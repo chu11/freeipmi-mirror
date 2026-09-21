@@ -1,5 +1,17 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi.c (_dcmi_specification_conformance): Read the
+	conformance version and parameter revision from a caller supplied
+	response object instead of issuing Get DCMI Capability Info
+	parameter 1 itself.
+	(_supported_dcmi_capabilities): Issue that command once, output the
+	specification conformance section from the same response, and
+	return the parameter revision to the caller.
+	(get_dcmi_capability_info): Update; --get-dcmi-capability-info
+	sends one fewer request.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi.c (get_enhanced_system_power_statistics):
 	Report "Enhanced System Power Statistics not supported" and fail
 	instead of silently printing nothing when the BMC does not support

@@ -66,12 +66,85 @@
 
 #define IPMI_DCMI_TIME_BUFLEN           512
 
-/* return 1 on output success, 0 on no output, -1 on error */
+/* obj_cmd_rs is any Get DCMI Capability Info response; every
+ * parameter's response carries the conformance version and parameter
+ * revision.
+ *
+ * return 1 on output success, 0 on no output, -1 on error
+ */
 static int
-_dcmi_specification_conformance (ipmi_dcmi_state_data_t *state_data, uint8_t *parameter_revision)
+_dcmi_specification_conformance (ipmi_dcmi_state_data_t *state_data,
+                                 fiid_obj_t obj_cmd_rs,
+                                 uint8_t *parameter_revision)
+{
+  uint8_t major, minor;
+  uint64_t val;
+
+  assert (state_data);
+  assert (obj_cmd_rs);
+  assert (parameter_revision);
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "dcmi_specification_conformance.major_version",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'dcmi_specification_conformance.major_version': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      return (-1);
+    }
+  major = val;
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "dcmi_specification_conformance.minor_version",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'dcmi_specification_conformance.minor_version': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      return (-1);
+    }
+  minor = val;
+
+  /* XXX: achu: The spec does not say how these version numbers are
+   * formatted.  decimal?  BCD?  On the one hand, I think to be
+   * consistent to the "IPMI Version" of a Get Device ID call, it
+   * should be BCD.  But, these are 8 bit fields instead of 4 bit
+   * fields (e.g. would I output "01.00" instead of "1.0"?).  So I'm
+   * going to assume decimal for now.
+   */
+  pstdout_printf (state_data->pstate,
+                  "DCMI Specification Conformance                     : %u.%u\n",
+                  major,
+                  minor);
+
+  if (FIID_OBJ_GET (obj_cmd_rs,
+                    "parameter_revision",
+                    &val) < 0)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'parameter_revision': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
+      return (-1);
+    }
+  (*parameter_revision) = val;
+
+  return (1);
+}
+
+/* Also outputs the specification conformance section, since it comes
+ * from the same response.
+ *
+ * return 1 on output success, 0 on no output, -1 on error
+ */
+static int
+_supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data,
+                              uint8_t *parameter_revision)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t major, minor;
   uint64_t val;
   int rv = -1;
 
@@ -97,104 +170,15 @@ _dcmi_specification_conformance (ipmi_dcmi_state_data_t *state_data, uint8_t *pa
       goto cleanup;
     }
 
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "dcmi_specification_conformance.major_version",
-                    &val) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'dcmi_specification_conformance.major_version': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
-      goto cleanup;
-    }
-  major = val;
+  if (_dcmi_specification_conformance (state_data,
+                                       obj_cmd_rs,
+                                       parameter_revision) < 0)
+    goto cleanup;
 
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "dcmi_specification_conformance.minor_version",
-                    &val) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'dcmi_specification_conformance.minor_version': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
-      goto cleanup;
-    }
-  minor = val;
-
-  /* XXX: achu: The spec does not say how these version numbers are
-   * formatted.  decimal?  BCD?  On the one hand, I think to be
-   * consistent to the "IPMI Version" of a Get Device ID call, it
-   * should be BCD.  But, these are 8 bit fields instead of 4 bit
-   * fields (e.g. would I output "01.00" instead of "1.0"?).  So I'm
-   * going to assume decimal for now.
-   */
-  pstdout_printf (state_data->pstate,
-                  "DCMI Specification Conformance                     : %u.%u\n",
-                  major,
-                  minor);
-
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "parameter_revision",
-                    &val) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'parameter_revision': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
-      goto cleanup;
-    }
-  (*parameter_revision) = val;
-
-  rv = 1;
- cleanup:
-  fiid_obj_destroy (obj_cmd_rs);
-  return (rv);
-}
-
-/* return 1 on output success, 0 on no output, -1 on error */
-static int
-_supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t parameter_revision;
-  uint64_t val;
-  int rv = -1;
-
-  assert (state_data);
-
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities_rs)))
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_create: %s\n",
-                       strerror (errno));
-      goto cleanup;
-    }
-
-  if (ipmi_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities (state_data->ipmi_ctx,
-                                                                          obj_cmd_rs) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "ipmi_cmd_dcmi_get_dcmi_capability_info_supported_dcmi_capabilities: %s\n",
-                       ipmi_ctx_errormsg (state_data->ipmi_ctx));
-      goto cleanup;
-    }
-
-  if (FIID_OBJ_GET (obj_cmd_rs,
-                    "parameter_revision",
-                    &val) < 0)
-    {
-      pstdout_fprintf (state_data->pstate,
-                       stderr,
-                       "fiid_obj_get: 'parameter_revision': %s\n",
-                       fiid_obj_errormsg (obj_cmd_rs));
-      goto cleanup;
-    }
-  parameter_revision = val;
+  pstdout_printf (state_data->pstate, "\n");
 
   /* See errata 1.0 */
-  if (!(parameter_revision >= 0x02))
+  if (!((*parameter_revision) >= 0x02))
     {
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "mandatory_platform_capabilities.identification_support",
@@ -318,7 +302,7 @@ _supported_dcmi_capabilities (ipmi_dcmi_state_data_t *state_data)
                   val ? "Available" : "Not present");
 
   /* See errata 1.0 */
-  if (!(parameter_revision >= 0x02))
+  if (!((*parameter_revision) >= 0x02))
     {
       if (FIID_OBJ_GET (obj_cmd_rs,
                         "manageability_access_capabilities.out_of_band_primary_lan_channel_available",
@@ -1051,13 +1035,7 @@ get_dcmi_capability_info (ipmi_dcmi_state_data_t *state_data)
 
   assert (state_data);
 
-  if ((ret = _dcmi_specification_conformance (state_data, &parameter_revision)) < 0)
-    return (-1);
-
-  if (ret)
-    pstdout_printf (state_data->pstate, "\n");
-
-  if ((ret = _supported_dcmi_capabilities (state_data)) < 0)
+  if ((ret = _supported_dcmi_capabilities (state_data, &parameter_revision)) < 0)
     return (-1);
 
   if (ret)
