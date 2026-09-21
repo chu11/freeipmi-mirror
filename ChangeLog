@@ -1,5 +1,13 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_parse): Validate
+	--exception-actions with IPMI_DCMI_EXCEPTION_ACTION_VALID rather
+	than the 00h-1Fh range; the reserved values 12h-1Fh were accepted
+	here only to be rejected by fill_cmd_dcmi_set_power_limit with a
+	generic "invalid parameters" after the session was opened.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-sel.8.pre.in: Fix "It's" typo in --tail and note that
 	more or fewer than COUNT records may be displayed when record ids
 	are not evenly spaced.

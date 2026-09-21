@@ -216,8 +216,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           fprintf (stderr, "invalid value for exception actions\n");
           exit (EXIT_FAILURE);
         }
-      if (tmp < IPMI_DCMI_EXCEPTION_ACTIONS_MIN
-          || tmp > IPMI_DCMI_EXCEPTION_ACTIONS_MAX)
+      if (!IPMI_DCMI_EXCEPTION_ACTION_VALID (tmp))
         {
           fprintf (stderr, "exception actions out of range\n");
           exit (EXIT_FAILURE);
