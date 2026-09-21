@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/ipmi-sel_.h (ipmi_sel_prog_data_t): Declare progname
+	const; it only ever points at argv[0].
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/ipmi-sel-argp.c (_ipmi_sel_args_validate): Reject
 	--post-clear with --info, --clear, --delete, --delete-range or
 	--list-sensor-types, where it was silently ignored.

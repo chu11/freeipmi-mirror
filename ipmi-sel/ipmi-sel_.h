@@ -126,7 +126,7 @@ struct ipmi_sel_arguments
 
 typedef struct ipmi_sel_prog_data
 {
-  char *progname;
+  const char *progname;
   struct ipmi_sel_arguments *args;
 } ipmi_sel_prog_data_t;
 
