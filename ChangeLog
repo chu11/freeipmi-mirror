@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-sensors.8.pre.in: Fix typos: "eparated", "This may
+	problem may exist", "an non-BMC".
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors-argp.c (cmdline_options): Fix
 	"sendor" typo in the --sdr-info help text.
 	* ipmi-sensors/ipmi-sensors-detailed-output.c

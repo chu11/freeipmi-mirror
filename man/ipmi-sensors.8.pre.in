@@ -102,7 +102,7 @@ below) or by number (decimal or hex).
 .TP
 \fB\-T\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
 Specify sensor types to not show outputs for.  Multiple types
-can be eparated by commas or spaces.  A special command line type of
+can be separated by commas or spaces.  A special command line type of
 "none", will indicate no types should be excluded (may be useful for
 overriding configured defaults).  Users may specify sensor types by
 string (see \fB\-\-list\-sensor\-types\fR below) or by number (decimal
@@ -211,7 +211,7 @@ motherboards.
 \fIignorescanningdisabled\fR - This workaround option will allow sensor
 readings to be read even if the sensor scanning bit indicates a sensor
 is disabled.  This option works around motherboards that incorrectly
-indicate sensors as disabled.  This may problem may exist on your
+indicate sensors as disabled.  This problem may exist on your
 motherboard if sensors are listed as "N/A" even if they should be
 available.  This option is confirmed to work around issues on Dell
 Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R410, Dell
@@ -223,7 +223,7 @@ sensor owner is not the BMC.  Typically, sensors owned by a non-BMC
 sensor owner must be bridged (e.g. with the \fB\-\-bridge\-sensors\fR
 option), however if the non-BMC sensor owner is invalid, bridging
 fails.  This option works around motherboards that incorrectly report
-an non-BMC sensor owner by always assuming the sensor owner is the
+a non-BMC sensor owner by always assuming the sensor owner is the
 BMC.  This problem may exist on your motherboard if sensors are listed
 as "N/A" even if they should be available. This option is confirmed to
 work around issues on Fujitsu RX300 and Fujitsu RX300S2 motherboards.
