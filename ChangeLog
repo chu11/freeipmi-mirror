@@ -1,5 +1,13 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/ipmi-sel-argp.c (_ipmi_sel_args_validate): Reject
+	--post-clear with --info, --clear, --delete, --delete-range or
+	--list-sensor-types, where it was silently ignored.
+	* man/ipmi-sel.8.pre.in: Document that --post-clear clears the
+	entire SEL, not only the records that were displayed.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/ipmi-sel-argp.c (_read_record_list, _read_record_id_range,
 	cmdline_parse): Report the offending input string rather than the
 	half-parsed strtol value in invalid record number/count errors.

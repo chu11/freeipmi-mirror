@@ -795,6 +795,13 @@ _ipmi_sel_args_validate (struct ipmi_sel_arguments *cmd_args)
       exit (EXIT_FAILURE);
     }
 
+  if (cmd_args->post_clear && action_count)
+    {
+      fprintf (stderr,
+               "--post-clear can only be used when displaying SEL records\n");
+      exit (EXIT_FAILURE);
+    }
+
   if (cmd_args->system_event_only && cmd_args->oem_event_only)
     {
       fprintf (stderr,

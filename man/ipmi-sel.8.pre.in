@@ -120,7 +120,9 @@ Clear SEL.
 .TP
 \fB\-\-post\-clear\fR
 Identical to \fB\-\-clear\fR, except the SEL clearing will be
-performed after SEL event records are displayed.  This option is
+performed after SEL event records are displayed.  The entire SEL is
+cleared, including any records that were not displayed due to
+display, date, or sensor type filtering options.  This option is
 useful for scripting if users intend to log SEL events to another log,
 then immediately clear SEL.  Unlike calling \fB\-\-clear\fR in another
 execution of
