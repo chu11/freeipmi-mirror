@@ -558,9 +558,10 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
             {
               if (ipmi_sdr_ctx_errnum (state_data->sdr_ctx) == IPMI_SDR_ERR_NOT_FOUND)
                 {
-                  pstdout_printf (state_data->pstate,
-                                  "Sensor Record ID '%d' not found\n",
-                                  state_data->prog_data->args->record_ids[i]);
+                  pstdout_fprintf (state_data->pstate,
+                                   stderr,
+                                   "Sensor Record ID '%u' not found\n",
+                                   state_data->prog_data->args->record_ids[i]);
                   return (-1);
                 }
               else
