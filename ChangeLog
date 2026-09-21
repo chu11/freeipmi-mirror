@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-daemon-common.c (daemonize_common): Print
+	the pid_t through a long cast rather than with %u.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-common.c (ipmi_open): Add the missing
 	newline to the ipmi_ctx_create error message.
 

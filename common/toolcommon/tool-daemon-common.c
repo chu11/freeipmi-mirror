@@ -103,7 +103,7 @@ daemonize_common (const char *pidfile)
         err_exit ("Cannot open pidfile '%s': %s", pidfile, strerror (errno));
 
       /* write the 2nd child PID to the pidfile */
-      fprintf (pf, "%u\n", pid);
+      fprintf (pf, "%ld\n", (long)pid);
       fclose (pf);
 
       exit (0);                   /* 1st child terminates */
