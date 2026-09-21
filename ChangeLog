@@ -1,5 +1,11 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_options): List the allowed
+	values, ACTIVATE and DEACTIVATE, in the
+	--activate-deactivate-power-limit help text.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/ipmi-dcmi-cmds.h: Remove
 	duplicate definitions of IPMI_DCMI_AVAILABLE and
 	IPMI_DCMI_NOT_PRESENT.
