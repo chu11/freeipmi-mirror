@@ -142,7 +142,7 @@ _sel_parse_record_string (pstdout_state_t pstate,
       if (_sel_parse_err_handle (pstate,
                                  sel_ctx,
                                  debug,
-                                 "ipmi_sel_parse_format_record_string") < 0)
+                                 "ipmi_sel_parse_read_record_string") < 0)
         return (-1);
       return (0);
     }
