@@ -1,5 +1,13 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors-simple-output.c (_round_double2):
+	Remove.  It rounded negative readings toward zero rather than to
+	nearest (-11.999 printed as -11.99) and was redundant with the
+	"%.2f" format the result was printed with.
+	(_simple_output_full_record): Print the reading directly.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi.c (set_power_limit): Combine the BMC's
 	current power limit configuration with the user's options in local
 	variables rather than writing the current values into the shared

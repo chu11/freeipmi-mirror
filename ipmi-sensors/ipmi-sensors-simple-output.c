@@ -66,19 +66,6 @@ ipmi_sensors_simple_output_setup (ipmi_sensors_state_data_t *state_data)
   return (0);
 }
 
-static double
-_round_double2 (double d)
-{
-  double r = 0.0;
-
-  r = (d - (long) d) * 100.0;
-
-  if ((r - (long) r) > 0.5)
-    return ((long) d + (((long) r + 1) / 100.0));
-
-  return ((long) d + ((long) r / 100.0));
-}
-
 static int
 _simple_output_header (ipmi_sensors_state_data_t *state_data,
                        uint16_t record_id,
@@ -301,7 +288,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 
               pstdout_printf (state_data->pstate,
                               fmt,
-                              _round_double2 (*sensor_reading),
+                              *sensor_reading,
                               sensor_units_buf);
             }
           else
@@ -463,7 +450,7 @@ _simple_output_full_record (ipmi_sensors_state_data_t *state_data,
 
               pstdout_printf (state_data->pstate,
                               fmt,
-                              _round_double2 (*sensor_reading),
+                              *sensor_reading,
                               sensor_units_buf);
             }
           else
