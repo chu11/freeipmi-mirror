@@ -1,6 +1,16 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/ipmi-sensors-detailed-output.c
+	(_detailed_output_header): With --shared-sensors or
+	--entity-sensor-names, also output a "Sensor Name" line built with
+	ipmi_sdr_parse_sensor_name / ipmi_sdr_parse_entity_sensor_name,
+	as the simple output does.  Previously both options had no effect
+	on verbose output, so every instance of a shared record printed the
+	same ID String.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-sensors/ipmi-sensors-detailed-output.c
 	(_detailed_output_event_enable): Honor
 	--ignore-unrecognized-events when building the assertion and
 	deassertion event enable lists, as the sensor event list already

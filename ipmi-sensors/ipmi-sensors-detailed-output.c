@@ -276,6 +276,62 @@ _detailed_output_header (ipmi_sensors_state_data_t *state_data,
                   "ID String: %s\n",
                   id_string);
 
+  /* The ID String is the raw SDR field.  When the user asked for
+   * names that differ from it, also output the name the simple output
+   * would show: the shared sensor instance modifier applied and/or
+   * the entity id and instance prefixed.
+   */
+  if (state_data->prog_data->args->shared_sensors
+      || state_data->prog_data->args->entity_sensor_names)
+    {
+      char sensor_name[IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1];
+      unsigned int sensor_name_flags = 0;
+
+      memset (sensor_name, '\0', IPMI_SDR_MAX_SENSOR_NAME_LENGTH + 1);
+
+      if (!state_data->prog_data->args->shared_sensors)
+        sensor_name_flags |= IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS;
+
+      if (state_data->prog_data->args->entity_sensor_names)
+        {
+          if (ipmi_sdr_parse_entity_sensor_name (state_data->sdr_ctx,
+                                                 NULL,
+                                                 0,
+                                                 sensor_number,
+                                                 sensor_name_flags,
+                                                 sensor_name,
+                                                 IPMI_SDR_MAX_SENSOR_NAME_LENGTH) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sdr_parse_entity_sensor_name: %s\n",
+                               ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+              return (-1);
+            }
+        }
+      else
+        {
+          if (ipmi_sdr_parse_sensor_name (state_data->sdr_ctx,
+                                          NULL,
+                                          0,
+                                          sensor_number,
+                                          sensor_name_flags,
+                                          sensor_name,
+                                          IPMI_SDR_MAX_SENSOR_NAME_LENGTH) < 0)
+            {
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "ipmi_sdr_parse_sensor_name: %s\n",
+                               ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+              return (-1);
+            }
+        }
+
+      pstdout_printf (state_data->pstate,
+                      "Sensor Name: %s\n",
+                      sensor_name);
+    }
+
   if (state_data->prog_data->args->interpret_oem_data)
     sensor_type_string = get_oem_sensor_type_output_string (sensor_type,
                                                             event_reading_type_code,
