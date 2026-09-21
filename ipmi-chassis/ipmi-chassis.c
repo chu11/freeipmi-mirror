@@ -430,7 +430,7 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
       str = "power down due to power overload";
       break;
     case IPMI_LAST_POWER_EVENT_POWER_DOWN_INTERLOCK_ACTIVATED:
-      str = "power down due to Activation of interlock switch";
+      str = "power down due to activation of interlock switch";
       break;
     case IPMI_LAST_POWER_EVENT_POWER_DOWN_POWER_FAULT:
       str = "power down due to power fault";

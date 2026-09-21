@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-chassis/ipmi-chassis.c (get_chassis_status): Fix stray
+	capital in the interlock last power event string.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-chassis/ipmi-chassis.c (get_chassis_capabilities): Capitalize
 	the capability labels consistently with the rest of the output.
 
