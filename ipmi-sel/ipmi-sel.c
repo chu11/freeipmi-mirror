@@ -1319,7 +1319,8 @@ _sel_parse_callback (ipmi_sel_ctx_t ctx, void *callback_data)
                 goto out;
             }
         }
-      else
+
+      if (state_data->prog_data->args->exclude_display_range)
         {
           if (record_id >= state_data->prog_data->args->exclude_display_range1
               && record_id <= state_data->prog_data->args->exclude_display_range2)
