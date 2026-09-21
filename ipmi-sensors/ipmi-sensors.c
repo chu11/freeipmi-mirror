@@ -628,7 +628,7 @@ _calculate_record_ids (ipmi_sensors_state_data_t *state_data,
           if (!flag)
             continue;
 
-          if (state_data->prog_data->args->exclude_record_ids)
+          if (state_data->prog_data->args->exclude_record_ids_length)
             {
               int found_exclude = 0;
 

@@ -1,5 +1,12 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors.c (_calculate_record_ids): Test
+	exclude_record_ids_length, not the address of the
+	exclude_record_ids array, which is always true.  No behavior
+	change; the loop ran zero times.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors-argp.c (cmdline_parse): In the
 	--record-ids and --exclude-record-ids error message print the
 	offending token rather than the partially parsed value, so
