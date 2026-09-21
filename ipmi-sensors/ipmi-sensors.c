@@ -910,6 +910,7 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
   char **event_message_list = NULL;
   int event_message_output_type = IPMI_SENSORS_EVENT_NORMAL;
   unsigned int event_message_list_len = 0;
+  int ret;
   int rv = -1;
 
   assert (state_data);
@@ -925,13 +926,13 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (ipmi_sensor_read (state_data->sensor_read_ctx,
-                        sdr_record,
-                        sdr_record_len,
-                        shared_sensor_number_offset,
-                        &sensor_reading_raw,
-                        &sensor_reading,
-                        &sensor_event_bitmask) <= 0)
+  if ((ret = ipmi_sensor_read (state_data->sensor_read_ctx,
+                               sdr_record,
+                               sdr_record_len,
+                               shared_sensor_number_offset,
+                               &sensor_reading_raw,
+                               &sensor_reading,
+                               &sensor_event_bitmask)) <= 0)
     {
       int errnum = ipmi_sensor_read_ctx_errnum (state_data->sensor_read_ctx);
 
@@ -979,6 +980,24 @@ _output_sensor (ipmi_sensors_state_data_t *state_data,
             pstdout_fprintf (state_data->pstate,
                              stderr,
                              "Sensor reading/event_bitmask retrieval error: %s\n",
+                             ipmi_sensor_read_ctx_errormsg (state_data->sensor_read_ctx));
+
+          event_message_output_type = IPMI_SENSORS_EVENT_UNKNOWN;
+
+          goto output;
+        }
+
+      /* ipmi_sensor_read returns 0 with this errnum when the SDR
+       * record's event/reading type code is not one it knows how to
+       * interpret.  That is a problem with one record, not with the
+       * session, so output the sensor as unknown and keep going.
+       */
+      if (!ret && errnum == IPMI_SENSOR_READ_ERR_SDR_ENTRY_ERROR)
+        {
+          if (state_data->prog_data->args->common_args.debug)
+            pstdout_fprintf (state_data->pstate,
+                             stderr,
+                             "Sensor event/reading type code not recognized: %s\n",
                              ipmi_sensor_read_ctx_errormsg (state_data->sensor_read_ctx));
 
           event_message_output_type = IPMI_SENSORS_EVENT_UNKNOWN;
