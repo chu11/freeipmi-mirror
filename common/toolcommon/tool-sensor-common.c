@@ -926,6 +926,7 @@ calculate_column_widths_ignored_sdr_cache (unsigned int non_abbreviated_units,
   assert (column_width);
 
   /* Ignoring the SDR cache?  Gotta make some guesses */
+  column_width->record_id = strlen (SENSORS_HEADER_RECORD_ID_STR);
   column_width->sensor_name = SENSORS_SENSOR_NAME_LENGTH;
   column_width->sensor_type = strlen (ipmi_sensor_types[IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS]);
   if (non_abbreviated_units)

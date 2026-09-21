@@ -1,5 +1,11 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-sensor-common.c
+	(calculate_column_widths_ignored_sdr_cache): Initialize the
+	record_id width too.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-sensor-common.h
 	(get_sensor_units_output_string): Name the last parameter
 	non_abbreviated_units_flag, as the definition and all callers treat
