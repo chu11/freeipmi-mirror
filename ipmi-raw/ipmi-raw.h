@@ -48,7 +48,7 @@ struct ipmi_raw_arguments
 
 typedef struct ipmi_raw_prog_data
 {
-  char *progname;
+  const char *progname;
   struct ipmi_raw_arguments *args;
 } ipmi_raw_prog_data_t;
 

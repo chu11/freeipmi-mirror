@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-raw/ipmi-raw.h (ipmi_raw_prog_data_t): Declare progname
+	const; it only ever points at argv[0].
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-raw/ipmi-raw.c (ipmi_raw_cmdline, ipmi_raw_stream): Drop the
 	trailing space from the rcvd output line.
 
