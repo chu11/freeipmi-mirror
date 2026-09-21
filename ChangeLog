@@ -1,5 +1,11 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-raw/ipmi-raw.h (IPMI_RAW_MAX_ARGS): Reduce from 128 KiB to
+	4096 and correct the comment; the library's raw templates hold at
+	most 1024 bytes of data.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-raw/ipmi-raw.c (ipmi_raw_stream): Include the line number
 	when a request fails to send.
 

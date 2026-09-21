@@ -24,8 +24,12 @@
 #include "tool-cmdline-common.h"
 #include "pstdout.h"
 
-/* IPMI 2.0 Payload is 2 bytes, so we'll assume that size * 2 for good measure */
-#define IPMI_RAW_MAX_ARGS (65536*2)
+/* libfreeipmi's raw command templates carry at most 1024 bytes of
+ * request/response data plus the command byte, and its internal packet
+ * buffers are 4096 bytes, so this is comfortably above anything that
+ * can actually be sent or received.
+ */
+#define IPMI_RAW_MAX_ARGS 4096
 
 enum ipmi_raw_argp_option_keys
   {
