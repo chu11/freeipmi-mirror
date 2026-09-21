@@ -174,13 +174,15 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           errno = 0;
           value = strtol (tok, &endptr, 10);
 
+          /* IPMI_SDR_RECORD_ID_LAST (0xFFFF) is the "no more records"
+           * marker in a Get SDR response, not a record id.
+           */
           if (errno
               || endptr[0] != '\0'
               || value < 0
-              || value < IPMI_SDR_RECORD_ID_FIRST
-              || value > IPMI_SDR_RECORD_ID_LAST)
+              || value >= IPMI_SDR_RECORD_ID_LAST)
             {
-              fprintf (stderr, "invalid sensor record id: %ld\n", value);
+              fprintf (stderr, "invalid sensor record id: %s\n", tok);
               exit (EXIT_FAILURE);
             }
 
@@ -216,10 +218,9 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           if (errno
               || endptr[0] != '\0'
               || value < 0
-              || value < IPMI_SDR_RECORD_ID_FIRST
-              || value > IPMI_SDR_RECORD_ID_LAST)
+              || value >= IPMI_SDR_RECORD_ID_LAST)
             {
-              fprintf (stderr, "invalid sensor record id: %ld\n", value);
+              fprintf (stderr, "invalid sensor record id: %s\n", tok);
               exit (EXIT_FAILURE);
             }
 

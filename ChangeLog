@@ -1,5 +1,14 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors-argp.c (cmdline_parse): In the
+	--record-ids and --exclude-record-ids error message print the
+	offending token rather than the partially parsed value, so
+	"-r 0x10" reports "0x10" instead of "0".  Reject 0xFFFF, which is
+	the Get SDR "no more records" marker rather than a record id, and
+	drop the redundant IPMI_SDR_RECORD_ID_FIRST comparison.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors-detailed-output.c
 	(_detailed_output_header): With --shared-sensors or
 	--entity-sensor-names, also output a "Sensor Name" line built with
