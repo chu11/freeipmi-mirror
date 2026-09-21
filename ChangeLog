@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi.conf.5.pre.in: Fix "albridging" typo; the workaround
+	is altbridging.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* common/toolcommon/tool-daemon-common.c (daemonize_common): Print
 	the pid_t through a long cast rather than with %u.
 
