@@ -2283,17 +2283,21 @@ set_power_limit (ipmi_dcmi_state_data_t *state_data)
         }
     }
 
-  if (!args->exception_actions)
-    args->exception_actions_arg = exception_actions;
+  /* Overlay the user's settings on the current configuration in
+   * locals.  args is shared by every hostrange thread, so it must
+   * not be used to hold per-host values.
+   */
+  if (args->exception_actions)
+    exception_actions = args->exception_actions_arg;
 
-  if (!args->power_limit_requested)
-    args->power_limit_requested_arg = power_limit_requested;
+  if (args->power_limit_requested)
+    power_limit_requested = args->power_limit_requested_arg;
 
-  if (!args->correction_time_limit)
-    args->correction_time_limit_arg = correction_time_limit;
+  if (args->correction_time_limit)
+    correction_time_limit = args->correction_time_limit_arg;
 
-  if (!args->statistics_sampling_period)
-    args->statistics_sampling_period_arg = management_application_statistics_sampling_period;
+  if (args->statistics_sampling_period)
+    management_application_statistics_sampling_period = args->statistics_sampling_period_arg;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_dcmi_set_power_limit_rs)))
     {
@@ -2305,10 +2309,10 @@ set_power_limit (ipmi_dcmi_state_data_t *state_data)
     }
 
   if (ipmi_cmd_dcmi_set_power_limit (state_data->ipmi_ctx,
-                                     args->exception_actions_arg,
-                                     args->power_limit_requested_arg,
-                                     args->correction_time_limit_arg,
-                                     args->statistics_sampling_period_arg,
+                                     exception_actions,
+                                     power_limit_requested,
+                                     correction_time_limit,
+                                     management_application_statistics_sampling_period,
                                      obj_cmd_rs) < 0)
     {
       if (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE

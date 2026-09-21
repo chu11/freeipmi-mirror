@@ -1,5 +1,14 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi.c (set_power_limit): Combine the BMC's
+	current power limit configuration with the user's options in local
+	variables rather than writing the current values into the shared
+	argument struct.  With a hostrange each host runs in its own
+	thread, so a host could be configured with values read from a
+	different host.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_options): List the allowed
 	values, ACTIVATE and DEACTIVATE, in the
 	--activate-deactivate-power-limit help text.
