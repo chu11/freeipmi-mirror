@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-raw.8.pre.in: Fix the --file example; there is no -f
+	short option.  Say NETFN rather than FN consistently.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-chassis/ipmi-chassis.c (run_cmd_args): Drop the unused rv
 	local and return 0 directly.
 

@@ -84,9 +84,9 @@ Execute command 0x01 with LUN 0x0 and NETFN 0x06 across a cluster using IPMI ove
 .PP
 Read LUN, NETFN, command and request data from standard input.
 .PP
-.B # ipmi-raw -f command-file
+.B # ipmi-raw --file=command-file
 .PP
-Read LUN/FN, command and request data from given file instead of standard input.
+Read LUN, NETFN, command and request data from given file instead of standard input.
 .PP
 .B # ipmi-raw < command-file
 .PP
