@@ -204,13 +204,13 @@ ipmi_sensors_oem_intel_quanta_qssc_s4r_output_oem_record (ipmi_sensors_state_dat
 
           /* Stored in .5 C units */
           pstdout_printf (state_data->pstate,
-                          "Temperature at Chassis Inlet: %u C\n",
-                          tempinlet/2);
+                          "Temperature at Chassis Inlet: %.1f C\n",
+                          tempinlet / 2.0);
 
           /* Stored in .5 C units */
           pstdout_printf (state_data->pstate,
-                          "Temperature rise from Chassis Inlet to DIMM Local Ambient: %u C\n",
-                          temprise/2);
+                          "Temperature rise from Chassis Inlet to DIMM Local Ambient: %.1f C\n",
+                          temprise / 2.0);
 
           /* Stored in mm/sec units */
           pstdout_printf (state_data->pstate,

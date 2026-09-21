@@ -1,5 +1,12 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors-oem-intel-quanta-qssc-s4r.c
+	(ipmi_sensors_oem_intel_quanta_qssc_s4r_output_oem_record): The
+	inlet temperature and temperature rise are stored in 0.5 C units;
+	print them with one decimal instead of integer-dividing by 2.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors.c (_calculate_record_ids): Test
 	exclude_record_ids_length, not the address of the
 	exclude_record_ids array, which is always true.  No behavior
