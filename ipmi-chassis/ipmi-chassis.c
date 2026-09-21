@@ -653,8 +653,6 @@ get_chassis_status (ipmi_chassis_state_data_t *state_data)
                       val ? "allowed" : "unallowed");
     }
 
-  pstdout_printf (state_data->pstate, "\n");
-
   rv = 0;
  cleanup:
   fiid_obj_destroy (obj_cmd_rs);
