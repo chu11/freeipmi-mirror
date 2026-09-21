@@ -115,20 +115,19 @@ opensesspriv, integritycheckvalue, assumesystemevent.
 Specify default verbose count to use for
 .B ipmi-sel(8).
 .TP
-\fIsensors\-types\fR \fITYPE-LIST\fR
-Specify sensor types of SEL events to log.  Multiple types can be
-specified separated by whitespace.  Users may specify sensor types by
-string or by number (decimal or hex).  Please see
+\fBsensor\-types\fR \fISENSOR-TYPES-LIST\fR
+Specify sensor types of SEL events to log.  Multiple sensor types can
+be specified separated by whitespace.  Users may specify sensor types
+by string or by number (decimal or hex).  Please see
 .B ipmi-sel(8)
-\fI\-\-list\-types\fR option to see possible string input types.
+\fI\-\-list\-sensor\-types\fR option to see possible string input types.
 .TP
-\fIexclude\-sensor\-types\fR \fISENSOR-TYPES-LIST\fR
-Specify sensor types of SEL events to not log.  default sensor types
-to not show sensor outputs for.  Multiple sensor types can be
-specified separated by whitespace.  Users may specify sensor types by
-string or by number.  Please see
+\fBexclude\-sensor\-types\fR \fISENSOR-TYPES-LIST\fR
+Specify sensor types of SEL events to not log.  Multiple sensor types
+can be specified separated by whitespace.  Users may specify sensor
+types by string or by number.  Please see
 .B ipmi-sel(8)
-\fI\-\-list\-types\fR option to see possible string input types.
+\fI\-\-list\-sensor\-types\fR option to see possible string input types.
 .TP
 \fBsystem\-event\-only\fR \fIENABLE|DISABLE\fR
 Specify if output should only include system event records.
