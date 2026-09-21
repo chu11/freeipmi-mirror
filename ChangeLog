@@ -1,5 +1,14 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors-detailed-output.c
+	(_detailed_output_event_enable): Honor
+	--ignore-unrecognized-events when building the assertion and
+	deassertion event enable lists, as the sensor event list already
+	does.  Remove the dead IPMI_GET_EVENT_MESSAGES_FLAGS_SHORT check;
+	the function asserts verbose_count >= 2.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors-output-common.c
 	(ipmi_sensors_output_event_message_list): Remove the unused spcbuf
 	padding buffer and IPMI_SENSORS_SPACE_BUFFER.

@@ -1161,15 +1161,15 @@ _detailed_output_event_enable (ipmi_sensors_state_data_t *state_data,
       goto cleanup;
     }
 
-  if (!state_data->prog_data->args->verbose_count)
-    event_message_flags |= IPMI_GET_EVENT_MESSAGES_FLAGS_SHORT;
-
   if (state_data->prog_data->args->interpret_oem_data)
     {
       manufacturer_id = state_data->oem_data.manufacturer_id;
       product_id = state_data->oem_data.product_id;
       event_message_flags |= IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA;
     }
+
+  if (state_data->prog_data->args->ignore_unrecognized_events)
+    event_message_flags |= IPMI_GET_EVENT_MESSAGES_FLAGS_IGNORE_UNRECOGNIZED_EVENTS;
 
   /* achu: According to the spec, bytes 3-6 of the packet should exist
    * if all event messages are not disabled and sensor scanning is not
