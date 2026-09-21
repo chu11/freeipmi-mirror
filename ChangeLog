@@ -1,5 +1,11 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-dcmi-cmds.h: Remove
+	duplicate definitions of IPMI_DCMI_AVAILABLE and
+	IPMI_DCMI_NOT_PRESENT.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi.h (ipmi_dcmi_prog_data_t): Declare progname
 	const; it only ever points at argv[0].
 
