@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-chassis/ipmi-chassis.c (get_chassis_capabilities): Capitalize
+	the capability labels consistently with the rest of the output.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-chassis.8.pre.in: Document the --chassis-identify interval
 	range and that 0 is equivalent to TURN-OFF.
 

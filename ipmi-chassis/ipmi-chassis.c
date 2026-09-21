@@ -83,7 +83,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Intrusion sensor        : %s\n",
+                  "Intrusion Sensor        : %s\n",
                   (val ? "provided" : "not provided"));
 
   if (FIID_OBJ_GET (obj_cmd_rs,
@@ -128,7 +128,7 @@ get_chassis_capabilities (ipmi_chassis_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "Power interlock         : %s\n",
+                  "Power Interlock         : %s\n",
                   (val ? "provided" : "not provided"));
 
   if (FIID_OBJ_GET (obj_cmd_rs,
