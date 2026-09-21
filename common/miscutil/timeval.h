@@ -50,6 +50,7 @@ int timeval_lt (struct timeval *a, struct timeval *b);
 
 void timeval_add (struct timeval *a, struct timeval *b, struct timeval *result);
 
+/* result = a - b, or zero if a <= b; the result is never negative */
 void timeval_sub (struct timeval *a, struct timeval *b, struct timeval *result);
 
 void timeval_millisecond_init (struct timeval *a, unsigned int ms);

@@ -1,3 +1,8 @@
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
+	* common/miscutil/timeval.h (timeval_sub): Document that the result
+	is clamped to zero when a <= b.
+
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
 	* common/pingtool/ping-tool-common.c (_signal_handler): Only set a
