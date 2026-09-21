@@ -42,16 +42,16 @@ debug_hdr_str (uint8_t packet_type,
                char *hdrbuf,
                unsigned int hdrbuf_len)
 {
-  char *fmt_inband =
+  const char *fmt_inband =
     "=====================================================\n"
     "%s%s %s\n"
     "=====================================================";
-  char *fmt_outofband =
+  const char *fmt_outofband =
     "=====================================================\n"
     "%s %s%s %s\n"
     "=====================================================";
-  char *str_direction;
-  char *str_prefix;
+  const char *str_direction;
+  const char *str_prefix;
   int len;
 
   assert (packet_type == DEBUG_UTIL_TYPE_NONE
@@ -91,7 +91,7 @@ debug_hdr_str (uint8_t packet_type,
                     str_direction);
   else
     {
-      char *str_version;
+      const char *str_version;
 
       if (packet_type == DEBUG_UTIL_TYPE_IPMI_1_5)
         str_version = "IPMI 1.5";
