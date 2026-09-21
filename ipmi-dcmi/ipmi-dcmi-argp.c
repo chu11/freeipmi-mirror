@@ -153,6 +153,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
        * identifier string is 64 w/ a NUL byte included.  That's the
        * literal wording.  Because that's what they're writing, that's
        * what I'm programming.
+       *
+       * The spec is also not clear on how to clear the asset tag.  We
+       * assume that overwriting the tag with spaces is what is desired
+       * in that case, so an empty string is not a valid input.  An
+       * empty string is not special-cased here; it is rejected by the
+       * library when the zero-length write is attempted.
        */
 
       if (strlen (cmd_args->set_asset_tag_arg) > IPMI_DCMI_MAX_ASSET_TAG_LENGTH)

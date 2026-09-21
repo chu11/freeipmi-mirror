@@ -1,5 +1,13 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_parse): Add comment noting
+	the spec is not clear on how to clear the asset tag, that
+	overwriting it with spaces is assumed to be what is desired, and
+	that an empty string is therefore not a valid --set-asset-tag
+	input.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-dcmi/ipmi-dcmi-argp.c (cmdline_parse): Validate
 	--exception-actions with IPMI_DCMI_EXCEPTION_ACTION_VALID rather
 	than the 00h-1Fh range; the reserved values 12h-1Fh were accepted
