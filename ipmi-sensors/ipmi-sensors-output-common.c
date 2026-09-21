@@ -38,8 +38,6 @@
 #include "tool-sdr-cache-common.h"
 #include "tool-sensor-common.h"
 
-#define IPMI_SENSORS_SPACE_BUFFER 1024
-
 int
 ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                                         int event_message_output_type,
@@ -49,7 +47,6 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
                                         char *prefix,
                                         unsigned int each_on_newline)
 {
-  char spcbuf[IPMI_SENSORS_SPACE_BUFFER + 1];
   unsigned int i;
 
   assert (state_data);
@@ -57,19 +54,6 @@ ipmi_sensors_output_event_message_list (ipmi_sensors_state_data_t *state_data,
 
   if (prefix)
     pstdout_printf (state_data->pstate, "%s", prefix);
-
-  memset (spcbuf, '\0', IPMI_SENSORS_SPACE_BUFFER + 1);
-  if (prefix && each_on_newline)
-    {
-      unsigned int len;
-
-      len = strlen (prefix);
-      if (len > IPMI_SENSORS_SPACE_BUFFER)
-        len = IPMI_SENSORS_SPACE_BUFFER;
-
-      for (i = 0; i < len; i++)
-        strcat (spcbuf, " ");
-    }
 
   if (event_message_output_type == IPMI_SENSORS_EVENT_NA)
     {

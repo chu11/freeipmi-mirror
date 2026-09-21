@@ -1,5 +1,11 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sensors/ipmi-sensors-output-common.c
+	(ipmi_sensors_output_event_message_list): Remove the unused spcbuf
+	padding buffer and IPMI_SENSORS_SPACE_BUFFER.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/ipmi-sdr-repository-cmds.h
 	(IPMI_SDR_FREE_SPACE_64KB_OR_MORE, IPMI_SDR_FREE_SPACE_UNSPECIFIED):
 	New defines for the Get SDR Repository Info free space special
