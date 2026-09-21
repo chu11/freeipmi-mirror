@@ -1,5 +1,10 @@
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-raw.8.pre.in: Document the file/stdin input format and
+	that processing stops at the first invalid line or failed request.
+
+2026-09-21 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-raw.8.pre.in: Fix the --file example; there is no -f
 	short option.  Say NETFN rather than FN consistently.
 

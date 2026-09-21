@@ -9,6 +9,15 @@ ipmi-raw \- execute IPMI commands by hex values
 is used to execute IPMI commands by hex values.  Hex values may be
 input on the command line, a file via the \fB\-\-file\fR option, or
 via stdin if neither of the previous are specified.
+.PP
+When reading from a file or stdin, each line is one request.  A line
+consists of whitespace separated hex bytes, each one or two hex digits
+with an optional \fI0x\fR prefix.  The first byte is the LUN, the
+second is the NETFN, the third is the command, and any remaining bytes
+are the request data.  Blank lines are ignored.  Comments are not
+supported.  Processing stops at the first line that cannot be parsed
+or the first request that fails to be sent, so that a script of
+dependent requests is not continued past a failure.
 #include <@top_srcdir@/man/manpage-common-table-of-contents.man>
 #include <@top_srcdir@/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/man/manpage-common-driver.man>
