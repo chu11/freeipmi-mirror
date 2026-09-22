@@ -744,11 +744,13 @@ _ipmiconsole_defaults_setup (void)
       if (conffile_errnum (cf) == CONFFILE_ERR_EXIST)
         goto out;
 
+      /* Log and continue with the base defaults, a bad config file
+       * should not make the engine unusable.
+       */
       if (conffile_errmsg (cf, buf, CONFFILE_MAX_ERRMSGLEN) < 0)
-        {
-          IPMICONSOLE_DEBUG (("libipmiconsole loaded alternate default debug flag"));
-          goto cleanup;
-        }
+        IPMICONSOLE_DEBUG (("conffile_parse: errnum = %d", conffile_errnum (cf)));
+      else
+        IPMICONSOLE_DEBUG (("conffile_parse: %s", buf));
     }
 
  out:
