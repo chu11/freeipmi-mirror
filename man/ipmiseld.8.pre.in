@@ -233,7 +233,7 @@ output specifics of each SEL event that occurs.
 .sp
 %t - time in format H:M:S using 24 hour clock
 .sp
-%d - date in format D-M-YEAR
+%d - date in format MON-D-YEAR (e.g. Dec-01-2012)
 .sp
 \fIFor System events\fR
 .sp
