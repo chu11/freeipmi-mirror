@@ -1,5 +1,10 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld.c (_sel_parse_err_handle): Take the function
+	name as const char *; all callers pass string literals.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld-cache.c (ipmiseld_data_cache_load): Fix error
 	message to name fd_read_n, not fd_write_n.
 

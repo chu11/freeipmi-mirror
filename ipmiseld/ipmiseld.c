@@ -295,7 +295,7 @@ ipmiseld_host_state_init (ipmiseld_host_data_t *host_data)
 
 /* return (-1), real error */
 static int
-_sel_parse_err_handle (ipmiseld_host_data_t *host_data, char *func)
+_sel_parse_err_handle (ipmiseld_host_data_t *host_data, const char *func)
 {
   assert (host_data);
   assert (func);
