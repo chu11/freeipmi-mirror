@@ -229,6 +229,12 @@ ipmiseld_calc_percent_full (ipmiseld_host_data_t *host_data,
   assert (host_data);
   assert (sel_info);
 
+  /* Per the IPMI spec (Get SEL Info), a free_space of 0xFFFF means
+   * "65535 or more bytes free", not exactly 65535.  There is no
+   * practical way to guess how much more, so we just take the
+   * reported value as-is.  The percentage will be overestimated on
+   * SELs with more than 64KB free, which is harmless.
+   */
   used_bytes = (sel_info->entries * IPMI_SEL_RECORD_MAX_RECORD_LENGTH);
   total_bytes = used_bytes + sel_info->free_space;
 

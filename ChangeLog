@@ -1,5 +1,12 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld.c (ipmiseld_calc_percent_full): Add comment
+	noting that a Get SEL Info free_space of 0xFFFF means 65535 or
+	more bytes, and that we take the value as-is since there is no
+	practical way to guess further.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld.h (ipmiseld_prog_data_t): Declare progname
 	const; it only ever points at argv[0].
 
