@@ -1,5 +1,13 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/ipmiconsole.c (sol_connect, main): Name the function
+	that actually failed in error messages: ipmiconsole_ctx_set_config
+	and ipmiconsole_engine_submit_block rather than
+	"ipmiconsole_submit_block", ipmiconsole_engine_init rather than
+	"ipmiconsole_setup".
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole.c (_ipmiconsole_defaults_setup): Log
 	the conffile error message when libipmiconsole.conf fails to
 	parse.  Previously the message was fetched and discarded, and the

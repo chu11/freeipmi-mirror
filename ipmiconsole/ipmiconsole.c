@@ -396,7 +396,7 @@ sol_connect (struct ipmiconsole_arguments *cmd_args,
                                       IPMICONSOLE_CTX_CONFIG_OPTION_SOL_PAYLOAD_INSTANCE,
                                       &(cmd_args->sol_payload_instance)) < 0)
         {
-          fprintf (stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_errormsg (c));
+          fprintf (stderr, "ipmiconsole_ctx_set_config: %s\r\n", ipmiconsole_ctx_errormsg (c));
           goto cleanup;
         }
     }
@@ -424,7 +424,7 @@ sol_connect (struct ipmiconsole_arguments *cmd_args,
           || ipmiconsole_ctx_errnum (c) == IPMICONSOLE_ERR_EXCESS_ERRORS_RECEIVED)
         printf ("[error received]: %s\n", ipmiconsole_ctx_errormsg (c));
       else
-        fprintf (stderr, "ipmiconsole_submit_block: %s\r\n", ipmiconsole_ctx_errormsg (c));
+        fprintf (stderr, "ipmiconsole_engine_submit_block: %s\r\n", ipmiconsole_ctx_errormsg (c));
       goto cleanup;
     }
 
@@ -580,7 +580,7 @@ main (int argc, char **argv)
 
   if (ipmiconsole_engine_init (1, debug_flags) < 0)
     {
-      perror ("ipmiconsole_setup");
+      perror ("ipmiconsole_engine_init");
       exit (EXIT_FAILURE);
     }
 
