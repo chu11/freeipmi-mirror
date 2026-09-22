@@ -1309,7 +1309,7 @@ _receive_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t *p)
     }
   else
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("invalid packet type: %d", p));
+      IPMICONSOLE_CTX_DEBUG (c, ("invalid packet type: %d", *p));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_INTERNAL_ERROR);
       goto cleanup;
     }

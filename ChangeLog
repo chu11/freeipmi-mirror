@@ -1,5 +1,11 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole_processing.c (_receive_packet): Print
+	the packet type, not the pointer to it, in the "invalid packet
+	type" debug message.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole.c (ipmiconsole_errmsgs): Fix "ctt
 	invalid" typo in the IPMICONSOLE_ERR_CTX_INVALID message.
 
