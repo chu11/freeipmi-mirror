@@ -1393,8 +1393,8 @@ _ipmiseld_poll (void *arg)
                                   IPMI_SEL_PARAMETER_INTERPRET_CONTEXT,
                                   &(host_data->host_poll->interpret_ctx)) < 0)
     {
-      err_output("ipmi_sel_ctx_set_interpret: %s",
-                 ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
+      ipmiseld_err_output (host_data, "ipmi_sel_ctx_set_parameter: %s",
+                  ipmi_sel_ctx_errormsg (host_data->host_poll->sel_ctx));
       goto cleanup;
     }
 
