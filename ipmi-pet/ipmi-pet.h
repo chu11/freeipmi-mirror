@@ -75,7 +75,7 @@ struct ipmi_pet_arguments
 
 typedef struct ipmi_pet_prog_data
 {
-  char *progname;
+  const char *progname;
   struct ipmi_pet_arguments *args;
 } ipmi_pet_prog_data_t;
 
