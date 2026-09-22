@@ -1,5 +1,17 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiconsole.8.pre.in: Document that the escape character
+	must be a single byte and may not be one of the escape command
+	characters, and that escape sequences are not processed in proxy
+	mode.
+	* etc/freeipmi.conf: Drop ipmiconsole-authentication-type, which
+	is meaningless for an IPMI 2.0 only tool.  Add
+	ipmiconsole-sol-payload-instance and
+	ipmiconsole-deactivate-all-instances.
+	* man/freeipmi.conf.5.pre.in: Drop ipmiconsole-authentication-type.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole.c (_config_file_workaround_flags):
 	Map the serialalertsdeferred and solpacketseq workarounds.  Both
 	are documented in libipmiconsole.conf(5) but were parsed and then
