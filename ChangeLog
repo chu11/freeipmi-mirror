@@ -1,5 +1,9 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld.c (ipmiseld_sel_info_get): Fix indentation.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld.c (_free_host_data): Remove stray semicolon.
 
 2026-09-22 Albert Chu <chu11@llnl.gov>

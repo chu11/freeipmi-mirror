@@ -144,7 +144,7 @@ ipmiseld_sel_info_get (ipmiseld_host_data_t *host_data, ipmiseld_sel_info_t *sel
                   fiid_obj_errormsg (obj_cmd_rs));
       goto cleanup;
     }
- sel_info->delete_sel_command_supported = val;
+  sel_info->delete_sel_command_supported = val;
 
   if (FIID_OBJ_GET (obj_cmd_rs, "reserve_sel_command_supported", &val) < 0)
     {
