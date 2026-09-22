@@ -247,7 +247,7 @@ struct ipmi_config_arguments
 
 typedef struct ipmi_config_prog_data
 {
-  char *progname;
+  const char *progname;
   struct ipmi_config_arguments *args;
   int hosts_count;
 } ipmi_config_prog_data_t;
