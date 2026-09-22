@@ -251,6 +251,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           exit (EXIT_FAILURE);
         }
       cmd_args->listen_port = tmp;
+      cmd_args->listen_port_set++;
       break;
     case TCPPROXY_ADDR_KEY:
         if (parse_address (&cmd_args->bind_addr, arg) != 0)
@@ -258,6 +259,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
             fprintf (stderr, "invalid proxy listening address \n");
             exit (EXIT_FAILURE);
           }
+      cmd_args->bind_addr_set++;
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -330,6 +332,20 @@ _ipmiconsole_args_validate (struct ipmiconsole_arguments *cmd_args)
       exit (EXIT_FAILURE);
     }
 
+  if (!cmd_args->run_solproxy)
+    {
+      if (cmd_args->listen_port_set)
+        {
+          fprintf (stderr, "--proxyport requires --proxy\n");
+          exit (EXIT_FAILURE);
+        }
+      if (cmd_args->bind_addr_set)
+        {
+          fprintf (stderr, "--proxyaddr requires --proxy\n");
+          exit (EXIT_FAILURE);
+        }
+    }
+
   if (cmd_args->common_args.session_timeout < IPMICONSOLE_KEEPALIVE_TIMEOUT_DEFAULT)
     {
       fprintf (stderr,
@@ -373,6 +389,8 @@ ipmiconsole_argp_parse (int argc, char **argv, struct ipmiconsole_arguments *cmd
   cmd_args->bind_addr.ai_family = AF_UNSPEC;
   cmd_args->bind_addr.ai_addr = (struct sockaddr *)&cmd_args->__ai_addr;
   cmd_args->listen_port = 6023;
+  cmd_args->listen_port_set = 0;
+  cmd_args->bind_addr_set = 0;
 #ifndef NDEBUG
   cmd_args->debugfile = 0;
   cmd_args->noraw = 0;

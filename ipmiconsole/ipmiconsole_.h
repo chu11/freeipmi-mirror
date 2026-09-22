@@ -79,6 +79,8 @@ struct ipmiconsole_arguments
   int lock_memory;
   int run_solproxy;
   int listen_port;
+  int listen_port_set;
+  int bind_addr_set;
 #ifndef NDEBUG
   int debugfile;
   int noraw;

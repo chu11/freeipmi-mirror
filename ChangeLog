@@ -1,5 +1,14 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/ipmiconsole_.h (struct ipmiconsole_arguments): Add
+	listen_port_set and bind_addr_set.
+	* ipmiconsole/ipmiconsole-argp.c (cmdline_parse): Set them for
+	--proxyport and --proxyaddr.
+	(_ipmiconsole_args_validate): Reject --proxyport and --proxyaddr
+	without --proxy instead of silently ignoring them.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiconsole/ipmiconsole.c (sol_connect, main): Name the function
 	that actually failed in error messages: ipmiconsole_ctx_set_config
 	and ipmiconsole_engine_submit_block rather than
