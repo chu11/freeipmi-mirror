@@ -1308,6 +1308,8 @@ ipmiconsole_ctx_create (const char *hostname,
 
   ipmiconsole_ctx_blocking_cleanup (c);
 
+  pthread_mutex_destroy (&(c->errnum_mutex));
+
   /* Note: use engine_config->engine_flags not c->config.engine_flags,
    * b/c we don't know where we failed earlier.
    */

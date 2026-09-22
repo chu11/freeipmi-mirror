@@ -1,5 +1,12 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole.c (ipmiconsole_ctx_create): Destroy
+	errnum_mutex on the error path.
+	* libipmiconsole/ipmiconsole_ctx.c (ipmiconsole_ctx_signal_setup):
+	Destroy status_mutex if initializing mutex_ctx_state fails.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole_checks.c
 	(ipmiconsole_check_rakp_4_integrity_check_value): Size the
 	managed_system_guid read with IPMI_MANAGED_SYSTEM_GUID_LENGTH

@@ -442,6 +442,7 @@ ipmiconsole_ctx_signal_setup (ipmiconsole_ctx_t c)
 
   if ((perr = pthread_mutex_init (&c->signal.mutex_ctx_state, NULL)) != 0)
     {
+      pthread_mutex_destroy (&(c->signal.status_mutex));
       errno = perr;
       return (-1);
     }
