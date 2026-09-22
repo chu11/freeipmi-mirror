@@ -1293,6 +1293,7 @@ ipmiconsole_engine_thread_create (void)
   if ((perr = pthread_create (&thread, &attr, _ipmiconsole_engine, index)))
     {
       IPMICONSOLE_DEBUG (("pthread_create: %s", strerror (perr)));
+      free (index);
       errno = perr;
       goto cleanup;
     }

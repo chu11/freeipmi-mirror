@@ -1,5 +1,11 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole_engine.c
+	(ipmiconsole_engine_thread_create): Free the thread index
+	argument if pthread_create() fails.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole_debug.h (IPMICONSOLE_DEBUG,
 	IPMICONSOLE_CTX_DEBUG): Pass the assembled message through a "%s"
 	format instead of using it as the format string.  A '%' in the
