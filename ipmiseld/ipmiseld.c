@@ -562,7 +562,7 @@ _sel_parse_callback (ipmi_sel_ctx_t ctx, void *callback_data)
                                            0,
                                            &sensor_type) < 0)
         {
-          if (_sel_parse_err_handle (host_data, "ipmi_sel_parse_read_record_type") < 0)
+          if (_sel_parse_err_handle (host_data, "ipmi_sel_parse_read_sensor_type") < 0)
             goto cleanup;
           goto out;
         }
@@ -635,7 +635,7 @@ _sel_parse_callback (ipmi_sel_ctx_t ctx, void *callback_data)
                                                         sel_record,
                                                         IPMI_SEL_RECORD_MAX_RECORD_LENGTH)) < 0)
         {
-          if (_sel_parse_err_handle (host_data, "ipmi_sel_parse_read_record_type") < 0)
+          if (_sel_parse_err_handle (host_data, "ipmi_sel_parse_read_record") < 0)
             goto cleanup;
           goto out;
         }

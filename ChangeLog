@@ -1,5 +1,11 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld.c (_sel_parse_callback): Name the correct
+	function in the error messages for ipmi_sel_parse_read_sensor_type
+	and ipmi_sel_parse_read_record failures.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld.c (ipmiseld_calc_percent_full): Add comment
 	noting that a Get SEL Info free_space of 0xFFFF means 65535 or
 	more bytes, and that we take the value as-is since there is no
