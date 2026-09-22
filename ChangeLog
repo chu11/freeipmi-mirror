@@ -1,5 +1,12 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole.c (_config_file_workaround_flags):
+	Map the serialalertsdeferred and solpacketseq workarounds.  Both
+	are documented in libipmiconsole.conf(5) but were parsed and then
+	silently dropped.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiconsole/ipmiconsole_.h (IPMICONSOLE_KEEPALIVE_TIMEOUT_DEFAULT):
 	New define for libipmiconsole's default keepalive timeout.
 	* ipmiconsole/ipmiconsole-argp.c (_ipmiconsole_args_validate):
