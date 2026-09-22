@@ -446,7 +446,7 @@ _voltage_str (uint8_t voltage)
     case IPMI_FRU_VOLTAGE_3_3V:
       return "3.3V";
     default:
-      return "";
+      return (NULL);
     }
 
   return (NULL);                /* NOT REACHED */
@@ -479,6 +479,7 @@ ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
   unsigned int voltage_2;
   unsigned int total_combined_wattage;
   unsigned int predictive_fail_tachometer_lower_threshold;
+  const char *voltage_str;
 
   assert (state_data);
   assert (areabuf);
@@ -603,12 +604,22 @@ ipmi_fru_output_power_supply_information (ipmi_fru_state_data_t *state_data,
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply Hold Up Time: %u s\n",
                   hold_up_time);
-  pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply Voltage 1: %s\n",
-                  _voltage_str (voltage_1));
-  pstdout_printf (state_data->pstate,
-                  "  FRU Power Supply Voltage 2: %s\n",
-                  _voltage_str (voltage_2));
+  if ((voltage_str = _voltage_str (voltage_1)))
+    pstdout_printf (state_data->pstate,
+                    "  FRU Power Supply Voltage 1: %s\n",
+                    voltage_str);
+  else
+    pstdout_printf (state_data->pstate,
+                    "  FRU Power Supply Voltage 1: Unknown (%Xh)\n",
+                    voltage_1);
+  if ((voltage_str = _voltage_str (voltage_2)))
+    pstdout_printf (state_data->pstate,
+                    "  FRU Power Supply Voltage 2: %s\n",
+                    voltage_str);
+  else
+    pstdout_printf (state_data->pstate,
+                    "  FRU Power Supply Voltage 2: Unknown (%Xh)\n",
+                    voltage_2);
   pstdout_printf (state_data->pstate,
                   "  FRU Power Supply Total Combined Wattage: %u Watts\n",
                   total_combined_wattage);

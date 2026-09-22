@@ -1,5 +1,12 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru-output.c (_voltage_str): Return NULL for an
+	unrecognized voltage code instead of "".
+	(ipmi_fru_output_power_supply_information): Print "Unknown (Xh)"
+	with the raw code when _voltage_str returns NULL.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/ipmi-fru-output.c (ipmi_fru_output_chassis_info_area):
 	Include the raw chassis type code when it is out of range, rather
 	than printing a bare "Unknown".
