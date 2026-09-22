@@ -1,5 +1,10 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem.h (ipmi_oem_prog_data_t): Declare progname
+	const; it only ever points at argv[0].
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config.h (ipmi_config_prog_data_t): Declare progname
 	const; it only ever points at argv[0].
 

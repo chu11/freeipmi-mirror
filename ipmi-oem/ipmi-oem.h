@@ -46,7 +46,7 @@ struct ipmi_oem_arguments
 
 typedef struct ipmi_oem_prog_data
 {
-  char *progname;
+  const char *progname;
   struct ipmi_oem_arguments *args;
 } ipmi_oem_prog_data_t;
 
