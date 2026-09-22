@@ -66,7 +66,7 @@ struct ipmi_fru_arguments
 
 typedef struct ipmi_fru_prog_data
 {
-  char *progname;
+  const char *progname;
   struct ipmi_fru_arguments *args;
 } ipmi_fru_prog_data_t;
 
@@ -75,7 +75,7 @@ typedef struct ipmi_fru_state_data
   ipmi_fru_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
-  char *hostname;
+  const char *hostname;
   ipmi_fru_ctx_t fru_ctx;
   ipmi_sdr_ctx_t sdr_ctx;
   struct ipmi_oem_data oem_data;

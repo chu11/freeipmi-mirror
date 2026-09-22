@@ -1223,7 +1223,7 @@ _ipmi_fru (pstdout_state_t pstate,
   memset (&state_data, '\0', sizeof (ipmi_fru_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
-  state_data.hostname = (char *)hostname;
+  state_data.hostname = hostname;
 
   /* no need for IPMI communication if reading from binary */
   if (!prog_data->args->fru_file)
