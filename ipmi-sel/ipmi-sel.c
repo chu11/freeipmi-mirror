@@ -2014,7 +2014,7 @@ _ipmi_sel (pstdout_state_t pstate,
   memset (&state_data, '\0', sizeof (ipmi_sel_state_data_t));
   state_data.prog_data = prog_data;
   state_data.pstate = pstate;
-  state_data.hostname = (char *)hostname;
+  state_data.hostname = hostname;
 
   if (!(state_data.ipmi_ctx = ipmi_open (prog_data->progname,
                                          hostname,

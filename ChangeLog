@@ -1,5 +1,11 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-sel/ipmi-sel_.h (ipmi_sel_state_data_t): Declare hostname
+	const.
+	* ipmi-sel/ipmi-sel.c (_ipmi_sel): Drop the cast of hostname.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-fru.8.pre.in: Add Xilinx Kria KV260/KR260 to the OEM
 	interpretation list.
 

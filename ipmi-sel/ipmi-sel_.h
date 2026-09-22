@@ -135,7 +135,7 @@ typedef struct ipmi_sel_state_data
   ipmi_sel_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
-  char *hostname;
+  const char *hostname;
   ipmi_sdr_ctx_t sdr_ctx;
   ipmi_sel_ctx_t sel_ctx;
   ipmi_interpret_ctx_t interpret_ctx;
