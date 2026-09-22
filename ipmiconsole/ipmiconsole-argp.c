@@ -42,6 +42,7 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <sys/param.h>
+#include <limits.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -344,6 +345,21 @@ _ipmiconsole_args_validate (struct ipmiconsole_arguments *cmd_args)
           fprintf (stderr, "--proxyaddr requires --proxy\n");
           exit (EXIT_FAILURE);
         }
+    }
+
+  /* struct ipmiconsole_protocol_config stores these as int and treats
+   * <= 0 as "use the default"
+   */
+  if (cmd_args->common_args.session_timeout > INT_MAX)
+    {
+      fprintf (stderr, "session timeout too large\n");
+      exit (EXIT_FAILURE);
+    }
+
+  if (cmd_args->common_args.retransmission_timeout > INT_MAX)
+    {
+      fprintf (stderr, "retransmission timeout too large\n");
+      exit (EXIT_FAILURE);
     }
 
   if (cmd_args->common_args.session_timeout < IPMICONSOLE_KEEPALIVE_TIMEOUT_DEFAULT)

@@ -1,5 +1,13 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/ipmiconsole-argp.c (_ipmiconsole_args_validate):
+	Reject --session-timeout and --retransmission-timeout above
+	INT_MAX.  struct ipmiconsole_protocol_config stores them as int
+	and treats <= 0 as "use the default", so such values silently
+	became the defaults.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiconsole/ipmiconsole_.h (struct ipmiconsole_arguments): Add
 	listen_port_set and bind_addr_set.
 	* ipmiconsole/ipmiconsole-argp.c (cmdline_parse): Set them for
