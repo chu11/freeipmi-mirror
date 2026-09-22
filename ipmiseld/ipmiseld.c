@@ -1512,7 +1512,7 @@ _signal_handler_callback (int sig)
 static void
 _free_host_data (void *x)
 {
-  ipmiseld_host_data_t *host_data;;
+  ipmiseld_host_data_t *host_data;
 
   assert (x);
 
