@@ -1,5 +1,11 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole.h.in (ipmiconsole_ctx_create):
+	Document the "host:port" and "[ipv6]:port" hostname forms the
+	function already accepts.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole.c (ipmiconsole_ctx_create): Destroy
 	errnum_mutex on the error path.
 	* libipmiconsole/ipmiconsole_ctx.c (ipmiconsole_ctx_signal_setup):

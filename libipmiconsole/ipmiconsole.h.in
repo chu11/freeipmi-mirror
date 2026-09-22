@@ -815,7 +815,10 @@ void ipmiconsole_engine_teardown (int cleanup_sol_sessions);
  *
  * hostname
  *
- *   Host or IP address you wish to connect to.
+ *   Host or IP address you wish to connect to.  An optional port may
+ *   be appended as "host:port".  For an IPv6 address with a port, use
+ *   "[address]:port".  If no port is given, the default RMCP port
+ *   (623) is used.
  *
  * ipmi_config
  *
