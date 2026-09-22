@@ -472,7 +472,7 @@ sol_proxy (struct ipmiconsole_arguments *cmd_args,
            int listen_s)
 {
   char addrbuf[INET6_ADDRSTRLEN];
-  struct sockaddr remote_addr;
+  struct sockaddr_storage remote_addr;
   int connection_s = -1;
   int ret;
   socklen_t remote_addr_len;
@@ -498,7 +498,7 @@ sol_proxy (struct ipmiconsole_arguments *cmd_args,
       printf ("\r\nListening on %s:%d\n", addrbuf, cmd_args->listen_port);
       set_sigterm_handler (SA_SIGINFO);
       remote_addr_len = sizeof (remote_addr);
-      connection_s = accept (listen_s, &remote_addr, &remote_addr_len);
+      connection_s = accept (listen_s, (struct sockaddr *)&remote_addr, &remote_addr_len);
       if (connection_s < 0)
         {
           if (errno != EINTR)
@@ -506,8 +506,8 @@ sol_proxy (struct ipmiconsole_arguments *cmd_args,
           return;
         }
       set_sigterm_handler (SA_SIGINFO | SA_RESTART);
-      if (inet_ntop (remote_addr.sa_family,
-          (remote_addr.sa_family == AF_INET ?
+      if (inet_ntop (remote_addr.ss_family,
+          (remote_addr.ss_family == AF_INET ?
             (void *)&((struct sockaddr_in *)&remote_addr)->sin_addr :
             (void *)&((struct sockaddr_in6 *)&remote_addr)->sin6_addr
           ),

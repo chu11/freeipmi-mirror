@@ -1,3 +1,11 @@
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
+	* ipmiconsole/ipmiconsole.c (sol_proxy): Use struct
+	sockaddr_storage for the accepted peer address.  struct sockaddr
+	is too small to hold a sockaddr_in6, so with an IPv6 --proxyaddr
+	the sin6_addr read for "Connection from" ran past the end of the
+	variable.
+
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sensors/ipmi-sensors.h (ipmi_sensors_argp_option_keys):
