@@ -1,5 +1,11 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* man/libipmiconsole.conf.5.pre.in: Add cipher suite ids 15, 16,
+	and 17 to the list accepted by
+	libipmiconsole-context-cipher-suite-id.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole.h.in (ipmiconsole_ctx_create):
 	Document the "host:port" and "[ipv6]:port" hostname forms the
 	function already accepts.

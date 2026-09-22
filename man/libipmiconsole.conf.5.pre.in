@@ -74,7 +74,7 @@ levels are supported: USER, OPERATOR, ADMIN.
 .TP
 \fBlibipmiconsole\-context\-cipher\-suite\-id\fR \fICIPHER\-SUITE\-ID\fR
 Specify the default cipher suite id to use.  The following cipher suite
-ids are supported: 0, 1, 2, 3, 6, 7, 8, 11, 12.
+ids are supported: 0, 1, 2, 3, 6, 7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBlibipmiconsole\-context\-workaround\-flags\fR \fIWORKAROUNDS\fR
 Specify default workaround flags to use.  Multiple workarounds can be
