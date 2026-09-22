@@ -1,5 +1,13 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru-output.c (ipmi_fru_output_dc_output,
+	ipmi_fru_output_dc_load): Do not cast voltages to int16_t before
+	printing.  libfreeipmi already returns them sign-extended and
+	scaled to millivolts, so the cast wrapped anything at or above
+	32.768 V (e.g. -48 V DC outputs) to garbage.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiconsole.8.pre.in: Document that the escape character
 	must be a single byte and may not be one of the escape command
 	characters, and that escape sequences are not processed in proxy

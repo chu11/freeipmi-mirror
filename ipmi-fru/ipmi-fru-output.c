@@ -704,13 +704,13 @@ ipmi_fru_output_dc_output (ipmi_fru_state_data_t *state_data,
                   (standby) ? "Yes" : "No");
   pstdout_printf (state_data->pstate,
                   "  FRU DC Output Nominal Voltage: %d mV\n",
-                  (int16_t)nominal_voltage);
+                  nominal_voltage);
   pstdout_printf (state_data->pstate,
                   "  FRU DC Output Maximum Negative Voltage Deviation: %d mV\n",
-                  (int16_t)maximum_negative_voltage_deviation);
+                  maximum_negative_voltage_deviation);
   pstdout_printf (state_data->pstate,
                   "  FRU DC Output Maximum Positive Voltage Deviation: %d mV\n",
-                  (int16_t)maximum_positive_voltage_deviation);
+                  maximum_positive_voltage_deviation);
   pstdout_printf (state_data->pstate,
                   "  FRU DC Output Ripple and Noise pk-pk: %u mV\n",
                   ripple_and_noise_pk_pk);
@@ -807,13 +807,13 @@ ipmi_fru_output_dc_load (ipmi_fru_state_data_t *state_data,
                   output_number);
   pstdout_printf (state_data->pstate,
                   "  FRU DC Load Nominal Voltage: %d mV\n",
-                  (int16_t)nominal_voltage);
+                  nominal_voltage);
   pstdout_printf (state_data->pstate,
                   "  FRU DC Load Spec'd Minimum Voltage: %d mV\n",
-                  (int16_t)specd_minimum_voltage);
+                  specd_minimum_voltage);
   pstdout_printf (state_data->pstate,
                   "  FRU DC Load Spec'd Maximum Voltage: %d mV\n",
-                  (int16_t)specd_maximum_voltage);
+                  specd_maximum_voltage);
   pstdout_printf (state_data->pstate,
                   "  FRU DC Load Spec'd Ripple and Noise pk-pk: %u mV\n",
                   specd_ripple_and_noise_pk_pk);
