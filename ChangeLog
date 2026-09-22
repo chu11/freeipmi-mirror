@@ -1,5 +1,13 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole_ctx.c (ipmiconsole_ctx_setup):
+	Initialize debug_fd to -1.  If ipmiconsole_ctx_create() failed
+	after copying IPMICONSOLE_DEBUG_FILE into the config but before
+	ipmiconsole_ctx_debug_setup() opened the file, the cleanup path
+	closed fd 0.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiconsole/ipmiconsole.c (sol_ioloop): Retry select() on
 	EINTR instead of printing "select: Interrupted system call" when
 	SIGTERM/SIGINT arrives in proxy mode.  The loop condition then

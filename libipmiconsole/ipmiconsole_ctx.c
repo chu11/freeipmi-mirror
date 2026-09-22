@@ -91,6 +91,9 @@ ipmiconsole_ctx_setup (ipmiconsole_ctx_t c)
   c->magic = IPMICONSOLE_CTX_MAGIC;
   c->api_magic = IPMICONSOLE_CTX_API_MAGIC;
 
+  /* so a cleanup before ipmiconsole_ctx_debug_setup() does not close fd 0 */
+  c->debug.debug_fd = -1;
+
   if ((perr = pthread_mutex_init (&(c->errnum_mutex), NULL)) != 0)
     {
       errno = perr;
