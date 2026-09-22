@@ -1,3 +1,10 @@
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
+	* libipmiconsole/ipmiconsole.c (_config_file_workaround_flags):
+	Map the serialalertsdeferred and solpacketseq workarounds.  Both
+	are documented in libipmiconsole.conf(5) but were parsed and then
+	silently dropped.
+
 2026-09-17 Albert Chu <chu11@llnl.gov>
 
 	* man/freeipmi.conf.5.pre.in: Document ipmi-sel-sensor-types,
