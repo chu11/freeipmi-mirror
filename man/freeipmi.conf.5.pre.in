@@ -1104,14 +1104,6 @@ If specified, will override the general option
 \fBk_g\fR
 above.  Prefix with '0x' to enter the key in hex.
 .TP
-\fBipmiconsole\-authentication\-type\fR \fIAUTHENTICATION\-TYPE\fR
-Specify the default authentication type to use for
-.B ipmiconsole(8).
-If specified, will override the general option
-\fBauthentication-type\fR
-above.  The following authentication types are supported: NONE,
-STRAIGHT_PASSWORD_KEY, MD2, and MD5.
-.TP
 \fBipmiconsole\-cipher\-suite\-id\fR \fICIPHER\-SUITE\-ID\fR
 Specify the default cipher suite id to use for
 .B ipmiconsole(8).

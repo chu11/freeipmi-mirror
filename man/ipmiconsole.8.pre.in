@@ -95,7 +95,10 @@ The following options are specific to
 .B ipmiconsole.
 .TP
 \fB\-e\fR \fICHAR\fR, \fB\-\-escape-char\fR=\fICHAR\fR
-Specify an alternate escape character (default char '&').
+Specify an alternate escape character (default char '&').  The
+escape character must be a single byte and may not be one of the
+escape command characters '?', '.', 'B', or 'D'.  See the ESCAPE
+CHARACTERS section below.
 .TP
 \fB\-\-dont-steal\fR
 Do not steal an SOL session if one is already detected as being in
@@ -181,7 +184,9 @@ Don't enter terminal raw mode.
 The following escape sequences are supported.  The default supported
 escape character is '&', but can be changed with the
 \fB\-e\fR
-option.
+option.  Escape sequences are only processed in terminal mode.  In
+SOL-to-TCP proxy mode (see below) all data is passed through to the
+remote console unmodified.
 .TP
 .I &?
 Display a list of currently available escape sequences.
