@@ -1,5 +1,12 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld-debug.h (IPMISELD_HOST_DEBUG): Pass the
+	already-formatted message to err_debug via "%s" rather than as
+	the format string; it embeds the hostname, which could contain
+	'%'.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld.c (_sel_log_format): Preserve "%%" as "%%" in
 	the intermediate format buffer.  It was collapsed to a single '%',
 	which ipmi_sel_parse_read_record_string then paired with the next

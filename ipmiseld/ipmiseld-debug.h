@@ -65,7 +65,7 @@
             free (__str); \
           } \
       } \
-    err_debug (__err); \
+    err_debug ("%s", __err); \
   } while (0)
 
 #else /* !NDEBUG */
@@ -88,7 +88,7 @@
             free (__str); \
           } \
       } \
-    err_debug (__err); \
+    err_debug ("%s", __err); \
   } while (0)
 
 #endif /* NDEBUG */
