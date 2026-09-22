@@ -1,5 +1,10 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* bmc-info/bmc-info.h (bmc_info_prog_data_t): Declare progname
+	const; it only ever points at argv[0].
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sensors/ipmi-sensors.h (ipmi_sensors_prog_data_t,
 	ipmi_sensors_state_data_t): Declare progname and hostname const.
 	* ipmi-sensors/ipmi-sensors.c (_ipmi_sensors): Drop the cast of

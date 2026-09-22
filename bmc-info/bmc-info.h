@@ -47,7 +47,7 @@ struct bmc_info_arguments
 
 typedef struct bmc_info_prog_data
 {
-  char *progname;
+  const char *progname;
   struct bmc_info_arguments *args;
 } bmc_info_prog_data_t;
 
