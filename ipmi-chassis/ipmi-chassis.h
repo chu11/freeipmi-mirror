@@ -57,7 +57,7 @@ struct ipmi_chassis_arguments
 
 typedef struct ipmi_chassis_prog_data
 {
-  char *progname;
+  const char *progname;
   struct ipmi_chassis_arguments *args;
 } ipmi_chassis_prog_data_t;
 
