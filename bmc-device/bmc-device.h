@@ -128,7 +128,7 @@ struct bmc_device_arguments
 
 typedef struct bmc_device_prog_data
 {
-  char *progname;
+  const char *progname;
   struct bmc_device_arguments *args;
 } bmc_device_prog_data_t;
 
@@ -137,7 +137,7 @@ typedef struct bmc_device_state_data
   bmc_device_prog_data_t *prog_data;
   ipmi_ctx_t ipmi_ctx;
   pstdout_state_t pstate;
-  char *hostname;
+  const char *hostname;
   ipmi_sdr_ctx_t sdr_ctx;
   ipmi_fru_ctx_t fru_ctx;
 } bmc_device_state_data_t;

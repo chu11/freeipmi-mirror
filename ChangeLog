@@ -1,5 +1,11 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* bmc-device/bmc-device.h (bmc_device_prog_data_t,
+	bmc_device_state_data_t): Declare progname and hostname const.
+	* bmc-device/bmc-device.c (_bmc_device): Drop the cast of hostname.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-sel/ipmi-sel_.h (ipmi_sel_state_data_t): Declare hostname
 	const.
 	* ipmi-sel/ipmi-sel.c (_ipmi_sel): Drop the cast of hostname.
