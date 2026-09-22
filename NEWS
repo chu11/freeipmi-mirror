@@ -4,6 +4,7 @@ o The format specifier %h was used for two different format fields.
   Use %H as target host specifier.
 o Fix minor output errors in Intel Node Manager DIMMs and Windmill
   device IDs.
+o Fix ipmiconsole workaround flag parsing issues.
 o Minor documentation fixes.
 
 FreeIPMI 1.6.19 - 08/27/26
