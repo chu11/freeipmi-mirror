@@ -1,5 +1,17 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/ipmiconsole_.h (IPMICONSOLE_KEEPALIVE_TIMEOUT_DEFAULT):
+	New define for libipmiconsole's default keepalive timeout.
+	* ipmiconsole/ipmiconsole-argp.c (_ipmiconsole_args_validate):
+	Reject --session-timeout below and --retransmission-timeout above
+	the keepalive timeout with a specific message.  libipmiconsole
+	requires retransmission <= keepalive <= session and previously
+	these failed with an opaque "ipmiconsole_ctx_create: Invalid
+	argument".
+	* man/ipmiconsole.8.pre.in: Document the bounds.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiconsole/ipmiconsole.c (sol_proxy): Use struct
 	sockaddr_storage for the accepted peer address.  struct sockaddr
 	is too small to hold a sockaddr_in6, so with an IPv6 --proxyaddr

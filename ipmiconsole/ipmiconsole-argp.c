@@ -329,6 +329,22 @@ _ipmiconsole_args_validate (struct ipmiconsole_arguments *cmd_args)
       fprintf (stderr, "hostname input required\n");
       exit (EXIT_FAILURE);
     }
+
+  if (cmd_args->common_args.session_timeout < IPMICONSOLE_KEEPALIVE_TIMEOUT_DEFAULT)
+    {
+      fprintf (stderr,
+               "session timeout must be at least %u milliseconds\n",
+               IPMICONSOLE_KEEPALIVE_TIMEOUT_DEFAULT);
+      exit (EXIT_FAILURE);
+    }
+
+  if (cmd_args->common_args.retransmission_timeout > IPMICONSOLE_KEEPALIVE_TIMEOUT_DEFAULT)
+    {
+      fprintf (stderr,
+               "retransmission timeout must be at most %u milliseconds\n",
+               IPMICONSOLE_KEEPALIVE_TIMEOUT_DEFAULT);
+      exit (EXIT_FAILURE);
+    }
 }
 
 void

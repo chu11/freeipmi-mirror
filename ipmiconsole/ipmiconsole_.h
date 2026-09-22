@@ -39,6 +39,13 @@
 
 #include "tool-cmdline-common.h"
 
+/* libipmiconsole's default keepalive timeout.  We do not override it,
+ * and the library requires retransmission timeout <= keepalive
+ * timeout <= session timeout, so the user's timeouts are bounded by
+ * it.
+ */
+#define IPMICONSOLE_KEEPALIVE_TIMEOUT_DEFAULT 20000
+
 enum ipmiconsole_argp_option_keys
   {
     DONT_STEAL_KEY = 160,
