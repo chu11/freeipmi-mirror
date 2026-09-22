@@ -112,7 +112,7 @@ motherboards.
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/man/manpage-common-oem-interpretation.man>
 .LP
-Wistron/Dell Poweredge C6220
+Wistron/Dell Poweredge C6220, Xilinx Kria KV260/KR260
 .SH "EXAMPLES"
 .B # ipmi-fru
 .PP

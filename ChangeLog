@@ -1,5 +1,10 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-fru.8.pre.in: Add Xilinx Kria KV260/KR260 to the OEM
+	interpretation list.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/ipmi-fru-argp.c (cmdline_options): Name the --device-id
 	argument IDNUM in --help, matching the man page and bmc-device.
 
