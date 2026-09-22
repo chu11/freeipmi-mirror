@@ -58,7 +58,7 @@
             free (__str);                                                       \
           }                                                                     \
       }                                                                         \
-    ipmiconsole_debug (__err);                                                  \
+    ipmiconsole_debug ("%s", __err);                                            \
   } while(0)
 
 #define IPMICONSOLE_CTX_DEBUG(__c, __msg)                                       \
@@ -85,7 +85,7 @@
             free (__str);                                                       \
           }                                                                     \
       }                                                                         \
-    ipmiconsole_ctx_debug ((__c), __err);                                       \
+    ipmiconsole_ctx_debug ((__c), "%s", __err);                                 \
   } while(0)
 
 int ipmiconsole_debug_setup (uint32_t debug_flags);

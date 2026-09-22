@@ -1,5 +1,14 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole_debug.h (IPMICONSOLE_DEBUG,
+	IPMICONSOLE_CTX_DEBUG): Pass the assembled message through a "%s"
+	format instead of using it as the format string.  A '%' in the
+	hostname (e.g. a scoped IPv6 literal like fe80::1%eth0), in a
+	config file error message, or in a strerror() string was being
+	interpreted by vsnprintf().
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld.c (_ipmiseld): Always expand --hostname via
 	fi_hostlist when out-of-band, even if it names a single host.
 	Previously hostrange syntax resolving to one host (e.g. "node[7]")
