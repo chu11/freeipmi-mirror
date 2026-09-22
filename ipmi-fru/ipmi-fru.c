@@ -1266,7 +1266,7 @@ _ipmi_fru (pstdout_state_t pstate,
           pstdout_fprintf (pstate,
                            stderr,
                            "ipmi_fru_ctx_set_flags: %s\n",
-                           ipmi_fru_ctx_strerror (ipmi_fru_ctx_errnum (state_data.fru_ctx)));
+                           ipmi_fru_ctx_errormsg (state_data.fru_ctx));
           goto cleanup;
         }
     }
