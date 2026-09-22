@@ -1387,6 +1387,19 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
       if (data_length > IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH)
         data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH;
 
+      /*
+       * data_length is the length of the whole text and must not
+       * shrink below what has already been copied, otherwise
+       * data_length - offset below underflows.
+       */
+      if (offset > data_length)
+        {
+          pstdout_fprintf (state_data->pstate,
+                           stderr,
+                           "ipmi_cmd_raw: invalid response data length\n");
+          goto cleanup;
+        }
+
       /* Every response should be NUL terminated, not just the last
        * component.
        */
