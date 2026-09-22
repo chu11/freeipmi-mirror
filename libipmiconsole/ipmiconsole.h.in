@@ -688,8 +688,11 @@ typedef void (*Ipmiconsole_callback)(void *);
  *   not) be output. Pass 0 for default of no debugging.
  *
  * Returns 0 on success, -1 on error.  On error errno will be set to
- * indicate error.  Possible errnos are ENOMEM if memory cannot be
- * allocated.
+ * indicate error.  Possible errnos are EINVAL on invalid input,
+ * ENOMEM if memory cannot be allocated, EMFILE if process file
+ * descriptor limits have been reached, EAGAIN if a thread cannot be
+ * created, and EPERM if the crypto library is incompatible.  Other
+ * values may be passed through from the underlying system calls.
  */
 int ipmiconsole_engine_init (unsigned int thread_count,
                              unsigned int debug_flags);

@@ -1,5 +1,11 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole.h.in (ipmiconsole_engine_init):
+	Document the errno values actually returned (EINVAL, EMFILE,
+	EAGAIN, EPERM and pass-through system errors), not just ENOMEM.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* man/libipmiconsole.conf.5.pre.in: Add cipher suite ids 15, 16,
 	and 17 to the list accepted by
 	libipmiconsole-context-cipher-suite-id.
