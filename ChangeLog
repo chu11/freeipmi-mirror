@@ -1,5 +1,10 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld.c (ipmiseld_check_thresholds): Use %u for the
+	unsigned percent in the "SEL is full" warning.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld.c (_sel_parse_err_handle): Take the function
 	name as const char *; all callers pass string literals.
 

@@ -1051,7 +1051,7 @@ ipmiseld_check_thresholds (ipmiseld_host_data_t *host_data)
       if (percent > host_data->prog_data->args->warning_threshold)
         {
           if (percent > host_data->last_host_state.last_percent_full)
-            ipmiseld_syslog_host (host_data, "SEL is %d%% full", percent);
+            ipmiseld_syslog_host (host_data, "SEL is %u%% full", percent);
         }
     }
 
