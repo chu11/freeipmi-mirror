@@ -1,5 +1,13 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru.c (_use_buffer_and_output_fru): Treat a
+	non-fatal FRU error in the file as success, as
+	_open_and_output_fru does for a device.  The error is already
+	reported in the normal output, and this also uses the previously
+	unused 'out' label.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/ipmi-fru-oem-xilinx.c (ipmi_fru_oem_xilinx_oem_record):
 	Terminate the last free form field with a newline when the record
 	does not end with a 0x00 delimiter.  Print non-printable bytes as
