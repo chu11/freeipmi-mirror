@@ -1,5 +1,11 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru.c (run_cmd_args): Exit the --ignore-sdr-cache
+	path through the common cleanup instead of returning directly, and
+	only close the FRU file descriptor if one was opened.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/ipmi-fru.c (_use_buffer_and_output_fru): Treat a
 	non-fatal FRU error in the file as success, as
 	_open_and_output_fru does for a device.  The error is already

@@ -1085,7 +1085,7 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
                                 IPMI_FRU_DEVICE_ID_DEFAULT,
                                 IPMI_FRU_DEFAULT_DEVICE_ID_STRING) < 0)
         goto cleanup;
-      return (0);
+      goto out;
     }
   else
     {
@@ -1191,7 +1191,8 @@ run_cmd_args (ipmi_fru_state_data_t *state_data)
  out:
   rv = 0;
  cleanup:
-  close (fd);
+  if (fd >= 0)
+    close (fd);
   return (rv);
 }
 
