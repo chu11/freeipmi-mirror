@@ -1,5 +1,12 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru.c (_output_fru): Report ASF and NVM Express
+	multirecords as "Unhandled FRU Area Type" by name on stdout
+	instead of printing the library's internal area type constant to
+	stderr.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/ipmi-fru-output.c (ipmi_fru_output_dc_output,
 	ipmi_fru_output_dc_load): Do not cast voltages to int16_t before
 	printing.  libfreeipmi already returns them sign-extended and

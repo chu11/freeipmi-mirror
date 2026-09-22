@@ -201,6 +201,22 @@ _output_fru (ipmi_fru_state_data_t *state_data)
                                               area_length) < 0)
                 goto cleanup;
               break;
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_ASF_FIXED_SMBUS_DEVICE_RECORD:
+              pstdout_printf (state_data->pstate,
+                              "  FRU Error: Unhandled FRU Area Type: ASF Fixed SMBus Device Record\n");
+              break;
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_ASF_LEGACY_DEVICE_ALERTS:
+              pstdout_printf (state_data->pstate,
+                              "  FRU Error: Unhandled FRU Area Type: ASF Legacy-Device Alerts\n");
+              break;
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_ASF_REMOTE_CONTROL:
+              pstdout_printf (state_data->pstate,
+                              "  FRU Error: Unhandled FRU Area Type: ASF Remote Control\n");
+              break;
+            case IPMI_FRU_AREA_TYPE_MULTIRECORD_NVM_EXPRESS:
+              pstdout_printf (state_data->pstate,
+                              "  FRU Error: Unhandled FRU Area Type: NVM Express\n");
+              break;
             default:
               pstdout_fprintf (state_data->pstate,
                                stderr,
