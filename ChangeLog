@@ -1,5 +1,12 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld-cache.c (ipmiseld_sdr_cache_create_and_load):
+	Gate debug output on foreground && debug, consistent with
+	ipmiseld.c, so --debug alone does not send it to syslog in daemon
+	mode.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld-debug.h (IPMISELD_HOST_DEBUG): Pass the
 	already-formatted message to err_debug via "%s" rather than as
 	the format string; it embeds the hostname, which could contain
