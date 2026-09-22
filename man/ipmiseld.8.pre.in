@@ -147,14 +147,14 @@ formatting details.
 Specify the format of the log output when a SEL OEM timestamped event
 is encountered.  Defaults to "SEL OEM Event: %d, %t, %I, %o" if
 logging locally, "SEL OEM Event(%H): %d, %t, %I, %o" if logging
-outofband or with hostranges..  See SEL LOG FORMAT STRING below for
+outofband or with hostranges.  See SEL LOG FORMAT STRING below for
 formatting details.
 .TP
 \fB\-\-oem\-non\-timestamped\-event\-format\fR=\fIFORMATSTRING\fR
 Specify the format of the log output when a SEL OEM non-timestamped
 event is encountered.  Defaults to "SEL OEM Event: %I, %o" if logging
 locally, "SEL OEM Event(%H): %I, %o" if logging outofband or with
-hostranges..  See SEL LOG FORMAT STRING below for formatting details.
+hostranges.  See SEL LOG FORMAT STRING below for formatting details.
 .TP
 \fB\-\-poll\-interval\fR=\fISECONDS\fR
 Specify the poll interval to check the SEL for new events.  Defaults

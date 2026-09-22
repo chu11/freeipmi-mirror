@@ -1,5 +1,11 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiseld.8.pre.in: Fix doubled periods in the
+	--oem-timestamped-event-format and
+	--oem-non-timestamped-event-format descriptions.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiseld.8.pre.in: Document the actual %d output format.
 	The daemon always sets IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING,
 	so dates are output as e.g. "Dec-01-2012", not D-M-YEAR.
