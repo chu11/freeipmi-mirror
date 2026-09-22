@@ -1,5 +1,11 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld-argp.c (cmdline_options): Describe
+	--sensor-types and --exclude-sensor-types in terms of logging SEL
+	events, matching the man page, rather than "showing sensors".
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld-cache.c (ipmiseld_sdr_cache_create_and_load):
 	Gate debug output on foreground && debug, consistent with
 	ipmiseld.c, so --debug alone does not send it to syslog in daemon
