@@ -1630,19 +1630,25 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
       goto cleanup;
     }
 
-  if (hosts_count == 1)
+  if (!prog_data->args->common_args.hostname)
     {
-      if (!(host_data = _alloc_host_data (prog_data, prog_data->args->common_args.hostname)))
+      /* inband */
+      if (!(host_data = _alloc_host_data (prog_data, NULL)))
         goto cleanup;
 
       if (!heap_insert (host_data_heap, host_data))
         {
           err_output ("heap_insert: %s", strerror (errno));
+          _free_host_data (host_data);
           goto cleanup;
         }
     }
   else
     {
+      /* Always expand via hostlist, even for a single host, so
+       * hostrange syntax that resolves to one host (e.g. "node[7]")
+       * is passed on as a plain hostname.
+       */
       if (!(hlist = fi_hostlist_create (prog_data->args->common_args.hostname)))
         {
           err_output ("fi_hostlist_create: %s", strerror (errno));
@@ -1663,6 +1669,7 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
           if (!heap_insert (host_data_heap, host_data))
             {
               err_output ("heap_insert: %s", strerror (errno));
+              _free_host_data (host_data);
               goto cleanup;
             }
 

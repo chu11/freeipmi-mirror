@@ -1,5 +1,14 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld.c (_ipmiseld): Always expand --hostname via
+	fi_hostlist when out-of-band, even if it names a single host.
+	Previously hostrange syntax resolving to one host (e.g. "node[7]")
+	was passed unexpanded to ipmi_ctx_open_outofband and failed with
+	"hostname invalid" on every poll.  Also free host_data if
+	heap_insert fails.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiseld.8.pre.in: Document that --event-state-filter states
 	may be separated by commas or spaces, matching the parser.
 
