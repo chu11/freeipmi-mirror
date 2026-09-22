@@ -1,3 +1,9 @@
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
+	* man/ipmiseld.8.pre.in: Document the actual %d output format.
+	The daemon always sets IPMI_SEL_STRING_FLAGS_DATE_MONTH_STRING,
+	so dates are output as e.g. "Dec-01-2012", not D-M-YEAR.
+
 2026-09-21 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-raw.8.pre.in: Fix the --file example; there is no -f
@@ -14,6 +20,12 @@
 
 	* man/freeipmi.conf.5.pre.in: Fix "albridging" typo; the workaround
 	is altbridging.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
+	* ipmiseld/ipmiseld-argp.c (cmdline_options): Describe
+	--sensor-types and --exclude-sensor-types in terms of logging SEL
+	events, matching the man page, rather than "showing sensors".
 
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
