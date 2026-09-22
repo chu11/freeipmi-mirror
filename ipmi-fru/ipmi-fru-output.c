@@ -65,7 +65,7 @@ static int
 _output_field (ipmi_fru_state_data_t *state_data,
                uint8_t language_code,
                ipmi_fru_field_t *field,
-               char *str)
+               const char *str)
 {
   char strbuf[IPMI_FRU_AREA_STRING_MAX + 1];
   unsigned int strbuflen = IPMI_FRU_AREA_STRING_MAX;
@@ -431,7 +431,7 @@ ipmi_fru_output_product_info_area (ipmi_fru_state_data_t *state_data,
   return (0);
 }
 
-static char *
+static const char *
 _voltage_str (uint8_t voltage)
 {
   switch (voltage)
@@ -1245,37 +1245,37 @@ _ipmi_fru_output_dimm_ddr3 (ipmi_fru_state_data_t *state_data,
 {
   fiid_obj_t obj_record = NULL;
   uint8_t total_sdram_capacity;
-  char *total_sdram_capacity_str = NULL;
+  const char *total_sdram_capacity_str = NULL;
   uint32_t total_sdram_capacity_val = 0;
   uint8_t total_sdram_capacity_valid;
   uint8_t bank_address_bits;
-  char *bank_address_bits_str = NULL;
+  const char *bank_address_bits_str = NULL;
   uint8_t module_minimum_nominal_voltage_1_5;
   uint8_t module_minimum_nominal_voltage_1_35;
   uint8_t module_minimum_nominal_voltage_1_25;
   uint8_t sdram_device_width;
-  char *sdram_device_width_str = NULL;
+  const char *sdram_device_width_str = NULL;
   uint32_t sdram_device_width_val = 0;
   uint8_t sdram_device_width_valid;
   uint8_t number_of_ranks;
-  char *number_of_ranks_str = NULL;
+  const char *number_of_ranks_str = NULL;
   uint32_t number_of_ranks_val = 0;
   uint8_t number_of_ranks_valid;
   uint8_t primary_bus_width;
-  char *primary_bus_width_str = NULL;
+  const char *primary_bus_width_str = NULL;
   uint32_t primary_bus_width_val = 0;
   uint8_t primary_bus_width_valid;
   uint8_t bus_width_extension;
-  char *bus_width_extension_str;
+  const char *bus_width_extension_str;
   uint32_t total_memory_capacity;
-  char *total_memory_capacity_units_str = NULL;
+  const char *total_memory_capacity_units_str = NULL;
   uint8_t die_count;
-  char *die_count_str;
+  const char *die_count_str;
   uint8_t sdram_device_type;
-  char *sdram_device_type_str;
+  const char *sdram_device_type_str;
   uint8_t number_of_continuation_codes_module_manufacturer;
   uint8_t last_non_zero_module_manufacturer;
-  char *module_manufacturer_str;
+  const char *module_manufacturer_str;
   uint8_t module_manufacturing_date_year;
   uint8_t module_manufacturing_date_week;
   uint32_t module_serial_number;
@@ -1284,7 +1284,7 @@ _ipmi_fru_output_dimm_ddr3 (ipmi_fru_state_data_t *state_data,
   uint16_t module_revision_code;
   uint8_t number_of_continuation_codes_dram_manufacturer;
   uint8_t last_non_zero_dram_manufacturer;
-  char *dram_manufacturer_str;
+  const char *dram_manufacturer_str;
   uint64_t val;
   int block_len;
   int rv = -1;
@@ -1900,39 +1900,39 @@ _ipmi_fru_output_dimm_ddr4 (ipmi_fru_state_data_t *state_data,
 {
   fiid_obj_t obj_record = NULL;
   uint8_t total_sdram_capacity;
-  char *total_sdram_capacity_str = NULL;
+  const char *total_sdram_capacity_str = NULL;
   uint32_t total_sdram_capacity_val = 0;
   uint8_t total_sdram_capacity_valid;
   uint8_t bank_address_bits;
-  char *bank_address_bits_str = NULL;
+  const char *bank_address_bits_str = NULL;
   uint8_t bank_group_bits;
-  char *bank_group_bits_str = NULL;
+  const char *bank_group_bits_str = NULL;
   uint8_t die_count;
-  char *die_count_str;
+  const char *die_count_str;
   uint8_t sdram_package_type;
-  char *sdram_package_type_str;
+  const char *sdram_package_type_str;
   uint8_t module_nominal_voltage_1_2;
   uint8_t module_nominal_voltage_TBD1;
   uint8_t module_nominal_voltage_TBD2;
   uint8_t sdram_device_width;
-  char *sdram_device_width_str = NULL;
+  const char *sdram_device_width_str = NULL;
   uint32_t sdram_device_width_val = 0;
   uint8_t sdram_device_width_valid;
   uint8_t number_of_package_ranks_per_dimm;
-  char *number_of_package_ranks_per_dimm_str = NULL;
+  const char *number_of_package_ranks_per_dimm_str = NULL;
   uint32_t number_of_package_ranks_per_dimm_val = 0;
   uint8_t number_of_package_ranks_per_dimm_valid;
   uint8_t primary_bus_width;
-  char *primary_bus_width_str = NULL;
+  const char *primary_bus_width_str = NULL;
   uint32_t primary_bus_width_val = 0;
   uint8_t primary_bus_width_valid;
   uint8_t bus_width_extension;
-  char *bus_width_extension_str;
+  const char *bus_width_extension_str;
   uint32_t total_memory_capacity;
-  char *total_memory_capacity_units_str = NULL;
+  const char *total_memory_capacity_units_str = NULL;
   uint8_t number_of_continuation_codes_module_manufacturer;
   uint8_t last_non_zero_module_manufacturer;
-  char *module_manufacturer_str;
+  const char *module_manufacturer_str;
   uint8_t module_manufacturing_date_year;
   uint8_t module_manufacturing_date_week;
   uint32_t module_serial_number;
@@ -1941,7 +1941,7 @@ _ipmi_fru_output_dimm_ddr4 (ipmi_fru_state_data_t *state_data,
   uint16_t module_revision_code;
   uint8_t number_of_continuation_codes_dram_manufacturer;
   uint8_t last_non_zero_dram_manufacturer;
-  char *dram_manufacturer_str;
+  const char *dram_manufacturer_str;
   uint8_t dram_stepping;
   uint64_t val;
   int block_len;
@@ -2619,7 +2619,7 @@ ipmi_fru_output_dimm (ipmi_fru_state_data_t *state_data,
 {
   fiid_obj_t obj_record = NULL;
   uint8_t dram_device_type;
-  char *dram_device_type_str = NULL;
+  const char *dram_device_type_str = NULL;
   uint64_t val;
   int rv = -1;
 

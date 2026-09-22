@@ -35,7 +35,7 @@
 
 #include "freeipmi-portability.h"
 
-static char *
+static const char *
 _version_str (uint8_t version)
 {
   switch (version)
