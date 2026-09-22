@@ -1,5 +1,10 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru-output.c (_output_field): Declare static; it
+	is not used outside this file.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/ipmi-fru_.h (ipmi_fru_prog_data_t, ipmi_fru_state_data_t):
 	Declare progname and hostname const.
 	* ipmi-fru/ipmi-fru.c (_ipmi_fru): Drop the cast of hostname.

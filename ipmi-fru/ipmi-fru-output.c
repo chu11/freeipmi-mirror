@@ -61,7 +61,7 @@
 
 #define IPMI_FRU_STR_BUFLEN    1024
 
-int
+static int
 _output_field (ipmi_fru_state_data_t *state_data,
                uint8_t language_code,
                ipmi_fru_field_t *field,
