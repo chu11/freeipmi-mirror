@@ -371,7 +371,7 @@ ipmiseld_data_cache_load (ipmiseld_host_data_t *host_data)
 
   if ((databuflen = fd_read_n (fd, databuf, IPMISELD_DATA_CACHE_LENGTH)) < 0)
     {
-      ipmiseld_err_output (host_data, "fd_write_n: %s", strerror (errno));
+      ipmiseld_err_output (host_data, "fd_read_n: %s", strerror (errno));
       goto cleanup;
     }
 

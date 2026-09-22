@@ -1,5 +1,10 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld-cache.c (ipmiseld_data_cache_load): Fix error
+	message to name fd_read_n, not fd_write_n.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld.c (_ipmiseld_poll): Report
 	ipmi_sel_ctx_set_parameter failure via ipmiseld_err_output so the
 	hostname is included, and name the function correctly.
