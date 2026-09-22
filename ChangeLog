@@ -1,5 +1,11 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru-output.c (ipmi_fru_output_oem_record): Name
+	the failing function, ipmi_fru_read_multirecord_record_type_id,
+	in its error message.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/ipmi-fru-output.c (_output_field, _voltage_str,
 	_ipmi_fru_output_dimm_ddr3, _ipmi_fru_output_dimm_ddr4,
 	ipmi_fru_output_dimm): Declare pointers to string literals const

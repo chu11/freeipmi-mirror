@@ -1184,7 +1184,7 @@ ipmi_fru_output_oem_record (ipmi_fru_state_data_t *state_data,
 
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_fru_multirecord_oem_record: %s\n",
+                           "ipmi_fru_read_multirecord_record_type_id: %s\n",
                            ipmi_fru_ctx_errormsg (state_data->fru_ctx));
           return (-1);
         }
