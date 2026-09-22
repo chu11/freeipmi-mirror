@@ -1584,7 +1584,6 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
   ipmiseld_host_data_t *host_data;
   char *host = NULL;
   int rv = -1;
-  int ret;
 
   assert (prog_data);
   assert (!host_data_heap);
@@ -1615,12 +1614,6 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
                                       (HeapDelF)_free_host_data)))
     {
       err_output ("heap_create: %s", strerror (errno));
-      goto cleanup;
-    }
-
-  if ((ret = pthread_mutex_init (&host_data_heap_lock, NULL)))
-    {
-      err_output ("pthread_mutex_init: %s", strerror (ret));
       goto cleanup;
     }
 

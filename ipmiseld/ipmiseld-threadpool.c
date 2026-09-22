@@ -140,12 +140,6 @@ ipmiseld_threadpool_init (struct ipmiseld_prog_data *prog_data,
       goto cleanup;
     }
 
-  if ((ret = pthread_mutex_init (&threadpool_queue_lock, NULL)))
-    {
-      err_output ("pthread_mutex_init: %s", strerror (ret));
-      goto cleanup;
-    }
-
   for (i = 0; i < prog_data->args->threadpool_count; i++)
     {
       threadpool_data_array[i].threadpool_num = i;

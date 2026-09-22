@@ -1,5 +1,14 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld.c (_ipmiseld): Remove pthread_mutex_init call
+	on host_data_heap_lock, which is already statically initialized
+	with PTHREAD_MUTEX_INITIALIZER; re-initializing an initialized
+	mutex is undefined behavior.
+	* ipmiseld/ipmiseld-threadpool.c (ipmiseld_threadpool_init): Ditto
+	for threadpool_queue_lock.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld.c (ipmiseld_check_thresholds): Use %u for the
 	unsigned percent in the "SEL is full" warning.
 
