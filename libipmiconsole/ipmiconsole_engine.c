@@ -554,7 +554,7 @@ _ipmi_recvfrom (ipmiconsole_ctx_t c)
 
   if (!len)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("ipmi_lan_recvfrom: no data", strerror (errno)));
+      IPMICONSOLE_CTX_DEBUG (c, ("ipmi_lan_recvfrom: no data"));
       /* Note: Not a fatal error, just return*/
       return (0);
     }
