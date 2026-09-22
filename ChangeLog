@@ -1,5 +1,12 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/ipmiconsole.c (sol_ioloop): Retry select() on
+	EINTR instead of printing "select: Interrupted system call" when
+	SIGTERM/SIGINT arrives in proxy mode.  The loop condition then
+	exits cleanly.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiconsole/ipmiconsole.c (sol_ioloop, sol_connect): Take
 	separate local input and output fds.  In terminal mode write
 	console output to stdout rather than back to stdin, so it can be

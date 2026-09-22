@@ -287,6 +287,9 @@ sol_ioloop (ipmiconsole_ctx_t c,
 
       if (select (nfds, &rds, NULL, NULL, &tv) < 0)
         {
+          /* SIGTERM/SIGINT in proxy mode, loop condition will exit */
+          if (errno == EINTR)
+            continue;
           perror ("select");
           return;
         }
