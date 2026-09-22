@@ -1,5 +1,13 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole_checks.c
+	(ipmiconsole_check_rakp_4_integrity_check_value): Size the
+	managed_system_guid read with IPMI_MANAGED_SYSTEM_GUID_LENGTH
+	rather than IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH.  Both are
+	16 today, so no behavior change.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole_engine.c (_ipmi_recvfrom): Drop the
 	strerror() argument from the "no data" debug message; the format
 	has no conversion for it and errno is meaningless after a

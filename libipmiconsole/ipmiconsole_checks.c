@@ -910,7 +910,7 @@ ipmiconsole_check_rakp_4_integrity_check_value (ipmiconsole_ctx_t c, ipmiconsole
   if ((managed_system_guid_len = fiid_obj_get_data (c->connection.obj_rakp_message_2,
                                                     "managed_system_guid",
                                                     managed_system_guid,
-                                                    IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)) < 0)
+                                                    IPMI_MANAGED_SYSTEM_GUID_LENGTH)) < 0)
     {
       IPMICONSOLE_CTX_DEBUG (c, ("fiid_obj_get_data: 'managed_system_guid': %s",
                                  fiid_obj_errormsg (c->connection.obj_rakp_message_2)));
