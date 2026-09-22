@@ -1,5 +1,11 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld.c (_sel_log_format): Output a lone trailing
+	'%' in a user format string as a literal percent instead of
+	silently dropping it.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld.c (ipmiseld_sel_info_get): Fix indentation.
 
 2026-09-22 Albert Chu <chu11@llnl.gov>

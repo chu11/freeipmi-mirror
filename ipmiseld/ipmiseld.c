@@ -397,6 +397,15 @@ _sel_log_format (ipmiseld_host_data_t *host_data,
       ptr++;
     }
 
+  /* A lone trailing '%' has nothing to pair with; output it as a
+   * literal rather than silently dropping it.
+   */
+  if (percent_flag)
+    {
+      if (_snprintf (fmtbuf, fmtbuf_len, &wlen, "%%%%"))
+        return (0);
+    }
+
   return (0);
 }
 
