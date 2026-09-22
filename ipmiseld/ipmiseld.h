@@ -134,7 +134,7 @@ struct ipmiseld_arguments
 
 typedef struct ipmiseld_prog_data
 {
-  char *progname;
+  const char *progname;
   int event_state_filter_mask;
   int log_facility;
   int log_priority;
