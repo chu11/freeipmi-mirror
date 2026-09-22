@@ -363,7 +363,11 @@ _sel_log_format (ipmiseld_host_data_t *host_data,
         {
           if (percent_flag)
             {
-              if (_snprintf (fmtbuf, fmtbuf_len, &wlen, "%%"))
+              /* fmtbuf is itself a format string for
+               * ipmi_sel_parse_read_record_string, so the escape must
+               * survive into it as "%%".
+               */
+              if (_snprintf (fmtbuf, fmtbuf_len, &wlen, "%%%%"))
                 return (0);
               percent_flag = 0;
             }

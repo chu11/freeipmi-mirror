@@ -1,5 +1,12 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld.c (_sel_log_format): Preserve "%%" as "%%" in
+	the intermediate format buffer.  It was collapsed to a single '%',
+	which ipmi_sel_parse_read_record_string then paired with the next
+	character, so e.g. "100%%d" expanded the "%d" as a date.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld.c (_sel_log_format): Output a lone trailing
 	'%' in a user format string as a literal percent instead of
 	silently dropping it.
