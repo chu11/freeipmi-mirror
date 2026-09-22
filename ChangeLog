@@ -1,5 +1,14 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmiconsole/ipmiconsole.c (sol_ioloop, sol_connect): Take
+	separate local input and output fds.  In terminal mode write
+	console output to stdout rather than back to stdin, so it can be
+	redirected or piped.  Flush stdout before writing console data
+	directly to the fd.
+	(_stdin): Flush the escape menu and "[generate break]" messages.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole.c (_config_file_workaround_flags):
 	Map the serialalertsdeferred and solpacketseq workarounds.  Both
 	are documented in libipmiconsole.conf(5) but were parsed and then

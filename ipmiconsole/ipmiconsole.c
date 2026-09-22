@@ -152,6 +152,7 @@ _stdin (ipmiconsole_ctx_t c,
                       escape_char,
                       escape_char,
                       escape_char);
+              fflush (stdout);
             }
           else if (buf[i] == '.')
             {
@@ -198,6 +199,7 @@ _stdin (ipmiconsole_ctx_t c,
               tbuflen = 0;
 
               printf ("[generate break]\r\n");
+              fflush (stdout);
               if (ipmiconsole_ctx_generate_break (c) < 0)
                 {
                   fprintf (stderr,
@@ -256,11 +258,15 @@ _stdin (ipmiconsole_ctx_t c,
   return (0);
 }
 
+/* localinfd/localoutfd are the same fd in proxy mode (a socket) but
+ * stdin/stdout in terminal mode, so console output can be redirected.
+ */
 static void
 sol_ioloop (ipmiconsole_ctx_t c,
             char escape_char,
             int solfd,
-            int localfd)
+            int localinfd,
+            int localoutfd)
 {
   char buf[IPMICONSOLE_BUFLEN];
   struct timeval tv;
@@ -268,13 +274,13 @@ sol_ioloop (ipmiconsole_ctx_t c,
   fd_set rds;
   int nfds;
 
-  nfds = ((solfd > localfd) ? solfd : localfd) + 1;
+  nfds = ((solfd > localinfd) ? solfd : localinfd) + 1;
 
   while (sigterm == 0)
     {
       FD_ZERO (&rds);
       FD_SET (solfd, &rds);
-      FD_SET (localfd, &rds);
+      FD_SET (localinfd, &rds);
 
       tv.tv_sec = 0;
       tv.tv_usec = 250000;
@@ -285,9 +291,9 @@ sol_ioloop (ipmiconsole_ctx_t c,
           return;
         }
 
-      if (FD_ISSET (localfd, &rds))
+      if (FD_ISSET (localinfd, &rds))
         {
-          if ((n = read (localfd, buf, IPMICONSOLE_BUFLEN)) < 0)
+          if ((n = read (localinfd, buf, IPMICONSOLE_BUFLEN)) < 0)
             {
               perror ("read");
               return;
@@ -296,7 +302,7 @@ sol_ioloop (ipmiconsole_ctx_t c,
           if (!n)
             return;
 
-          if (localfd == STDIN_FILENO)
+          if (localinfd == STDIN_FILENO)
             {
               if (_stdin (c,
                           escape_char,
@@ -326,7 +332,7 @@ sol_ioloop (ipmiconsole_ctx_t c,
 
           if (n)
             {
-              if (write (localfd, buf, n) != n)
+              if (write (localoutfd, buf, n) != n)
                 {
                   perror ("write");
                   return;
@@ -365,7 +371,8 @@ sol_connect (struct ipmiconsole_arguments *cmd_args,
              struct ipmiconsole_ipmi_config *ipmi_config,
              struct ipmiconsole_protocol_config *protocol_config,
              struct ipmiconsole_engine_config *engine_config,
-             int localfd)
+             int localinfd,
+             int localoutfd)
 {
   ipmiconsole_ctx_t c = NULL;
   int solfd = -1;
@@ -432,11 +439,14 @@ sol_connect (struct ipmiconsole_arguments *cmd_args,
 
 
   printf ("[SOL established]\r\n");
+  /* console data is written directly to the fd, not through stdio */
+  fflush (stdout);
 
   sol_ioloop (c,
               cmd_args->escape_char,
               solfd,
-              localfd);
+              localinfd,
+              localoutfd);
 
   printf ("\r\n[closing the connection]\r\n");
   rv = 0;
@@ -522,6 +532,7 @@ sol_proxy (struct ipmiconsole_arguments *cmd_args,
                          ipmi_config,
                          protocol_config,
                          engine_config,
+                         connection_s,
                          connection_s);
       if (ret < 0)
         fprintf (stderr, "Session terminated with error: %d\n", ret);
@@ -705,7 +716,8 @@ main (int argc, char **argv)
                &ipmi_config,
                &protocol_config,
                &engine_config,
-               STDIN_FILENO);
+               STDIN_FILENO,
+               STDOUT_FILENO);
 
 #ifndef NDEBUG
   if (!cmd_args.noraw)
