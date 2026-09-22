@@ -81,7 +81,7 @@ static char *ipmiconsole_errmsgs[] =
   {
     "success",                                            /* 0 */
     "ctx null",                                           /* 1 */
-    "ctt invalid",                                        /* 2 */
+    "ctx invalid",                                        /* 2 */
     "engine already setup",                               /* 3 */
     "engine not setup",                                   /* 4 */
     "ctx not submitted",                                  /* 5 */

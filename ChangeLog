@@ -1,5 +1,10 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole.c (ipmiconsole_errmsgs): Fix "ctt
+	invalid" typo in the IPMICONSOLE_ERR_CTX_INVALID message.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole_engine.c
 	(ipmiconsole_engine_thread_create): Free the thread index
 	argument if pthread_create() fails.
