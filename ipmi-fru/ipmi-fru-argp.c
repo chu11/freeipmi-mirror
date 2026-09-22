@@ -86,7 +86,7 @@ static struct argp_option cmdline_options[] =
     ARGP_COMMON_TIME_OPTIONS,
     ARGP_COMMON_HOSTRANGED_OPTIONS,
     ARGP_COMMON_OPTIONS_DEBUG,
-    { "device-id", DEVICE_ID_KEY, "DEVICE_ID", 0,
+    { "device-id", DEVICE_ID_KEY, "IDNUM", 0,
       "Specify a specific FRU device ID.", 40},
     { "verbose", VERBOSE_KEY, 0, 0,
       "Increase verbosity in output.", 41},

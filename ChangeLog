@@ -1,5 +1,10 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru-argp.c (cmdline_options): Name the --device-id
+	argument IDNUM in --help, matching the man page and bmc-device.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/ipmi-fru-oem-xilinx.c (ipmi_fru_oem_xilinx_oem_record):
 	Print the unsigned MAC ID index with %u.
 
