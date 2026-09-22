@@ -156,8 +156,9 @@ ipmi_fru_output_chassis_info_area (ipmi_fru_state_data_t *state_data,
                     ipmi_fru_chassis_types[chassis_type]);
   else
     pstdout_printf (state_data->pstate,
-                    "  FRU Chassis Type: %s\n",
-                    ipmi_fru_chassis_types[IPMI_FRU_CHASSIS_TYPE_UNKNOWN]);
+                    "  FRU Chassis Type: %s (%02Xh)\n",
+                    ipmi_fru_chassis_types[IPMI_FRU_CHASSIS_TYPE_UNKNOWN],
+                    chassis_type);
 
   /* achu: Chassis Info Area has no language code, assume English. */
 
