@@ -1,5 +1,13 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* libipmidetect/ipmidetect.c (_get_data): Limit the sscanf hostname
+	conversion to IPMIDETECT_MAXHOSTNAMELEN (64) characters.  The
+	previous %256s bound was larger than the 65 byte destination
+	buffer, so an overlong hostname from the daemon could still
+	overflow the stack.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiconsole.8.pre.in: Document that the escape character
 	must be a single byte and may not be one of the escape command
 	characters, and that escape sequences are not processed in proxy
