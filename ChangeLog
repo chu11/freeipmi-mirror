@@ -1,5 +1,10 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiseld.8.pre.in: Document that --event-state-filter states
+	may be separated by commas or spaces, matching the parser.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiseld.8.pre.in: Fix doubled periods in the
 	--oem-timestamped-event-format and
 	--oem-non-timestamped-event-format descriptions.
