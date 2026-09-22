@@ -25,6 +25,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <ctype.h>
 #include <assert.h>
 
 #include <freeipmi/freeipmi.h>
@@ -163,8 +164,14 @@ ipmi_fru_oem_xilinx_oem_record (ipmi_fru_state_data_t *state_data,
               pstdout_printf (state_data->pstate, "  FRU OEM ");
             }
 
-          pstdout_printf (state_data->pstate, "%c", oem_data[i]);
+          pstdout_printf (state_data->pstate,
+                          "%c",
+                          isprint (oem_data[i]) ? oem_data[i] : '.');
         }
+
+      /* record did not end with a field delimiter */
+      if (new_field == 0)
+        pstdout_printf (state_data->pstate, "\n");
 
       return (1);
     }

@@ -1,5 +1,12 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru-oem-xilinx.c (ipmi_fru_oem_xilinx_oem_record):
+	Terminate the last free form field with a newline when the record
+	does not end with a 0x00 delimiter.  Print non-printable bytes as
+	'.' instead of passing them through to the terminal.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/ipmi-fru.c (_output_fru): Report ASF and NVM Express
 	multirecords as "Unhandled FRU Area Type" by name on stdout
 	instead of printing the library's internal area type constant to
