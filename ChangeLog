@@ -1,5 +1,10 @@
 2026-09-22 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-fru/ipmi-fru-oem-xilinx.c (ipmi_fru_oem_xilinx_oem_record):
+	Print the unsigned MAC ID index with %u.
+
+2026-09-22 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-fru/ipmi-fru-output.c (_voltage_str): Return NULL for an
 	unrecognized voltage code instead of "".
 	(ipmi_fru_output_power_supply_information): Print "Unknown (Xh)"

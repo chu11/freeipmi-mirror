@@ -97,7 +97,7 @@ ipmi_fru_oem_xilinx_oem_record (ipmi_fru_state_data_t *state_data,
 
           for (j = 0; j < mac_cnt; j++)
             {
-              pstdout_printf (state_data->pstate, "  FRU OEM MAC ID %d: ", j);
+              pstdout_printf (state_data->pstate, "  FRU OEM MAC ID %u: ", j);
 
               start = j*6 + 1;
               stop = start + 5;
