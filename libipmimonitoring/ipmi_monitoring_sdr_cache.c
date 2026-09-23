@@ -62,11 +62,8 @@ _ipmi_monitoring_sdr_ctx_init (ipmi_monitoring_ctx_t c, const char *hostname)
 
   if (!(c->sdr_ctx = ipmi_sdr_ctx_create ()))
     {
-      IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_create: %s", strerror (errno)));
-      if (errno == EPERM || errno == EACCES)
-        c->errnum = IPMI_MONITORING_ERR_PERMISSION;
-      else
-        c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+      IPMI_MONITORING_DEBUG (("ipmi_sdr_ctx_create: %s", strerror (errno)));
+      c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
       return (-1);
     }
 
