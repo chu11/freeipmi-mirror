@@ -1,5 +1,19 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* libipmidetect/ipmidetect.c (_connect_errno_to_errnum): New
+	function mapping a connect() errno to an ipmidetect errnum:
+	ETIMEDOUT to IPMIDETECT_ERR_CONNECT_TIMEOUT, ECONNREFUSED,
+	ECONNRESET, EHOSTUNREACH, ENETUNREACH and ENETDOWN to
+	IPMIDETECT_ERR_CONNECT, anything else to IPMIDETECT_ERR_INTERNAL.
+	(_low_timeout_connect): Use it for both the synchronous connect()
+	failure and the SO_ERROR result of a non-blocking connect.
+	Previously an unreachable host reported via SO_ERROR was an
+	"internal system error" while the same errno from a synchronous
+	failure was a connection error, and every synchronous errno was
+	treated as a connection error.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* ipmidetect/ipmidetect.c (_output_data): Make static.  It is only
 	called from main and was the one file-local function with external
 	linkage and no prototype.

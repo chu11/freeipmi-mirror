@@ -356,6 +356,30 @@ _read_conffile (ipmidetect_t handle, struct ipmidetect_config *conf)
   return (rv);
 }
 
+/*
+ * _connect_errno_to_errnum
+ *
+ * Map a connect() errno, whether returned synchronously or via
+ * SO_ERROR after a non-blocking connect, to an ipmidetect errnum.
+ */
+static int
+_connect_errno_to_errnum (int err)
+{
+  switch (err)
+    {
+    case ETIMEDOUT:
+      return (IPMIDETECT_ERR_CONNECT_TIMEOUT);
+    case ECONNREFUSED:
+    case ECONNRESET:
+    case EHOSTUNREACH:
+    case ENETUNREACH:
+    case ENETDOWN:
+      return (IPMIDETECT_ERR_CONNECT);
+    default:
+      return (IPMIDETECT_ERR_INTERNAL);
+    }
+}
+
 static int
 _low_timeout_connect (ipmidetect_t handle,
                       const char *hostname,
@@ -434,7 +458,7 @@ _low_timeout_connect (ipmidetect_t handle,
   ret = connect (fd, servaddr, servaddr_len);
   if (ret < 0 && errno != EINPROGRESS)
     {
-      handle->errnum = IPMIDETECT_ERR_CONNECT;
+      handle->errnum = _connect_errno_to_errnum (errno);
       goto cleanup;
     }
   else if (ret < 0 && errno == EINPROGRESS)
@@ -477,12 +501,7 @@ _low_timeout_connect (ipmidetect_t handle,
 
               if (error != 0)
                 {
-                  if (error == ECONNREFUSED)
-                    handle->errnum = IPMIDETECT_ERR_CONNECT;
-                  else if (error == ETIMEDOUT)
-                    handle->errnum = IPMIDETECT_ERR_CONNECT_TIMEOUT;
-                  else
-                    handle->errnum = IPMIDETECT_ERR_INTERNAL;
+                  handle->errnum = _connect_errno_to_errnum (error);
                   goto cleanup;
                 }
               /* else no error, connected within timeout length */
