@@ -54,10 +54,14 @@ listed must be the shortened names of hostnames.
 .SH "OPTIONS"
 .TP
 \fB\-h\fR \fISTRING\fR, \fB\-\-hostname\fR=\fISTRING\fR
-server hostname (default=localhost)
+server hostname.  If not specified, the hostnames listed in
+.B ipmidetect.conf(5)
+are tried in order, or localhost if none are configured.
 .TP
 \fB\-p\fR \fIINT\fR, \fB\-\-port\fR=\fIINT\fR
-server port (default=9225)
+server port.  If not specified, the port listed in
+.B ipmidetect.conf(5)
+is used, or 9225 if none is configured.
 .TP
 \fB\-d\fR, \fB\-\-detected\fR
 List only detected nodes
