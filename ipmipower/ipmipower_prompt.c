@@ -43,6 +43,7 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <errno.h>
+#include <limits.h>
 
 #include "ipmipower_prompt.h"
 #include "ipmipower_error.h"
@@ -1103,13 +1104,15 @@ _cmd_set_unsigned_int (char **argv,
   else
     {
       char *endptr;
-      unsigned int temp;
+      long temp;
 
       errno = 0;
-      temp = strtoul (argv[1], &endptr, 10);
+      temp = strtol (argv[1], &endptr, 10);
       if (errno
           || endptr == argv[1]
-          || endptr[0] != '\0')
+          || endptr[0] != '\0'
+          || temp < 0
+          || (unsigned long)temp > UINT_MAX)
         ipmipower_cbuf_printf (ttyout,
                                "invalid %s input\n",
                                str);

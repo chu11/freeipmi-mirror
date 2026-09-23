@@ -1,5 +1,12 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_prompt.c (_cmd_set_unsigned_int): Parse with
+	strtol into a long and reject negative values and values above
+	UINT_MAX.  strtoul accepted a leading '-', so "session-timeout -1"
+	set the timeout to 4294967295 ms.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_argp.c (cmdline_parse): Parse the numeric
 	ipmipower options into a long and reject values above UINT_MAX.
 	They were stored through an int, so a value such as 4294967297 did
