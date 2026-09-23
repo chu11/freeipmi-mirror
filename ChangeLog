@@ -1,5 +1,16 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/ipmi_monitoring_defs.h
+	(IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH): Raise from 32 to
+	IPMI_SDR_MAX_SENSOR_NAME_LENGTH; entity-prefixed sensor names were
+	being silently truncated to 31 characters.
+	* libipmimonitoring/ipmi_monitoring_sensor_reading.c
+	(ipmi_monitoring_get_sensor_reading): Size the local sensor_name
+	buffer MAX + 1 and pass MAX + 1 to ipmi_sdr_parse_*sensor_name(), so
+	the existing overflow check can actually fire.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* libipmimonitoring/ipmi_monitoring.c
 	(ipmi_monitoring_sel_by_record_id): Reject record ids 0x0000 and
 	0xFFFF, which the BMC interprets as "first entry" and "last entry"

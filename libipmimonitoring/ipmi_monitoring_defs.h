@@ -124,7 +124,10 @@
 #define IPMI_MONITORING_SESSION_TIMEOUT_LENGTH_DEFAULT        20000
 #define IPMI_MONITORING_RETRANSMISSION_TIMEOUT_LENGTH_DEFAULT 500
 
-#define IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH      32
+/* Entity-prefixed names ("<entity> <instance> <id string>") can
+ * exceed 32; use libfreeipmi's bound so nothing is truncated.
+ */
+#define IPMI_MONITORING_MAX_SENSOR_NAME_LENGTH      IPMI_SDR_MAX_SENSOR_NAME_LENGTH
 
 #define IPMI_MONITORING_OEM_DATA_MAX                13
 
