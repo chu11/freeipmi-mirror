@@ -359,6 +359,10 @@ _get_sensor_reading (ipmi_monitoring_ctx_t c,
       int errnum = ipmi_sensor_read_ctx_errnum (c->sensor_read_ctx);
 
       IPMI_MONITORING_DEBUG (("ipmi_sensor_read: %s", ipmi_sensor_read_ctx_errormsg (c->sensor_read_ctx)));
+      /* Node Busy is a transient per-command condition, treat it like
+       * any other per-sensor "cannot read" case rather than failing
+       * the whole read, as ipmi-sensors does.
+       */
       if (errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_ANALOG
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_LINEAR
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE
@@ -366,7 +370,8 @@ _get_sensor_reading (ipmi_monitoring_ctx_t c,
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NOT_OWNED_BY_BMC
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_CANNOT_BE_BRIDGED
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_IS_SYSTEM_SOFTWARE
-          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_READING_CANNOT_BE_OBTAINED)
+          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_READING_CANNOT_BE_OBTAINED
+          || errnum == IPMI_SENSOR_READ_ERR_NODE_BUSY)
         {
           rv = 0;
           goto cleanup;

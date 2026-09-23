@@ -1,6 +1,13 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
 	* libipmimonitoring/ipmi_monitoring_sensor_reading.c
+	(_get_sensor_reading): Treat IPMI_SENSOR_READ_ERR_NODE_BUSY as a
+	per-sensor unreadable result instead of failing the entire sensor
+	read with BMC_BUSY, matching ipmi-sensors.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
+	* libipmimonitoring/ipmi_monitoring_sensor_reading.c
 	(_get_sensor_reading): Remove duplicated NON_ANALOG / NON_LINEAR
 	entries from the unreadable-sensor errnum list.
 
