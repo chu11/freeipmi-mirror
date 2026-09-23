@@ -336,7 +336,7 @@ enum ipmi_monitoring_sensor_reading_flags
  *   IPMI_MONITORING_DRIVER_TYPE_OPENIPMI
  *   IPMI_MONITORING_DRIVER_TYPE_SUNBMC
  *
- *    Pass < 0 for default of IPMI_MONITORING_DRIVER_TYPE_KCS.
+ *    Pass < 0 to probe for an available in-band driver.
  *
  * disable_auto_probe
  *
