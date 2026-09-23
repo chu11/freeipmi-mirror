@@ -484,6 +484,17 @@ typedef struct ipmi_monitoring_ctx *ipmi_monitoring_ctx_t;
  * If callback returns < 0, libipmimonitoring will stop reading
  * remaining information.
  */
+
+/*
+ * Pointers returned by the ipmi_monitoring_sel_read_* and
+ * ipmi_monitoring_sensor_read_* functions below (sensor names, event
+ * offset strings, bitmask string arrays, sensor readings) are owned
+ * by the context.  They remain valid until the next
+ * ipmi_monitoring_sel_by_*, ipmi_monitoring_sensor_readings_by_*,
+ * ipmi_monitoring_*_iterator_destroy or ipmi_monitoring_ctx_destroy
+ * call; within a callback they are valid only for the duration of
+ * that callback.  Copy them if they are needed longer.
+ */
 typedef int (*Ipmi_Monitoring_Callback)(ipmi_monitoring_ctx_t c, void *callback_data);
 
 /*
