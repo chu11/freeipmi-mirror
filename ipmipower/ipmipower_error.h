@@ -78,7 +78,7 @@
     if (__len < IPMIPOWER_ERROR_BUFLEN)                                         \
       {                                                                         \
         char *__str;                                                            \
-        if ((__str = __error_msg_create __msg))                                 \
+        if ((__str = ipmipower_error_msg_create __msg))                         \
           {                                                                     \
             strncat (__err, __str, IPMIPOWER_ERROR_BUFLEN - __len);             \
             free (__str);                                                       \
@@ -103,7 +103,7 @@
         if (__len < IPMIPOWER_ERROR_BUFLEN)                                     \
           {                                                                     \
             char *__str;                                                        \
-            if ((__str = __error_msg_create __msg))                             \
+            if ((__str = ipmipower_error_msg_create __msg))                     \
               {                                                                 \
                 strncat (__err, __str, IPMIPOWER_ERROR_BUFLEN - __len);         \
                 free (__str);                                                   \
@@ -119,6 +119,6 @@ void ipmipower_error (const char *fmt, ...);
 
 void ipmipower_debug (const char *fmt, ...);
 
-char * __error_msg_create (const char *fmt, ...);
+char * ipmipower_error_msg_create (const char *fmt, ...);
 
 #endif /* IPMIPOWER_ERROR_H */

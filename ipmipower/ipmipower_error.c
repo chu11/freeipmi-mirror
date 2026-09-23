@@ -150,7 +150,7 @@ ipmipower_debug (const char *fmt, ...)
 }
 
 char *
-__error_msg_create (const char *fmt, ...)
+ipmipower_error_msg_create (const char *fmt, ...)
 {
   char *buffer;
   va_list ap;
