@@ -198,8 +198,8 @@ Since IPMI is based on UDP, it is
 difficult for
 .B ipmipower
 to distinguish between a missing machine and a bad (or heavily loaded)
-network connection in interactive mode.  when running in interactive
-mode.  For example, suppose a link consistently drops 80% of the
+network connection when running in interactive mode.  For example,
+suppose a link consistently drops 80% of the
 packets to a particular machine.  The power control operation may have
 difficulty completing, although a recent pong response from RMCP makes
 .B ipmipower
