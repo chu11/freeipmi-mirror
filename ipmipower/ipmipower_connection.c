@@ -728,8 +728,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
             {
               if (errno == EMFILE && !emfilecount)
                 {
-                  IPMIPOWER_DEBUG (("file descriptor limit reached"));
-                  /* XXX return -1? */
+                  IPMIPOWER_ERROR (("file descriptor limit reached"));
                   emfilecount++;
                 }
               errflag++;

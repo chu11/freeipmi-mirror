@@ -1,5 +1,12 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_connection.c
+	(ipmipower_connection_array_create): Report the file descriptor limit
+	being reached with IPMIPOWER_ERROR instead of IPMIPOWER_DEBUG, so the
+	failure is visible without --debug.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_powercmd.h, ipmipower/ipmipower_powercmd.c
 	(ipmipower_powercmd_setup, ipmipower_powercmd_cleanup)
 	(ipmipower_powercmd_pending): Declare and define with (void) instead
