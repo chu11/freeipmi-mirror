@@ -1043,7 +1043,10 @@ int ipmi_monitoring_sensor_read_sensor_bitmask (ipmi_monitoring_ctx_t c);
  * ipmi_monitoring_sensor_read_sensor_bitmask_strings
  *
  * Returns an array of strings representing the events in the bitmask,
- * NULL on error.  Array is NUL terminated.
+ * NULL on error.  Array is NUL terminated.  Also returns NULL, with
+ * an errnum of IPMI_MONITORING_ERR_SUCCESS, if the sensor could not
+ * be read and no bitmask is available; check
+ * ipmi_monitoring_ctx_errnum() to distinguish the two.
  */
 char **ipmi_monitoring_sensor_read_sensor_bitmask_strings (ipmi_monitoring_ctx_t c);
 
