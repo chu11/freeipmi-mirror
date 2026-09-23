@@ -614,7 +614,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
         {
           if (!(ip->extra_arg = strdup (extra_arg)))
             {
-              IPMIPOWER_ERROR (("strdup"));
+              IPMIPOWER_ERROR (("strdup: %s", strerror (errno)));
               exit (EXIT_FAILURE);
             }
         }

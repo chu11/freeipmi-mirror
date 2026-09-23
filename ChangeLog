@@ -1,5 +1,11 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_powercmd.c (ipmipower_powercmd_queue): Include
+	strerror (errno) in the strdup failure message like every other
+	allocation failure in ipmipower.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_powercmd.c (_process_ipmi_packets): In the
 	C410x get sensor reading state, report FIID_OBJ_GET failures from
 	obj_c410x_get_sensor_reading_rs, the object being read, instead of
