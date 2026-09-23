@@ -1371,8 +1371,11 @@ _retry_packets (ipmipower_powercmd_t ip)
   if (time_since_last_ipmi_send < retransmission_timeout)
     return (0);
 
-  /* Do we have enough time to retransmit? */
-  timeval_add_ms (&cur_time, cmd_args.common_args.session_timeout, &end_time);
+  /* Do we have enough time to retransmit before the session times
+   * out?  The session deadline is measured from when the protocol
+   * began, not from now.
+   */
+  timeval_add_ms (&(ip->time_begin), cmd_args.common_args.session_timeout, &end_time);
   timeval_sub (&end_time, &cur_time, &result);
   timeval_millisecond_calc (&result, &time_left);
   if (time_left < retransmission_timeout)
