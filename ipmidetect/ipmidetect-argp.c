@@ -139,6 +139,7 @@ _read_nodes_from_stdin (struct ipmidetect_arguments *cmd_args)
 static error_t
 cmdline_parse (int key, char *arg, struct argp_state *state)
 {
+  static int stdin_read = 0;
   struct ipmidetect_arguments *cmd_args;
   char *endptr;
   long port;
@@ -184,7 +185,12 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       break;
     case ARGP_KEY_ARG:
       if (!strcmp (arg, "-"))
-        _read_nodes_from_stdin (cmd_args);
+        {
+          if (stdin_read)
+            err_exit ("\"-\" may only be specified once");
+          _read_nodes_from_stdin (cmd_args);
+          stdin_read = 1;
+        }
       else
         _push_inputted_nodes (cmd_args, arg);
       fi_hostlist_uniq (cmd_args->inputted_nodes);

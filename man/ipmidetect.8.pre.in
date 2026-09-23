@@ -43,8 +43,9 @@ daemon.
 .B ipmidetect
 will output the status of each IPMI node configured with
 .B ipmidetectd(8)
-unless they are specified on the command line.  If the first node
-listed is "-", nodes will be read in from standard input.  The nodes
+unless they are specified on the command line.  If "-" is listed as a
+node, nodes will be read in from standard input in addition to any
+listed on the command line; "-" may be given only once.  The nodes
 can be listed in hostrange format, comma separated lists, or space
 separated lists.  See the section below on HOSTRANGED SUPPORT for
 instructions on how to list hosts in range format.  The hostnames
