@@ -60,7 +60,7 @@
 
 extern struct ipmipower_arguments cmd_args;
 
-char *
+const char *
 ipmipower_power_cmd_to_string (ipmipower_power_cmd_t cmd)
 {
   assert (IPMIPOWER_POWER_CMD_VALID (cmd));
@@ -110,7 +110,7 @@ ipmipower_power_cmd_check_privilege (ipmipower_power_cmd_t cmd,
   if (cmd_args.common_args.privilege_level == IPMI_PRIVILEGE_LEVEL_USER
       && IPMIPOWER_POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE_LEVEL (cmd))
     {
-      char *power_cmd_str;
+      const char *power_cmd_str;
 
       power_cmd_str = ipmipower_power_cmd_to_string (cmd);
 

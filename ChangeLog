@@ -1,5 +1,18 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_output.c: Make ipmipower_outputs a const char *
+	table sized to IPMIPOWER_MSG_TYPE_NUM_ENTRIES so an extra initializer
+	is a compile error.
+	(ipmipower_output): Assert the entry for the message type is
+	non-NULL, catching a missing initializer.
+	* ipmipower/ipmipower_util.c, ipmipower/ipmipower_util.h
+	(ipmipower_power_cmd_to_string): Return const char *.
+	(ipmipower_power_cmd_check_privilege): Adjust.
+	* ipmipower/ipmipower_oem.c
+	(ipmipower_oem_power_cmd_check_support_and_privilege): Adjust.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_error.c, ipmipower/ipmipower_error.h: Rename
 	__error_msg_create to ipmipower_error_msg_create.  Identifiers
 	beginning with a double underscore are reserved for the

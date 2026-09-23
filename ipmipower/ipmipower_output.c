@@ -49,7 +49,7 @@ extern struct ipmipower_arguments cmd_args;
 extern fi_hostlist_t output_hostrange[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
 extern unsigned int output_counts[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
 
-static char *ipmipower_outputs[] =
+static const char *ipmipower_outputs[IPMIPOWER_MSG_TYPE_NUM_ENTRIES] =
   {
     "on",
     "off",
@@ -81,6 +81,7 @@ void
 ipmipower_output (ipmipower_msg_type_t num, const char *hostname, const char *extra_arg)
 {
   assert (IPMIPOWER_MSG_TYPE_VALID (num));
+  assert (ipmipower_outputs[num]);
   assert (hostname);
 
   /* If extra argument required, then we can't do consolidated output */

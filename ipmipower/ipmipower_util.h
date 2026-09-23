@@ -33,7 +33,7 @@
 
 #include "cbuf.h"
 
-char *ipmipower_power_cmd_to_string (ipmipower_power_cmd_t cmd);
+const char *ipmipower_power_cmd_to_string (ipmipower_power_cmd_t cmd);
 
 /* ipmipower_power_cmd_check_privilege
  * - check if privilege level ok for power cmd

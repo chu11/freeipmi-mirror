@@ -156,7 +156,7 @@ ipmipower_oem_power_cmd_check_support_and_privilege (ipmipower_power_cmd_t cmd,
                                                      unsigned int errbuflen)
 {
   unsigned int oem_power_type_support_mask;
-  char *power_cmd_str;
+  const char *power_cmd_str;
   int rv = -1;
 
   assert (IPMIPOWER_POWER_CMD_VALID (cmd));
