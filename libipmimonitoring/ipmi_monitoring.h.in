@@ -873,7 +873,7 @@ int ipmi_monitoring_sel_read_oem_data (ipmi_monitoring_ctx_t c,
 /*
  * ipmi_monitoring_sensor_readings_by_record_id
  *
- * Retrieve sensor readings by sensor numbers and store them in the monitoring context.
+ * Retrieve sensor readings by SDR record id and store them in the monitoring context.
  *
  * If 'hostname' is NULL, sensors for the current node will be retrieved in-band.
  * If 'record_ids' is NULL, all sensors will be retrieved
