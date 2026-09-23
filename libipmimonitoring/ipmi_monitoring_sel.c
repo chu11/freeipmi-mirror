@@ -896,6 +896,7 @@ ipmi_monitoring_get_sel (ipmi_monitoring_ctx_t c,
   assert (c->sel_parse_ctx);
   assert (c->sel_records);
 
+  memset (&spd, '\0', sizeof (spd));
   spd.c = c;
   spd.sel_flags = sel_flags;
 
