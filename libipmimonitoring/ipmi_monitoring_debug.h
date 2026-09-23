@@ -53,7 +53,7 @@
             free (__str);                                                           \
           }                                                                         \
       }                                                                             \
-    ipmi_monitoring_debug (__err);                                                  \
+    ipmi_monitoring_debug ("%s", __err);                                            \
   } while(0)
 
 void ipmi_monitoring_debug (const char *fmt, ...);
