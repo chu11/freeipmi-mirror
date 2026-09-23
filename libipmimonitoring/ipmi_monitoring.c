@@ -721,7 +721,7 @@ ipmi_monitoring_sel_by_sensor_type (ipmi_monitoring_ctx_t c,
   return (rv);
 }
 
-int
+static int
 _ipmi_monitoring_date_parse (ipmi_monitoring_ctx_t c,
                              const char *date,
                              unsigned int *date_val)
