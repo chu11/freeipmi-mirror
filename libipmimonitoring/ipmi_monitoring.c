@@ -432,10 +432,13 @@ ipmi_monitoring_ctx_sdr_cache_filenames (ipmi_monitoring_ctx_t c, const char *fo
 }
 
 static int
-_ipmi_monitoring_interpret_oem_data (ipmi_monitoring_ctx_t c, int enable_interpret_oem_data)
+_ipmi_monitoring_interpret_oem_data (ipmi_monitoring_ctx_t c,
+                                     int enable_interpret_oem_data,
+                                     int assume_system_event_records)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
+  unsigned int interpret_flags = IPMI_INTERPRET_FLAGS_DEFAULT;
   int rv = -1;
 
   assert (c);
@@ -443,6 +446,19 @@ _ipmi_monitoring_interpret_oem_data (ipmi_monitoring_ctx_t c, int enable_interpr
   assert (c->interpret_ctx);
   assert (c->ipmi_ctx);
   assert (_ipmi_monitoring_initialized);
+
+  if (enable_interpret_oem_data)
+    interpret_flags |= IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA;
+
+  if (assume_system_event_records)
+    interpret_flags |= IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS;
+
+  if (ipmi_interpret_ctx_set_flags (c->interpret_ctx, interpret_flags) < 0)
+    {
+      IPMI_MONITORING_DEBUG (("ipmi_interpret_ctx_set_flags: %s", ipmi_interpret_ctx_errormsg (c->interpret_ctx)));
+      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+      goto cleanup;
+    }
 
   if (enable_interpret_oem_data)
     {
@@ -476,13 +492,6 @@ _ipmi_monitoring_interpret_oem_data (ipmi_monitoring_ctx_t c, int enable_interpr
         }
       c->product_id = val;
 
-      if (ipmi_interpret_ctx_set_flags (c->interpret_ctx, IPMI_INTERPRET_FLAGS_INTERPRET_OEM_DATA) < 0)
-        {
-          IPMI_MONITORING_DEBUG (("ipmi_interpret_ctx_set_flags: %s", ipmi_interpret_ctx_errormsg (c->interpret_ctx)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          goto cleanup;
-        }
-
       if (ipmi_interpret_ctx_set_manufacturer_id (c->interpret_ctx, c->manufacturer_id) < 0)
         {
           IPMI_MONITORING_DEBUG (("ipmi_interpret_ctx_set_manufacturer_id: %s", ipmi_interpret_ctx_errormsg (c->interpret_ctx)));
@@ -493,15 +502,6 @@ _ipmi_monitoring_interpret_oem_data (ipmi_monitoring_ctx_t c, int enable_interpr
       if (ipmi_interpret_ctx_set_product_id (c->interpret_ctx, c->product_id) < 0)
         {
           IPMI_MONITORING_DEBUG (("ipmi_interpret_ctx_set_product_id: %s", ipmi_interpret_ctx_errormsg (c->interpret_ctx)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
-          goto cleanup;
-        }
-    }
-  else
-    {
-      if (ipmi_interpret_ctx_set_flags (c->interpret_ctx, IPMI_INTERPRET_FLAGS_DEFAULT) < 0)
-        {
-          IPMI_MONITORING_DEBUG (("ipmi_interpret_ctx_set_flags: %s", ipmi_interpret_ctx_errormsg (c->interpret_ctx)));
           c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
@@ -544,16 +544,10 @@ _ipmi_monitoring_sel (ipmi_monitoring_ctx_t c,
         goto cleanup;
     }
 
-  if (sel_flags & IPMI_MONITORING_SEL_FLAGS_INTERPRET_OEM_DATA)
-    {
-      if (_ipmi_monitoring_interpret_oem_data (c, 1) < 0)
-        goto cleanup;
-    }
-  else
-    {
-      if (_ipmi_monitoring_interpret_oem_data (c, 0) < 0)
-        goto cleanup;
-    }
+  if (_ipmi_monitoring_interpret_oem_data (c,
+                                           (sel_flags & IPMI_MONITORING_SEL_FLAGS_INTERPRET_OEM_DATA) ? 1 : 0,
+                                           (sel_flags & IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD) ? 1 : 0) < 0)
+    goto cleanup;
 
   if (sel_flags & IPMI_MONITORING_SEL_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT)
     sdr_create_flags |= IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT;
@@ -561,7 +555,7 @@ _ipmi_monitoring_sel (ipmi_monitoring_ctx_t c,
   if (ipmi_monitoring_sdr_cache_load (c, hostname, sdr_create_flags) < 0)
     goto cleanup;
 
-  if (ipmi_monitoring_sel_init (c) < 0)
+  if (ipmi_monitoring_sel_init (c, sel_flags) < 0)
     goto cleanup;
 
   if (ipmi_monitoring_get_sel (c,
@@ -1264,16 +1258,10 @@ _ipmi_monitoring_sensor_readings_flags_common (ipmi_monitoring_ctx_t c,
         }
     }
 
-  if (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA)
-    {
-      if (_ipmi_monitoring_interpret_oem_data (c, 1) < 0)
-        goto cleanup;
-    }
-  else
-    {
-      if (_ipmi_monitoring_interpret_oem_data (c, 0) < 0)
-        goto cleanup;
-    }
+  if (_ipmi_monitoring_interpret_oem_data (c,
+                                           (sensor_reading_flags & IPMI_MONITORING_SENSOR_READING_FLAGS_INTERPRET_OEM_DATA) ? 1 : 0,
+                                           0) < 0)
+    goto cleanup;
 
   rv = 0;
  cleanup:

@@ -70,7 +70,7 @@ _sel_cleanup (ipmi_monitoring_ctx_t c)
 }
 
 int
-ipmi_monitoring_sel_init (ipmi_monitoring_ctx_t c)
+ipmi_monitoring_sel_init (ipmi_monitoring_ctx_t c, unsigned int sel_flags)
 {
   assert (c);
   assert (c->magic == IPMI_MONITORING_MAGIC);
@@ -83,6 +83,20 @@ ipmi_monitoring_sel_init (ipmi_monitoring_ctx_t c)
       IPMI_MONITORING_DEBUG (("ipmi_sel_ctx_create: %s", strerror (errno)));
       c->errnum = IPMI_MONITORING_ERR_OUT_OF_MEMORY;
       goto cleanup;
+    }
+
+  /* The record type remap for the HP DL380 G5 workaround has to
+   * happen inside libfreeipmi, since that is where every field of
+   * the record is read.
+   */
+  if (sel_flags & IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD)
+    {
+      if (ipmi_sel_ctx_set_flags (c->sel_parse_ctx, IPMI_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORDS) < 0)
+        {
+          IPMI_MONITORING_DEBUG (("ipmi_sel_ctx_set_flags: %s", ipmi_sel_ctx_errormsg (c->sel_parse_ctx)));
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          goto cleanup;
+        }
     }
 
   return (0);
@@ -613,17 +627,6 @@ _store_sel_record (ipmi_monitoring_ctx_t c, unsigned int sel_flags)
       goto cleanup;
     }
 
-  /* IPMI Workaround
-   *
-   * HP DL 380 G5
-   *
-   * Motherboard is reporting SEL Records of record type 0x00, which
-   * is not a valid record type.
-   */
-  if (sel_flags & IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD
-      && !IPMI_SEL_RECORD_TYPE_VALID (record_type))
-    record_type = IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
-
   s->record_id = record_id;
   s->record_type = record_type;
 
@@ -744,17 +747,6 @@ _ipmi_monitoring_sel_parse_sensor_types (ipmi_sel_ctx_t ctx, void *callback_data
       return (-1);
     }
 
-  /* IPMI Workaround
-   *
-   * HP DL 380 G5
-   *
-   * Motherboard is reporting SEL Records of record type 0x00, which
-   * is not a valid record type.
-   */
-  if (spd->sel_flags & IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD
-      && !IPMI_SEL_RECORD_TYPE_VALID (record_type))
-    record_type = IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
-
   record_type_class = ipmi_sel_record_type_class (record_type);
 
   if (record_type_class == IPMI_SEL_RECORD_TYPE_CLASS_SYSTEM_EVENT_RECORD)
@@ -819,17 +811,6 @@ _ipmi_monitoring_sel_parse_date_range (ipmi_sel_ctx_t ctx, void *callback_data)
       _sel_parse_ctx_error_convert (spd->c);
       return (-1);
     }
-
-  /* IPMI Workaround
-   *
-   * HP DL 380 G5
-   *
-   * Motherboard is reporting SEL Records of record type 0x00, which
-   * is not a valid record type.
-   */
-  if (spd->sel_flags & IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD
-      && !IPMI_SEL_RECORD_TYPE_VALID (record_type))
-    record_type = IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD;
 
   record_type_class = ipmi_sel_record_type_class (record_type);
 

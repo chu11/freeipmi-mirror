@@ -29,7 +29,7 @@
 
 #include "ipmi_monitoring.h"
 
-int ipmi_monitoring_sel_init (ipmi_monitoring_ctx_t c);
+int ipmi_monitoring_sel_init (ipmi_monitoring_ctx_t c, unsigned int sel_flags);
 
 int ipmi_monitoring_sel_cleanup (ipmi_monitoring_ctx_t c);
 
