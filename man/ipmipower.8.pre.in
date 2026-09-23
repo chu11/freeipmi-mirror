@@ -188,7 +188,7 @@ does not respond in MILLISECONDS time.  Defaults to 30000 milliseconds
 .TP
 \fB\-\-ping\-packet\-count\fR=\fICOUNT\fR
 Specify the ping packet count size.  Defaults to 10.  See the
-\fB\-\-ping-percent\-fR option below for more information on this
+\fB\-\-ping\-percent\fR option below for more information on this
 option.
 .TP
 \fB\-\-ping\-percent\fR=\fIPERCENT\fR
