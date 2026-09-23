@@ -1,5 +1,14 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/ipmi_monitoring.c
+	(_ipmi_monitoring_sensor_readings_by_record_id)
+	(_ipmi_monitoring_sensor_readings_by_sensor_type): Do not overwrite
+	c->errnum with INTERNAL_ERROR when ipmi_sdr_cache_iterate() fails
+	because the callback returned an error; the callback already set
+	the specific errnum (CALLBACK_ERROR, BMC_BUSY, IPMI_ERROR, etc.).
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* libipmimonitoring/ipmi_monitoring_sel.c (ipmi_monitoring_sel_init):
 	Take the sel flags and set IPMI_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORDS
 	on the sel ctx when IPMI_MONITORING_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORD

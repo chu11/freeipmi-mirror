@@ -1425,7 +1425,9 @@ _ipmi_monitoring_sensor_readings_by_record_id (ipmi_monitoring_ctx_t c,
                                   &sdr_callback_arg) < 0)
         {
           IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_iterate: %s", ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
-          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          /* callback already set a specific errnum */
+          if (ipmi_sdr_ctx_errnum (c->sdr_ctx) != IPMI_SDR_ERR_ERROR_RETURNED_IN_CALLBACK)
+            c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
           goto cleanup;
         }
     }
@@ -1601,7 +1603,9 @@ _ipmi_monitoring_sensor_readings_by_sensor_type (ipmi_monitoring_ctx_t c,
                               &sdr_callback_arg) < 0)
     {
       IPMI_MONITORING_DEBUG (("ipmi_sdr_cache_iterate: %s", ipmi_sdr_ctx_errormsg (c->sdr_ctx)));
-      c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+      /* callback already set a specific errnum */
+      if (ipmi_sdr_ctx_errnum (c->sdr_ctx) != IPMI_SDR_ERR_ERROR_RETURNED_IN_CALLBACK)
+        c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
       goto cleanup;
     }
 
