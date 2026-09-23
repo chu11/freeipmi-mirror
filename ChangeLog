@@ -1,5 +1,12 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* common/toolcommon/tool-config-file-common.c (config_file_parse):
+	Validate ipmipower-ping-percent with _config_file_percent_int so
+	values above 100 are rejected, as they are on the command line.  A
+	value above 100 silently disabled the bad-link heuristic.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_prompt.c (_cmd_set_unsigned_int): Parse with
 	strtol into a long and reject negative values and values above
 	UINT_MAX.  strtoul accepted a leading '-', so "session-timeout -1"
