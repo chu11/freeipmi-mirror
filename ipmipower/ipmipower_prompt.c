@@ -701,7 +701,7 @@ _cmd_help (void)
                          "on-if-off [on|off]                       - Toggle on-if-off functionality.\n"
                          "wait-until-on [on|off]                   - Toggle wait-until-on functionality.\n"
                          "wait-until-off [on|off]                  - Toggle wait-until-off functionality.\n"
-                         "retransmission-wait-timeout MILLISECONDS - Specify a new retransmission timeout length.\n"
+                         "retransmission-wait-timeout MILLISECONDS - Specify a new retransmission wait timeout length.\n"
                          "retransmission-backoff-count COUNT       - Specify a new retransmission backoff count.\n"
                          "ping-interval MILLISECONDS               - Specify a new ping interval length.\n"
                          "ping-timeout MILLISECONDS                - Specify a new ping timeout length.\n"
