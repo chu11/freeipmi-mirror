@@ -101,7 +101,7 @@ _clean_fd (int fd)
       else
         break;
 
-      IPMIPOWER_DEBUG (("removed packet: %d", rv));
+      IPMIPOWER_DEBUG (("removed packet: %ld", (long)rv));
     }
 }
 
