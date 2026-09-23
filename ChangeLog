@@ -1,5 +1,12 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_powercmd.c (_process_ipmi_packets): In the
+	C410x get sensor reading state, report FIID_OBJ_GET failures from
+	obj_c410x_get_sensor_reading_rs, the object being read, instead of
+	obj_get_chassis_status_rs.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_check.c
 	(ipmipower_check_rakp_4_integrity_check_value): Report the error from
 	obj_rakp_message_4_rs, the object fiid_obj_clear_field was called on,

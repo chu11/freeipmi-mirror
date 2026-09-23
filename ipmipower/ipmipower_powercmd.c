@@ -2221,7 +2221,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
                         &val) < 0)
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'sensor_reading': %s",
-                            fiid_obj_errormsg (ip->obj_get_chassis_status_rs)));
+                            fiid_obj_errormsg (ip->obj_c410x_get_sensor_reading_rs)));
           exit (EXIT_FAILURE);
         }
       sensor_reading = val;
@@ -2231,7 +2231,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
                         &val) < 0)
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'reading_state': %s",
-                            fiid_obj_errormsg (ip->obj_get_chassis_status_rs)));
+                            fiid_obj_errormsg (ip->obj_c410x_get_sensor_reading_rs)));
           exit (EXIT_FAILURE);
         }
       reading_state = val;
@@ -2241,7 +2241,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
                         &val) < 0)
         {
           IPMIPOWER_ERROR (("FIID_OBJ_GET: 'sensor_scanning': %s",
-                            fiid_obj_errormsg (ip->obj_get_chassis_status_rs)));
+                            fiid_obj_errormsg (ip->obj_c410x_get_sensor_reading_rs)));
           exit (EXIT_FAILURE);
         }
       sensor_scanning = val;
