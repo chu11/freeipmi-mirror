@@ -126,14 +126,22 @@ The IPMI specification allows power on commands to return prior to the
 power on actually taking place.  This option will force
 .B ipmipower
 to regularly query the remote BMC and return only after the machine
-has powered on.
+has powered on.  The queries are spaced by the
+\fB\-\-retransmission\-wait\-timeout\fR and are bounded by the
+\fB\-\-session\-timeout\fR; if the machine has not powered on by the
+time the session timeout expires, a "session timeout" error is
+reported for the host.
 .TP
 \fB\-\-wait\-until\-off\fR
 The IPMI specification allows power off commands to return prior the
 power off actually taking place.  This option will force
 .B ipmipower
 to regularly query the remote BMC and return only after the machine
-has powered off.
+has powered off.  The queries are spaced by the
+\fB\-\-retransmission\-wait\-timeout\fR and are bounded by the
+\fB\-\-session\-timeout\fR; if the machine has not powered off by the
+time the session timeout expires, a "session timeout" error is
+reported for the host.
 .TP
 \fB\-\-oem\-power\-type\fR=\fIOEM\-POWER\-TYPE\fR
 This option informs
