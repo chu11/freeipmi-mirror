@@ -210,7 +210,7 @@ cmdline_parse (int key,
           || tmp <= 0
           || (unsigned long)tmp > UINT_MAX)
         {
-          fprintf (stderr, "retransmission wait timeout length invalid");
+          fprintf (stderr, "retransmission wait timeout length invalid\n");
           exit (EXIT_FAILURE);
         }
       cmd_args->retransmission_wait_timeout = tmp;
@@ -224,7 +224,7 @@ cmdline_parse (int key,
           || tmp <= 0
           || (unsigned long)tmp > UINT_MAX)
         {
-          fprintf (stderr, "retransmission backoff count invalid");
+          fprintf (stderr, "retransmission backoff count invalid\n");
           exit (EXIT_FAILURE);
         }
       cmd_args->retransmission_backoff_count = tmp;
@@ -238,7 +238,7 @@ cmdline_parse (int key,
           || tmp < 0
           || (unsigned long)tmp > UINT_MAX)
         {
-          fprintf (stderr, "ping interval length invalid");
+          fprintf (stderr, "ping interval length invalid\n");
           exit (EXIT_FAILURE);
         }
       cmd_args->ping_interval = tmp;
@@ -252,7 +252,7 @@ cmdline_parse (int key,
           || tmp < 0
           || (unsigned long)tmp > UINT_MAX)
         {
-          fprintf (stderr, "ping timeout length invalid");
+          fprintf (stderr, "ping timeout length invalid\n");
           exit (EXIT_FAILURE);
         }
       cmd_args->ping_timeout = tmp;
@@ -266,7 +266,7 @@ cmdline_parse (int key,
           || tmp < 0
           || (unsigned long)tmp > UINT_MAX)
         {
-          fprintf (stderr, "ping packet count invalid");
+          fprintf (stderr, "ping packet count invalid\n");
           exit (EXIT_FAILURE);
         }
       cmd_args->ping_packet_count = tmp;
@@ -283,7 +283,7 @@ cmdline_parse (int key,
             || ping_percent < 0
             || ping_percent > 100)
           {
-            fprintf (stderr, "ping percent invalid");
+            fprintf (stderr, "ping percent invalid\n");
             exit (EXIT_FAILURE);
           }
         cmd_args->ping_percent = (unsigned int)ping_percent;
@@ -298,7 +298,7 @@ cmdline_parse (int key,
           || tmp < 0
           || (unsigned long)tmp > UINT_MAX)
         {
-          fprintf (stderr, "ping consec count invalid");
+          fprintf (stderr, "ping consec count invalid\n");
           exit (EXIT_FAILURE);
         }
       cmd_args->ping_consec_count = tmp;

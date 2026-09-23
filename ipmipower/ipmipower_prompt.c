@@ -245,7 +245,7 @@ _cmd_k_g (char **argv)
   assert (argv);
 
   if (cmd_args.common_args.driver_type == IPMI_DEVICE_LAN)
-    ipmipower_cbuf_printf (ttyout, "k_g is only used for IPMI 2.0");
+    ipmipower_cbuf_printf (ttyout, "k_g is only used for IPMI 2.0\n");
   else
     {
       memset (k_g_tmp, '\0', sizeof (k_g_tmp));
