@@ -62,7 +62,7 @@ const char *argp_program_bug_address =
 static char cmdline_doc[] =
   "ipmidetect - IPMI node detection client";
 
-static char cmdline_args_doc[] = "";
+static char cmdline_args_doc[] = "[NODES...]";
 
 static struct argp_option cmdline_options[] =
   {
