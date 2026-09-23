@@ -176,7 +176,7 @@ interactive mode, RMCP (Remote Management Control Protocol) messages
 discovery will be sent to all configured remote hosts to confirm their
 support of IPMI. A remote host is considered undiscovered if the host
 does not respond in MILLISECONDS time.  Defaults to 30000 milliseconds
-(30 seconds).  The ping timeout cannot be larger than the ping interval.
+(30 seconds).  The ping interval cannot be larger than the ping timeout.
 .TP
 \fB\-\-ping\-packet\-count\fR=\fICOUNT\fR
 Specify the ping packet count size.  Defaults to 10.  See the
