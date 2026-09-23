@@ -757,7 +757,9 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
 
   if (errflag)
     {
+      int saved_errno = errno;
       int i;
+
       for (i = 0; i < index; i++)
         {
           /* ignore potential error, error path */
@@ -791,6 +793,7 @@ ipmipower_connection_array_create (const char *hostname, unsigned int *len)
             }
         }
       free (ics);
+      errno = saved_errno;
       return (NULL);
     }
 
