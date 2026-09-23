@@ -643,7 +643,11 @@ ipmi_monitoring_sel_by_record_id (ipmi_monitoring_ctx_t c,
 
       for (i = 0; i < record_ids_len; i++)
         {
-          if (record_ids[i] > IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
+          /* 0x0000 and 0xFFFF are "first" and "last" entry aliases to
+           * the BMC, not record ids
+           */
+          if (record_ids[i] == IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY
+              || record_ids[i] >= IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
             {
               c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
               return (-1);

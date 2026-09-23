@@ -604,7 +604,9 @@ int ipmi_monitoring_ctx_sdr_cache_filenames (ipmi_monitoring_ctx_t c,
  * Retrieve SEL records by record ID and store them in the monitoring context.
  *
  * If 'hostname' is NULL, SEL records for the current node will be retrieved in-band.
- * If 'record_ids' is NULL, all records will be retrieved
+ * If 'record_ids' is NULL, all records will be retrieved.  Record ids
+ * must be in the range 0x0001 - 0xFFFE; 0x0000 and 0xFFFF are
+ * reserved by IPMI to mean "first entry" and "last entry".
  * If specified, callback function will be called after each record is read and parsed.
  *
  * Returns number of records retrieved on success, -1 on error.
