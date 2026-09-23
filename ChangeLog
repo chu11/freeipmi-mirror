@@ -1,5 +1,11 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetect/ipmidetect-argp.c (_read_nodes_from_stdin): Store the
+	fd_read_n result in a ssize_t rather than an int, matching its
+	return type.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* ipmidetect/ipmidetect-argp.c (cmdline_parse): Error out if "-" is
 	given more than once.  The second read of standard input hit EOF
 	and silently added no nodes.

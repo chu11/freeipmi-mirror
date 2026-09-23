@@ -113,7 +113,7 @@ static void
 _read_nodes_from_stdin (struct ipmidetect_arguments *cmd_args)
 {
   char buf[IPMIDETECT_STDIN_BUFFERLEN];
-  int n;
+  ssize_t n;
 
   assert (cmd_args);
 
