@@ -136,7 +136,8 @@ static struct argp cmdline_config_file_argp = { cmdline_options,
                                                 cmdline_args_doc,
                                                 cmdline_doc};
 
-void _parse_oem_power_type (struct ipmipower_arguments *cmd_args, const char *oem_power_type_str)
+static void
+_parse_oem_power_type (struct ipmipower_arguments *cmd_args, const char *oem_power_type_str)
 {
   assert (cmd_args);
   assert (oem_power_type_str);

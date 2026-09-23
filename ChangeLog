@@ -1,5 +1,10 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_argp.c (_parse_oem_power_type): Make static.
+	* ipmipower/ipmipower_connection.c (_hostname_count): Make static.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_powercmd.c (_send_packet): Fix the function
 	comment, which said sequence counts are not updated on
 	retransmission.  They are incremented on every send and the receive

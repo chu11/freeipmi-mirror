@@ -498,7 +498,7 @@ _connection_add_extra_arg (struct ipmipower_connection *ic, const char *extra_ar
   _connection_add_extra_arg_base (ic, extra_arg);
 }
 
-int
+static int
 _hostname_count (const char *hostname)
 {
   fi_hostlist_t h = NULL;
