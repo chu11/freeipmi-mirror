@@ -99,6 +99,36 @@ ipmi_monitoring_sel_init (ipmi_monitoring_ctx_t c, unsigned int sel_flags)
         }
     }
 
+  /* c->manufacturer_id etc. were read by
+   * _ipmi_monitoring_interpret_oem_data(); the string formatter needs
+   * them too for IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA.
+   */
+  if (sel_flags & IPMI_MONITORING_SEL_FLAGS_INTERPRET_OEM_DATA)
+    {
+      if (ipmi_sel_ctx_set_manufacturer_id (c->sel_parse_ctx, c->manufacturer_id) < 0)
+        {
+          IPMI_MONITORING_DEBUG (("ipmi_sel_ctx_set_manufacturer_id: %s", ipmi_sel_ctx_errormsg (c->sel_parse_ctx)));
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          goto cleanup;
+        }
+
+      if (ipmi_sel_ctx_set_product_id (c->sel_parse_ctx, c->product_id) < 0)
+        {
+          IPMI_MONITORING_DEBUG (("ipmi_sel_ctx_set_product_id: %s", ipmi_sel_ctx_errormsg (c->sel_parse_ctx)));
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          goto cleanup;
+        }
+
+      if (ipmi_sel_ctx_set_ipmi_version (c->sel_parse_ctx,
+                                         c->ipmi_version_major,
+                                         c->ipmi_version_minor) < 0)
+        {
+          IPMI_MONITORING_DEBUG (("ipmi_sel_ctx_set_ipmi_version: %s", ipmi_sel_ctx_errormsg (c->sel_parse_ctx)));
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          goto cleanup;
+        }
+    }
+
   return (0);
 
  cleanup:
@@ -435,6 +465,8 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
   s->event_data3 = event_data3;
 
   sel_string_flags = IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD | IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
+  if (sel_flags & IPMI_MONITORING_SEL_FLAGS_INTERPRET_OEM_DATA)
+    sel_string_flags |= IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA;
   if (sel_flags & IPMI_MONITORING_SEL_FLAGS_ENTITY_SENSOR_NAMES)
     sel_string_flags |= IPMI_SEL_STRING_FLAGS_ENTITY_SENSOR_NAMES;
 
@@ -455,6 +487,8 @@ _ipmi_monitoring_sel_parse_system_event_record (ipmi_monitoring_ctx_t c,
   memset (event_offset_string, '\0', IPMI_MONITORING_SEL_EVENT_OFFSET_STRING_MAX + 1);
 
   sel_string_flags = IPMI_SEL_STRING_FLAGS_IGNORE_UNAVAILABLE_FIELD | IPMI_SEL_STRING_FLAGS_OUTPUT_NOT_AVAILABLE;
+  if (sel_flags & IPMI_MONITORING_SEL_FLAGS_INTERPRET_OEM_DATA)
+    sel_string_flags |= IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA;
 
   if ((ret = ipmi_sel_parse_read_record_string (c->sel_parse_ctx,
                                                 "%e",

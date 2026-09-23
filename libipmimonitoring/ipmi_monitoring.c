@@ -492,6 +492,22 @@ _ipmi_monitoring_interpret_oem_data (ipmi_monitoring_ctx_t c,
         }
       c->product_id = val;
 
+      if (FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_major", &val) < 0)
+        {
+          IPMI_MONITORING_DEBUG (("FIID_OBJ_GET: %s", fiid_obj_errormsg (obj_cmd_rs)));
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          goto cleanup;
+        }
+      c->ipmi_version_major = val;
+
+      if (FIID_OBJ_GET (obj_cmd_rs, "ipmi_version_minor", &val) < 0)
+        {
+          IPMI_MONITORING_DEBUG (("FIID_OBJ_GET: %s", fiid_obj_errormsg (obj_cmd_rs)));
+          c->errnum = IPMI_MONITORING_ERR_INTERNAL_ERROR;
+          goto cleanup;
+        }
+      c->ipmi_version_minor = val;
+
       if (ipmi_interpret_ctx_set_manufacturer_id (c->interpret_ctx, c->manufacturer_id) < 0)
         {
           IPMI_MONITORING_DEBUG (("ipmi_interpret_ctx_set_manufacturer_id: %s", ipmi_interpret_ctx_errormsg (c->interpret_ctx)));

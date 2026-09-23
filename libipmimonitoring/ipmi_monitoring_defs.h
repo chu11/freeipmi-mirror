@@ -196,6 +196,8 @@ struct ipmi_monitoring_ctx {
   /* for use by both sel and sensor codepath */
   uint32_t manufacturer_id;
   uint16_t product_id;
+  uint8_t ipmi_version_major;
+  uint8_t ipmi_version_minor;
 
   /* for use by both sel and sensor codepath */
   ipmi_sdr_ctx_t sdr_ctx;
