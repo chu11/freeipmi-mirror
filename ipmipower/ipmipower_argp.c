@@ -43,6 +43,7 @@
 #endif /* HAVE_UNISTD_H */
 #include <assert.h>
 #include <errno.h>
+#include <limits.h>
 
 #include "ipmipower_argp.h"
 
@@ -155,7 +156,7 @@ cmdline_parse (int key,
 {
   struct ipmipower_arguments *cmd_args;
   char *endptr;
-  int tmp = 0;
+  long tmp = 0;
 
   assert (state);
 
@@ -207,7 +208,8 @@ cmdline_parse (int key,
       if (errno
           || endptr == arg
           || endptr[0] != '\0'
-          || tmp <= 0)
+          || tmp <= 0
+          || (unsigned long)tmp > UINT_MAX)
         {
           fprintf (stderr, "retransmission wait timeout length invalid");
           exit (EXIT_FAILURE);
@@ -220,7 +222,8 @@ cmdline_parse (int key,
       if (errno
           || endptr == arg
           || endptr[0] != '\0'
-          || tmp <= 0)
+          || tmp <= 0
+          || (unsigned long)tmp > UINT_MAX)
         {
           fprintf (stderr, "retransmission backoff count invalid");
           exit (EXIT_FAILURE);
@@ -233,7 +236,8 @@ cmdline_parse (int key,
       if (errno
           || endptr == arg
           || endptr[0] != '\0'
-          || tmp < 0)
+          || tmp < 0
+          || (unsigned long)tmp > UINT_MAX)
         {
           fprintf (stderr, "ping interval length invalid");
           exit (EXIT_FAILURE);
@@ -246,7 +250,8 @@ cmdline_parse (int key,
       if (errno
           || endptr == arg
           || endptr[0] != '\0'
-          || tmp < 0)
+          || tmp < 0
+          || (unsigned long)tmp > UINT_MAX)
         {
           fprintf (stderr, "ping timeout length invalid");
           exit (EXIT_FAILURE);
@@ -259,7 +264,8 @@ cmdline_parse (int key,
       if (errno
           || endptr == arg
           || endptr[0] != '\0'
-          || tmp < 0)
+          || tmp < 0
+          || (unsigned long)tmp > UINT_MAX)
         {
           fprintf (stderr, "ping packet count invalid");
           exit (EXIT_FAILURE);
@@ -290,7 +296,8 @@ cmdline_parse (int key,
       if (errno
           || endptr == arg
           || endptr[0] != '\0'
-          || tmp < 0)
+          || tmp < 0
+          || (unsigned long)tmp > UINT_MAX)
         {
           fprintf (stderr, "ping consec count invalid");
           exit (EXIT_FAILURE);
