@@ -138,7 +138,21 @@ ipmi_monitoring_init (unsigned int flags, int *errnum)
     }
 
   if (_ipmi_monitoring_initialized)
-    return (0);
+    {
+      /* flags are global and already in effect; a second caller
+       * cannot change them
+       */
+      if (flags != _ipmi_monitoring_flags)
+        {
+          if (errnum)
+            *errnum = IPMI_MONITORING_ERR_PARAMETERS;
+          return (-1);
+        }
+
+      if (errnum)
+        *errnum = IPMI_MONITORING_ERR_SUCCESS;
+      return (0);
+    }
 
   _ipmi_monitoring_flags = flags;
 
