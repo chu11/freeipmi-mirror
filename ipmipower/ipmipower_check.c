@@ -1113,7 +1113,7 @@ ipmipower_check_rakp_4_integrity_check_value (ipmipower_powercmd_t ip,
                                 "integrity_check_value") < 0)
         {
           IPMIPOWER_ERROR (("fiid_obj_clear_field: 'integrity_check_value': %s",
-                            fiid_obj_errormsg (ip->obj_open_session_rs)));
+                            fiid_obj_errormsg (ip->obj_rakp_message_4_rs)));
           exit (EXIT_FAILURE);
         }
     }
