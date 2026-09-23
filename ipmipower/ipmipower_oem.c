@@ -217,7 +217,7 @@ ipmipower_oem_power_cmd_check_extra_arg (const char *extra_arg,
   if (cmd_args.oem_power_type == IPMIPOWER_OEM_POWER_TYPE_C410X)
     {
       char *endptr;
-      unsigned int tmp;
+      long tmp;
 
       if (!extra_arg)
         {

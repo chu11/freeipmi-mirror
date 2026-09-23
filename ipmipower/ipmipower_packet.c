@@ -1106,7 +1106,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   else if (pkt == IPMIPOWER_PACKET_TYPE_C410X_GET_SENSOR_READING_RQ)
     {
       char *endptr;
-      unsigned int slot_number;
+      long slot_number;
 
       assert (ip->extra_arg);
 
@@ -1131,7 +1131,7 @@ ipmipower_packet_create (ipmipower_powercmd_t ip,
   else if (pkt == IPMIPOWER_PACKET_TYPE_C410X_SLOT_POWER_CONTROL_RQ)
     {
       char *endptr;
-      unsigned int slot_number;
+      long slot_number;
       uint16_t slot_number_bitmask;
 
       assert (ip->extra_arg);
