@@ -687,10 +687,11 @@ ipmipower_powercmd_pending ()
 /* _send_packet
  * - Send a packet of the specified type
  * - updates state and counts
- * - if this is a retransmission, do not update inbound and rqseq
- *   count.  BMC may need to know if this is a retransmission.  Must
- *   increment outbound sequence number, since BMC may increase outbound
- *   sequence number.
+ * - the requester sequence number, message tag, and session sequence
+ *   number are incremented on every send, retransmissions included.
+ *   The receive side checks the response against the most recent
+ *   send, so a late response to an earlier transmission is discarded
+ *   rather than matched.
  */
 static void
 _send_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
