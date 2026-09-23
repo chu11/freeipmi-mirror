@@ -268,7 +268,7 @@ Specify the ipmi driver to use.
 Specify a new session timeout length.
 .TP
 \fBretransmission-timeout\fR \fIMILLISECONDS\fR
-Specify a new retransmiision timeout length.
+Specify a new retransmission timeout length.
 .TP
 \fBauthentication-type\fR \fIAUTHENTICATION-TYPE\fR
 Specify the authentication type to use.
