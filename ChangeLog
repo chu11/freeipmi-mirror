@@ -1,5 +1,11 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/ipmi_monitoring.c
+	(ipmi_monitoring_ctx_sdr_cache_directory): Reject a path that exists
+	but is not a directory.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* libipmimonitoring/ipmi_monitoring.c (ipmi_monitoring_init): On a
 	repeat call, set *errnum to SUCCESS when the flags match those in
 	effect and fail with PARAMETERS when they differ, rather than

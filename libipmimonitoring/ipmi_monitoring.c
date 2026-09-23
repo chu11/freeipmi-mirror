@@ -400,6 +400,12 @@ ipmi_monitoring_ctx_sdr_cache_directory (ipmi_monitoring_ctx_t c, const char *di
       return (-1);
     }
 
+  if (!S_ISDIR (buf.st_mode))
+    {
+      c->errnum = IPMI_MONITORING_ERR_PARAMETERS;
+      return (-1);
+    }
+
   strncpy (c->sdr_cache_directory, dir, MAXPATHLEN);
   c->sdr_cache_directory_set = 1;
 
