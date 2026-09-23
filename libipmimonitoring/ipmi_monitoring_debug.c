@@ -57,9 +57,11 @@ _debug (const char *fmt, va_list ap)
 
   assert (fmt);
 
+  if (!(_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG))
+    return;
+
   vsnprintf (errbuf, IPMI_MONITORING_DEBUG_ERROR_BUFLEN, fmt, ap);
-  if (_ipmi_monitoring_flags & IPMI_MONITORING_FLAGS_DEBUG)
-    fprintf (stderr, "%s\n", errbuf);
+  fprintf (stderr, "%s\n", errbuf);
 }
 
 void
