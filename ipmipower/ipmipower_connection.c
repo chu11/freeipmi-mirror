@@ -339,6 +339,7 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
 	  /* some other error, close the ipmi_fd we just opened and try
 	   * the next addrinfo */
 	  close (ic->ipmi_fd);
+	  ic->ipmi_fd = -1;
 	  continue;
 	}
 
@@ -369,16 +370,20 @@ _connection_setup (struct ipmipower_connection *ic, const char *hostname)
         }
       else
         {
-	  close(ic->ipmi_fd);
-	  close(ic->ping_fd);
+	  close (ic->ipmi_fd);
+	  close (ic->ping_fd);
+	  ic->ipmi_fd = -1;
+	  ic->ping_fd = -1;
 	  continue;
         }
 
       if ((bind (ic->ipmi_fd, ic->srcaddr, ic->srcaddrlen) < 0)
           || (bind (ic->ping_fd, ic->srcaddr, ic->srcaddrlen) < 0))
 	{
-	  close(ic->ipmi_fd);
-	  close(ic->ping_fd);
+	  close (ic->ipmi_fd);
+	  close (ic->ping_fd);
+	  ic->ipmi_fd = -1;
+	  ic->ping_fd = -1;
 	  continue;
 	}
 
