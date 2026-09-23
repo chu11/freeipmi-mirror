@@ -52,8 +52,6 @@
 #include "tool-cmdline-common.h"
 #include "tool-config-file-common.h"
 
-extern struct ipmipower_connection *ics;
-
 const char *argp_program_version =
   "ipmipower - " PACKAGE_VERSION "\n"
   "Copyright (C) 2007-2015 Lawrence Livermore National Security, LLC.\n"

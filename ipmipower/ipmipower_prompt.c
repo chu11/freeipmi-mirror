@@ -72,8 +72,6 @@ extern struct ipmipower_connection *ics;
 
 extern unsigned int ics_len;
 
-extern struct oem_power_type_data *oem_power_type_data;
-
 extern unsigned int output_counts[IPMIPOWER_MSG_TYPE_NUM_ENTRIES];
 
 /* eliminate
