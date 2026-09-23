@@ -1,5 +1,13 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/ipmi_monitoring_parse_common.c
+	(ipmi_monitoring_get_sensor_type): Return
+	IPMI_MONITORING_SENSOR_TYPE_UNKNOWN for reserved sensor types
+	0x2D-0xBF instead of the raw value, which matches nothing in the
+	public enum.  OEM types 0xC0-0xFF still pass through.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* libipmimonitoring/ipmi_monitoring_sel.c (ipmi_monitoring_get_sel):
 	Zero the sel_parse_data struct before filling in the fields the
 	chosen parse path uses.

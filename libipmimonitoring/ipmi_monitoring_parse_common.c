@@ -144,6 +144,14 @@ ipmi_monitoring_get_sensor_type (ipmi_monitoring_ctx_t c,
       return (IPMI_MONITORING_SENSOR_TYPE_FRU_STATE);
     }
 
-  return (sensor_type);
+  /* OEM types pass through, the IPMI_MONITORING_SENSOR_TYPE_OEM_MIN
+   * to OEM_MAX range maps 1:1.  Anything else is reserved by the
+   * spec and matches nothing in the public enum.
+   */
+  if (IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
+    return (sensor_type);
+
+  IPMI_MONITORING_DEBUG (("sensor_type '0x%X' reserved", sensor_type));
+  return (IPMI_MONITORING_SENSOR_TYPE_UNKNOWN);
 }
 
