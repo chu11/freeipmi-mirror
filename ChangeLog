@@ -1,5 +1,11 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetect/ipmidetect.c (_output_data): Make static.  It is only
+	called from main and was the one file-local function with external
+	linkage and no prototype.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* ipmidetect/ipmidetect.c: Drop unused includes (getopt.h, dirent.h,
 	sys/time.h, time.h, sys/types.h, sys/stat.h, fcntl.h, stdarg.h,
 	fd.h) and the unused IPMIDETECT_OPTIONS_LEN,

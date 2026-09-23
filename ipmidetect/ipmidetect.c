@@ -280,7 +280,7 @@ _create_formats (char *endstr)
  *
  * Returns exit_val;
  */
-int
+static int
 _output_data (void)
 {
   int exit_val;
