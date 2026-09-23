@@ -228,6 +228,12 @@ enum ipmi_monitoring_flags
     IPMI_MONITORING_FLAGS_LOCK_MEMORY        = 0x04,
   };
 
+/* The 1.5, 2.0 and in-band workaround flags share numeric values.
+ * Which set applies is selected by the call: in-band flags when
+ * hostname is NULL or localhost, otherwise the set matching
+ * protocol_version.  Passing a flag from a different set fails with
+ * IPMI_MONITORING_ERR_PARAMETERS.
+ */
 enum ipmi_monitoring_workaround_flags
   {
     /* For use w/ IPMI_MONITORING_PROTOCOL_VERSION_1_5 */
