@@ -27,7 +27,7 @@
 #ifndef IPMIDETECT_ARGP_H
 #define IPMIDETECT_ARGP_H
 
-#include "ipmidetect.h"
+#include "ipmidetect_.h"
 
 void ipmidetect_argp_parse (int argc, char **argv, struct ipmidetect_arguments *cmd_args);
 
