@@ -363,8 +363,6 @@ _get_sensor_reading (ipmi_monitoring_ctx_t c,
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_LINEAR
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_READING_UNAVAILABLE
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_SCANNING_DISABLED
-          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_ANALOG
-          || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NON_LINEAR
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_NOT_OWNED_BY_BMC
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_CANNOT_BE_BRIDGED
           || errnum == IPMI_SENSOR_READ_ERR_SENSOR_IS_SYSTEM_SOFTWARE
