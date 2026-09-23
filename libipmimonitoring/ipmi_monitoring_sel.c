@@ -655,7 +655,7 @@ _store_sel_record (ipmi_monitoring_ctx_t c, unsigned int sel_flags)
                                        0,
                                        &record_type) < 0)
     {
-      IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_id: %s",
+      IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_type: %s",
                               ipmi_sel_ctx_errormsg (c->sel_parse_ctx)));
       _sel_parse_ctx_error_convert (c);
       goto cleanup;
@@ -775,7 +775,7 @@ _ipmi_monitoring_sel_parse_sensor_types (ipmi_sel_ctx_t ctx, void *callback_data
                                        0,
                                        &record_type) < 0)
     {
-      IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_id: %s",
+      IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_type: %s",
                               ipmi_sel_ctx_errormsg (spd->c->sel_parse_ctx)));
       _sel_parse_ctx_error_convert (spd->c);
       return (-1);
@@ -840,7 +840,7 @@ _ipmi_monitoring_sel_parse_date_range (ipmi_sel_ctx_t ctx, void *callback_data)
                                        0,
                                        &record_type) < 0)
     {
-      IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_id: %s",
+      IPMI_MONITORING_DEBUG (("ipmi_sel_parse_read_record_type: %s",
                               ipmi_sel_ctx_errormsg (spd->c->sel_parse_ctx)));
       _sel_parse_ctx_error_convert (spd->c);
       return (-1);
