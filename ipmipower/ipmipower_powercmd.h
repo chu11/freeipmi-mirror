@@ -29,9 +29,9 @@
 
 #include "ipmipower.h"
 
-void ipmipower_powercmd_setup ();
+void ipmipower_powercmd_setup (void);
 
-void ipmipower_powercmd_cleanup ();
+void ipmipower_powercmd_cleanup (void);
 
 void ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
                                struct ipmipower_connection *ic,
@@ -41,7 +41,7 @@ void ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
  * - Determines if any commands are still pending
  * Returns 1 if commands are still being executed, 0 if not
  */
-int ipmipower_powercmd_pending ();
+int ipmipower_powercmd_pending (void);
 
 /* ipmipower_powercmd_process_pending
  * - Process remaining commands still in the queue

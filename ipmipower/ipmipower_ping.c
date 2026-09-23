@@ -72,7 +72,7 @@ static int force_discovery_sweep;
 #define IPMI_RQ_SEQ_MAX  0x3F
 
 void
-ipmipower_ping_force_discovery_sweep ()
+ipmipower_ping_force_discovery_sweep (void)
 {
   force_discovery_sweep = 1;
 }

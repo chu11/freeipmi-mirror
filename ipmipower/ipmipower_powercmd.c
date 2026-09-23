@@ -180,7 +180,7 @@ _destroy_ipmipower_powercmd (void *x)
 }
 
 void
-ipmipower_powercmd_setup ()
+ipmipower_powercmd_setup (void)
 {
   assert (!pending);  /* need to cleanup first! */
 
@@ -200,7 +200,7 @@ ipmipower_powercmd_setup ()
 }
 
 void
-ipmipower_powercmd_cleanup ()
+ipmipower_powercmd_cleanup (void)
 {
   assert (pending);  /* did not run ipmipower_powercmd_setup() */
   list_destroy (pending);
@@ -677,7 +677,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
 }
 
 int
-ipmipower_powercmd_pending ()
+ipmipower_powercmd_pending (void)
 {
   assert (pending);  /* did not run ipmipower_powercmd_setup() */
 

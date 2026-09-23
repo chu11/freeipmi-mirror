@@ -29,7 +29,7 @@
 
 #include "ipmipower.h"
 
-void ipmipower_ping_force_discovery_sweep ();
+void ipmipower_ping_force_discovery_sweep (void);
 
 void ipmipower_ping_process_pings (int *timeout);
 
