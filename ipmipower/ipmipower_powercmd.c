@@ -297,8 +297,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
                                               &(ip->integrity_algorithm),
                                               &(ip->confidentiality_algorithm)) < 0)
         {
-          IPMIPOWER_ERROR (("ipmipower_powercmd_queue: ipmi_cipher_suite_id_to_algorithms: ",
-                            "cmd_args.common_args.cipher_suite_id: %d: %s",
+          IPMIPOWER_ERROR (("ipmi_cipher_suite_id_to_algorithms: cipher_suite_id: %d: %s",
                             cmd_args.common_args.cipher_suite_id, strerror (errno)));
           exit (EXIT_FAILURE);
         }
