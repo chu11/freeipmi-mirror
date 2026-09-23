@@ -253,8 +253,8 @@ Specify a new password.  No input for null password.
 Specify a new K_g BMC Key.  No input for null key.  Prefix with '0x'
 to enter a key in hexadecimal
 .TP
-\fBipmi-version\fR \fIIPMIVERSION\fR
-Specify the ipmi version to use.
+\fBdriver-type\fR \fIIPMIDRIVER\fR
+Specify the ipmi driver to use.
 .TP
 \fBsession-timeout\fR \fIMILLISECONDS\fR
 Specify a new session timeout length.
