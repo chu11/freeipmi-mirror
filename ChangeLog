@@ -1,5 +1,13 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetect/ipmidetect.c: Drop unused includes (getopt.h, dirent.h,
+	sys/time.h, time.h, sys/types.h, sys/stat.h, fcntl.h, stdarg.h,
+	fd.h) and the unused IPMIDETECT_OPTIONS_LEN,
+	IPMIDETECT_LONG_OPTIONS_LEN and IPMIDETECT_MAXPATHLEN defines left
+	over from the pre-argp getopt implementation.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* ipmidetect/ipmidetect-argp.h: Include the tool's ipmidetect_.h
 	rather than the library's ipmidetect.h.  The prototype needs struct
 	ipmidetect_arguments, which only the tool header defines; it compiled

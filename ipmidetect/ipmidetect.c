@@ -32,28 +32,7 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#include <stdarg.h>
 #endif /* STDC_HEADERS */
-
-#if HAVE_GETOPT_H
-#include <getopt.h>
-#endif /* HAVE_GETOPT_H */
-#include <dirent.h>
-#if TIME_WITH_SYS_TIME
-#include <sys/time.h>
-#include <time.h>
-#else  /* !TIME_WITH_SYS_TIME */
-#if HAVE_SYS_TIME_H
-#include <sys/time.h>
-#else /* !HAVE_SYS_TIME_H */
-#include <time.h>
-#endif  /* !HAVE_SYS_TIME_H */
-#endif /* !TIME_WITH_SYS_TIME */
-#include <sys/types.h>
-#include <sys/stat.h>
-#if HAVE_FCNTL_H
-#include <fcntl.h>
-#endif /* HAVE_FCNTL_H */
 #include <assert.h>
 #include <errno.h>
 
@@ -63,7 +42,6 @@
 
 #include "freeipmi-portability.h"
 #include "error.h"
-#include "fd.h"
 #include "fi_hostlist.h"
 
 /*
@@ -71,9 +49,6 @@
  */
 #define IPMIDETECT_BUFFERLEN         65536
 #define IPMIDETECT_FORMATLEN         64
-#define IPMIDETECT_OPTIONS_LEN       64
-#define IPMIDETECT_LONG_OPTIONS_LEN  32
-#define IPMIDETECT_MAXPATHLEN        256
 
 /*
  * Ipmidetect output data
