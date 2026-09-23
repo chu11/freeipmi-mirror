@@ -241,8 +241,9 @@ control operations that can be executed in parallel.
 .SH "INTERACTIVE COMMANDS"
 .B Ipmipower
 provides the following interactive commands at the ipmipower> prompt.
-Before any power commands (on, off, cycle, reset, stat, pulse, or
-soft) can be used, hostnames must be configured into
+Before any power commands (on, off, cycle, reset, stat, pulse, soft,
+identify-on, identify-off, or identify-status) can be used, hostnames
+must be configured into
 .B ipmipower,
 either through the command prompt or the hostname command below.  The
 parameters and options to the commands below mirror their appropriate
