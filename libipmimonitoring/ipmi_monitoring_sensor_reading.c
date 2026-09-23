@@ -1217,6 +1217,11 @@ ipmi_monitoring_get_sensor_reading (ipmi_monitoring_ctx_t c,
       && record_type != IPMI_SDR_FORMAT_COMPACT_SENSOR_RECORD)
     {
       IPMI_MONITORING_DEBUG (("record_type '0x%X' not supported", record_type));
+
+      /* a non-sensor record can never match a requested sensor type */
+      if (sensor_types)
+        return (0);
+
       if (_store_unreadable_sensor_reading (c,
                                             sensor_reading_flags,
                                             record_id,

@@ -877,6 +877,13 @@ int ipmi_monitoring_sel_read_oem_data (ipmi_monitoring_ctx_t c,
  * If 'record_ids' is NULL, all sensors will be retrieved
  * If specified, callback function will be called after each sensor is read and parsed.
  *
+ * SDR records that are not sensor records (e.g. FRU or management
+ * controller device locators) are returned with a sensor type of
+ * IPMI_MONITORING_SENSOR_TYPE_UNKNOWN and a sensor state of
+ * IPMI_MONITORING_STATE_UNKNOWN unless
+ * IPMI_MONITORING_SENSOR_READING_FLAGS_IGNORE_NON_INTERPRETABLE_SENSORS
+ * is specified.
+ *
  * Returns number of sensors values retrieved on success, -1 on error.
  * Sensor iterators below may be used after calling this function to
  * iterate through sensors.

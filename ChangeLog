@@ -1,5 +1,16 @@
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
+	* libipmimonitoring/ipmi_monitoring_sensor_reading.c
+	(ipmi_monitoring_get_sensor_reading): When filtering by sensor type,
+	skip SDR records that are not full or compact sensor records instead
+	of returning them as SENSOR_TYPE_UNKNOWN readings; they can never
+	match a requested type.
+	* libipmimonitoring/ipmi_monitoring.h.in
+	(ipmi_monitoring_sensor_readings_by_record_id): Document that
+	non-sensor SDR records are returned with unknown type and state.
+
+2026-09-23 Albert Chu <chu11@llnl.gov>
+
 	* libipmimonitoring/ipmi_monitoring.c
 	(_ipmi_monitoring_sensor_readings_by_record_id)
 	(_ipmi_monitoring_sensor_readings_by_sensor_type): Do not overwrite
