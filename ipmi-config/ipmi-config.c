@@ -475,13 +475,15 @@ _ipmi_config (pstdout_state_t pstate,
               struct ipmi_config_section *s;
               ipmi_config_err_t this_ret;
 
+              /* section names were validated above, so this cannot fail */
               if (!(s = ipmi_config_find_section (&state_data, sstr->section_name)))
                 {
                   pstdout_fprintf (pstate,
                                    stderr,
                                    "## FATAL: Cannot checkout section '%s'\n",
                                    sstr->section_name);
-                  continue;
+                  ret = IPMI_CONFIG_ERR_FATAL_ERROR;
+                  break;
                 }
 
               this_ret = ipmi_config_checkout_section (&state_data,
