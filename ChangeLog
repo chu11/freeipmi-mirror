@@ -1,5 +1,19 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config.h (struct ipmi_config_keypair): Add
+	value_input_set.
+	* ipmi-config/ipmi-config-argp.c (_ipmi_config_keypair_parse_string,
+	_ipmi_config_keypair_create, cmdline_parse): Record whether the
+	--key-pair argument contained "=".
+	(_ipmi_config_args_validate): For --commit and --diff, reject a
+	--key-pair with no "=".  "Section:Key" and "Section:Key=" were
+	indistinguishable, so a forgotten "=value" committed an empty
+	value, which for Password, K_G, Username and others clears the
+	setting.  Checkout still accepts a bare key.
+	* man/ipmi-config.8.pre.in (--key-pair): Document it.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-validate.c (check_number_range,
 	check_number_range_unsigned): Reject a value in which strtol()
 	consumed nothing.  An empty value passed the endptr[0] == '\0'

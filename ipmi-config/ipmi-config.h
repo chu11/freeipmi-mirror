@@ -149,6 +149,7 @@ struct ipmi_config_keypair
   char *section_name;
   char *key_name;
   char *value_input;
+  int value_input_set;          /* "=" was present, even if VALUE was empty */
   struct ipmi_config_keypair *next;
 };
 

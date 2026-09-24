@@ -200,7 +200,8 @@ static int
 _ipmi_config_keypair_parse_string (const char *str,
                                    char **section_name,
                                    char **key_name,
-                                   char **value)
+                                   char **value,
+                                   int *value_set)
 {
   char *str_temp = NULL;
   char *section_name_tok = NULL;
@@ -214,10 +215,13 @@ _ipmi_config_keypair_parse_string (const char *str,
   assert (section_name);
   assert (key_name);
   assert (value);
+  assert (value_set);
 
   *section_name = NULL;
   *key_name = NULL;
   *value = NULL;
+  /* strtok_r cannot tell "Sec:Key" from "Sec:Key=" */
+  *value_set = (strchr (str, '=') != NULL);
 
   if (!(str_temp = strdup (str)))
     {
@@ -345,7 +349,8 @@ _ipmi_config_keypair_append (struct ipmi_config_keypair **keypairs,
 static struct ipmi_config_keypair *
 _ipmi_config_keypair_create (const char *section_name,
                              const char *key_name,
-                             const char *value_input)
+                             const char *value_input,
+                             int value_input_set)
 {
   struct ipmi_config_keypair *keypair = NULL;
 
@@ -361,6 +366,7 @@ _ipmi_config_keypair_create (const char *section_name,
   keypair->section_name = NULL;
   keypair->key_name = NULL;
   keypair->value_input = NULL;
+  keypair->value_input_set = value_input_set;
   keypair->next = NULL;
 
   if (!(keypair->section_name = strdup (section_name)))
@@ -473,6 +479,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
   char *section_name = NULL;
   char *key_name = NULL;
   char *value = NULL;
+  int value_set = 0;
 
   assert (state);
 
@@ -514,12 +521,14 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (_ipmi_config_keypair_parse_string (arg,
                                              &section_name,
                                              &key_name,
-                                             &value) < 0)
+                                             &value,
+                                             &value_set) < 0)
         exit (EXIT_FAILURE);
 
       if (!(kp = _ipmi_config_keypair_create (section_name,
                                               key_name,
-                                              value)))
+                                              value,
+                                              value_set)))
         exit (EXIT_FAILURE);
 
       if (_ipmi_config_keypair_append (&(cmd_args->keypairs),
@@ -638,6 +647,30 @@ _ipmi_config_args_validate (struct ipmi_config_arguments *cmd_args)
       fprintf (stderr,
                "Only one of --filename, --keypair, and --section can be used\n");
       exit (EXIT_FAILURE);
+    }
+
+  /* A bare "Section:Key" is fine for checkout, but for commit/diff it
+   * would be an empty value, which for keys like Password clears the
+   * setting.  Require the "=" so a forgotten value is caught.
+   */
+  if (cmd_args->action == IPMI_CONFIG_ACTION_COMMIT
+      || cmd_args->action == IPMI_CONFIG_ACTION_DIFF)
+    {
+      struct ipmi_config_keypair *kp;
+
+      for (kp = cmd_args->keypairs; kp; kp = kp->next)
+        {
+          if (!kp->value_input_set)
+            {
+              fprintf (stderr,
+                       "No value given for key pair '%s:%s', use '%s:%s=VALUE' (VALUE may be empty)\n",
+                       kp->section_name,
+                       kp->key_name,
+                       kp->section_name,
+                       kp->key_name);
+              exit (EXIT_FAILURE);
+            }
+        }
     }
 
   /* filename is readable if commit, writable/creatable if checkout */
