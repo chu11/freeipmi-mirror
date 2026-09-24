@@ -680,7 +680,9 @@ _ipmi_config_args_validate (struct ipmi_config_arguments *cmd_args)
         {
         case IPMI_CONFIG_ACTION_COMMIT:
         case IPMI_CONFIG_ACTION_DIFF:
-          if (access (cmd_args->filename, R_OK) < 0)
+          /* "-" is standard input */
+          if (strcmp (cmd_args->filename, "-")
+              && access (cmd_args->filename, R_OK) < 0)
             {
               fprintf (stderr,
                        "Cannot read '%s': %s\n",

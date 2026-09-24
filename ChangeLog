@@ -1,5 +1,13 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-argp.c (_ipmi_config_args_validate): Do
+	not access() a --filename of "-" for commit and diff; it means
+	standard input, which the check made unreachable unless a file
+	literally named "-" existed.
+	* man/ipmi-config.8.pre.in (--filename): Document "-".
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-pef-sections.c
 	(ipmi_config_pef_sections_create): Create Lan_Alert_Destination_0
 	per-channel sections too.  The base loop created destinations

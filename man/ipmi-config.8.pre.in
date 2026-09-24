@@ -77,7 +77,9 @@ Show differences between stored information and a config file or key pairs.
 .TP
 \fB\-n\fR \fIFILENAME\fR, \fB\-\-filename\fR=\fIFILENAME\fR
 Specify a config file for checkout/commit/diff.  If specified with checkout, cannot
-use with multiple hosts or with \fB\-\-always\-prefix\fR.
+use with multiple hosts or with \fB\-\-always\-prefix\fR.  For commit
+and diff, a FILENAME of "-" reads the configuration from standard
+input.
 .TP
 \fB\-e\fR \fI"KEY=VALUE"\fR, \fB\-\-key\-pair\fR=\fI"KEY=VALUE"\fR
 Specify KEY=VALUE pairs for checkout/commit/diff.  Specify KEY by
