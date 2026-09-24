@@ -27,8 +27,6 @@
 #ifndef IPMIDETECT_H
 #define IPMIDETECT_H
 
-#include <stdio.h>
-
 /*
  * Libipmidetect version
  *
