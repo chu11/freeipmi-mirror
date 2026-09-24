@@ -259,7 +259,7 @@ the checked out value may be blank.  Some of these fields may be
 disableable, while some are not.
 
 The
-.B Chassis_Power_Conf:Power_Control_Interval
+.B Chassis_Power_Conf:Power_Cycle_Interval
 field cannot be checked out.  Therefore the checked out value will
 always be blank.
 
