@@ -1,5 +1,13 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c
+	(ipmi_config_core_lan6_conf_section_get): Remove a doubled space
+	in the section comment, and describe the router MAC address keys
+	as "Give valid MAC address" (there is no IPv6-specific MAC format)
+	to match the Lan_Conf MAC keys.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-core-rmcpplus-conf-privilege-section.c
 	(ipmi_config_core_rmcpplus_conf_privilege_section_get): Add the
 	missing space in "(SOL),cipher" in the section comment.

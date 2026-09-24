@@ -2315,7 +2315,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
   char key_name[IPMI_CONFIG_MAX_KEY_NAME_LEN];
   char *section_comment =
     "In the Lan6_Conf section, typical networking configuration is setup.  "
-    "Most users will choose to set an address in  \"IPv6_Static_Address\" "
+    "Most users will choose to set an address in \"IPv6_Static_Address\" "
     "and set the appropriate routing for the machine.  Note that multiple IPv6 "
     "addresses can be configured, enable verbose output to view them.";
   char *section_name_base_str = "Lan6_Conf";
@@ -2653,7 +2653,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "IPv6_Static_Router_Mac_Address_1",
-                                   "Give valid IPv6 mac address",
+                                   "Give valid MAC address",
                                    0,
                                    ipv6_static_router_mac_address_checkout,
                                    ipv6_static_router_mac_address_commit,
@@ -2693,7 +2693,7 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "IPv6_Static_Router_Mac_Address_2",
-                                   "Give valid IPv6 mac address",
+                                   "Give valid MAC address",
                                    0,
                                    ipv6_static_router_mac_address_checkout,
                                    ipv6_static_router_mac_address_commit,
