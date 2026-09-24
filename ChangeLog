@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetectd/ipmidetectd-config.c (ipmidetectd_config_setup):
+	Remove duplicate hosts from the configured list so overlapping host
+	ranges no longer exit with "Duplicate host ip".
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmidetectd/ipmidetectd.c (IPMIDETECTD_NODES_PER_SOCKET): Raise
 	from 8 to 64 so large clusters need far fewer sockets; 64 pending
 	replies still fit in the default receive buffer.

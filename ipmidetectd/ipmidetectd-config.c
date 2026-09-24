@@ -178,6 +178,11 @@ ipmidetectd_config_setup (void)
   _config_default ();
   _config_file_parse ();
 
+  /* Overlapping host ranges are a harmless way to repeat a host; only
+   * distinct names that resolve to the same address are an error.
+   */
+  fi_hostlist_uniq (conf.hosts);
+
   if (!fi_hostlist_count (conf.hosts))
     err_exit ("No nodes configured");
 }
