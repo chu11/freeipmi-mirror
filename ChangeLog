@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* libipmidetect/ipmidetect.c (ipmidetect_load_data): Drop the
+	strlen() > 0 guard and the attempts counter in the configured
+	hostname loop.  An empty entry fails in getaddrinfo() and falls
+	through to the next host the same way, and attempts was always i.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* libipmidetect/ipmidetect.c (_low_timeout_connect): Size port_str
 	for an integer instead of IPMIDETECT_BUFLEN and drop the memset;
 	snprintf NUL-terminates.

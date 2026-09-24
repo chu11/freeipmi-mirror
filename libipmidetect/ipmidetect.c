@@ -677,24 +677,19 @@ ipmidetect_load_data (ipmidetect_t handle,
   if (!hostname && conffile_config.hostnames_flag)
     {
       unsigned int i;
-      unsigned int attempts = 0;
 
       for (i = 0; i < conffile_config.hostnames_len; i++)
         {
-          if (strlen (conffile_config.hostnames[i]) > 0)
-            {
-              if (attempts && _reset_node_lists (handle) < 0)
-                goto cleanup;
-              attempts++;
+          if (i && _reset_node_lists (handle) < 0)
+            goto cleanup;
 
-              if (_get_data (handle,
-                             conffile_config.hostnames[i],
-                             port,
-                             timeout_len) < 0)
-                continue;
-              else
-                break;
-            }
+          if (_get_data (handle,
+                         conffile_config.hostnames[i],
+                         port,
+                         timeout_len) < 0)
+            continue;
+          else
+            break;
         }
 
       if (i >= conffile_config.hostnames_len)
