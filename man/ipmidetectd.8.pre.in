@@ -75,7 +75,8 @@ Turn on debugging and run daemon in foreground
 Output version
 
 .SH "ERRORS"
-Errors are logged to syslog.
+Errors are logged to syslog.  When running in the foreground with
+\fB\-\-debug\fR, errors are written to standard error instead.
 .SH "FILES"
 @IPMIDETECTD_CONFIG_FILE_DEFAULT@
 .br

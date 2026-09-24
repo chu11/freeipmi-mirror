@@ -1,5 +1,10 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmidetectd.8.pre.in: Note under ERRORS that errors go to
+	standard error rather than syslog when running with --debug.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmidetectd.8.pre.in: Document that the daemon serves results
 	over TCP on all interfaces, port 9225 by default.  List the pidfile
 	under FILES and ipmidetect(8) and libipmidetect(3) under SEE ALSO.
