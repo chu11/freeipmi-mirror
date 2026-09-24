@@ -642,7 +642,7 @@ _ipmi_config_args_validate (struct ipmi_config_arguments *cmd_args)
       && cmd_args->action == IPMI_CONFIG_ACTION_DIFF)
     {
       fprintf (stderr,
-               "Both --filename or --keypair cannot be used\n");
+               "--filename and --key-pair cannot both be used with --diff\n");
       exit (EXIT_FAILURE);
     }
 
@@ -651,7 +651,25 @@ _ipmi_config_args_validate (struct ipmi_config_arguments *cmd_args)
       && (cmd_args->keypairs && cmd_args->section_strs))
     {
       fprintf (stderr,
-               "Only one of --filename, --keypair, and --section can be used\n");
+               "--key-pair and --section cannot both be used with --checkout\n");
+      exit (EXIT_FAILURE);
+    }
+
+  /* --section is only meaningful for checkout */
+  if (cmd_args->section_strs
+      && cmd_args->action
+      && cmd_args->action != IPMI_CONFIG_ACTION_CHECKOUT)
+    {
+      fprintf (stderr,
+               "--section can only be used with --checkout\n");
+      exit (EXIT_FAILURE);
+    }
+
+  if (cmd_args->action == IPMI_CONFIG_ACTION_LIST_SECTIONS
+      && (cmd_args->keypairs || cmd_args->filename))
+    {
+      fprintf (stderr,
+               "--key-pair and --filename cannot be used with --listsections\n");
       exit (EXIT_FAILURE);
     }
 

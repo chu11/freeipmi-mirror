@@ -1,5 +1,15 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-argp.c (_ipmi_config_args_validate):
+	Reject --section with --commit or --diff, and --key-pair or
+	--filename with --listsections; they were accepted and silently
+	ignored.  Reword the --filename/--key-pair with --diff message,
+	which read "Both --filename or --keypair cannot be used", and the
+	--key-pair/--section with --checkout message, which claimed
+	--filename was also exclusive.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-argp.c (_ipmi_config_category): Reject
 	an empty category list.  `--category ""` or `--category ,` left
 	the mask zero, so the tool connected to the BMC, built no
