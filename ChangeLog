@@ -1,5 +1,13 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-lan-conf-section.c
+	(ipmi_config_core_lan_conf_section_get): Validate Vlan_Priority as
+	a three-bit value; the vlan_priority field is 3 bits and the
+	library does not range-check it, so values up to 255 were accepted
+	and silently truncated on the wire.  Describe it as "0-7".
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-core-user-sections.c
 	(ipmi_config_core_user_section_get): Validate Serial_Session_Limit
 	as a four-bit value like Lan_Session_Limit; the user_session_limit

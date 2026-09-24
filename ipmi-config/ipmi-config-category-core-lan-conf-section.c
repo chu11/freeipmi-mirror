@@ -2364,11 +2364,11 @@ ipmi_config_core_lan_conf_section_get (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_add_key (state_data,
                                    section,
                                    "Vlan_Priority",
-                                   "Give valid unsigned number",
+                                   "Possible values: 0-7",
                                    verbose_option_config_flags,
                                    vlan_priority_checkout,
                                    vlan_priority_commit,
-                                   number_range_one_byte_validate) < 0)
+                                   number_range_three_bits_validate) < 0)
     goto cleanup;
 
   if (ipmi_config_section_add_key (state_data,
