@@ -1,5 +1,13 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-pef-sections.c
+	(_get_number_of_lan_alert_destinations, _get_number_of_alert_strings,
+	_get_number_of_alert_policy_entries, _get_number_of_event_filters):
+	Print the fiid_obj_get error message when reading the count field
+	fails, rather than returning a non-fatal error silently.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-core-sections.c
 	(_get_number_of_users): Print the fiid_obj_get error message when
 	reading max_channel_user_ids fails, rather than returning a

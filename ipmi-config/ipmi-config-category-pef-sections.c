@@ -96,6 +96,10 @@ _get_number_of_lan_alert_destinations (struct ipmi_config_state_data *state_data
                     "number_of_lan_destinations",
                     &val) < 0)
     {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'number_of_lan_destinations': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -152,6 +156,10 @@ _get_number_of_alert_strings (struct ipmi_config_state_data *state_data, uint8_t
                     "number_of_alert_strings",
                     &val) < 0)
     {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'number_of_alert_strings': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -208,6 +216,10 @@ _get_number_of_alert_policy_entries (struct ipmi_config_state_data *state_data, 
                     "number_of_alert_policy_entries",
                     &val) < 0)
     {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'number_of_alert_policy_entries': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
@@ -264,6 +276,10 @@ _get_number_of_event_filters (struct ipmi_config_state_data *state_data, uint8_t
                     "number_of_event_filters",
                     &val) < 0)
     {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'number_of_event_filters': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
