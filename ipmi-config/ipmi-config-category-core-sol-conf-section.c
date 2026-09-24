@@ -119,7 +119,7 @@ enable_sol_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   val ? "Yes" : "No") < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -963,7 +963,7 @@ non_volatile_bit_rate_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   sol_bit_rate_string (bit_rate)) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -1092,7 +1092,7 @@ volatile_bit_rate_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   sol_bit_rate_string (bit_rate)) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -1221,7 +1221,7 @@ sol_payload_port_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                port_number) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:

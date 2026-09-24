@@ -540,14 +540,14 @@ username_checkout (ipmi_config_state_data_t *state_data,
       if (ipmi_config_section_update_keyvalue_output (state_data,
                                                       kv,
                                                       "anonymous") < 0)
-        return (IPMI_CONFIG_ERR_FATAL_ERROR);
+        goto cleanup;
     }
   else
     {
       if (ipmi_config_section_update_keyvalue_output (state_data,
                                                       kv,
                                                       username) < 0)
-        return (IPMI_CONFIG_ERR_FATAL_ERROR);
+        goto cleanup;
     }
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
@@ -1693,7 +1693,7 @@ sol_payload_access_checkout (ipmi_config_state_data_t *state_data,
           if (ipmi_config_section_update_keyvalue_output (state_data,
                                                           kv,
                                                           IPMI_CONFIG_USERNAME_NOT_SET_YET_STR) < 0)
-            return (IPMI_CONFIG_ERR_FATAL_ERROR);
+            goto cleanup;
           goto out;
         }
 
@@ -1725,7 +1725,7 @@ sol_payload_access_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   val ? "Yes" : "No") < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
  out:
   rv = IPMI_CONFIG_ERR_SUCCESS;

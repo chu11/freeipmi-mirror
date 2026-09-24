@@ -849,7 +849,7 @@ pef_startup_delay_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                pef_startup_delay) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -966,7 +966,7 @@ pef_alert_startup_delay_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                pef_alert_startup_delay) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:

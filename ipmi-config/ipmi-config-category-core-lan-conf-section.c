@@ -123,7 +123,7 @@ ip_address_source_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ip_address_source_string (ip_address_source)) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -271,7 +271,7 @@ ip_address_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ip_address_str) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -423,7 +423,7 @@ mac_address_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   mac_address_str) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -578,7 +578,7 @@ subnet_mask_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   subnet_mask_str) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -732,7 +732,7 @@ default_gateway_address_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ip_address_str) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -885,7 +885,7 @@ default_gateway_mac_address_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   mac_address_str) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -1040,7 +1040,7 @@ backup_gateway_address_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ip_address_str) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -1192,7 +1192,7 @@ backup_gateway_mac_address_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   mac_address_str) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -1569,7 +1569,7 @@ vlan_priority_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                vlan_priority) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -2036,7 +2036,7 @@ primary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                primary_rmcp_port_number) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -2165,7 +2165,7 @@ secondary_rmcp_port_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                secondary_rmcp_port_number) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:

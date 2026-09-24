@@ -363,7 +363,7 @@ alert_string_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   alert_string) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:

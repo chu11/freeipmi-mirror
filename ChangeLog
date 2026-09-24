@@ -1,5 +1,14 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-*.c: In checkout and commit
+	functions that hold a fiid object, `goto cleanup` rather than
+	`return (IPMI_CONFIG_ERR_FATAL_ERROR)` when
+	ipmi_config_section_update_keyvalue_output*() or inet_pton()
+	fails, so the object is destroyed.  rv is already FATAL at those
+	points, so the result is unchanged.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config.c (main): Reject --checkout --filename
 	with multiple hosts before pstdout_launch().
 	(_ipmi_config): Drop the per-thread check, which ran only after

@@ -467,7 +467,7 @@ ipv6_ipv4_addressing_enables_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   ipv6_ipv4_addressing_enables_string (val)) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -1666,7 +1666,7 @@ ipv6_static_router_address_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   address_str) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -1718,7 +1718,7 @@ ipv6_static_router_address_commit (ipmi_config_state_data_t *state_data,
                          stderr,
                          "inet_pton: %s\n",
                          strerror (errno));
-      return (IPMI_CONFIG_ERR_FATAL_ERROR);
+      goto cleanup;
     }
 
   if (num == 1)
@@ -1856,7 +1856,7 @@ ipv6_static_router_mac_address_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   router_mac_address_str) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -2030,8 +2030,7 @@ ipv6_static_router_prefix_length_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output_unsigned_int (state_data,
                                                                kv,
                                                                prefix_length) < 0)
-
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -2217,7 +2216,7 @@ ipv6_static_router_prefix_value_checkout (ipmi_config_state_data_t *state_data,
   if (ipmi_config_section_update_keyvalue_output (state_data,
                                                   kv,
                                                   prefix_value_str) < 0)
-    return (IPMI_CONFIG_ERR_FATAL_ERROR);
+    goto cleanup;
 
   rv = IPMI_CONFIG_ERR_SUCCESS;
  cleanup:
@@ -2269,7 +2268,7 @@ ipv6_static_router_prefix_value_commit (ipmi_config_state_data_t *state_data,
                          stderr,
                          "inet_pton: %s\n",
                          strerror (errno));
-      return (IPMI_CONFIG_ERR_FATAL_ERROR);
+      goto cleanup;
     }
 
   if (num == 1)
