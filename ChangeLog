@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-user-sections.c
+	(enable_user_commit): Compare the second
+	ipmi_check_completion_code() result against 1 like every other
+	call; it returns -1 on error, which was being treated as a match.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config.c (_is_user_section): New function
 	matching "User" followed by a digit.
 	(_ipmi_config): Use it when counting user sections for the

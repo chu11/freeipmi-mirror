@@ -1152,7 +1152,7 @@ enable_user_commit (ipmi_config_state_data_t *state_data,
                                                IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID) == 1))
               || (ipmi_ctx_errnum (state_data->ipmi_ctx) == IPMI_ERR_BAD_COMPLETION_CODE
                   && (ipmi_check_completion_code (obj_cmd_rs,
-                                                  IPMI_COMP_CODE_SET_USER_PASSWORD_COMMAND_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT))))
+                                                  IPMI_COMP_CODE_SET_USER_PASSWORD_COMMAND_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT) == 1)))
             {
               if (state_data->prog_data->args->common_args.debug)
                 pstdout_fprintf (state_data->pstate,
