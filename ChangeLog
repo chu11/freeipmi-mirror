@@ -1,5 +1,16 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c
+	(ipmi_config_core_lan6_conf_section_get): Always register both
+	the un-suffixed IPv6_Static_Address*/IPv6_Dynamic_Address* keys
+	and the numbered _N variants, using IPMI_CONFIG_DO_NOT_CHECKOUT
+	to select which set --checkout prints, as the channel sections
+	already do.  Previously only one set existed depending on -v, so
+	a verbose checkout could not be committed or diffed without -v
+	(and vice versa), failing with "Unknown key".
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-parse.c (ipmi_config_parse): Use
 	strtok_r() rather than strtok().  With hostrange support one
 	thread per host parses the config file concurrently and the shared
