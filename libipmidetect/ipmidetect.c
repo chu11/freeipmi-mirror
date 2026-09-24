@@ -127,6 +127,7 @@ struct ipmidetect_config
   char hostnames[IPMIDETECT_CONFIG_HOSTNAMES_MAX+1][IPMIDETECT_MAXHOSTNAMELEN+1];
   unsigned int hostnames_len;
   int hostnames_flag;
+  int hostnames_input_error;
   int port;
   int port_flag;
   int timeout_len;
@@ -281,13 +282,23 @@ _cb_hostnames (conffile_t cf, struct conffile_data *data, char *optionname,
       return (-1);
     }
 
+  /* conffile reports any callback failure as a parse error; record
+   * that these are limit violations in an otherwise well-formed file
+   * so _read_conffile can report IPMIDETECT_ERR_CONF_INPUT instead.
+   */
   if (data->stringlist_len > IPMIDETECT_CONFIG_HOSTNAMES_MAX)
-    return (-1);
+    {
+      conf->hostnames_input_error = 1;
+      return (-1);
+    }
 
   for (i = 0; i < data->stringlist_len; i++)
     {
       if (strlen (data->stringlist[i]) > IPMIDETECT_MAXHOSTNAMELEN)
-        return (-1);
+        {
+          conf->hostnames_input_error = 1;
+          return (-1);
+        }
       strcpy (conf->hostnames[i], data->stringlist[i]);
     }
   conf->hostnames_len = data->stringlist_len;
@@ -340,7 +351,10 @@ _read_conffile (ipmidetect_t handle, struct ipmidetect_config *conf)
       if (conffile_errnum (cf) != CONFFILE_ERR_EXIST)
         {
           int errnum = conffile_errnum (cf);
-          if (CONFFILE_IS_PARSE_ERR (errnum))
+          if (errnum == CONFFILE_ERR_PARSE_CALLBACK
+              && conf->hostnames_input_error)
+            handle->errnum = IPMIDETECT_ERR_CONF_INPUT;
+          else if (CONFFILE_IS_PARSE_ERR (errnum))
             handle->errnum = IPMIDETECT_ERR_CONF_PARSE;
           else if (errnum == CONFFILE_ERR_OUTMEM)
             handle->errnum = IPMIDETECT_ERR_OUT_OF_MEMORY;
@@ -694,7 +708,11 @@ ipmidetect_load_data (ipmidetect_t handle,
 
       if (i >= conffile_config.hostnames_len)
         {
-          handle->errnum = IPMIDETECT_ERR_CONNECT;
+          /* Keep the error from the last server tried; only fall
+           * back to a generic connect error if none was tried.
+           */
+          if (!conffile_config.hostnames_len)
+            handle->errnum = IPMIDETECT_ERR_CONNECT;
           goto cleanup;
         }
     }

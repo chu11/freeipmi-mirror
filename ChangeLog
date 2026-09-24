@@ -1,5 +1,14 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* libipmidetect/ipmidetect.c (ipmidetect_load_data): When every
+	configured server fails, keep the errnum from the last attempt
+	instead of overwriting it with IPMIDETECT_ERR_CONNECT.
+	(_cb_hostnames, _read_conffile): Report more than
+	IPMIDETECT_CONFIG_HOSTNAMES_MAX hostnames or an over-long hostname
+	as IPMIDETECT_ERR_CONF_INPUT rather than IPMIDETECT_ERR_CONF_PARSE.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/libipmidetect.3.pre.in: Fix the ipmidetect_errormsg() prototype
 	to take an ipmidetect_t handle, not an int.  List the configuration
 	file under FILES and ipmidetect.conf(5) under SEE ALSO.
