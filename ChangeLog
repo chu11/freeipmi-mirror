@@ -1,5 +1,13 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-pef-sections.c
+	(ipmi_config_pef_sections_create): Create Lan_Alert_Destination_0
+	per-channel sections too.  The base loop created destinations
+	0..N but the per-channel loop created 1..N, so with -v on a
+	multi-channel BMC Lan_Alert_Destination_0_Channel_X was missing.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-utils.c (ipv4_address_string2int): Parse
 	with inet_aton(), the same function ip_address_validate() uses,
 	instead of sscanf("%u.%u.%u.%u").  Forms inet_aton() accepts but

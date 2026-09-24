@@ -403,10 +403,11 @@ ipmi_config_pef_sections_create (ipmi_config_state_data_t *state_data)
     {
       for (channelindex = 0; channelindex < state_data->lan_channel_numbers_count; channelindex++)
         {
-          for (i = 0; i < number_of_lan_alert_destinations; i++)
+          /* destination 0 is the volatile one, same as the base loop */
+          for (i = 0; i <= number_of_lan_alert_destinations; i++)
             {
               if (!(section = ipmi_config_pef_lan_alert_destination_section_get (state_data,
-                                                                                 i + 1,
+                                                                                 i,
                                                                                  state_data->lan_channel_config_flags,
                                                                                  channelindex)))
                 goto cleanup;
