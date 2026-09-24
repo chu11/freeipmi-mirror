@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-utils.c
+	(_get_sol_channel_number_for_channel): Print the fiid_obj_get
+	error message when reading payload_channel fails, rather than
+	returning a non-fatal error silently.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-map.c (sensor_type_string): Return
 	"Critical_Interrupt" rather than "Critical_interrupt", matching the
 	capitalization of every other sensor type string and the man page.

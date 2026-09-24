@@ -426,6 +426,10 @@ _get_sol_channel_number_for_channel (ipmi_config_state_data_t *state_data,
                     "payload_channel",
                     &val) < 0)
     {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "fiid_obj_get: 'payload_channel': %s\n",
+                       fiid_obj_errormsg (obj_cmd_rs));
       rv = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
       goto cleanup;
     }
