@@ -72,7 +72,7 @@ _get_pef_control (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_create: %s",
+                       "fiid_obj_create: %s\n",
                        strerror (errno));
       goto cleanup;
     }
@@ -161,7 +161,7 @@ _set_pef_control (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_create: %s",
+                       "fiid_obj_create: %s\n",
                        strerror (errno));
       goto cleanup;
     }
@@ -385,7 +385,7 @@ _get_pef_action_global_control (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_create: %s",
+                       "fiid_obj_create: %s\n",
                        strerror (errno));
       goto cleanup;
     }
@@ -494,7 +494,7 @@ _set_pef_action_global_control (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_create: %s",
+                       "fiid_obj_create: %s\n",
                        strerror (errno));
       goto cleanup;
     }
@@ -808,7 +808,7 @@ pef_startup_delay_checkout (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_create: %s",
+                       "fiid_obj_create: %s\n",
                        strerror (errno));
       goto cleanup;
     }
@@ -874,7 +874,7 @@ pef_startup_delay_commit (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_create: %s",
+                       "fiid_obj_create: %s\n",
                        strerror (errno));
       goto cleanup;
     }
@@ -925,7 +925,7 @@ pef_alert_startup_delay_checkout (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_create: %s",
+                       "fiid_obj_create: %s\n",
                        strerror (errno));
       goto cleanup;
     }
@@ -991,7 +991,7 @@ pef_alert_startup_delay_commit (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_create: %s",
+                       "fiid_obj_create: %s\n",
                        strerror (errno));
       goto cleanup;
     }

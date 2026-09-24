@@ -1,5 +1,14 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-common-pef-conf-section.c
+	(_get_pef_control, _set_pef_control, _get_pef_action_global_control,
+	_set_pef_action_global_control, pef_startup_delay_checkout,
+	pef_startup_delay_commit, pef_alert_startup_delay_checkout,
+	pef_alert_startup_delay_commit): Add the missing newline to the
+	fiid_obj_create error message.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-core-lan-conf-section.c
 	(ip_address_checkout, subnet_mask_checkout,
 	default_gateway_address_checkout, backup_gateway_address_checkout):
