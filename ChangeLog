@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-sections.c
+	(_get_number_of_users): Print the fiid_obj_get error message when
+	reading max_channel_user_ids fails, rather than returning a
+	non-fatal error silently.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-utils.c
 	(_get_sol_channel_number_for_channel): Print the fiid_obj_get
 	error message when reading payload_channel fails, rather than
