@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-rmcpplus-conf-privilege-section.c
+	(ipmi_config_core_rmcpplus_conf_privilege_section_get): Add the
+	missing space in "(SOL),cipher" in the section comment.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-core-lan-conf-misc-section.c
 	(ipmi_config_core_lan_conf_misc_section_get): Add the missing space
 	in "inform the BMC torespond" in the section comment.

@@ -572,7 +572,7 @@ ipmi_config_core_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *
 {
   struct ipmi_config_section *section = NULL;
   char *section_comment =
-    "If your system supports IPMI 2.0 and Serial-over-LAN (SOL),"
+    "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), "
     "cipher suite IDs may be configurable below.  In the "
     "Rmcpplus_Conf_Privilege section, maximum user privilege levels "
     "allowed for authentication under IPMI 2.0 (including Serial-over-LAN) "
