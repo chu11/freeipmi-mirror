@@ -31,6 +31,6 @@
 #include "config.h"
 #endif /* HAVE_CONFIG_H */
 
-void ipmidetectd_config_setup (int argc, char **argv);
+void ipmidetectd_config_setup (void);
 
 #endif /* IPMIDETECTD_CONFIG_H */

@@ -42,7 +42,6 @@
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
 #include <limits.h>
-#include <assert.h>
 #include <errno.h>
 
 #include "ipmidetectd.h"
@@ -174,10 +173,8 @@ _config_file_parse (void)
 }
 
 void
-ipmidetectd_config_setup (int argc, char **argv)
+ipmidetectd_config_setup (void)
 {
-  assert (argv);
-
   _config_default ();
   _config_file_parse ();
 

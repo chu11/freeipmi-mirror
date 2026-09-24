@@ -732,7 +732,7 @@ main (int argc, char **argv)
 
   ipmidetectd_argp_parse (argc, argv, &cmd_args);
 
-  ipmidetectd_config_setup (argc, argv);
+  ipmidetectd_config_setup ();
 
   if (!cmd_args.debug)
     {

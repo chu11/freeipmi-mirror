@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetectd/ipmidetectd-config.c, ipmidetectd/ipmidetectd-config.h
+	(ipmidetectd_config_setup): Drop the unused argc and argv
+	parameters.
+	* ipmidetectd/ipmidetectd.c (main): Update caller.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmidetectd/ipmidetectd.c: Drop unused extern declaration of
 	h_errno, left over from gethostbyname().
 
