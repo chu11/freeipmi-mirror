@@ -1,5 +1,14 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-utils.c (ipv4_address_string2int): Parse
+	with inet_aton(), the same function ip_address_validate() uses,
+	instead of sscanf("%u.%u.%u.%u").  Forms inet_aton() accepts but
+	sscanf did not ("10.1", "0x0a000001") passed validation and then
+	aborted the whole commit as a fatal error at that key; sscanf also
+	did not reject octets above 255.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config.h (struct ipmi_config_keypair): Add
 	value_input_set.
 	* ipmi-config/ipmi-config-argp.c (_ipmi_config_keypair_parse_string,

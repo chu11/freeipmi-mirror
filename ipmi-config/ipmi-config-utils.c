@@ -25,6 +25,9 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <errno.h>
 #include <assert.h>
 
@@ -106,26 +109,17 @@ ipv4_address_string2int (ipmi_config_state_data_t *state_data,
                          const char *src,
                          uint32_t *dest)
 {
-  unsigned int b1, b2, b3, b4;
-  uint64_t val;
-  int ret;
+  struct in_addr a;
 
   assert (state_data);
   assert (src);
   assert (dest);
 
-  if ((ret = sscanf (src,
-                     "%u.%u.%u.%u",
-                     &b1,
-                     &b2,
-                     &b3,
-                     &b4)) < 0)
-    {
-      pstdout_perror (state_data->pstate, "sscanf");
-      return (-1);
-    }
-
-  if (ret != 4)
+  /* Same parser as ip_address_validate(), so anything that validated
+   * converts.  s_addr is the first octet in the low byte, which is the
+   * layout the set-LAN-parameter commands take.
+   */
+  if (!inet_aton (src, &a))
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -134,13 +128,7 @@ ipv4_address_string2int (ipmi_config_state_data_t *state_data,
       return (-1);
     }
 
-  val = 0;
-  val |= (uint64_t)b1;
-  val |= ((uint64_t)b2 << 8);
-  val |= ((uint64_t)b3 << 16);
-  val |= ((uint64_t)b4 << 24);
-
-  *dest = val;
+  *dest = a.s_addr;
   return (0);
 }
 
