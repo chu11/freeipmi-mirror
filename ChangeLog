@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-dcmi-dcmi-conf-section.c
+	(_get_power_limit): Add the missing newline to the fiid_obj_create,
+	ipmi_cmd_dcmi_get_power_limit and fiid_obj_get error messages.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-common-pef-conf-section.c
 	(_get_pef_control, _set_pef_control, _get_pef_action_global_control,
 	_set_pef_action_global_control, pef_startup_delay_checkout,

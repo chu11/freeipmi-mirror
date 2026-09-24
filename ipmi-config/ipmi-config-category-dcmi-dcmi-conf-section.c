@@ -576,7 +576,7 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "fiid_obj_create: %s",
+                       "fiid_obj_create: %s\n",
                        strerror (errno));
       goto cleanup;
     }
@@ -616,7 +616,7 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
           if (state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
-                             "ipmi_cmd_dcmi_get_power_limit: %s",
+                             "ipmi_cmd_dcmi_get_power_limit: %s\n",
                              IPMI_COMP_CODE_DCMI_NO_SET_POWER_LIMIT_STR);
 
           if (no_set_power_limit_flag)
@@ -651,7 +651,7 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
           || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "fiid_obj_get: 'exception_actions': %s",
+                         "fiid_obj_get: 'exception_actions': %s\n",
                          fiid_obj_errormsg (obj_cmd_rs));
 
       if (no_set_power_limit_error_flag)
@@ -669,7 +669,7 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
           || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "fiid_obj_get: 'power_limit_requested': %s",
+                         "fiid_obj_get: 'power_limit_requested': %s\n",
                          fiid_obj_errormsg (obj_cmd_rs));
 
       if (no_set_power_limit_error_flag)
@@ -687,7 +687,7 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
           || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "fiid_obj_get: 'correction_time_limit': %s",
+                         "fiid_obj_get: 'correction_time_limit': %s\n",
                          fiid_obj_errormsg (obj_cmd_rs));
 
       if (no_set_power_limit_error_flag)
@@ -705,7 +705,7 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
           || fiid_obj_errnum (obj_cmd_rs) != FIID_ERR_DATA_NOT_AVAILABLE)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "fiid_obj_get: 'management_application_statistics_sampling_period': %s",
+                         "fiid_obj_get: 'management_application_statistics_sampling_period': %s\n",
                          fiid_obj_errormsg (obj_cmd_rs));
 
       if (no_set_power_limit_error_flag)
