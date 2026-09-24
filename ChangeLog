@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* libipmidetect/ipmidetect.c (_low_timeout_connect): Size port_str
+	for an integer instead of IPMIDETECT_BUFLEN and drop the memset;
+	snprintf NUL-terminates.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* libipmidetect/ipmidetect.h.in: Drop unneeded <stdio.h> include.
 
 2026-09-24 Albert Chu <chu11@llnl.gov>

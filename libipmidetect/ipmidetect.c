@@ -392,11 +392,10 @@ _low_timeout_connect (ipmidetect_t handle,
   struct sockaddr_in servaddr4;
   struct sockaddr_in6 servaddr6;
   struct addrinfo ai_hints, *ai_res = NULL, *ai = NULL;
-  char port_str[IPMIDETECT_BUFLEN + 1];
+  char port_str[16];
   int rv = -1;
 
-  memset (port_str, '\0', IPMIDETECT_BUFLEN + 1);
-  snprintf (port_str, IPMIDETECT_BUFLEN, "%d", port);
+  snprintf (port_str, sizeof (port_str), "%d", port);
   memset (&ai_hints, 0, sizeof (struct addrinfo));
   ai_hints.ai_family = AF_UNSPEC;
   ai_hints.ai_socktype = SOCK_STREAM;
