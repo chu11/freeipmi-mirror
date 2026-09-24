@@ -549,7 +549,7 @@ main (int argc, char **argv)
 
   if (!(ctx = ipmi_locate_ctx_create ()))
     {
-      fprintf (stderr, "ipmi_locate_ctx_create(): %s\n", strerror (errno));
+      fprintf (stderr, "%s: ipmi_locate_ctx_create(): %s\n", argv[0], strerror (errno));
       exit (EXIT_FAILURE);
     }
 

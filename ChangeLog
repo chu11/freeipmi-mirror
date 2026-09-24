@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-locate/ipmi-locate.c (main): Prefix the
+	ipmi_locate_ctx_create() failure message with the program name,
+	matching the permission denied message.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmidetectd/ipmidetectd-config.c (_config_file_parse): Exit
 	immediately with the errno message when conffile_handle_create()
 	fails instead of skipping the parse and later reporting the
