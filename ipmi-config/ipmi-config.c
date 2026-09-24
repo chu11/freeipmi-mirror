@@ -209,13 +209,8 @@ _ipmi_config (pstdout_state_t pstate,
         {
           int fd;
 
-          if (prog_data->hosts_count > 1)
-            {
-              pstdout_fprintf (pstate,
-                               stderr,
-                               "Cannot output multiple host checkout into a single file\n");
-              goto cleanup;
-            }
+          /* main() rejects --filename with multiple hosts */
+          assert (prog_data->hosts_count == 1);
 
           if ((fd = open (prog_data->args->filename,
                           O_WRONLY | O_CREAT | O_TRUNC,
@@ -588,6 +583,19 @@ main (int argc, char *argv[])
   /* We don't want caching info to output when are doing ranged output */
   if (hosts_count > 1)
     prog_data.args->common_args.quiet_cache = 1;
+
+  /* Each host runs in its own thread; they cannot share one output
+   * file, and this is cheaper to reject here than after every thread
+   * has opened its session and built its sections.
+   */
+  if (hosts_count > 1
+      && prog_data.args->action == IPMI_CONFIG_ACTION_CHECKOUT
+      && prog_data.args->filename)
+    {
+      fprintf (stderr,
+               "Cannot output multiple host checkout into a single file\n");
+      return (IPMI_CONFIG_FATAL_EXIT_VALUE);
+    }
 
   /* Each host runs in its own thread; they cannot share one stdin */
   if (hosts_count > 1

@@ -1,5 +1,13 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config.c (main): Reject --checkout --filename
+	with multiple hosts before pstdout_launch().
+	(_ipmi_config): Drop the per-thread check, which ran only after
+	every host had opened its session and built all sections, and
+	printed the error once per host.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-sensors-sections.c
 	(ipmi_config_sensors_sections_create): When the SDR contains no
 	threshold or discrete sensors, return an empty placeholder section
