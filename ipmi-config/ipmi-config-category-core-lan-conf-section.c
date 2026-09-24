@@ -263,7 +263,7 @@ ip_address_checkout (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "inet_ntop: %s",
+                       "inet_ntop: %s\n",
                        strerror (errno));
       goto cleanup;
     }
@@ -570,7 +570,7 @@ subnet_mask_checkout (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "inet_ntop: %s",
+                       "inet_ntop: %s\n",
                        strerror (errno));
       goto cleanup;
     }
@@ -724,7 +724,7 @@ default_gateway_address_checkout (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "inet_ntop: %s",
+                       "inet_ntop: %s\n",
                        strerror (errno));
       goto cleanup;
     }
@@ -1032,7 +1032,7 @@ backup_gateway_address_checkout (ipmi_config_state_data_t *state_data,
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "inet_ntop: %s",
+                       "inet_ntop: %s\n",
                        strerror (errno));
       goto cleanup;
     }

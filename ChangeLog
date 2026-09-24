@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-lan-conf-section.c
+	(ip_address_checkout, subnet_mask_checkout,
+	default_gateway_address_checkout, backup_gateway_address_checkout):
+	Add the missing newline to the inet_ntop error message.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-core-user-sections.c
 	(enable_user_commit): Compare the second
 	ipmi_check_completion_code() result against 1 like every other
