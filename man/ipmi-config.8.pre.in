@@ -6,8 +6,8 @@ ipmi-config \- configure IPMI values
 [\fIOPTION\fR...]
 .SH "DESCRIPTION"
 .B ipmi-config
-is used to get and set configuration parameters in IPMI.  In can be
-used to configured usernames, passwords, networking information,
+is used to get and set configuration parameters in IPMI.  It can be
+used to configure usernames, passwords, networking information,
 security, Serial-over-LAN (SOL), Platform Event Filtering (PEF), boot
 devices, power restoration policy, sensor thresholds, sensor
 events, and many more configuration options.
@@ -103,7 +103,7 @@ additional uncommon sections and/or fields will be shown.  In the
 parameters, Vlan parameters, IPv4 Header parameters, RMCP port, all
 IPv6 configurable addresses (if > 1 is supported), and sections for
 each channel on a system (if multiple channels exist).  In the
-\fIpef\fR category, this includes checkout out sections for each
+\fIpef\fR category, this includes checking out sections for each
 channel on a system (if multiple channels exist).
 .TP
 \fB\-vv\fR
@@ -113,17 +113,17 @@ sometimes the reason why.  Sometimes output fields that are identified
 as unsupported on the motherboard.
 .TP
 \fB\-\-lan\-channel\-number\fR=\fINUMBER\fR
-Use an specific channel number for LAN configuration.  Particularly
+Use a specific channel number for LAN configuration.  Particularly
 useful if motherboard contains multiple LAN channels and a user wishes
 to use a specific one.
 .TP
 \fB\-\-serial\-channel\-number\fR=\fINUMBER\fR
-Use an specific channel number for serial configuration.  Particularly
+Use a specific channel number for serial configuration.  Particularly
 useful if motherboard contains multiple serial channels and a user
 wishes to use a specific one.
 .TP
 \fB\-\-sol\-channel\-number\fR=\fINUMBER\fR
-Use an specific channel number for SOL configuration.  Particularly
+Use a specific channel number for SOL configuration.  Particularly
 useful if motherboard contains multiple SOL channels and a user
 wishes to use a specific one.
 #include <@top_srcdir@/man/manpage-common-sdr-cache-options-heading.man>
@@ -136,7 +136,7 @@ wishes to use a specific one.
 #include <@top_srcdir@/man/manpage-common-hostranged-eliminate.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-always-prefix.man>
 .SH "GENERAL USE"
-Most users of will want to:
+Most users will want to:
 .LP
 A) Run with \fI\-\-checkout\fR to get a copy of the current
 configuration and store it in a file.  The standard output can be
@@ -150,7 +150,7 @@ specifying the configuration file with the \fI\-\-filename\fR option.
 The configuration can be committed to multiple hosts in parallel via
 the hostrange support.
 .LP
-Although not typically necessarily, some motherboards do not store
+Although not typically necessary, some motherboards do not store
 configuration values in non-volatile memory.  Therefore, after system
 reboots, some configuration values may have changed.  The user may
 wish to run configuration tools on each boot to ensure configuration
@@ -197,7 +197,7 @@ session limit) will require an input value for the session limit.
 Under most conditions, it is not necessary to set this field and most
 users may choose to ignore it.  This field is considered optional by
 IPMI standards, and may result in errors when attempting to configure
-it to a non-zero value.  If errors to occur, setting the value back to
+it to a non-zero value.  If errors do occur, setting the value back to
 0 should resolve problems.
 .LP
 The fields
