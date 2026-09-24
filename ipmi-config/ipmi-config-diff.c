@@ -72,7 +72,10 @@ ipmi_config_diff (ipmi_config_state_data_t *state_data)
                               "\t## ERROR: Unable to checkout %s:%s\n",
                               s->section_name,
                               kv->key->key_name);
-              ret = this_ret;
+              /* the specific non-fatal codes all map to the same exit
+               * status, as in checkout and commit
+               */
+              ret = IPMI_CONFIG_ERR_NON_FATAL_ERROR;
             }
           kv = kv->next;
         }

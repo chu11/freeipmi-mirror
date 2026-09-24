@@ -1,5 +1,14 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-diff.c (ipmi_config_diff): Record any
+	non-fatal checkout failure as IPMI_CONFIG_ERR_NON_FATAL_ERROR, as
+	checkout and commit do.  The specific codes (read only, not
+	supported, invalid/unsupported config) were passed through and
+	only the generic code mapped to a non-zero exit status, so a diff
+	that could not read a "Not Supported" key exited 0.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-core-lan-conf-auth-section.c
 	(_set_authentication_type_enables): In the OEM authentication
 	retry workaround, look up the section being committed by
