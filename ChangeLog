@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-locate/ipmi-locate.c (display_ipmi_locate_info): Print the
+	SMBUS slave address with the same FI_64 format as the memory and
+	I/O base addresses instead of casting to unsigned long.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-locate/ipmi-locate.c (main): Prefix the
 	ipmi_locate_ctx_create() failure message with the program name,
 	matching the permission denied message.
