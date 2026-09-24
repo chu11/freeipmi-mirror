@@ -45,6 +45,7 @@
 #endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 #include <sys/types.h>
+#include <sys/resource.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
@@ -83,7 +84,12 @@
 #define IPMIDETECTD_PIDFILE IPMIDETECTD_LOCALSTATEDIR "/run/ipmidetectd.pid"
 
 #define IPMIDETECTD_BUFLEN           1024
-#define IPMIDETECTD_NODES_PER_SOCKET 8
+/* Replies are spread across sockets so that a burst of simultaneous
+ * responses cannot overflow a single receive buffer.  With the Linux
+ * default of ~200KB per socket and up to ~2KB of kernel accounting per
+ * small datagram, 64 pending replies fit comfortably.
+ */
+#define IPMIDETECTD_NODES_PER_SOCKET 64
 #define IPMIDETECTD_SERVER_BACKLOG   5
 
 /* IPMI has a 6 bit sequence number */
@@ -122,6 +128,7 @@ _fds_setup (void)
 {
   struct sockaddr_in6 addr6;
   struct sockaddr_in6 servaddr;
+  struct rlimit rlim;
   int option_value;
   socklen_t option_value_len;
   unsigned int i;
@@ -141,13 +148,29 @@ _fds_setup (void)
   if (nodes_count % IPMIDETECTD_NODES_PER_SOCKET)
     fds_count++;
 
+  /* Best effort to make room for one socket per node group; if this
+   * fails the socket() loop below reports the real problem.
+   */
+  if (getrlimit (RLIMIT_NOFILE, &rlim) == 0
+      && rlim.rlim_cur < rlim.rlim_max)
+    {
+      rlim.rlim_cur = rlim.rlim_max;
+      setrlimit (RLIMIT_NOFILE, &rlim);
+    }
+
   if (!(fds = (int *)malloc (fds_count * sizeof (int))))
     err_exit ("malloc: %s", strerror (errno));
 
   for (i = 0; i < fds_count; i++)
     {
       if ((fds[i] = socket (AF_INET6, SOCK_DGRAM, 0)) < 0)
-        err_exit ("socket: %s", strerror (errno));
+        {
+          if (errno == EMFILE || errno == ENFILE)
+            err_exit ("socket: %s: %u nodes require %u sockets, raise the "
+                      "file descriptor limit",
+                      strerror (errno), nodes_count, fds_count + 1);
+          err_exit ("socket: %s", strerror (errno));
+        }
 
       memset (&addr6, '\0', sizeof (struct sockaddr_in6));
       addr6.sin6_family = AF_INET6;

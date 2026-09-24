@@ -1,5 +1,14 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetectd/ipmidetectd.c (IPMIDETECTD_NODES_PER_SOCKET): Raise
+	from 8 to 64 so large clusters need far fewer sockets; 64 pending
+	replies still fit in the default receive buffer.
+	(_fds_setup): Raise the RLIMIT_NOFILE soft limit to the hard limit
+	before creating sockets, as ipmipower does, and report the node and
+	socket counts when socket() fails with EMFILE or ENFILE.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmidetectd.8.pre.in: Note under ERRORS that errors go to
 	standard error rather than syslog when running with --debug.
 
