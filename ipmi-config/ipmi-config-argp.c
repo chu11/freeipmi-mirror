@@ -159,6 +159,12 @@ _ipmi_config_category (char *arg, unsigned int *category_mask)
       tok = strtok (NULL, " ,");
     }
 
+  if (!(*category_mask))
+    {
+      fprintf (stderr, "no category specified\n");
+      goto cleanup;
+    }
+
   rv = 0;
  cleanup:
   free (argtmp);

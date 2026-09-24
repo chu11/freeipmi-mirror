@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-argp.c (_ipmi_config_category): Reject
+	an empty category list.  `--category ""` or `--category ,` left
+	the mask zero, so the tool connected to the BMC, built no
+	sections, and died on assert (state_data.sections).
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-argp.c (_ipmi_config_args_validate): Do
 	not access() a --filename of "-" for commit and diff; it means
 	standard input, which the check made unreachable unless a file
