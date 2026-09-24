@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetectd/ipmidetectd.c (_info_destroy): New list destructor
+	that frees the hostname along with the ipmidetectd_info struct.
+	(_nodes_setup): Use it instead of a bare free().
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmidetectd/ipmidetectd-config.c, ipmidetectd/ipmidetectd-config.h
 	(ipmidetectd_config_setup): Drop the unused argc and argv
 	parameters.

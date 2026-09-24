@@ -183,6 +183,18 @@ _fds_setup (void)
 }
 
 static void
+_info_destroy (void *x)
+{
+  struct ipmidetectd_info *info = x;
+
+  if (info)
+    {
+      free (info->hostname);
+      free (info);
+    }
+}
+
+static void
 _nodes_setup (void)
 {
   fi_hostlist_iterator_t itr = NULL;
@@ -195,7 +207,7 @@ _nodes_setup (void)
   assert (nodes_count);
   assert (!nodes_index);
 
-  if (!(nodes = list_create ((ListDelF)free)))
+  if (!(nodes = list_create (_info_destroy)))
     err_exit ("list_create: %s", strerror (errno));
 
   if (!(nodes_index = hash_create (nodes_count,
