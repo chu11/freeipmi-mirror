@@ -411,7 +411,7 @@ ipmi_config_core_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data
     "network.  The \"Gratuitous_ARP_Interval\" can be used to set the "
     "period a Gratuitous ARP is always sent."
     "\n"
-    "If set to \"Yes\", \"Enable_ARP_Response\" will inform the BMC to"
+    "If set to \"Yes\", \"Enable_ARP_Response\" will inform the BMC to "
     "respond to ARP requests from other machines.";
   char *section_name_base_str = "Lan_Conf_Misc";
 

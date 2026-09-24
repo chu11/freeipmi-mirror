@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-lan-conf-misc-section.c
+	(ipmi_config_core_lan_conf_misc_section_get): Add the missing space
+	in "inform the BMC torespond" in the section comment.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-core-user-sections.c
 	(ipmi_config_core_user_section_get): Fix typos in the User section
 	comment: "is a fixed to", "atleast" (twice), and a missing space
