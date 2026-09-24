@@ -1,3 +1,16 @@
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-config/ipmi-config-category-pef-lan-alert-destination.c
+	(alert_ip_address_commit, alert_mac_address_commit): Copy the
+	input with snprintf() rather than strcpy(); the destination
+	buffers are 17 and 25 bytes and the validators did not bound the
+	input length.
+	* ipmi-config/ipmi-config-validate.c (ip_address_validate): Reject
+	strings of INET_ADDRSTRLEN or more, since inet_aton() accepts any
+	number of leading zeros.
+	(mac_address_validate): Use %n to require that nothing follow the
+	sixth octet; trailing text was previously accepted and ignored.
+
 2026-09-23 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmidetect.8.pre.in: Document that the --hostname and --port

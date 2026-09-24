@@ -225,6 +225,12 @@ ip_address_validate (ipmi_config_state_data_t *state_data,
   assert (key_name);
   assert (value);
 
+  /* inet_aton() accepts arbitrarily many leading zeros; commit paths
+   * copy the string into INET_ADDRSTRLEN sized buffers.
+   */
+  if (strlen (value) >= INET_ADDRSTRLEN)
+    return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
+
   if (inet_aton (value, &a))
     return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
   return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
@@ -255,20 +261,24 @@ mac_address_validate (ipmi_config_state_data_t *state_data,
                       const char *value)
 {
   unsigned int foo;
+  int consumed = 0;
 
   assert (state_data);
   assert (section_name);
   assert (key_name);
   assert (value);
 
+  /* %n confirms nothing follows the sixth octet */
   if (sscanf (value,
-              "%02x:%02x:%02x:%02x:%02x:%02x",
+              "%02x:%02x:%02x:%02x:%02x:%02x%n",
               &foo,
               &foo,
               &foo,
               &foo,
               &foo,
-              &foo) == 6)
+              &foo,
+              &consumed) == 6
+      && value[consumed] == '\0')
     return (IPMI_CONFIG_VALIDATE_VALID_VALUE);
   return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 }

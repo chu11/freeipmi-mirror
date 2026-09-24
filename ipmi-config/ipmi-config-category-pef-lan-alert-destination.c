@@ -707,8 +707,7 @@ alert_ip_address_commit (ipmi_config_state_data_t *state_data,
                                          &da)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  /* length checked earlier during validation */
-  strcpy (da.alert_ip, kv->value_input);
+  snprintf (da.alert_ip, sizeof (da.alert_ip), "%s", kv->value_input);
 
   return (_set_destination_addresses (state_data,
                                       section_name,
@@ -757,8 +756,7 @@ alert_mac_address_commit (ipmi_config_state_data_t *state_data,
                                          &da)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  /* length checked earlier during validation */
-  strcpy (da.alert_mac, kv->value_input);
+  snprintf (da.alert_mac, sizeof (da.alert_mac), "%s", kv->value_input);
 
   return (_set_destination_addresses (state_data,
                                       section_name,
