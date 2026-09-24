@@ -984,7 +984,7 @@ sensor_type_string (uint8_t value)
     case IPMI_EVENT_SENSOR_TYPE_SYSTEM_EVENT:
       return "System_Event";
     case IPMI_EVENT_SENSOR_TYPE_CRITICAL_INTERRUPT:
-      return "Critical_interrupt";
+      return "Critical_Interrupt";
     case IPMI_EVENT_SENSOR_TYPE_BUTTON_SWITCH:
       return "Button_Switch";
     case IPMI_EVENT_SENSOR_TYPE_MODULE_BOARD:

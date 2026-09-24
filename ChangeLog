@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-map.c (sensor_type_string): Return
+	"Critical_Interrupt" rather than "Critical_interrupt", matching the
+	capitalization of every other sensor type string and the man page.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c
 	(ipmi_config_core_lan6_conf_section_get): Remove a doubled space
 	in the section comment, and describe the router MAC address keys
