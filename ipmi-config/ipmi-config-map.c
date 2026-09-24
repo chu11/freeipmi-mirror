@@ -48,7 +48,7 @@ channel_access_mode (const char *string)
   return (-1);
 }
 
-char *
+const char *
 channel_access_mode_string (uint8_t value)
 {
   switch (value)
@@ -85,7 +85,7 @@ get_privilege_limit_number (const char *string)
   return (0);
 }
 
-char *
+const char *
 get_privilege_limit_string (uint8_t value)
 {
   switch (value)
@@ -124,7 +124,7 @@ privilege_level_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 privilege_level_string (uint8_t value)
 {
   switch (value)
@@ -163,7 +163,7 @@ rmcpplus_priv_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 rmcpplus_priv_string (int value)
 {
   switch (value)
@@ -202,7 +202,7 @@ ip_address_source_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 ip_address_source_string (uint8_t value)
 {
   switch (value)
@@ -235,7 +235,7 @@ ipv6_ipv4_addressing_enables_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 ipv6_ipv4_addressing_enables_string (uint8_t value)
 {
   switch (value)
@@ -264,7 +264,7 @@ power_restore_policy_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 power_restore_policy_string (uint8_t value)
 {
   switch (value)
@@ -292,7 +292,7 @@ connect_mode_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 connect_mode_string (uint8_t value)
 {
   switch (value)
@@ -319,7 +319,7 @@ flow_control_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 flow_control_string (uint8_t value)
 {
   switch (value)
@@ -352,7 +352,7 @@ bit_rate_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 bit_rate_string (uint8_t value)
 {
   switch (value)
@@ -391,7 +391,7 @@ sol_bit_rate_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 sol_bit_rate_string (uint8_t value)
 {
   switch (value)
@@ -426,7 +426,7 @@ alert_destination_type_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 alert_destination_type_string (uint8_t value)
 {
   switch (value)
@@ -453,7 +453,7 @@ alert_gateway_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 alert_gateway_string (uint8_t value)
 {
   switch (value)
@@ -478,7 +478,7 @@ bios_boot_type_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 bios_boot_type_string (uint8_t value)
 {
   switch (value)
@@ -523,7 +523,7 @@ boot_device_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 boot_device_string (uint8_t value)
 {
   switch (value)
@@ -586,7 +586,7 @@ device_instance_selector_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 device_instance_selector_string (uint8_t value)
 {
   /* achu: this is dumb, but that's the way these map functions work */
@@ -672,7 +672,7 @@ firmware_bios_verbosity_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 firmware_bios_verbosity_string (uint8_t value)
 {
   switch (value)
@@ -701,7 +701,7 @@ console_redirection_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 console_redirection_string (uint8_t value)
 {
   switch (value)
@@ -734,7 +734,7 @@ policy_type_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 policy_type_string (uint8_t value)
 {
   switch (value)
@@ -776,7 +776,7 @@ filter_type_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 filter_type_string (uint8_t value)
 {
   switch (value)
@@ -816,7 +816,7 @@ event_severity_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 event_severity_string (uint8_t value)
 {
   switch (value)
@@ -940,7 +940,7 @@ sensor_type_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 sensor_type_string (uint8_t value)
 {
   switch (value)
@@ -1057,7 +1057,7 @@ exception_actions_number (const char *string)
   return (-1);
 }
 
-char *
+const char *
 exception_actions_string (uint8_t value)
 {
   switch (value)

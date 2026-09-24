@@ -80,7 +80,7 @@ get_address_status_number (const char *string)
   return (-1);
 }
 
-static char *
+static const char *
 get_address_status_string (uint8_t value)
 {
   switch (value)
@@ -708,7 +708,7 @@ _set_ipv6_static_address (ipmi_config_state_data_t *state_data,
   return (rv);
 }
 
-int
+static int
 get_static_address_source_number (const char *string)
 {
   assert (string);
@@ -718,7 +718,7 @@ get_static_address_source_number (const char *string)
   return (-1);
 }
 
-char *
+static const char *
 get_static_address_source_string (uint8_t value)
 {
   switch (value)
@@ -1186,7 +1186,7 @@ get_dynamic_address_source_type_number (const char *string)
   return (-1);
 }
 
-static char *
+static const char *
 get_dynamic_address_source_type_string (uint8_t value)
 {
   switch (value)
@@ -2313,12 +2313,12 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
 {
   struct ipmi_config_section *section = NULL;
   char key_name[IPMI_CONFIG_MAX_KEY_NAME_LEN];
-  char *section_comment =
+  const char *section_comment =
     "In the Lan6_Conf section, typical networking configuration is setup.  "
     "Most users will choose to set an address in \"IPv6_Static_Address\" "
     "and set the appropriate routing for the machine.  Note that multiple IPv6 "
     "addresses can be configured, enable verbose output to view them.";
-  char *section_name_base_str = "Lan6_Conf";
+  const char *section_name_base_str = "Lan6_Conf";
   unsigned int verbose_option_config_flags = 0;
   unsigned int base_address_flags;
   unsigned int numbered_address_flags;

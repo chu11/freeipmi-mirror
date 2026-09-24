@@ -40,7 +40,7 @@ ipmi_config_core_lan_channel_section_get (ipmi_config_state_data_t *state_data,
                                           int channel_index)
 {
   struct ipmi_config_section * section = NULL;
-  char *section_comment =
+  const char *section_comment =
     "In the Lan_Channel section, general IPMI over LAN can be enabled for "
     "disabled.  In the below, \"Volatile\" configurations are immediately "
     "configured onto the BMC and will have immediate effect on the system.  "
@@ -56,7 +56,7 @@ ipmi_config_core_lan_channel_section_get (ipmi_config_state_data_t *state_data,
     "\n"
     "\"User_Level_Auth\" and \"Per_Message_Auth\" are typically set to "
     "\"Yes\" for additional security.";
-  char *section_name_base_str = "Lan_Channel";
+  const char *section_name_base_str = "Lan_Channel";
 
   assert (state_data);
 

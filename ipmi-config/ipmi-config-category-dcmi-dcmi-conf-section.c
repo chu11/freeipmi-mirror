@@ -1058,7 +1058,7 @@ exception_actions_checkout (ipmi_config_state_data_t *state_data,
 {
   ipmi_config_err_t ret;
   struct get_power_limit_data gpld;
-  char *str;
+  const char *str;
 
   assert (state_data);
   assert (section_name);

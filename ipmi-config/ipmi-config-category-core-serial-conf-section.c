@@ -918,11 +918,11 @@ ipmi_config_core_serial_conf_section_get (ipmi_config_state_data_t *state_data,
                                           int channel_index)
 {
   struct ipmi_config_section *section = NULL;
-  char *section_comment =
+  const char *section_comment =
     "In the Serial_Conf section, typical serial communication configuration "
     "is setup.  Most users will only be interested in IPMI over LAN, "
     "therefore this section can generally be ignored.";
-  char *section_name_base_str = "Serial_Conf";
+  const char *section_name_base_str = "Serial_Conf";
 
   assert (state_data);
 

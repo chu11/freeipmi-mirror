@@ -49,7 +49,7 @@
  * end of the day.
  */
 
-char *threshold_event_strings[] =
+static const char *const threshold_event_strings[] =
   {
     "Lower_Non_Critical_Going_Low",
     "Lower_Non_Critical_Going_High",
@@ -66,7 +66,7 @@ char *threshold_event_strings[] =
     NULL,
   };
 
-char *generic_event_strings_0x02[] =
+static const char *const generic_event_strings_0x02[] =
   {
     "Transition_to_Idle",
     "Transition_to_Active",
@@ -74,35 +74,35 @@ char *generic_event_strings_0x02[] =
     NULL,
   };
 
-char *generic_event_strings_0x03[] =
+static const char *const generic_event_strings_0x03[] =
   {
     "State_Deasserted",
     "State_Asserted",
     NULL,
   };
 
-char *generic_event_strings_0x04[] =
+static const char *const generic_event_strings_0x04[] =
   {
     "Predictive_Failure_Deasserted",
     "Predictive_Failure_Asserted",
     NULL,
   };
 
-char *generic_event_strings_0x05[] =
+static const char *const generic_event_strings_0x05[] =
   {
     "Limit_Not_Exceeded",
     "Limit_Exceeded",
     NULL,
   };
 
-char *generic_event_strings_0x06[] =
+static const char *const generic_event_strings_0x06[] =
   {
     "Performance_Met",
     "Performance_Lags",
     NULL,
   };
 
-char *generic_event_strings_0x07[] =
+static const char *const generic_event_strings_0x07[] =
   {
     "Transition_to_OK",
     "Transition_to_Non_Critical_from_OK",
@@ -116,21 +116,21 @@ char *generic_event_strings_0x07[] =
     NULL,
   };
 
-char *generic_event_strings_0x08[] =
+static const char *const generic_event_strings_0x08[] =
   {
     "Device_Removed_or_Device_Absent",
     "Device_Inserted_or_Device_Present",
     NULL,
   };
 
-char *generic_event_strings_0x09[] =
+static const char *const generic_event_strings_0x09[] =
   {
     "Device_Disabled",
     "Device_Enabled",
     NULL,
   };
 
-char *generic_event_strings_0x0A[] =
+static const char *const generic_event_strings_0x0A[] =
   {
     "Transition_to_Running",
     "Transition_to_In_Test",
@@ -144,7 +144,7 @@ char *generic_event_strings_0x0A[] =
     NULL,
   };
 
-char *generic_event_strings_0x0B[] =
+static const char *const generic_event_strings_0x0B[] =
   {
     "Fully_Redundant",
     "Redundancy_Lost",
@@ -157,7 +157,7 @@ char *generic_event_strings_0x0B[] =
     NULL,
   };
 
-char *generic_event_strings_0x0C[] =
+static const char *const generic_event_strings_0x0C[] =
   {
     "D0_Power_State",
     "D1_Power_State",
@@ -166,7 +166,7 @@ char *generic_event_strings_0x0C[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_physical_security_chassis_intrusion[] =
+static const char *const sensor_specific_event_strings_physical_security_chassis_intrusion[] =
   {
     "General_Chassis_Intrusion",
     "Drive_Bay_Intrusion",
@@ -178,7 +178,7 @@ char *sensor_specific_event_strings_physical_security_chassis_intrusion[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_platform_security_violation_attempt[] =
+static const char *const sensor_specific_event_strings_platform_security_violation_attempt[] =
   {
     "Secure_Mode_Violation_Attempt",
     "Pre_Boot_Password_Violation_User_Password",
@@ -189,7 +189,7 @@ char *sensor_specific_event_strings_platform_security_violation_attempt[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_processor[] =
+static const char *const sensor_specific_event_strings_processor[] =
   {
     "IERR",
     "Thermal_Trip",
@@ -205,7 +205,7 @@ char *sensor_specific_event_strings_processor[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_power_supply[] =
+static const char *const sensor_specific_event_strings_power_supply[] =
   {
     "Presence_Detected",
     "Power_Supply_Failure_Detected",
@@ -217,7 +217,7 @@ char *sensor_specific_event_strings_power_supply[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_power_unit[] =
+static const char *const sensor_specific_event_strings_power_unit[] =
   {
     "Power_Off_or_Power_Down",
     "Power_Cycle",
@@ -230,7 +230,7 @@ char *sensor_specific_event_strings_power_unit[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_memory[] =
+static const char *const sensor_specific_event_strings_memory[] =
   {
     "Correctable_ECC",
     "Uncorrectable_ECC",
@@ -246,7 +246,7 @@ char *sensor_specific_event_strings_memory[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_drive_slot[] =
+static const char *const sensor_specific_event_strings_drive_slot[] =
   {
     "Drive_Presence",
     "Drive_Fault",
@@ -260,7 +260,7 @@ char *sensor_specific_event_strings_drive_slot[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_system_firmware_progress[] =
+static const char *const sensor_specific_event_strings_system_firmware_progress[] =
   {
     "System_Firmware_Error",
     "System_Firmware_Hang",
@@ -268,7 +268,7 @@ char *sensor_specific_event_strings_system_firmware_progress[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_event_logging_disabled[] =
+static const char *const sensor_specific_event_strings_event_logging_disabled[] =
   {
     "Correctable_Memory_Error_Logging_Disabled",
     "Event_Type_Logging_Disabled",
@@ -279,7 +279,7 @@ char *sensor_specific_event_strings_event_logging_disabled[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_system_event[] =
+static const char *const sensor_specific_event_strings_system_event[] =
   {
     "System_Reconfigured",
     "OEM_System_Boot_Event",
@@ -290,7 +290,7 @@ char *sensor_specific_event_strings_system_event[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_critical_interrupt[] =
+static const char *const sensor_specific_event_strings_critical_interrupt[] =
   {
     "Front_Panel_NMI_or_Diagnostic_Interrupt",
     "Bus_Timeout",
@@ -307,14 +307,14 @@ char *sensor_specific_event_strings_critical_interrupt[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_cable_interconnect[] =
+static const char *const sensor_specific_event_strings_cable_interconnect[] =
   {
     "Cable_Interconnect_Is_Connected",
     "Configuration_Error_Incorrect_Cable_Connected_or_Incorrect_Interconnection",
     NULL,
   };
 
-char *sensor_specific_event_strings_boot_error[] =
+static const char *const sensor_specific_event_strings_boot_error[] =
   {
     "No_Bootable_Media",
     "Non_Bootable_Diskette_Left_In_Drive",
@@ -324,7 +324,7 @@ char *sensor_specific_event_strings_boot_error[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_slot_connector[] =
+static const char *const sensor_specific_event_strings_slot_connector[] =
   {
     "Fault_Status_Asserted",
     "Identify_Status_Asserted",
@@ -340,7 +340,7 @@ char *sensor_specific_event_strings_slot_connector[] =
   };
 
 /* event state 4-7 are "reserved" and useless */
-char *sensor_specific_event_strings_watchdog2[] =
+static const char *const sensor_specific_event_strings_watchdog2[] =
   {
     "Timer_Expired",
     "Hard_Reset",
@@ -353,9 +353,9 @@ char *sensor_specific_event_strings_watchdog2[] =
     "Timer_Interrupt",
     NULL,
   };
-int sensor_specific_event_strings_watchdog2_indexes[] = { 0, 1, 2, 3, 8, -1};
+static const int sensor_specific_event_strings_watchdog2_indexes[] = { 0, 1, 2, 3, 8, -1};
 
-char *sensor_specific_event_strings_entity_presence[] =
+static const char *const sensor_specific_event_strings_entity_presence[] =
   {
     "Entity_Present",
     "Entity_Absent",
@@ -363,7 +363,7 @@ char *sensor_specific_event_strings_entity_presence[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_management_subsystem_health[] =
+static const char *const sensor_specific_event_strings_management_subsystem_health[] =
   {
     "Sensor_Access_Degraded_or_Unavailable",
     "Controller_Access_Degraded_or_Unavailable",
@@ -374,7 +374,7 @@ char *sensor_specific_event_strings_management_subsystem_health[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_battery[] =
+static const char *const sensor_specific_event_strings_battery[] =
   {
     "Battery_Low",
     "Battery_Failed",
@@ -382,7 +382,7 @@ char *sensor_specific_event_strings_battery[] =
     NULL,
   };
 
-char *sensor_specific_event_strings_fru_state[] =
+static const char *const sensor_specific_event_strings_fru_state[] =
   {
     "FRU_Not_Installed",
     "FRU_Inactive",
@@ -1274,7 +1274,7 @@ _generic_event_enable_verify (ipmi_config_state_data_t *state_data,
   return (rv);
 }
 
-static char **
+static const char *const *
 _generic_event_enable_get_event_strings (ipmi_config_state_data_t *state_data,
                                          uint8_t event_reading_type_code)
 {
@@ -1325,7 +1325,7 @@ _generic_event_enable_get_data (ipmi_config_state_data_t *state_data,
 {
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
-  char **event_strings = NULL;
+  const char *const *event_strings = NULL;
   int found = 0;
   int i;
 
@@ -1508,7 +1508,7 @@ _setup_generic_event_enable_wrapper (ipmi_config_state_data_t *state_data,
                                      uint8_t event_reading_type_code)
 {
   char key_name[KEY_NAME_MAX_LEN];
-  char **event_strings = NULL;
+  const char *const *event_strings = NULL;
   uint16_t bitmask = 0;
   int rv = -1;
   int i;
@@ -1655,7 +1655,7 @@ _sensor_specific_event_enable_verify (ipmi_config_state_data_t *state_data,
   return (rv);
 }
 
-static char **
+static const char *const *
 _sensor_specific_event_enable_get_event_strings (ipmi_config_state_data_t *state_data,
                                                  uint8_t sensor_type)
 {
@@ -1717,7 +1717,7 @@ _sensor_specific_event_enable_get_data (ipmi_config_state_data_t *state_data,
 {
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
   ipmi_config_err_t ret;
-  char **event_strings = NULL;
+  const char *const *event_strings = NULL;
   int found = 0;
   int i;
 
@@ -1918,7 +1918,7 @@ _setup_sensor_specific_event_enable_wrapper (ipmi_config_state_data_t *state_dat
                                              Sdr_event_flags_func sdr_call)
 {
   char key_name[KEY_NAME_MAX_LEN];
-  char **event_strings = NULL;
+  const char *const *event_strings = NULL;
   uint16_t bitmask = 0;
   uint8_t sensor_type;
   int rv = -1;

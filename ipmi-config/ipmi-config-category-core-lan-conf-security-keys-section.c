@@ -351,12 +351,12 @@ ipmi_config_core_lan_conf_security_keys_section_get (ipmi_config_state_data_t *s
                                                      int channel_index)
 {
   struct ipmi_config_section *section = NULL;
-  char *section_comment =
+  const char *section_comment =
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), a "
     "K_g BMC key may be configurable.  The K_g key is an optional key that "
     "can be set for two key authentication in IPMI 2.0.  It is optionally "
     "configured.  Most users will want to set this to zero (or blank).";
-  char *section_name_base_str = "Lan_Conf_Security_Keys";
+  const char *section_name_base_str = "Lan_Conf_Security_Keys";
 
   assert (state_data);
 

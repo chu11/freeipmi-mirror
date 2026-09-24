@@ -1192,7 +1192,7 @@ sensor_type_checkout (ipmi_config_state_data_t *state_data,
 {
   ipmi_config_err_t ret;
   struct event_filter_table eft;
-  char *str;
+  const char *str;
 
   assert (state_data);
   assert (section_name);

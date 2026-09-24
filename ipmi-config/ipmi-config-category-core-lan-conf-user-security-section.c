@@ -376,7 +376,7 @@ ipmi_config_core_lan_conf_user_security_section_get (ipmi_config_state_data_t *s
                                                      int channel_index)
 {
   struct ipmi_config_section *section = NULL;
-  char *section_comment =
+  const char *section_comment =
     "The following user security configuration options are optionally "
     "implemented by the vendor.  They may not be available your system and "
     "may not be visible below."
@@ -389,7 +389,7 @@ ipmi_config_core_lan_conf_user_security_section_get (ipmi_config_state_data_t *s
     "determines the time a user will be locked off if the bad password "
     "threshold is reached.  If set to \"Yes\", \"Enable_Event_Message_When_User_Disabled\" "
     "will inform the BMC to log an event message when a user is disabled.";
-  char *section_name_base_str = "Lan_Conf_User_Security";
+  const char *section_name_base_str = "Lan_Conf_User_Security";
 
   assert (state_data);
 

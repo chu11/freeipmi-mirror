@@ -448,7 +448,7 @@ struct ipmi_config_section *
 ipmi_config_chassis_front_panel_buttons_get (ipmi_config_state_data_t *state_data)
 {
   struct ipmi_config_section *section = NULL;
-  char *section_comment =
+  const char *section_comment =
     "The following configuration options are for enabling or disabling "
     "button functionality on the chassis.  Button may refer to a "
     "pushbutton, switch, or other front panel control built into the "

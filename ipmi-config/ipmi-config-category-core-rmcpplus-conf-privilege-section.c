@@ -571,7 +571,7 @@ ipmi_config_core_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *
                                                       int channel_index)
 {
   struct ipmi_config_section *section = NULL;
-  char *section_comment =
+  const char *section_comment =
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), "
     "cipher suite IDs may be configurable below.  In the "
     "Rmcpplus_Conf_Privilege section, maximum user privilege levels "
@@ -581,7 +581,7 @@ ipmi_config_core_rmcpplus_conf_privilege_section_get (ipmi_config_state_data_t *
     "algorithms for IPMI 2.0.  Typically, the highest privilege level any "
     "username configured should set for support under a cipher suite ID. "
     "This is typically \"Administrator\".";
-  char *section_name_base_str = "Rmcpplus_Conf_Privilege";
+  const char *section_name_base_str = "Rmcpplus_Conf_Privilege";
 
   assert (state_data);
 

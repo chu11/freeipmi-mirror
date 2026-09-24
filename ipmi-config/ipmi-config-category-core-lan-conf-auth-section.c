@@ -886,7 +886,7 @@ ipmi_config_core_lan_conf_auth_section_get (ipmi_config_state_data_t *state_data
                                             int channel_index)
 {
   struct ipmi_config_section *section = NULL;
-  char *section_comment =
+  const char *section_comment =
     "In the Lan_Conf_Auth section, allowable authentication mechanisms for "
     "IPMI 1.5 is configured.  Most users will want to set all \"MD5\" "
     "authentication to \"Yes\" and the rest to \"No\".  If you have "
@@ -895,7 +895,7 @@ ipmi_config_core_lan_conf_auth_section_get (ipmi_config_state_data_t *state_data
     "to allow \"None\" authentication to work.  Some motherboards do not "
     "allow you to enable OEM authentication, so you may wish to set all "
     "OEM related fields to \"No\".";
-  char *section_name_base_str = "Lan_Conf_Auth";
+  const char *section_name_base_str = "Lan_Conf_Auth";
 
   assert (state_data);
 

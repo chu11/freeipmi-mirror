@@ -189,7 +189,7 @@ ipmi_config_pef_community_string_section_get (ipmi_config_state_data_t *state_da
                                               int channel_index)
 {
   struct ipmi_config_section *section = NULL;
-  char *section_name_base_str = "Community_String";
+  const char *section_name_base_str = "Community_String";
 
   assert (state_data);
 

@@ -1,5 +1,28 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-map.h, ipmi-config/ipmi-config-map.c: All
+	*_string() functions return string literals; declare them as
+	returning const char *.
+	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c
+	(get_address_status_string, get_static_address_source_string,
+	get_dynamic_address_source_type_string): Likewise.
+	(get_static_address_source_number, get_static_address_source_string):
+	Make static; nothing outside this file uses them.
+	* ipmi-config/ipmi-config-category-sensors-sensor-event-enable-common.c:
+	Make the threshold_event_strings, generic_event_strings_* and
+	sensor_specific_event_strings_* tables and the watchdog2 index
+	table static const, and the accessors and locals that point at
+	them const char *const *.
+	* ipmi-config/ipmi-config-category-*.c: Declare the section_comment
+	and section_name_base_str locals that point at string literals as
+	const char *.
+	* ipmi-config/ipmi-config-category-dcmi-dcmi-conf-section.c
+	(exception_actions_checkout): Make the str local const char *.
+	* ipmi-config/ipmi-config-category-pef-event-filter-table.c
+	(sensor_type_checkout): Likewise.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-pef-sections.c
 	(_get_number_of_lan_alert_destinations, _get_number_of_alert_strings,
 	_get_number_of_alert_policy_entries, _get_number_of_event_filters):

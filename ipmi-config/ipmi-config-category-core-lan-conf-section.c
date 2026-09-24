@@ -2234,12 +2234,12 @@ ipmi_config_core_lan_conf_section_get (ipmi_config_state_data_t *state_data,
                                        int channel_index)
 {
   struct ipmi_config_section *section = NULL;
-  char *section_comment =
+  const char *section_comment =
     "In the Lan_Conf section, typical networking configuration is setup.  "
     "Most users will choose to set \"Static\" for the \"IP_Address_Source\" "
     "and set the appropriate \"IP_Address\", \"MAC_Address\", "
     "\"Subnet_Mask\", etc. for the machine.";
-  char *section_name_base_str = "Lan_Conf";
+  const char *section_name_base_str = "Lan_Conf";
   unsigned int verbose_option_config_flags = 0;
 
   assert (state_data);

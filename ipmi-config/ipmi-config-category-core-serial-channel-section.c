@@ -40,7 +40,7 @@ ipmi_config_core_serial_channel_section_get (ipmi_config_state_data_t *state_dat
                                              int channel_index)
 {
   struct ipmi_config_section * section = NULL;
-  char *section_comment =
+  const char *section_comment =
     "In the Serial_Channel section, IPMI over Serial communication can be "
     "enabled or disabled.  "
     "In the below, \"Volatile\" configurations are immediately "
@@ -52,7 +52,7 @@ ipmi_config_core_serial_channel_section_get (ipmi_config_state_data_t *state_dat
     "Most users will only be interested in IPMI over LAN, therefore serial "
     "communication can be disabled.  This can be done by setting "
     "\"Access_Mode\" to \"Disabled\".";
-  char *section_name_base_str = "Serial_Channel";
+  const char *section_name_base_str = "Serial_Channel";
 
   assert (state_data);
 

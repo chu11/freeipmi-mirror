@@ -2171,7 +2171,7 @@ ipmi_config_core_user_section_get (ipmi_config_state_data_t *state_data, unsigne
 {
   struct ipmi_config_section *section = NULL;
   char section_name[IPMI_CONFIG_MAX_SECTION_NAME_LEN];
-  char *section_comment_text =
+  const char *section_comment_text =
     "In the following User sections, users should configure usernames, "
     "passwords, and access rights for IPMI over LAN communication.  "
     "Usernames can be set to any string with the exception of User1, which "

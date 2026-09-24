@@ -398,7 +398,7 @@ ipmi_config_core_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data
                                             int channel_index)
 {
   struct ipmi_config_section *section = NULL;
-  char *section_comment =
+  const char *section_comment =
     "The following miscellaneous configuration options are optionally "
     "implemented by the vendor.  They may not be available your system and "
     "may not be visible below."
@@ -413,7 +413,7 @@ ipmi_config_core_lan_conf_misc_section_get (ipmi_config_state_data_t *state_data
     "\n"
     "If set to \"Yes\", \"Enable_ARP_Response\" will inform the BMC to "
     "respond to ARP requests from other machines.";
-  char *section_name_base_str = "Lan_Conf_Misc";
+  const char *section_name_base_str = "Lan_Conf_Misc";
 
   assert (state_data);
 

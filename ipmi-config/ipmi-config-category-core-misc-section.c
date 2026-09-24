@@ -153,7 +153,7 @@ struct ipmi_config_section *
 ipmi_config_core_misc_section_get (ipmi_config_state_data_t *state_data)
 {
   struct ipmi_config_section *section = NULL;
-  char *section_comment =
+  const char *section_comment =
     "The following miscellaneous configuration options are optionally "
     "implemented by the vendor.  They may not be available your system and "
     "may not be visible below."

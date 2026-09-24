@@ -1290,7 +1290,7 @@ ipmi_config_core_sol_conf_section_get (ipmi_config_state_data_t *state_data,
                                        int channel_index)
 {
   struct ipmi_config_section * section = NULL;
-  char *section_comment =
+  const char *section_comment =
     "If your system supports IPMI 2.0 and Serial-over-LAN (SOL), the "
     "following configuration options will allow SOL configuration."
     "\n"
@@ -1305,7 +1305,7 @@ ipmi_config_core_sol_conf_section_get (ipmi_config_state_data_t *state_data,
     "and \"Volatile_Bit_Rate\" should both be set to the appropriate baud "
     "rate for your system.  This is typically the same baud rate configured "
     "in the BIOS and/or operating system.";
-  char *section_name_base_str = "SOL_Conf";
+  const char *section_name_base_str = "SOL_Conf";
 
   assert (state_data);
 
