@@ -259,7 +259,7 @@ asset_tag_commit (ipmi_config_state_data_t *state_data,
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "fiid_obj_get: 'total_asset_tag_length': %s\n",
+                           "fiid_obj_get: 'total_asset_tag_length_written': %s\n",
                            fiid_obj_errormsg (obj_cmd_rs));
           goto cleanup;
         }
@@ -635,7 +635,7 @@ _get_power_limit (ipmi_config_state_data_t *state_data,
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "ipmi_cmd_get_pef_configuration_parameters_event_filter_table: %s\n",
+                         "ipmi_cmd_dcmi_get_power_limit: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
