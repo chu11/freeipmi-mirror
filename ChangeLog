@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmidetectd.8.pre.in: State that the daemon exits with an
+	error when no hosts are configured, rather than "will not function
+	properly".
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmidetectd/ipmidetectd.c (_info_destroy): New list destructor
 	that frees the hostname along with the ipmidetectd_info struct.
 	(_nodes_setup): Use it instead of a bare free().

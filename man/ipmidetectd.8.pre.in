@@ -43,10 +43,10 @@ The
 .B ipmidetectd
 daemon must be configured using the
 .B ipmidetectd
-configuration file.  Until
+configuration file.  If no
 hosts to be pinged are configured,
 .B ipmidetectd
-will not function properly.
+will exit with an error.
 .LP
 See the
 .BR ipmidetectd.conf(5)
