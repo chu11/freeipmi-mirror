@@ -1,5 +1,14 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c
+	(ipmi_config_core_lan6_conf_section_get): Only fail section setup
+	when getting the number of IPv6 addresses is a fatal error.  With
+	--debug the non-fatal "not supported" case also returned NULL
+	(leaking the section), so `ipmi-config --debug --checkout` failed
+	outright on any BMC without IPv6 support.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config.c (_ipmi_config, main): Exit with
 	IPMI_CONFIG_FATAL_EXIT_VALUE (2) rather than EXIT_FAILURE (1) when
 	the operation cannot run at all: connection failure, section setup

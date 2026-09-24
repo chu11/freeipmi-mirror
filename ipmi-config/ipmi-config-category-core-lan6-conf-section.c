@@ -2396,12 +2396,13 @@ ipmi_config_core_lan6_conf_section_get (ipmi_config_state_data_t *state_data,
     {
       if (ret == IPMI_CONFIG_ERR_FATAL_ERROR
           || state_data->prog_data->args->common_args.debug)
-        {
-          pstdout_fprintf (state_data->pstate,
-                           stderr,
-                           "Unable to get number of addresses\n");
-          return (NULL);
-        }
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "Unable to get number of addresses\n");
+
+      if (ret == IPMI_CONFIG_ERR_FATAL_ERROR)
+        goto cleanup;
+
       goto done;
     }
 
