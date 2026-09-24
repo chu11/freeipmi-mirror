@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c
+	(_get_ipv6_static_address, _set_ipv6_static_address): Name the
+	function actually called, ..._ipv6_static_addresses, in the error
+	message rather than ..._ipv6_static_ip_address.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-dcmi-dcmi-conf-section.c
 	(_get_power_limit): Add the missing newline to the fiid_obj_create,
 	ipmi_cmd_dcmi_get_power_limit and fiid_obj_get error messages.

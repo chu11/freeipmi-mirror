@@ -581,7 +581,7 @@ _get_ipv6_static_address (ipmi_config_state_data_t *state_data,
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "ipmi_cmd_get_lan_configuration_parameters_ipv6_static_ip_address: %s\n",
+                         "ipmi_cmd_get_lan_configuration_parameters_ipv6_static_addresses: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
@@ -696,7 +696,7 @@ _set_ipv6_static_address (ipmi_config_state_data_t *state_data,
           || state_data->prog_data->args->common_args.debug)
         pstdout_fprintf (state_data->pstate,
                          stderr,
-                         "ipmi_cmd_set_lan_configuration_parameters_ipv6_static_ip_address: %s\n",
+                         "ipmi_cmd_set_lan_configuration_parameters_ipv6_static_addresses: %s\n",
                          ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
       goto cleanup;
