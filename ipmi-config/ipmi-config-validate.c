@@ -67,7 +67,9 @@ check_number_range (const char *value,
   errno = 0;
   conv = strtol (value, &endptr, 0);
 
+  /* endptr == value: nothing was parsed, e.g. an empty value */
   if (errno
+      || endptr == value
       || endptr[0] != '\0')
     return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 
@@ -90,7 +92,9 @@ check_number_range_unsigned (const char *value,
   errno = 0;
   conv = strtoul (value, &endptr, 0);
 
+  /* endptr == value: nothing was parsed, e.g. an empty value */
   if (errno
+      || endptr == value
       || endptr[0] != '\0')
     return (IPMI_CONFIG_VALIDATE_INVALID_VALUE);
 

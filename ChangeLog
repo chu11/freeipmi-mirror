@@ -1,5 +1,13 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-validate.c (check_number_range,
+	check_number_range_unsigned): Reject a value in which strtol()
+	consumed nothing.  An empty value passed the endptr[0] == '\0'
+	test with conv 0, so a numeric key with no value in the file (or
+	`-e Section:Key`) validated and committed 0.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-utils.h, ipmi-config/ipmi-config-utils.c
 	(ipmi_config_value_to_number): New function, strtol() with base 0.
 	* ipmi-config/ipmi-config-category-*.c: Use it in place of atoi()
