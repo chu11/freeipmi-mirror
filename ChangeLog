@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-locate.8.pre.in: Fix the NAME line to say ipmi-locate
+	rather than IPMI so apropos and whatis find the page.  Document the
+	--defaults option and that the tool must be run as root.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-locate/ipmi-locate.c (display_ipmi_locate_info): Print the
 	SMBUS slave address with the same FI_64 format as the memory and
 	I/O base addresses instead of casting to unsigned long.
