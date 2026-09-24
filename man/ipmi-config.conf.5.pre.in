@@ -47,7 +47,7 @@ Future versions of this manpage will try to include more information.
      	Lan_Enable_Ipmi_Msgs                         Yes
      	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
      	Lan_Privilege_Limit                          Administrator
-        ## Possible values: 0-17, 0 is unlimited; May be reset to 0 if not specified
+        ## Possible values: 0-15, 0 is unlimited; May be reset to 0 if not specified
         ## Lan_Session_Limit
      	## Possible values: Yes/No
      	SOL_Payload_Access                           Yes
@@ -63,7 +63,7 @@ Future versions of this manpage will try to include more information.
      	Lan_Enable_Ipmi_Msgs                         No
      	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
      	Lan_Privilege_Limit                          No_Access
-        ## Possible values: 0-17, 0 is unlimited; May be reset to 0 if not specified
+        ## Possible values: 0-15, 0 is unlimited; May be reset to 0 if not specified
         ## Lan_Session_Limit
         ## Possible values: Yes/No
         SOL_Payload_Access                           No

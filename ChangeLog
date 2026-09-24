@@ -1,5 +1,16 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-user-sections.c
+	(ipmi_config_core_user_section_get): Validate Serial_Session_Limit
+	as a four-bit value like Lan_Session_Limit; the user_session_limit
+	field is 4 bits and the library does not range-check it, so values
+	up to 255 were accepted and silently truncated on the wire.
+	Describe both session limits as "0-15"; 17 was never valid.
+	* man/ipmi-config.conf.5.pre.in: Update the example checkout to
+	match.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.8.pre.in (GENERAL USE): The per-node IP/MAC
 	example passed its key pairs with -k, which is --k-g.  Use -e.
 
