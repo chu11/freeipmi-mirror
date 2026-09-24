@@ -1,5 +1,10 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-config.8.pre.in (GENERAL USE): The per-node IP/MAC
+	example passed its key pairs with -k, which is --k-g.  Use -e.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c
 	(ipmi_config_core_lan6_conf_section_get): The description of
 	IPv6_IPv4_Addressing_Enables listed IPv4-Only/IPv6-Only/
