@@ -569,6 +569,20 @@ main (int argc, char *argv[])
   if (hosts_count > 1)
     prog_data.args->common_args.quiet_cache = 1;
 
+  /* Each host runs in its own thread; they cannot share one stdin */
+  if (hosts_count > 1
+      && (prog_data.args->action == IPMI_CONFIG_ACTION_COMMIT
+          || prog_data.args->action == IPMI_CONFIG_ACTION_DIFF)
+      && ((prog_data.args->filename
+           && !strcmp (prog_data.args->filename, "-"))
+          || (!prog_data.args->filename
+              && !prog_data.args->keypairs)))
+    {
+      fprintf (stderr,
+               "Cannot read configuration from standard input for multiple hosts, use --filename or --key-pair\n");
+      return (EXIT_FAILURE);
+    }
+
   prog_data.hosts_count = hosts_count;
 
   if ((rv = pstdout_launch (prog_data.args->common_args.hostname,

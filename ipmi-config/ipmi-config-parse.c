@@ -42,10 +42,12 @@ ipmi_config_parse (ipmi_config_state_data_t *state_data,
   int line_num = 0;
   struct ipmi_config_section *section = NULL;
   struct ipmi_config_key *key;
-  char *str, *tok;
+  char *str, *tok, *saveptr;
   ipmi_config_err_t rv = IPMI_CONFIG_ERR_FATAL_ERROR;
 
   assert (state_data);
+
+  /* strtok_r: with hostrange support one thread per host runs this */
 
   while (fgets (buf, IPMI_CONFIG_PARSE_BUFLEN, fp))
     {
@@ -53,7 +55,7 @@ ipmi_config_parse (ipmi_config_state_data_t *state_data,
 
       buf[IPMI_CONFIG_PARSE_BUFLEN-1] = '\0';
 
-      str = strtok (buf, " \t\n");
+      str = strtok_r (buf, " \t\n", &saveptr);
 
       if (!str)
         {
@@ -77,7 +79,7 @@ ipmi_config_parse (ipmi_config_state_data_t *state_data,
 
       if (same (str, "Section"))
         {
-          if (!(tok = strtok (NULL, " \t\n")))
+          if (!(tok = strtok_r (NULL, " \t\n", &saveptr)))
             {
               pstdout_fprintf (state_data->pstate,
                                stderr,
@@ -148,7 +150,7 @@ ipmi_config_parse (ipmi_config_state_data_t *state_data,
           goto cleanup;
         }
 
-      tok = strtok (NULL, " \t\n");
+      tok = strtok_r (NULL, " \t\n", &saveptr);
       if (!tok)
         tok = "";
 

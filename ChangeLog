@@ -1,5 +1,16 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-parse.c (ipmi_config_parse): Use
+	strtok_r() rather than strtok().  With hostrange support one
+	thread per host parses the config file concurrently and the shared
+	strtok() state was clobbered between threads.
+	* ipmi-config/ipmi-config.c (main): Reject --commit and --diff
+	from standard input when more than one host is given.  Every host
+	thread read the same stdin, so all but one saw a truncated or empty
+	configuration and reported success.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-pef-lan-alert-destination.c
 	(alert_ip_address_commit, alert_mac_address_commit): Copy the
 	input with snprintf() rather than strcpy(); the destination
