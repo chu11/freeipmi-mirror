@@ -33,6 +33,7 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif /* HAVE_UNISTD_H */
+#include <ctype.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -59,6 +60,18 @@
 #include "tool-hostrange-common.h"
 #include "tool-sdr-cache-common.h"
 #include "tool-util-common.h"
+
+/* "User" followed by a digit, i.e. User1, User2, ..., and not
+ * Lan_Conf_User_Security or its channel variants.
+ */
+static int
+_is_user_section (const char *section_name)
+{
+  assert (section_name);
+
+  return (!strncasecmp (section_name, "User", strlen ("User"))
+          && isdigit ((unsigned char)section_name[strlen ("User")]));
+}
 
 static int
 _ipmi_config (pstdout_state_t pstate,
@@ -324,7 +337,7 @@ _ipmi_config (pstdout_state_t pstate,
           section = state_data.sections;
           while (section)
             {
-              if (stristr (section->section_name, "User"))
+              if (_is_user_section (section->section_name))
                 user_count++;
               section = section->next;
             }
@@ -339,13 +352,14 @@ _ipmi_config (pstdout_state_t pstate,
                 {
                   struct ipmi_config_keyvalue *kv;
 
-                  if (stristr (section->section_name, "User"))
+                  if (_is_user_section (section->section_name))
                     {
-                      uint8_t userid;
+                      unsigned int userid;
 
+                      /* User sections are User1 .. User<user_count> */
                       userid = atoi (section->section_name + strlen ("User"));
 
-                      if (userid < user_count)
+                      if (userid >= 1 && userid <= user_count)
                         {
                           if ((kv = ipmi_config_find_keyvalue (section,
                                                                "Enable_User")))

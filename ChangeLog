@@ -1,5 +1,16 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config.c (_is_user_section): New function
+	matching "User" followed by a digit.
+	(_ipmi_config): Use it when counting user sections for the
+	Enable_User-after-Password workaround.  stristr (..., "User") also
+	matched Lan_Conf_User_Security and its channel variants, and the
+	inflated count is what let the highest UserN pass the
+	`userid < user_count` test.  Test `1 <= userid <= user_count` to
+	match the 1-based section numbering directly.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config.c (_ipmi_config): In the --section
 	checkout loop, treat a section lookup failure as a fatal error and
 	break out rather than continue.  The continue did not advance the
