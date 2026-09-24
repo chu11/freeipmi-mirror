@@ -171,6 +171,28 @@ ipmi_config_sensors_sections_create (ipmi_config_state_data_t *state_data)
       goto cleanup;
     }
 
+  /* No threshold or discrete sensors in the SDR (e.g. OEM-only
+   * sensors).  The caller treats NULL as failure, so hand back an
+   * empty placeholder section that neither checkout nor --listsections
+   * shows; an empty category is not an error.
+   */
+  if (!sdr_callback_arg.sections)
+    {
+      if (state_data->prog_data->args->verbose_count)
+        pstdout_fprintf (state_data->pstate,
+                         stderr,
+                         "## No configurable sensors found\n");
+
+      if (!(sdr_callback_arg.sections = ipmi_config_section_create (state_data,
+                                                                    "Sensors_None",
+                                                                    NULL,
+                                                                    NULL,
+                                                                    IPMI_CONFIG_DO_NOT_CHECKOUT | IPMI_CONFIG_DO_NOT_LIST,
+                                                                    NULL,
+                                                                    NULL)))
+        goto cleanup;
+    }
+
   return (sdr_callback_arg.sections);
 
  cleanup:

@@ -1,5 +1,14 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-sensors-sections.c
+	(ipmi_config_sensors_sections_create): When the SDR contains no
+	threshold or discrete sensors, return an empty placeholder section
+	flagged DO_NOT_CHECKOUT | DO_NOT_LIST (and say so under -v)
+	instead of NULL.  The caller treats NULL as failure, so a BMC with
+	only OEM sensors made `--category=sensors` exit 1 with no message.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-argp.c (_ipmi_config_args_validate):
 	Reject --section with --commit or --diff, and --key-pair or
 	--filename with --listsections; they were accepted and silently
