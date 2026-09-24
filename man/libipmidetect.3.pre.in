@@ -40,7 +40,7 @@ or undetected
 .sp
 .BI "char *ipmidetect_strerror(int errnum);"
 .sp
-.BI "char *ipmidetect_errormsg(int errnum);"
+.BI "char *ipmidetect_errormsg(ipmidetect_t handle);"
 .sp
 .BI "void ipmidetect_perror(ipmidetect_t handle, const char *msg);"
 .sp
@@ -64,6 +64,8 @@ daemon.
 
 .SH "FILES"
 /usr/include/ipmidetect.h
+.br
+@IPMIDETECT_CONFIG_FILE_DEFAULT@
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH COPYRIGHT
 Copyright (C) 2007-2015 Lawrence Livermore National Security, LLC.
@@ -71,5 +73,5 @@ Copyright (C) 2007-2015 Lawrence Livermore National Security, LLC.
 Copyright (C) 2007 The Regents of the University of California.
 #include <@top_srcdir@/man/manpage-common-gpl-library-text.man>
 .SH "SEE ALSO"
-ipmidetect(8), ipmidetectd(8)
+ipmidetect(8), ipmidetect.conf(5), ipmidetectd(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>

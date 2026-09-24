@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/libipmidetect.3.pre.in: Fix the ipmidetect_errormsg() prototype
+	to take an ipmidetect_t handle, not an int.  List the configuration
+	file under FILES and ipmidetect.conf(5) under SEE ALSO.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-core-lan6-conf-section.c
 	(ipmi_config_core_lan6_conf_section_get): The description of
 	IPv6_IPv4_Addressing_Enables listed IPv4-Only/IPv6-Only/
