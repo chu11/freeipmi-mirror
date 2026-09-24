@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-user-sections.c
+	(ipmi_config_core_user_section_get): Fix typos in the User section
+	comment: "is a fixed to", "atleast" (twice), and a missing space
+	before "SOL_Payload_Access".
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-dcmi-dcmi-conf-section.c
 	(asset_tag_commit): Name the field actually read,
 	total_asset_tag_length_written, in the fiid_obj_get error message.
