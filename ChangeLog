@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-locate.8.pre.in: Fix the NAME line to say ipmi-locate
+	rather than IPMI so apropos and whatis find the page.  Document the
+	--defaults option and that the tool must be run as root.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/libipmidetect.3.pre.in: Fix the ipmidetect_errormsg() prototype
 	to take an ipmidetect_t handle, not an int.  List the configuration
 	file under FILES and ipmidetect.conf(5) under SEE ALSO.

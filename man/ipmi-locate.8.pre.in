@@ -1,6 +1,6 @@
 .TH IPMI-LOCATE 8 "@ISODATE@" "IPMI Locate version @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
-IPMI \- IPMI probing utility
+ipmi-locate \- IPMI probing utility
 .SH "SYNOPSIS"
 .B ipmi-locate
 [\fIOPTION\fR...]
@@ -15,8 +15,17 @@ Users are cautioned though, the failure to discover IPMI via
 is not sufficient to disprove that IPMI exists on your
 system.  Your system may not publish such information or may expect
 clients to communicate at default locations.
+.PP
+The system's SMBIOS/DMI and ACPI tables are read directly, so
+.B Ipmi-locate
+must be run as root.
 
 .SH "OPTIONS"
+.TP
+\fB\-\-defaults\fR
+After the probe results, also display the default KCS, SMIC, and SSIF
+device locations from the IPMI specification.  These are compiled-in
+values, not values discovered on the system.
 #include <@top_srcdir@/man/manpage-common-misc.man>
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
