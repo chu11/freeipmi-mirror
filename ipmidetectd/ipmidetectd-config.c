@@ -130,10 +130,7 @@ _config_file_parse (void)
   int num;
 
   if (!(cf = conffile_handle_create ()))
-    {
-      err_output ("conffile_handle_create");
-      goto cleanup;
-    }
+    err_exit ("conffile_handle_create: %s", strerror (errno));
 
   num = sizeof (options)/sizeof (struct conffile_option);
 

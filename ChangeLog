@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetectd/ipmidetectd-config.c (_config_file_parse): Exit
+	immediately with the errno message when conffile_handle_create()
+	fails instead of skipping the parse and later reporting the
+	misleading "No nodes configured".
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmidetectd/ipmidetectd-config.c (ipmidetectd_config_setup):
 	Remove duplicate hosts from the configured list so overlapping host
 	ranges no longer exit with "Duplicate host ip".
