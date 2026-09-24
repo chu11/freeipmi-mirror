@@ -1,5 +1,16 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config.c (_ipmi_config, main): Exit with
+	IPMI_CONFIG_FATAL_EXIT_VALUE (2) rather than EXIT_FAILURE (1) when
+	the operation cannot run at all: connection failure, section setup
+	failure, unreadable file, parse or validation error, hostrange
+	setup failure.  The man page documents 2 for fatal errors, but
+	these paths returned 1, the same as a single field failing.
+	* man/ipmi-config.8.pre.in (DIAGNOSTICS): Say what distinguishes a
+	non-fatal error from a fatal one.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-diff.c (ipmi_config_diff): Record any
 	non-fatal checkout failure as IPMI_CONFIG_ERR_NON_FATAL_ERROR, as
 	checkout and commit do.  The specific codes (read only, not

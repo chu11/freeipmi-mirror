@@ -81,7 +81,11 @@ _ipmi_config (pstdout_state_t pstate,
   ipmi_config_state_data_t state_data;
   ipmi_config_prog_data_t *prog_data;
   struct ipmi_config_section *tmp_sections;
-  int exit_code = EXIT_FAILURE;
+  /* Everything that jumps to cleanup before the action runs (cannot
+   * connect, cannot build sections, bad file, parse or validation
+   * error) is fatal per the man page.
+   */
+  int exit_code = IPMI_CONFIG_FATAL_EXIT_VALUE;
   ipmi_config_err_t ret = 0;
   int file_opened = 0;
   FILE *fp = NULL;              /* init NULL to remove warnings */
@@ -98,7 +102,7 @@ _ipmi_config (pstdout_state_t pstate,
       if (sdr_cache_flush_cache (pstate,
                                  hostname,
                                  &prog_data->args->common_args) < 0)
-        return (EXIT_FAILURE);
+        return (IPMI_CONFIG_FATAL_EXIT_VALUE);
       return (EXIT_SUCCESS);
     }
 
@@ -576,7 +580,7 @@ main (int argc, char *argv[])
 
   if ((hosts_count = pstdout_setup (&(prog_data.args->common_args.hostname),
                                     &(prog_data.args->common_args))) < 0)
-    return (EXIT_FAILURE);
+    return (IPMI_CONFIG_FATAL_EXIT_VALUE);
 
   if (!hosts_count)
     return (EXIT_SUCCESS);
@@ -596,7 +600,7 @@ main (int argc, char *argv[])
     {
       fprintf (stderr,
                "Cannot read configuration from standard input for multiple hosts, use --filename or --key-pair\n");
-      return (EXIT_FAILURE);
+      return (IPMI_CONFIG_FATAL_EXIT_VALUE);
     }
 
   prog_data.hosts_count = hosts_count;
@@ -608,7 +612,7 @@ main (int argc, char *argv[])
       fprintf (stderr,
                "pstdout_launch: %s\n",
                pstdout_strerror (pstdout_errnum));
-      return (EXIT_FAILURE);
+      return (IPMI_CONFIG_FATAL_EXIT_VALUE);
     }
 
   return (rv);

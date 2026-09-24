@@ -369,7 +369,12 @@ Commit all configuration values from bmc-data-updt.conf and key 'lan_conf_misc:g
 .PP
 .SH "DIAGNOSTICS"
 Upon successful execution, exit status is 0.  On non-fatal error, exit
-status is 1.  On fatal error, exit status is 2.
+status is 1.  On fatal error, exit status is 2.  A non-fatal error is
+one where the requested operation ran but one or more fields could not
+be checked out, committed, or compared.  A fatal error is one where
+the operation could not run at all, such as being unable to connect to
+the BMC, an unreadable or unparseable configuration file, or an
+invalid value.
 .LP
 If multiple hosts are specified for communication, the exit status is
 0 if and only if all targets successfully execute.  If any non-fatal
