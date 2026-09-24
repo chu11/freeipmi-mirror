@@ -115,8 +115,6 @@ unsigned int nodes_count = 0;
 hash_t nodes_index = NULL;
 int server_fd = -1;
 
-extern int h_errno;
-
 static volatile sig_atomic_t exit_flag = 1;
 
 static void

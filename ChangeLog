@@ -1,5 +1,10 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmidetectd/ipmidetectd.c: Drop unused extern declaration of
+	h_errno, left over from gethostbyname().
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* libipmidetect/ipmidetect.c (_is_node): Look each node up once per
 	list instead of up to three times.
 
