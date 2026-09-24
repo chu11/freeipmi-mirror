@@ -1,5 +1,14 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-category-core-lan-conf-auth-section.c
+	(_set_authentication_type_enables): In the OEM authentication
+	retry workaround, look up the section being committed by
+	section_name rather than the fixed name "Lan_Conf_Auth".  When
+	committing a per-channel Lan_Conf_Auth_Channel_N section the
+	retry read the OEM_Enable_* inputs from the base section instead.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.8.pre.in: The Chassis_Power_Conf key that cannot
 	be checked out is Power_Cycle_Interval, not Power_Control_Interval.
 

@@ -565,17 +565,16 @@ _set_authentication_type_enables (ipmi_config_state_data_t *state_data,
           struct ipmi_config_section *section;
           struct ipmi_config_keyvalue *kv;
 
-          section = state_data->sections;
-          while (section)
+          /* section_name may be a per-channel Lan_Conf_Auth_Channel_N */
+          if (!(section = ipmi_config_find_section (state_data, section_name)))
             {
-              if (!strcasecmp (section->section_name, "Lan_Conf_Auth"))
-                break;
-              section = section->next;
+              /* shouldn't be possible, we're already in this section */
+              pstdout_fprintf (state_data->pstate,
+                               stderr,
+                               "Cannot find section '%s'\n",
+                               section_name);
+              goto cleanup;
             }
-
-          /* shouldn't be possible */
-          if (!section)
-            goto cleanup;
 
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "Callback_Enable_Auth_Type_OEM_Proprietary")))
