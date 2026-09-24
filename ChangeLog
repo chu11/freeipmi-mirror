@@ -1,5 +1,10 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* libipmidetect/ipmidetect.c (_is_node): Look each node up once per
+	list instead of up to three times.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* libipmidetect/ipmidetect.c (ipmidetect_load_data): When every
 	configured server fails, keep the errnum from the last attempt
 	instead of overwriting it with IPMIDETECT_ERR_CONNECT.

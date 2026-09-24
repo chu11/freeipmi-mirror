@@ -843,7 +843,7 @@ ipmidetect_get_undetected_nodes_string (ipmidetect_t handle, char *buf, int bufl
 static int
 _is_node (ipmidetect_t handle, const char *node, int which)
 {
-  int temp, rv = -1;
+  int detected, undetected, rv;
 
   if (_loaded_handle_error_check (handle) < 0)
     return (-1);
@@ -854,22 +854,19 @@ _is_node (ipmidetect_t handle, const char *node, int which)
       return (-1);
     }
 
-  if (fi_hostlist_find (handle->detected_nodes, node) < 0
-      && fi_hostlist_find (handle->undetected_nodes, node) < 0)
+  detected = (fi_hostlist_find (handle->detected_nodes, node) >= 0);
+  undetected = (fi_hostlist_find (handle->undetected_nodes, node) >= 0);
+
+  if (!detected && !undetected)
     {
       handle->errnum = IPMIDETECT_ERR_NOTFOUND;
       return (-1);
     }
 
   if (which == IPMIDETECT_DETECTED_NODES)
-    temp = fi_hostlist_find (handle->detected_nodes, node);
+    rv = detected;
   else
-    temp = fi_hostlist_find (handle->undetected_nodes, node);
-
-  if (temp != -1)
-    rv = 1;
-  else
-    rv = 0;
+    rv = undetected;
 
   handle->errnum = IPMIDETECT_ERR_SUCCESS;
   return (rv);
