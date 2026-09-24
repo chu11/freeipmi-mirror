@@ -240,7 +240,7 @@ bad_password_threshold_commit (ipmi_config_state_data_t *state_data,
   if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  bpt.bad_password_threshold_number = atoi (kv->value_input);
+  bpt.bad_password_threshold_number = ipmi_config_value_to_number (kv->value_input);
   return (_set_bad_password_threshold (state_data, section_name, &bpt));
 }
 
@@ -282,7 +282,7 @@ attempt_count_reset_interval_commit (ipmi_config_state_data_t *state_data,
   if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  bpt.attempt_count_reset_interval = atoi (kv->value_input);
+  bpt.attempt_count_reset_interval = ipmi_config_value_to_number (kv->value_input);
   return (_set_bad_password_threshold (state_data, section_name, &bpt));
 }
 
@@ -324,7 +324,7 @@ user_lockout_interval_commit (ipmi_config_state_data_t *state_data,
   if ((ret = _get_bad_password_threshold (state_data, section_name, &bpt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  bpt.user_lockout_interval = atoi (kv->value_input);
+  bpt.user_lockout_interval = ipmi_config_value_to_number (kv->value_input);
   return (_set_bad_password_threshold (state_data, section_name, &bpt));
 }
 

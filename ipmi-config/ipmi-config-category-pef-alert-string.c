@@ -218,7 +218,7 @@ event_filter_number_commit (ipmi_config_state_data_t *state_data,
                                      &ask)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  ask.event_filter_number = atoi (kv->value_input);
+  ask.event_filter_number = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_alert_string_keys (state_data,
                                   section_name,
@@ -267,7 +267,7 @@ alert_string_set_commit (ipmi_config_state_data_t *state_data,
                                      &ask)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  ask.alert_string_set = atoi (kv->value_input);
+  ask.alert_string_set = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_alert_string_keys (state_data,
                                   section_name,

@@ -628,7 +628,7 @@ character_accumulate_interval_commit (ipmi_config_state_data_t *state_data,
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  it.character_accumulate_interval = atoi (kv->value_input);
+  it.character_accumulate_interval = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it));
 }
@@ -671,7 +671,7 @@ character_send_threshold_commit (ipmi_config_state_data_t *state_data,
   if ((ret = _get_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  it.character_send_threshold = atoi (kv->value_input);
+  it.character_send_threshold = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_sol_character_accumulate_interval_and_send_threshold (state_data, section_name, &it));
 }
@@ -849,7 +849,7 @@ sol_retry_count_commit (ipmi_config_state_data_t *state_data,
   if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  sr.retry_count = atoi (kv->value_input);
+  sr.retry_count = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_sol_sol_retry (state_data, section_name, &sr));
 }
@@ -892,7 +892,7 @@ sol_retry_interval_commit (ipmi_config_state_data_t *state_data,
   if ((ret = _get_sol_sol_retry (state_data, section_name, &sr)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  sr.retry_interval = atoi (kv->value_input);
+  sr.retry_interval = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_sol_sol_retry (state_data, section_name, &sr));
 }
@@ -1260,7 +1260,7 @@ sol_payload_port_commit (ipmi_config_state_data_t *state_data,
 
   if (ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (state_data->ipmi_ctx,
                                                                          channel_number,
-                                                                         atoi (kv->value_input),
+                                                                         ipmi_config_value_to_number (kv->value_input),
                                                                          obj_cmd_rs) < 0)
     {
       if (ipmi_config_param_errnum_is_non_fatal (state_data,

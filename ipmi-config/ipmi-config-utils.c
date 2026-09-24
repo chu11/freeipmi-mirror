@@ -93,6 +93,14 @@ ipmi_config_find_keyvalue (struct ipmi_config_section *section,
   return (kv);
 }
 
+long
+ipmi_config_value_to_number (const char *value)
+{
+  assert (value);
+
+  return (strtol (value, NULL, 0));
+}
+
 int
 ipv4_address_string2int (ipmi_config_state_data_t *state_data,
                          const char *src,

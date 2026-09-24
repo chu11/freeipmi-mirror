@@ -257,19 +257,19 @@ _set_alert_policy_table (struct ipmi_config_state_data *state_data,
 
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "Policy_Number")))
-            apt->policy_number = atoi (kv->value_input);
+            apt->policy_number = ipmi_config_value_to_number (kv->value_input);
 
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "Destination_Selector")))
-            apt->destination_selector = atoi (kv->value_input);
+            apt->destination_selector = ipmi_config_value_to_number (kv->value_input);
 
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "Channel_Number")))
-            apt->channel_number = atoi (kv->value_input);
+            apt->channel_number = ipmi_config_value_to_number (kv->value_input);
 
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "Alert_String_Set_Selector")))
-            apt->alert_string_set_selector = atoi (kv->value_input);
+            apt->alert_string_set_selector = ipmi_config_value_to_number (kv->value_input);
 
           if ((kv = ipmi_config_find_keyvalue (section,
                                                "Event_Specific_Alert_String")))
@@ -471,7 +471,7 @@ policy_number_commit (ipmi_config_state_data_t *state_data,
                                       &apt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  apt.policy_number = atoi (kv->value_input);
+  apt.policy_number = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_alert_policy_table (state_data,
                                    section_name,
@@ -520,7 +520,7 @@ destination_selector_commit (ipmi_config_state_data_t *state_data,
                                       &apt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  apt.destination_selector = atoi (kv->value_input);
+  apt.destination_selector = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_alert_policy_table (state_data,
                                    section_name,
@@ -569,7 +569,7 @@ channel_number_commit (ipmi_config_state_data_t *state_data,
                                       &apt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  apt.channel_number = atoi (kv->value_input);
+  apt.channel_number = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_alert_policy_table (state_data,
                                    section_name,
@@ -618,7 +618,7 @@ alert_string_set_selector_commit (ipmi_config_state_data_t *state_data,
                                       &apt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  apt.alert_string_set_selector = atoi (kv->value_input);
+  apt.alert_string_set_selector = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_alert_policy_table (state_data,
                                    section_name,

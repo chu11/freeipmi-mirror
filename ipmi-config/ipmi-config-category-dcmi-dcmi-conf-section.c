@@ -802,11 +802,11 @@ _set_power_limit (ipmi_config_state_data_t *state_data,
           goto cleanup;
         }
 
-      gpld->power_limit_requested = atoi (power_limit_requested_kv->value_input);
+      gpld->power_limit_requested = ipmi_config_value_to_number (power_limit_requested_kv->value_input);
       gpld->correction_time_limit = strtoul (correction_time_limit_kv->value_input,
                                              NULL,
                                              0);
-      gpld->management_application_statistics_sampling_period = atoi (sampling_period_kv->value_input);
+      gpld->management_application_statistics_sampling_period = ipmi_config_value_to_number (sampling_period_kv->value_input);
 
       num = exception_actions_number (exception_actions_kv->value_input);
       if (num < 0)
@@ -939,7 +939,7 @@ power_limit_requested_commit (ipmi_config_state_data_t *state_data,
         return (ret);
     }
 
-  gpld.power_limit_requested = atoi (kv->value_input);
+  gpld.power_limit_requested = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_power_limit (state_data, section_name, &gpld, 0));
 }
@@ -1046,7 +1046,7 @@ management_application_statistics_sampling_period_commit (ipmi_config_state_data
         return (ret);
     }
 
-  gpld.management_application_statistics_sampling_period = atoi (kv->value_input);
+  gpld.management_application_statistics_sampling_period = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_power_limit (state_data, section_name, &gpld, 0));
 }

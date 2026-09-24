@@ -356,7 +356,7 @@ alert_acknowledge_timeout_commit (ipmi_config_state_data_t *state_data,
                                     &dt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  dt.alert_acknowledge_timeout = atoi (kv->value_input);
+  dt.alert_acknowledge_timeout = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_destination_type (state_data,
                                  section_name,
@@ -405,7 +405,7 @@ alert_retries_commit (ipmi_config_state_data_t *state_data,
                                     &dt)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  dt.alert_retries = atoi (kv->value_input);
+  dt.alert_retries = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_destination_type (state_data,
                                  section_name,

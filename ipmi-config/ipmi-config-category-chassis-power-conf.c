@@ -185,7 +185,7 @@ power_cycle_interval_commit (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_cmd_set_power_cycle_interval (state_data->ipmi_ctx,
-                                         atoi (kv->value_input),
+                                         ipmi_config_value_to_number (kv->value_input),
                                          obj_cmd_rs) < 0)
     {
       if (state_data->prog_data->args->common_args.debug)

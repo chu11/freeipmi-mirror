@@ -31,6 +31,12 @@ struct ipmi_config_keyvalue *ipmi_config_find_keyvalue (struct ipmi_config_secti
                                                         const char *key_name);
 
 
+/* Convert a numeric value_input that has already passed
+ * check_number_range(), which accepts hex and octal, with the same
+ * rules it used; atoi() would read "0x10" as 0 and "010" as 10.
+ */
+long ipmi_config_value_to_number (const char *value);
+
 int ipv4_address_string2int (ipmi_config_state_data_t *state_data,
                              const char *src,
                              uint32_t *dest);

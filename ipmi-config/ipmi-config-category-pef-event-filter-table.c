@@ -979,7 +979,7 @@ alert_policy_number_commit (ipmi_config_state_data_t *state_data,
                                       &eft)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  eft.alert_policy_number = atoi (kv->value_input);
+  eft.alert_policy_number = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_event_filter_table (state_data,
                                    section_name,
@@ -1028,7 +1028,7 @@ group_control_selector_commit (ipmi_config_state_data_t *state_data,
                                       &eft)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  eft.group_control_selector = atoi (kv->value_input);
+  eft.group_control_selector = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_event_filter_table (state_data,
                                    section_name,

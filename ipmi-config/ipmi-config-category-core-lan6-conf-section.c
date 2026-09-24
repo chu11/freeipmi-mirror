@@ -2059,7 +2059,7 @@ ipv6_static_router_prefix_length_commit (ipmi_config_state_data_t *state_data,
   /* router 1 or 2 */
   num = atoi (kv->key->key_name + strlen ("IPv6_Static_Router_Prefix_Length_"));
 
-  prefix_length = atoi (kv->value_input);
+  prefix_length = ipmi_config_value_to_number (kv->value_input);
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_lan_configuration_parameters_rs)))
     {

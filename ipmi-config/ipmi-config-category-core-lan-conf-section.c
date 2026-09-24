@@ -1439,7 +1439,7 @@ vlan_id_commit (ipmi_config_state_data_t *state_data,
   if ((ret = _get_vlan_id (state_data, section_name, &vi)) != IPMI_CONFIG_ERR_SUCCESS)
     return (ret);
 
-  vi.vlan_id = atoi (kv->value_input);
+  vi.vlan_id = ipmi_config_value_to_number (kv->value_input);
 
   return (_set_vlan_id (state_data, section_name, &vi));
 }
@@ -1610,7 +1610,7 @@ vlan_priority_commit (ipmi_config_state_data_t *state_data,
 
   if (ipmi_cmd_set_lan_configuration_parameters_vlan_priority (state_data->ipmi_ctx,
                                                                channel_number,
-                                                               atoi (kv->value_input),
+                                                               ipmi_config_value_to_number (kv->value_input),
                                                                obj_cmd_rs) < 0)
     {
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
@@ -2075,7 +2075,7 @@ primary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
 
   if (ipmi_cmd_set_lan_configuration_parameters_primary_rmcp_port_number (state_data->ipmi_ctx,
                                                                           channel_number,
-                                                                          atoi (kv->value_input),
+                                                                          ipmi_config_value_to_number (kv->value_input),
                                                                           obj_cmd_rs) < 0)
     {
       if (ipmi_config_param_errnum_is_non_fatal (state_data,
@@ -2204,7 +2204,7 @@ secondary_rmcp_port_commit (ipmi_config_state_data_t *state_data,
 
   if (ipmi_cmd_set_lan_configuration_parameters_secondary_rmcp_port_number (state_data->ipmi_ctx,
                                                                             channel_number,
-                                                                            atoi (kv->value_input),
+                                                                            ipmi_config_value_to_number (kv->value_input),
                                                                             obj_cmd_rs) < 0)
     {
       if (ipmi_config_param_errnum_is_non_fatal (state_data,

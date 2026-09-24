@@ -347,7 +347,7 @@ _set_user_access (ipmi_config_state_data_t *state_data,
                   (lan_flag) ? "Lan" : "Serial");
 
       if ((kvtmp = ipmi_config_find_keyvalue (section, keynametmp)))
-        ua->session_limit = atoi (kvtmp->value_input);
+        ua->session_limit = ipmi_config_value_to_number (kvtmp->value_input);
     }
   else
     {

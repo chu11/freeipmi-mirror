@@ -1,5 +1,15 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-config/ipmi-config-utils.h, ipmi-config/ipmi-config-utils.c
+	(ipmi_config_value_to_number): New function, strtol() with base 0.
+	* ipmi-config/ipmi-config-category-*.c: Use it in place of atoi()
+	on every numeric value_input.  check_number_range() validates with
+	strtol() base 0 and so accepts hex and octal, but the commits
+	converted with atoi(), so "0x10" passed validation and committed 0
+	and "010" committed 10.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-core-lan-conf-section.c
 	(ipmi_config_core_lan_conf_section_get): Validate Vlan_Priority as
 	a three-bit value; the vlan_priority field is 3 bits and the

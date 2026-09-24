@@ -367,7 +367,7 @@ gratuitous_arp_interval_commit (ipmi_config_state_data_t *state_data,
 
   if (ipmi_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (state_data->ipmi_ctx,
                                                                          channel_number,
-                                                                         atoi (kv->value_input),
+                                                                         ipmi_config_value_to_number (kv->value_input),
                                                                          obj_cmd_rs) < 0)
     {
       if (ipmi_config_param_errnum_is_non_fatal (state_data,

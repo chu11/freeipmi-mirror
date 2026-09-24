@@ -880,7 +880,7 @@ pef_startup_delay_commit (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (state_data->ipmi_ctx,
-                                                                   atoi (kv->value_input),
+                                                                   ipmi_config_value_to_number (kv->value_input),
                                                                    obj_cmd_rs) < 0)
     {
       ipmi_config_err_t ret;
@@ -997,7 +997,7 @@ pef_alert_startup_delay_commit (ipmi_config_state_data_t *state_data,
     }
 
   if (ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (state_data->ipmi_ctx,
-                                                                         atoi (kv->value_input),
+                                                                         ipmi_config_value_to_number (kv->value_input),
                                                                          obj_cmd_rs) < 0)
     {
       ipmi_config_err_t ret;
