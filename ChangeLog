@@ -1,5 +1,10 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* libipmidetect/ipmidetect.c (ipmidetect_handle_create): Define
+	with (void) to match the header prototype.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-config/ipmi-config-category-*.c: In checkout and commit
 	functions that hold a fiid object, `goto cleanup` rather than
 	`return (IPMI_CONFIG_ERR_FATAL_ERROR)` when

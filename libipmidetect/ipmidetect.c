@@ -220,7 +220,7 @@ _initialize_handle (ipmidetect_t handle)
 }
 
 ipmidetect_t
-ipmidetect_handle_create ()
+ipmidetect_handle_create (void)
 {
   ipmidetect_t handle;
 
