@@ -1,5 +1,13 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-pet/ipmi-pet-argp.c (cmdline_parse): Reject a specific trap
+	or --manufacturer-id larger than 32 bits instead of silently
+	truncating it.
+	* ipmi-pet/ipmi-pet.c (_ipmi_pet_parse): Ditto for the specific
+	trap read from a file or stdin.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-pet/ipmi-pet-argp.c (cmdline_options): Add
 	ARGP_COMMON_SDR_CACHE_OPTIONS_IGNORE so the documented
 	--ignore-sdr-cache option is accepted again.  It was dropped by

@@ -38,6 +38,7 @@
 #include <time.h>
 #endif  /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
+#include <limits.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -1674,7 +1675,8 @@ _ipmi_pet_parse (ipmi_pet_state_data_t *state_data,
           errno = 0;
           uvalue = strtoul (token, &endptr, 0);
           if (errno
-              || endptr[0] != '\0')
+              || endptr[0] != '\0'
+              || uvalue > UINT_MAX)
             {
               fprintf (stderr, "invalid specific trap argument on line %u\n", line_count);
               rv = 0;

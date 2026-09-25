@@ -157,7 +157,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
       if (errno
           || endptr == arg
           || endptr[0] != '\0'
-          || !tmp)
+          || !tmp
+          || tmp > UINT_MAX)
         {
           fprintf (stderr, "invalid manufacturer id: %lu\n", tmp);
           exit (EXIT_FAILURE);
@@ -217,7 +218,8 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
             uvalue = strtoul (arg, &endptr, 0);
             if (errno
                 || endptr == arg
-                || endptr[0] != '\0')
+                || endptr[0] != '\0'
+                || uvalue > UINT_MAX)
               {
                 fprintf (stderr, "invalid specific trap argument\n");
                 exit (EXIT_FAILURE);
