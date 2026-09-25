@@ -1,5 +1,12 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-messaging-support-cmds.c
+	(fill_cmd_set_system_info_parameters_set_in_progress): Send
+	parameter selector 0 (set in progress) instead of 1 (system
+	firmware version).
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/cmds/ipmi-pef-and-alerting-cmds.c
 	(fill_cmd_alert_immediate): Set the operation field, which was
 	validated but never written and left the request invalid.  Drop the
