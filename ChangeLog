@@ -1,5 +1,10 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_set_telnet_config): Add the
+	missing newline after the last option in the key list.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-wistron.c (ipmi_oem_wistron_set_chassis_led_status):
 	Select the fault LED state from the second option, not the first.
 	Code is currently disabled.

@@ -3926,7 +3926,7 @@ ipmi_oem_dell_set_telnet_config (ipmi_oem_state_data_t *state_data)
                       "Option: telnet=enable|disable\n"
                       "Option: sessiontimeout=seconds\n"
                       "Option: portnumber=num\n"
-                      "Option: 7fls=enable|disable");
+                      "Option: 7fls=enable|disable\n");
       return (0);
     }
 
