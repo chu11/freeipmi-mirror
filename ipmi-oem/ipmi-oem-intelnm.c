@@ -1258,6 +1258,20 @@ _ipmi_oem_intelnm_get_node_manager_version_common (ipmi_oem_state_data_t *state_
 }
 
 static void
+_ipmi_oem_intelnm_unrecognized_version (ipmi_oem_state_data_t *state_data,
+                                        uint8_t node_manager_version)
+{
+  assert (state_data);
+
+  pstdout_fprintf (state_data->pstate,
+                   stderr,
+                   "%s:%s unrecognized node manager version: %02Xh\n",
+                   state_data->prog_data->args->oem_id,
+                   state_data->prog_data->args->oem_command,
+                   node_manager_version);
+}
+
+static void
 _ipmi_oem_intelnm_get_domain_id_str (ipmi_oem_state_data_t *state_data,
                                      uint8_t domain_id,
                                      char *domain_id_str,
@@ -1955,7 +1969,8 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
       policypowerdomain_array = policypowerdomain_legacy;
       policypowerdomain_array_len = policypowerdomain_legacy_len;
     }
-  else
+  else if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_1_0
+           || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_1_5)
     {
       if (!domainid_specified)
         {
@@ -1970,6 +1985,11 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
 
       policypowerdomain_array = policypowerdomain_legacy;
       policypowerdomain_array_len = policypowerdomain_legacy_len;
+    }
+  else
+    {
+      _ipmi_oem_intelnm_unrecognized_version (state_data, node_manager_version);
+      goto cleanup;
     }
 
   for (i = 0; i < domainid_array_len; i++)
@@ -2752,15 +2772,21 @@ ipmi_oem_intelnm_get_node_manager_policy (ipmi_oem_state_data_t *state_data)
 
       if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_0
           || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_2_5
-          ||node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_3_0)
+          || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_3_0)
         {
           domainid_array = domainid_defaults_2_0;
           domainid_array_len = domainid_defaults_2_0_len;
         }
-      else
+      else if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_1_0
+               || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_1_5)
         {
           domainid_array = domainid_defaults_1_5;
           domainid_array_len = domainid_defaults_1_5_len;
+        }
+      else
+        {
+          _ipmi_oem_intelnm_unrecognized_version (state_data, node_manager_version);
+          goto cleanup;
         }
     }
 
@@ -3845,10 +3871,16 @@ ipmi_oem_intelnm_get_node_manager_policy_alert_thresholds (ipmi_oem_state_data_t
           domainid_array = domainid_defaults_2_0;
           domainid_array_len = domainid_defaults_2_0_len;
         }
-      else
+      else if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_1_0
+               || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_1_5)
         {
           domainid_array = domainid_defaults_1_5;
           domainid_array_len = domainid_defaults_1_5_len;
+        }
+      else
+        {
+          _ipmi_oem_intelnm_unrecognized_version (state_data, node_manager_version);
+          goto cleanup;
         }
     }
 
@@ -4569,10 +4601,16 @@ ipmi_oem_intelnm_get_node_manager_policy_suspend_periods (ipmi_oem_state_data_t 
           domainid_array = domainid_defaults_2_0;
           domainid_array_len = domainid_defaults_2_0_len;
         }
-      else
+      else if (node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_1_0
+               || node_manager_version == IPMI_OEM_INTEL_NODE_MANAGER_VERSION_1_5)
         {
           domainid_array = domainid_defaults_1_5;
           domainid_array_len = domainid_defaults_1_5_len;
+        }
+      else
+        {
+          _ipmi_oem_intelnm_unrecognized_version (state_data, node_manager_version);
+          goto cleanup;
         }
     }
 
