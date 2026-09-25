@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-fujitsu.c (ipmi_oem_fujitsu_get_sel_entry_long_text):
+	Stop reading if a response reports a total data length no larger
+	than the bytes already copied, which would otherwise memcpy with a
+	negative length.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-ibm.c (IPMI_OEM_IBM_LED_NAME_BUFLEN): Increase to
 	18 so the 17 character "ServeRAID 8k Batt" LED name is not
 	truncated by snprintf.
