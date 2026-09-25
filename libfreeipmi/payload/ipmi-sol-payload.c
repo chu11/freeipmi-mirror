@@ -100,7 +100,9 @@ fill_sol_payload_data (uint8_t packet_sequence_number,
                        unsigned int character_data_len,
                        fiid_obj_t obj_sol_payload)
 {
-  if (!fiid_obj_valid (obj_sol_payload))
+  if (packet_sequence_number > IPMI_SOL_PACKET_SEQUENCE_NUMBER_MAX
+      || packet_ack_nack_sequence_number > IPMI_SOL_PACKET_SEQUENCE_NUMBER_MAX
+      || !fiid_obj_valid (obj_sol_payload))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -143,7 +145,9 @@ fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
                                              unsigned int character_data_len,
                                              fiid_obj_t obj_sol_payload)
 {
-  if (!IPMI_SOL_FLUSH_OUTBOUND_VALID (flush_outbound)
+  if (packet_sequence_number > IPMI_SOL_PACKET_SEQUENCE_NUMBER_MAX
+      || packet_ack_nack_sequence_number > IPMI_SOL_PACKET_SEQUENCE_NUMBER_MAX
+      || !IPMI_SOL_FLUSH_OUTBOUND_VALID (flush_outbound)
       || !IPMI_SOL_FLUSH_INBOUND_VALID (flush_inbound)
       || !IPMI_SOL_ASSERT_DCD_DSR_VALID (drop_dcd_dsr)
       || !IPMI_SOL_ASSERT_CTS_VALID (cts_pause)
