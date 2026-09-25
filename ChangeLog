@@ -1,5 +1,14 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/spec/ipmi-device-types-spec.c
+	(ipmi_device_type_modifier_fru_inventory_device_behind_management_controller),
+	libfreeipmi/include/freeipmi/spec/ipmi-device-types-spec.h
+	(IPMI_DEVICE_TYPE_MODIFIER_FRU_INVENTORY_DEVICE_BEHIND_MANAGEMENT_CONTROLLER_UNSPECIFIED):
+	Comment that the 0xFF "unspecified" modifier is not supported in the
+	string table.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h
 	(IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_PRESENT_DEVICE_ABSENT,
 	IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_PRESENT_DEVICE_PRESENT):
