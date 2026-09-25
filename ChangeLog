@@ -1,6 +1,15 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/record-format/ipmi-sdr-record-format.c
+	(tmpl_sdr_generic_device_locator_record): Add the missing "Record
+	Body Bytes" comment divider; the key bytes are only bytes 6-8.
+	* libfreeipmi/include/freeipmi/templates/ipmi-sdr-record-format-templates.h:
+	Update accordingly, and correct the documented device_access_address
+	field names, which were listed as direct_access_address.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/record-format/ipmi-sdr-record-format.c
 	(tmpl_sdr_oem_record): Mark oem_data optional and variable length;
 	the OEM data is "up to 56 bytes".
 	* libfreeipmi/include/freeipmi/templates/ipmi-sdr-record-format-templates.h:

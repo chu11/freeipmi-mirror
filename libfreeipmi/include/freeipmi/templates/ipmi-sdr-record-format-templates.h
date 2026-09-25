@@ -942,8 +942,8 @@ FIID Template: tmpl_sdr_generic_device_locator_record
     /********************
      * Record Key Bytes *
      ********************/
-    { 1, "direct_access_address.reserved", REQUIRED, LENGTH-FIXED }
-    { 7, "direct_access_address", REQUIRED, LENGTH-FIXED }
+    { 1, "device_access_address.reserved", REQUIRED, LENGTH-FIXED }
+    { 7, "device_access_address", REQUIRED, LENGTH-FIXED }
 
     { 1, "channel_number_ms", REQUIRED, LENGTH-FIXED }
     { 7, "device_slave_address", REQUIRED, LENGTH-FIXED }
@@ -952,6 +952,9 @@ FIID Template: tmpl_sdr_generic_device_locator_record
     { 2, "lun_for_master_write_read_command", REQUIRED, LENGTH-FIXED }
     { 3, "channel_number_ls", REQUIRED, LENGTH-FIXED }
 
+    /*********************
+     * Record Body Bytes *
+     *********************/
     { 3, "address_span", REQUIRED, LENGTH-FIXED }
     { 5, "address_span.reserved", REQUIRED, LENGTH-FIXED }
     { 8, "reserved", REQUIRED, LENGTH-FIXED }

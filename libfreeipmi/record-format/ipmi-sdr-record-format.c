@@ -918,6 +918,9 @@ fiid_template_t tmpl_sdr_generic_device_locator_record =
     { 2, "lun_for_master_write_read_command", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3, "channel_number_ls", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
+    /*********************
+     * Record Body Bytes *
+     *********************/
     { 3, "address_span", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 5, "address_span.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
