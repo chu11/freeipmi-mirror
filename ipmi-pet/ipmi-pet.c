@@ -585,8 +585,8 @@ _ipmi_pet_form_sel_record (ipmi_pet_state_data_t *state_data,
   if (len != IPMI_SEL_RECORD_MAX_RECORD_LENGTH)
     {
       fprintf (stderr,
-               "Invalid length SEL record: %u\n",
-               sel_record_len);
+               "Invalid length SEL record: %d\n",
+               len);
       goto cleanup;
     }
 
