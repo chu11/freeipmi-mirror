@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-intel.c (ipmi_oem_intel_set_smtp_config): Error
+	out if the only argument is a channel number and there are no
+	KEY=VALUE options to set, instead of silently doing nothing.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-fujitsu.c (ipmi_oem_fujitsu_get_sel_entry_long_text):
 	Stop reading if a response reports a total data length no larger
 	than the bytes already copied, which would otherwise memcpy with a

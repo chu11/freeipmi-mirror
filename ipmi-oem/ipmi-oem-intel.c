@@ -886,6 +886,17 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
         }
     }
 
+  if (!load_channel_numbers
+      && state_data->prog_data->args->oem_options_count == 1)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s no KEY=VALUE options specified\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command);
+      goto cleanup;
+    }
+
   if (load_channel_numbers)
     {
       int ret;
