@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-wistron.c (ipmi_oem_wistron_clear_proprietary_string):
+	Pass the clear command, not the read command, to the completion
+	code check.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-intel.c (_set_smtp_configuration_data): Pass the
 	set command, not the get command, to the completion code check.
 

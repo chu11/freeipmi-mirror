@@ -3251,7 +3251,7 @@ ipmi_oem_wistron_clear_proprietary_string (ipmi_oem_state_data_t *state_data)
                                                    bytes_rs,
                                                    rs_len,
                                                    2,
-                                                   IPMI_CMD_OEM_WISTRON_READ_PROPRIETARY_STRING,
+                                                   IPMI_CMD_OEM_WISTRON_CLEAR_PROPRIETARY_STRING,
                                                    IPMI_NET_FN_FIRMWARE_RS,
                                                    NULL) < 0)
     goto cleanup;
