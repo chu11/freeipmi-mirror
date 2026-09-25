@@ -890,7 +890,7 @@ extern const char * const ipmi_sensor_type_fru_state_event_data2_offset_communic
 extern unsigned int ipmi_sensor_type_fru_state_event_data2_offset_communication_lost_cause_of_state_change_max_index;
 
 /*
- * event data 2
+ * event data 3
  */
 
 extern const char * const ipmi_sensor_type_power_supply_event_data3_offset_configuration_error_error_type[];
