@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-wistron.c (ipmi_oem_wistron_set_chassis_led_status):
+	Select the fault LED state from the second option, not the first.
+	Code is currently disabled.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_power_monitoring_interval_range):
 	Pass the command constant, not the control switch data value, to
 	the completion code check so the Dell OEM error strings are found.

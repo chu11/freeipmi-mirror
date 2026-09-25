@@ -2517,9 +2517,9 @@ ipmi_oem_wistron_set_chassis_led_status (ipmi_oem_state_data_t *state_data)
   else
     bytes_rq[2] =  IPMI_OEM_WISTRON_CHASSIS_LED_BLINK_ON;
 
-  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "fault-off"))
+  if (!strcasecmp (state_data->prog_data->args->oem_options[1], "fault-off"))
     bytes_rq[3] =  IPMI_OEM_WISTRON_CHASSIS_LED_OFF;
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "fault-solid"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "fault-solid"))
     bytes_rq[3] =  IPMI_OEM_WISTRON_CHASSIS_LED_SOLID_ON;
   else
     bytes_rq[3] =  IPMI_OEM_WISTRON_CHASSIS_LED_BLINK_ON;
