@@ -1,5 +1,10 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-intel.c (_set_smtp_configuration_data): Pass the
+	set command, not the get command, to the completion code check.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Move the .B bmc-device(8) and .B
 	bmc-info(8) references in the Intel restore-configuration and
 	get-node-manager-alert-destination entries onto their own lines so
