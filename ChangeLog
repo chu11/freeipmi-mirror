@@ -1,5 +1,11 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-pef-and-alerting-cmds.c
+	(fill_cmd_set_pef_configuration_parameters_alert_policy_table):
+	Validate the channel number.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/cmds/ipmi-chassis-cmds.c (fill_cmd_chassis_identify):
 	Require at least one of identify_interval and force_identify, and
 	send an identify_interval of 0 when only force_identify is given

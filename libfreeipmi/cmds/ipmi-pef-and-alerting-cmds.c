@@ -961,6 +961,7 @@ fill_cmd_set_pef_configuration_parameters_alert_policy_table (uint8_t alert_poli
 {
   if (!IPMI_ALERT_POLICY_TABLE_POLICY_TYPE_VALID (policy_type)
       || !IPMI_ALERT_POLICY_ENABLED_DISABLED_VALID (policy_enabled)
+      || !IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || !IPMI_EVENT_SPECIFIC_ALERT_STRING_VALID (event_specific_alert_string)
       || !fiid_obj_valid (obj_cmd_rq))
     {
