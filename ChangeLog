@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-pet.8.pre.in: Fix the NAME line to say ipmi-pet rather
+	than IPMI so apropos and whatis find the page.  Fix two \FR typos
+	that should be \fR.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-pet/ipmi-pet.c (_ipmi_pet_process): Always report an SDR
 	cache search failure that aborts the tool rather than only under
 	--debug, and name ipmi_sdr_cache_search_sensor, the function that

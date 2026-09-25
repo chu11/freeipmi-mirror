@@ -1,6 +1,6 @@
 .TH IPMI-PET 8 "@ISODATE@" "IPMI-PET version @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
-IPMI \- IPMI Platform Event Trap Interpreter
+ipmi-pet \- IPMI Platform Event Trap Interpreter
 .SH "SYNOPSIS"
 .B ipmi-pet
 [\fIOPTION\fR...] [SPECIFIC TRAP] [VARIABLE BINDING HEX BYTES ...]
@@ -129,7 +129,7 @@ for more information.
 Specify an alternate event state configuration file.  Option ignored
 if \fB\-\-output\-event\-state\fR not specified.
 .TP
-\fB\-\-manufacturer\-id\fR=\fINUMBER\FR
+\fB\-\-manufacturer\-id\fR=\fINUMBER\fR
 Specify a specific manufacturer id to assume.  Useful if you wish to
 specify \fB\-\-interpret\-oem\-data\fR, but the manufacturer id cannot
 be determined by IPMI access or is not available in the SNMP trap.
@@ -137,7 +137,7 @@ The manufacturer id of a motherboard can be determined with
 .B bmc-info(8).
 If this option is specified, so must \fB\-\-product\-id\fR.
 .TP
-\fB\-\-product\-id\fR=\fINUMBER\FR
+\fB\-\-product\-id\fR=\fINUMBER\fR
 Specify a specific product id to assume.  Useful if you wish to
 specify \fB\-\-interpret\-oem\-data\fR, but the product id cannot
 be determined by IPMI access or is not available in the SNMP trap.
