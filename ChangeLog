@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Show the power supply instance argument of
+	Dell get-instantaneous-power-consumption-data as optional, as the
+	description already explains.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Document the Wistron
 	write-proprietary-string command under its real name rather than
 	set-proprietary-string.

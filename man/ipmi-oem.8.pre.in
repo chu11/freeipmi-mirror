@@ -228,7 +228,7 @@ This OEM command can read and output power supply ratings and other
 information.  This OEM command requires access to the SDR.  Command
 confirmed to work on Dell Poweredge R610, R710, and M610.
 .TP
-.B get-instantaneous-power-consumption-data \fIpower_supply_instance\fR
+.B get-instantaneous-power-consumption-data \fI[power_supply_instance]\fR
 This OEM command can read instantaneous power consumption data.  If a
 power supply instance number is specified, only data for that instance
 will be gathered.  Otherwise, collective power consumption will be
