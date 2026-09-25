@@ -1,5 +1,15 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-sensor-cmds.c
+	(tmpl_cmd_set_sensor_reading_and_event_status_discrete_rq,
+	tmpl_cmd_set_sensor_reading_and_event_status_discrete_event_fields_rq):
+	Name the deassertion byte's reserved bit reserved2; the duplicate
+	reserved1 key could never be set.
+	* libfreeipmi/include/freeipmi/templates/ipmi-sensor-cmds-templates.h:
+	Update accordingly.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-lan-configuration-parameters-spec.h
 	(IPMI_LAN_CONFIGURATION_PARAMETER_SELECTOR_VALID),
 	libfreeipmi/include/freeipmi/spec/ipmi-pef-configuration-parameters-spec.h

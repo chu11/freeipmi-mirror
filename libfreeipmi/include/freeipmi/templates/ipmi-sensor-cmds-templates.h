@@ -898,7 +898,7 @@ FIID Template: tmpl_cmd_set_sensor_reading_and_event_status_discrete_rq
     { 1, "state_12_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
     { 1, "state_13_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
     { 1, "state_14_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
-    { 1, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved2", REQUIRED, LENGTH-FIXED }
     { 8, "event_data1", REQUIRED, LENGTH-FIXED }
     { 8, "event_data2", REQUIRED, LENGTH-FIXED }
     { 8, "event_data3", REQUIRED, LENGTH-FIXED }
@@ -1012,7 +1012,7 @@ FIID Template: tmpl_cmd_set_sensor_reading_and_event_status_discrete_event_field
     { 1, "state_12_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
     { 1, "state_13_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
     { 1, "state_14_deassertion_event_occurred", REQUIRED, LENGTH-FIXED }
-    { 1, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved2", REQUIRED, LENGTH-FIXED }
     { 4, "offset_from_event_reading_type_code", REQUIRED, LENGTH-FIXED }
     { 2, "event_data3_flag", REQUIRED, LENGTH-FIXED }
     { 2, "event_data2_flag", REQUIRED, LENGTH-FIXED }
