@@ -1556,7 +1556,8 @@ int
 fill_cmd_oem_intel_node_manager_get_limiting_policy_id (uint8_t domain_id,
                                                         fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid (obj_cmd_rq))
+  if (!IPMI_OEM_INTEL_NODE_MANAGER_DOMAIN_ID_VALID (domain_id)
+      || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
       return (-1);

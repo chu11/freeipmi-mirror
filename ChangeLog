@@ -1,5 +1,11 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-oem-intel-node-manager-cmds.c
+	(fill_cmd_oem_intel_node_manager_get_limiting_policy_id): Validate
+	the domain id like the other Node Manager fills.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/cmds/ipmi-pef-and-alerting-cmds.c
 	(fill_cmd_set_pef_configuration_parameters_alert_policy_table):
 	Validate the channel number.
