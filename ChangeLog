@@ -1,5 +1,14 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-lan-cmds.c
+	(tmpl_cmd_get_lan_configuration_parameters_ipv4_header_parameters_rs,
+	tmpl_cmd_get_lan_configuration_parameters_primary_rmcp_port_number_rs,
+	tmpl_cmd_get_lan_configuration_parameters_secondary_rmcp_port_number_rs):
+	Flag the cmd field FIID_FIELD_MAKES_PACKET_SUFFICIENT like every
+	other response template.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/cmds/ipmi-device-global-cmds.c
 	(fill_cmd_get_device_guid): Only accept objects built from the
 	request template, not the GUID format response template.
