@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-inventec.c (ipmi_oem_inventec_set_sol_inactivity_timeout):
+	Name ipmi_cmd_set_sol_configuration_parameters, not the get
+	function, in the error message.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-sun.c (_sun_get_led_sdr_callback,
 	ipmi_oem_sun_set_led): Name ipmi_sdr_parse_entity_id_instance_type,
 	the function actually called, in the error message.

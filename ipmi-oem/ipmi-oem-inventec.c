@@ -2161,7 +2161,7 @@ ipmi_oem_inventec_set_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "ipmi_cmd_get_sol_configuration_parameters: %s\n",
+                       "ipmi_cmd_set_sol_configuration_parameters: %s\n",
                        ipmi_ctx_errormsg (state_data->ipmi_ctx));
       goto cleanup;
     }
