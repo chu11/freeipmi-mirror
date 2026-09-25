@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_power_monitoring_interval_range):
+	Pass the command constant, not the control switch data value, to
+	the completion code check so the Dell OEM error strings are found.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-wistron.c (ipmi_oem_wistron_clear_proprietary_string):
 	Pass the clear command, not the read command, to the completion
 	code check.
