@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Document the Wistron
+	write-proprietary-string command under its real name rather than
+	set-proprietary-string.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Document the Dell set-nic-selection and
 	set-nic-selection-failover commands under their real names rather
 	than set-nic-section.
