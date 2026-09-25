@@ -1,6 +1,12 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h
+	(IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA2_OFFSET_SYSTEM_FIRMWARE_ERROR_UNRECOVERABLE_HARD_DISK_ATAPI_IDE_DEVICE_FAILURE):
+	Rename from ATPI, fixing the typo.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h
 	(IPMI_SENSOR_TYPE_CHIP_SET_EVENT_DATA2_*,
 	IPMI_SENSOR_TYPE_CHIP_SET_EVENT_DATA3_*): Rename from
 	IPMI_SENSOR_TYPE_CHIP_EVENT_DATA*_ to match the CHIP_SET naming used
