@@ -191,11 +191,11 @@ extern const char *const ipmi_oem_device_type;
 extern const char * const ipmi_device_type_modifier_ds1624_temperature_sensor_eeprom_or_equivalent[];
 extern unsigned int ipmi_device_type_modifier_ds1624_temperature_sensor_eeprom_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_ds1621_temperature_sensor_eeprom_or_equivalent[];
-extern unsigned int ipmi_device_type_modifier_ds1621_temperature_sensor_eeprom_or_equivalent_max_index;
+extern const char * const ipmi_device_type_modifier_ds1621_temperature_sensor_or_equivalent[];
+extern unsigned int ipmi_device_type_modifier_ds1621_temperature_sensor_or_equivalent_max_index;
 
-extern const char * const ipmi_device_type_modifier_lm75_temperature_sensor_eeprom_or_equivalent[];
-extern unsigned int ipmi_device_type_modifier_lm75_temperature_sensor_eeprom_or_equivalent_max_index;
+extern const char * const ipmi_device_type_modifier_lm75_temperature_sensor_or_equivalent[];
+extern unsigned int ipmi_device_type_modifier_lm75_temperature_sensor_or_equivalent_max_index;
 
 extern const char * const ipmi_device_type_modifier_heceta_asic_or_similar[];
 extern unsigned int ipmi_device_type_modifier_heceta_asic_or_similar_max_index;

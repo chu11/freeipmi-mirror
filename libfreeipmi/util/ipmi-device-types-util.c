@@ -83,14 +83,14 @@ ipmi_device_type_modifier_message (uint8_t device_type,
       return (_get_message (device_modifier,
                             buf,
                             buflen,
-                            ipmi_device_type_modifier_ds1621_temperature_sensor_eeprom_or_equivalent_max_index,
-                            ipmi_device_type_modifier_ds1621_temperature_sensor_eeprom_or_equivalent));
+                            ipmi_device_type_modifier_ds1621_temperature_sensor_or_equivalent_max_index,
+                            ipmi_device_type_modifier_ds1621_temperature_sensor_or_equivalent));
     case IPMI_DEVICE_TYPE_LM75_TEMPERATURE_SENSOR_OR_EQUIVALENT:
       return (_get_message (device_modifier,
                             buf,
                             buflen,
-                            ipmi_device_type_modifier_lm75_temperature_sensor_eeprom_or_equivalent_max_index,
-                            ipmi_device_type_modifier_lm75_temperature_sensor_eeprom_or_equivalent));
+                            ipmi_device_type_modifier_lm75_temperature_sensor_or_equivalent_max_index,
+                            ipmi_device_type_modifier_lm75_temperature_sensor_or_equivalent));
     case IPMI_DEVICE_TYPE_HECETA_ASIC_OR_SIMILAR:
       return (_get_message (device_modifier,
                             buf,

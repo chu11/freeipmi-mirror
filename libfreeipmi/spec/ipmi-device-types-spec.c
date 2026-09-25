@@ -256,19 +256,19 @@ const char * const ipmi_device_type_modifier_ds1624_temperature_sensor_eeprom_or
   };
 unsigned int ipmi_device_type_modifier_ds1624_temperature_sensor_eeprom_or_equivalent_max_index = 0x00;
 
-const char * const ipmi_device_type_modifier_ds1621_temperature_sensor_eeprom_or_equivalent[] =
+const char * const ipmi_device_type_modifier_ds1621_temperature_sensor_or_equivalent[] =
   {
     "unspecified",
     NULL
   };
-unsigned int ipmi_device_type_modifier_ds1621_temperature_sensor_eeprom_or_equivalent_max_index = 0x00;
+unsigned int ipmi_device_type_modifier_ds1621_temperature_sensor_or_equivalent_max_index = 0x00;
 
-const char * const ipmi_device_type_modifier_lm75_temperature_sensor_eeprom_or_equivalent[] =
+const char * const ipmi_device_type_modifier_lm75_temperature_sensor_or_equivalent[] =
   {
     "unspecified",
     NULL
   };
-unsigned int ipmi_device_type_modifier_lm75_temperature_sensor_eeprom_or_equivalent_max_index = 0x00;
+unsigned int ipmi_device_type_modifier_lm75_temperature_sensor_or_equivalent_max_index = 0x00;
 
 const char * const ipmi_device_type_modifier_heceta_asic_or_similar[] =
   {
