@@ -1,5 +1,12 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-pef-and-alerting-cmds.c
+	(fill_cmd_alert_immediate): Set the operation field, which was
+	validated but never written and left the request invalid.  Drop the
+	duplicate channel number check.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/cmds/ipmi-oem-intel-node-manager-cmds.c
 	(tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy_rq):
 	Remove the stray 16 bit policy_target_limit field that followed the

@@ -1083,7 +1083,6 @@ fill_cmd_alert_immediate (uint8_t channel_number,
       || !IPMI_ALERT_IMMEDIATE_OPERATION_VALID (operation)
       || !IPMI_STRING_SELECTOR_VALID (string_selector)
       || !IPMI_SEND_ALERT_STRING_VALID (send_alert_string)
-      || !IPMI_CHANNEL_NUMBER_VALID (channel_number)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -1102,6 +1101,7 @@ fill_cmd_alert_immediate (uint8_t channel_number,
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "destination_selector", destination_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "string_selector", string_selector);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "send_alert_string", send_alert_string);
   return (0);
