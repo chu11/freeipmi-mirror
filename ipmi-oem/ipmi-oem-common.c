@@ -370,6 +370,7 @@ ipmi_oem_parse_ip_address (ipmi_oem_state_data_t *state_data,
 {
   unsigned int b1, b2, b3, b4;
   uint32_t temp;
+  int consumed = 0;
   int ret;
 
   assert (state_data);
@@ -377,11 +378,12 @@ ipmi_oem_parse_ip_address (ipmi_oem_state_data_t *state_data,
   assert (ip_address);
 
   if ((ret = sscanf (value,
-                     "%u.%u.%u.%u",
+                     "%u.%u.%u.%u%n",
                      &b1,
                      &b2,
                      &b3,
-                     &b4)) < 0)
+                     &b4,
+                     &consumed)) < 0)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
@@ -392,7 +394,12 @@ ipmi_oem_parse_ip_address (ipmi_oem_state_data_t *state_data,
       return (-1);
     }
 
-  if (ret != 4)
+  if (ret != 4
+      || value[consumed] != '\0'
+      || b1 > UCHAR_MAX
+      || b2 > UCHAR_MAX
+      || b3 > UCHAR_MAX
+      || b4 > UCHAR_MAX)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
