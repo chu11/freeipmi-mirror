@@ -46,6 +46,7 @@ const char * const ipmi_oem_hp_uid_light[] =
     "on",
     "off",
     "blinking",
+    NULL
   };
 unsigned int ipmi_oem_hp_uid_light_max_index = 0x02;
 
@@ -54,5 +55,6 @@ const char * const ipmi_oem_hp_health_led[] =
     "green",
     "amber",
     "red",
+    NULL
   };
 unsigned int ipmi_oem_hp_health_led_max_index = 0x02;

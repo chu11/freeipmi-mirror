@@ -1,5 +1,13 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-dell-spec.c
+	(ipmi_sensor_type_oem_dell_non_fatal_error),
+	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-hp-spec.c
+	(ipmi_oem_hp_uid_light, ipmi_oem_hp_health_led): Add the NULL
+	sentinel every other string table has.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-spec.c
 	(ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_hang,
 	ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_progress):

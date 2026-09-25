@@ -108,6 +108,7 @@ const char * const ipmi_sensor_type_oem_dell_non_fatal_error[] =
     "PCIe error",
     "undocumented",             /* not known yet */
     "QPI Link Degrade",
+    NULL
   };
 unsigned int ipmi_sensor_type_oem_dell_non_fatal_error_max_index = 0x02;
 
