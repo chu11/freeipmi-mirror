@@ -766,7 +766,7 @@ Xanadu II/III).
 This OEM command will set additional OEM authentication settings on
 the IPMI card.  The possible keys and values are
 \fImaxauthenticationfailures=count\fR, \fIlockoutwindow=seconds\fR,
-\fIlockouttime=seconds\fR, and \fIhttpsportnumber=num\fR.
+and \fIlockouttime=seconds\fR.
 \fImaxauthenticationfailures\fR specifies the maximum number of
 allowed authentication failures.  \fIlockoutwindow\fR specifies the
 window of time the authentication failure count can be reached in to
