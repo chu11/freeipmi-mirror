@@ -478,8 +478,8 @@ values.  The command will spin until the restore is confirmed to be
 complete.  Command configured to work on Intel S5500WB (Penguin
 Computing Relion 700) and Intel S2600JF (Appro 512X).  After running
 this command, the BMC must be reset to return it to functioning
-status.  This may be accomplished by executing a cold-reset with .B
-bmc-device(8).
+status.  This may be accomplished by executing a cold-reset with
+.B bmc-device(8).
 .RE
 .TP
 .B IntelNM (Intel Node Manager)
@@ -665,8 +665,9 @@ This OEM command will get the policy which is currently limiting.
 This OEM command will get the current alert destination information.
 Some of the configuration information output by this command will need
 to be correlated to BMC device channel and PEF configuration.  BMC
-device channel information can be viewed via .B bmc-info(8).  PEF
-configuration can be viewed via
+device channel information can be viewed via
+.B bmc-info(8).
+PEF configuration can be viewed via
 .B ipmi-config(8).
 Command confirmed to work on Intel S2600JF (Appro 512X).
 .TP
