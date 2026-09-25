@@ -2631,8 +2631,6 @@ fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_length (ui
                                       channel_number,
                                       prefix_length,
                                       obj_cmd_rq));
-
-  return (0);
 }
 
 int
