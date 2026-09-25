@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-common.c (ipmi_oem_parse_string): Reject strings
+	longer than 255 bytes, since the length is returned through a
+	uint8_t and a 256 byte string was reported as empty.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_set_port_map): Print the
 	ipass mapping argument, not the slot mapping argument, in the out of
 	range error.

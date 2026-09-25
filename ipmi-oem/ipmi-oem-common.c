@@ -428,7 +428,9 @@ ipmi_oem_parse_string (ipmi_oem_state_data_t *state_data,
   assert (stringbuf);
   assert (stringbuflen);
 
-  if (strlen (value) > stringbuflen)
+  /* string_length is returned via a uint8_t */
+  if (strlen (value) > stringbuflen
+      || strlen (value) > UCHAR_MAX)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
