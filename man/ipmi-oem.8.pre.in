@@ -1484,7 +1484,7 @@ purpose.  It can also be read via
 .B ipmi-fru.
 Command confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
-.B set-proprietary-string <string>
+.B write-proprietary-string <string>
 This OEM command will write the proprietary string stored in the FRU.
 The maximum length string is 80 characters.  Command confirmed to work
 on Wistron / Dell Poweredge C6220.
