@@ -1,5 +1,14 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/record-format/ipmi-sdr-record-format.h
+	(IPMI_SDR_ACPI_DEVICE_POWER_STATE_NOTIFICATION_REQUIRED,
+	IPMI_SDR_NO_ACPI_DEVICE_POWER_STATE_NOTIFICATION_REQUIRED,
+	IPMI_SDR_ACPI_SYSTEM_POWER_STATE_NOTIFICATION_REQUIRED,
+	IPMI_SDR_NO_ACPI_SYSTEM_POWER_STATE_NOTIFICATION_REQUIRED): Swap the
+	values; the spec defines a set bit as "notification required".
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
 	(_get_system_event_event_data2_message_offset_entry_added_to_auxiliary_log):
 	Index the log entry action table with the log entry action nibble and
