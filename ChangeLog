@@ -1,5 +1,14 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-messaging-support-cmds.h:
+	Declare tmpl_cmd_get_system_guid_format_rs instead of repeating the
+	device GUID format declaration.
+	* libfreeipmi/include/freeipmi/cmds/ipmi-rmcpplus-support-and-payload-cmds.h:
+	Declare tmpl_cmd_suspend_resume_payload_encryption_rs instead of
+	declaring the request template twice.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/cmds/ipmi-sensor-cmds.c
 	(tmpl_cmd_set_sensor_reading_and_event_status_discrete_rq,
 	tmpl_cmd_set_sensor_reading_and_event_status_discrete_event_fields_rq):

@@ -339,7 +339,7 @@ extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs;
 
 extern fiid_template_t tmpl_cmd_get_system_guid_rq;
 extern fiid_template_t tmpl_cmd_get_system_guid_rs;
-extern fiid_template_t tmpl_cmd_get_device_guid_format_rs;
+extern fiid_template_t tmpl_cmd_get_system_guid_format_rs;
 
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_rq;
 extern fiid_template_t tmpl_cmd_set_system_info_parameters_rs;
