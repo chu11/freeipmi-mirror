@@ -8065,7 +8065,7 @@ ipmi_oem_dell_set_port_map (ipmi_oem_state_data_t *state_data)
                        "%s:%s invalid OEM option argument '%s' : out of range\n",
                        state_data->prog_data->args->oem_id,
                        state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[2]);
+                       state_data->prog_data->args->oem_options[1]);
       goto cleanup;
     }
 

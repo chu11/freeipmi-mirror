@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_set_port_map): Print the
+	ipass mapping argument, not the slot mapping argument, in the out of
+	range error.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-intelnm.c (_ipmi_oem_intelnm_unrecognized_version):
 	New helper.
 	(ipmi_oem_intelnm_get_node_manager_capabilities,
