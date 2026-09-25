@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-pet/ipmi-pet-argp.c (cmdline_options): Add
+	ARGP_COMMON_SDR_CACHE_OPTIONS_IGNORE so the documented
+	--ignore-sdr-cache option is accepted again.  It was dropped by
+	accident in the 2012 SDR option macro cleanup.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-locate.8.pre.in: Fix the NAME line to say ipmi-locate
 	rather than IPMI so apropos and whatis find the page.  Document the
 	--defaults option and that the tool must be run as root.
