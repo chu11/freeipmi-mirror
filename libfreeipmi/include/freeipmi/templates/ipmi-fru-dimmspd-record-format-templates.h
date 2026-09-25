@@ -112,7 +112,7 @@ FIID Template: tmpl_fru_dimm_spd_ddr3_record
     /* Byte 8: Module Memory Bus Width */
     { 3, "primary_bus_width", REQUIRED, LENGTH-FIXED }
     { 2, "bus_width_extension", REQUIRED, LENGTH-FIXED }
-    { 3, "reserve6", REQUIRED, LENGTH-FIXED }
+    { 3, "reserved6", REQUIRED, LENGTH-FIXED }
     /* Byte 9: Fine Timebase (FTB) Dividend / Divisor */
     { 4, "fine_timebase_divisor", REQUIRED, LENGTH-FIXED }
     { 4, "fine_timebase_dividend", REQUIRED, LENGTH-FIXED }
@@ -267,7 +267,7 @@ FIID Template: tmpl_fru_dimm_spd_ddr4_record
     /* Byte 13: Module Memory Bus Width */
     { 3, "primary_bus_width", REQUIRED, LENGTH-FIXED }
     { 2, "bus_width_extension", REQUIRED, LENGTH-FIXED }
-    { 3, "reserve11", REQUIRED, LENGTH-FIXED }
+    { 3, "reserved11", REQUIRED, LENGTH-FIXED }
     /* Byte 14: Module Thermal Sensor */
     { 7, "reserved12", REQUIRED, LENGTH-FIXED }
     { 1, "thermal_sensor", REQUIRED, LENGTH-FIXED }
@@ -486,19 +486,19 @@ FIID Template: tmpl_fru_dimm_spd_ddr4_module_specific_load_reduction_memory_modu
     /* Byte 139: Drive Buffer Revision Number */
     { 8, "drive_buffer_revision_number", REQUIRED, LENGTH-FIXED }
     /* Byte 140: DRAM VrefDQ for Package Rank 0 */
-    { 6, "dram_vrefq_for_package_rank0_drams", REQUIRED, LENGTH-FIXED }
+    { 6, "dram_vrefdq_for_package_rank0_drams", REQUIRED, LENGTH-FIXED }
     { 2, "reserved4", REQUIRED, LENGTH-FIXED }
     /* Byte 141: DRAM VrefDQ for Package Rank 1 */
-    { 6, "dram_vrefq_for_package_rank1_drams", REQUIRED, LENGTH-FIXED }
+    { 6, "dram_vrefdq_for_package_rank1_drams", REQUIRED, LENGTH-FIXED }
     { 2, "reserved5", REQUIRED, LENGTH-FIXED }
     /* Byte 142: DRAM VrefDQ for Package Rank 2 */
-    { 6, "dram_vrefq_for_package_rank2_drams", REQUIRED, LENGTH-FIXED }
+    { 6, "dram_vrefdq_for_package_rank2_drams", REQUIRED, LENGTH-FIXED }
     { 2, "reserved6", REQUIRED, LENGTH-FIXED }
     /* Byte 143: DRAM VrefDQ for Package Rank 3 */
-    { 6, "dram_vrefq_for_package_rank3_drams", REQUIRED, LENGTH-FIXED }
+    { 6, "dram_vrefdq_for_package_rank3_drams", REQUIRED, LENGTH-FIXED }
     { 2, "reserved7", REQUIRED, LENGTH-FIXED }
     /* Byte 144: Data Buffer VrefDQ for DRAM Interface */
-    { 8, "data_buffer_vrefq_for_dram", REQUIRED, LENGTH-FIXED }
+    { 8, "data_buffer_vrefdq_for_dram", REQUIRED, LENGTH-FIXED }
     /* Byte 145: Data Buffer MDQ Drive Strength and RTT for data rate <= 1866 */
     { 3, "dram_interface_mdq_read_termination_strength_lt_1866", REQUIRED, LENGTH-FIXED }
     { 1, "reserved8", REQUIRED, LENGTH-FIXED }

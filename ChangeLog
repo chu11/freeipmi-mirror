@@ -1,6 +1,17 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c
+	(tmpl_fru_dimm_spd_ddr3_record): Rename reserve6 to reserved6.
+	(tmpl_fru_dimm_spd_ddr4_record): Rename reserve11 to reserved11.
+	(tmpl_fru_dimm_spd_ddr4_module_specific_load_reduction_memory_module):
+	Rename the dram_vrefq_* and data_buffer_vrefq_* fields to *_vrefdq_*;
+	the signal is VrefDQ.
+	* libfreeipmi/include/freeipmi/templates/ipmi-fru-dimmspd-record-format-templates.h:
+	Update accordingly.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c
 	(tmpl_fru_dimm_spd_ddr4_record): Rename
 	minimum_refrsh_recovery_delay_time4 to
 	minimum_refresh_recovery_delay_time4, fixing the typo.
