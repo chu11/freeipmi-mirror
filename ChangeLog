@@ -1,5 +1,18 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-intel.c (ipmi_oem_intel_get_smtp_config,
+	ipmi_oem_intel_set_smtp_config): Drop the unused error string
+	argument from the "no LAN channels discovered" message.
+	* ipmi-oem/ipmi-oem-intelnm.c
+	(ipmi_oem_intelnm_get_node_manager_capabilities): Drop the unused
+	arguments from the policy power domain error message; one of them
+	indexed oem_options one past the last option.
+	* ipmi-oem/ipmi-oem-inventec.c
+	(ipmi_oem_inventec_get_sol_inactivity_timeout): Drop the unused
+	timeout argument from the "no timeout" message.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-dell.c (_get_dell_system_info_long_string,
 	_get_dell_system_info_idrac_info, _output_dell_system_info_cmc_info,
 	_output_dell_system_info_cmc_ipv6_info,

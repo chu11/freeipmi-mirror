@@ -467,8 +467,7 @@ ipmi_oem_intel_get_smtp_config (ipmi_oem_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_get_channel_numbers: no LAN channels discovered\n",
-                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+                           "ipmi_get_channel_numbers: no LAN channels discovered\n");
           goto cleanup;
         }
 
@@ -907,8 +906,7 @@ ipmi_oem_intel_set_smtp_config (ipmi_oem_state_data_t *state_data)
         {
           pstdout_fprintf (state_data->pstate,
                            stderr,
-                           "ipmi_get_channel_numbers: no LAN channels discovered\n",
-                           ipmi_ctx_errormsg (state_data->ipmi_ctx));
+                           "ipmi_get_channel_numbers: no LAN channels discovered\n");
           goto cleanup;
         }
 

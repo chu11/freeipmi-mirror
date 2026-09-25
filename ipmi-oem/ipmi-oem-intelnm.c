@@ -1909,10 +1909,7 @@ ipmi_oem_intelnm_get_node_manager_capabilities (ipmi_oem_state_data_t *state_dat
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
-                       "policy power domain does not apply to all domains indicated (or defaulted to)\n",
-                       state_data->prog_data->args->oem_id,
-                       state_data->prog_data->args->oem_command,
-                       state_data->prog_data->args->oem_options[i]);
+                       "policy power domain does not apply to all domains indicated (or defaulted to)\n");
       goto cleanup;
     }
 

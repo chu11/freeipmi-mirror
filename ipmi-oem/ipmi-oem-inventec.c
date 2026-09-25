@@ -2067,7 +2067,7 @@ ipmi_oem_inventec_get_sol_inactivity_timeout (ipmi_oem_state_data_t *state_data)
   if (sol_inactivity_timeout)
     pstdout_printf (state_data->pstate, "SOL Inactivity Timeout : %u minutes\n", sol_inactivity_timeout);
   else
-    pstdout_printf (state_data->pstate, "SOL Inactivity Timeout : no timeout\n", sol_inactivity_timeout);
+    pstdout_printf (state_data->pstate, "SOL Inactivity Timeout : no timeout\n");
 
   rv = 0;
  cleanup:
