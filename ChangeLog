@@ -1,5 +1,12 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h
+	(IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_PRESENT_DEVICE_ABSENT,
+	IPMI_GENERIC_EVENT_READING_TYPE_CODE_DEVICE_PRESENT_DEVICE_PRESENT):
+	Swap values to 0x00 and 0x01, matching the spec and the string table.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-spec.c
 	(ipmi_sensor_type_chip_set_short_max_index): Fix to 0x01, the array
 	has two entries.  Previously the "Thermal Trip" short string could
