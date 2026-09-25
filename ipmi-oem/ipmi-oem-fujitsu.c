@@ -1387,6 +1387,12 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
       if (data_length > IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH)
         data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH;
 
+      /* BMC now reports less data than we've already read, nothing
+       * more to copy
+       */
+      if (data_length <= offset)
+        break;
+
       /* Every response should be NUL terminated, not just the last
        * component.
        */
