@@ -583,8 +583,9 @@ fill_cmd_chassis_identify (const uint8_t *identify_interval,
                            const uint8_t *force_identify,
                            fiid_obj_t obj_cmd_rq)
 {
-  if ((force_identify
-       && !IPMI_CHASSIS_FORCE_IDENTIFY_VALID (*force_identify))
+  if ((!identify_interval && !force_identify)
+      || (force_identify
+          && !IPMI_CHASSIS_FORCE_IDENTIFY_VALID (*force_identify))
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -600,14 +601,14 @@ fill_cmd_chassis_identify (const uint8_t *identify_interval,
   FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
 
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CHASSIS_IDENTIFY);
-  if (identify_interval)
+  /* identify_interval must precede force_identify on the wire, so
+   * send 0 if the caller only specified force_identify
+   */
+  FILL_FIID_OBJ_SET (obj_cmd_rq, "identify_interval", identify_interval ? *identify_interval : 0);
+  if (force_identify)
     {
-      FILL_FIID_OBJ_SET (obj_cmd_rq, "identify_interval", *identify_interval);
-      if (force_identify)
-        {
-          FILL_FIID_OBJ_SET (obj_cmd_rq, "force_identify", *force_identify);
-          FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
-        }
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "force_identify", *force_identify);
+      FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
     }
 
   return (0);
