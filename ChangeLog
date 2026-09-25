@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem.c (oem_dell): Require zero options for
+	set-active-directory-config, like the other KEY=VALUE commands, so
+	running it with no arguments lists the available keys as documented
+	instead of failing the option count check.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-wistron.c (ipmi_oem_wistron_set_ipv6_settings):
 	Document the gateway key as ipv6gatewayipaddress, the key the
 	parser actually accepts.
