@@ -1351,7 +1351,7 @@ Command confirmed to work on Wistron / Dell Poweredge C6220.
 .B set-ipv6-settings \fIKEY=VALUE ...\fR
 This OEM command will set the current IPv6 settings on the IPMI card.
 The possible keys and values are \fIipv6=enable|disable\fR,
-\fIipv6address=ipaddress\fR, \fIipv6gatewayaddress=ipaddress\fR,
+\fIipv6address=ipaddress\fR, \fIipv6gatewayipaddress=ipaddress\fR,
 \fIipv6prefixlength=length\fR, \fIipv6autoconfig=enable|disable\fR,
 \fIipv6autodns=enable|disable\fR, \fIipv6dnsserver1=ipaddress\fR, and
 \fIipv6dnsserver2=ipaddress\fR.  If no key=value pairs are specified,

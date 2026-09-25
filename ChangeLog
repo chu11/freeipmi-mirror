@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-wistron.c (ipmi_oem_wistron_set_ipv6_settings):
+	Document the gateway key as ipv6gatewayipaddress, the key the
+	parser actually accepts.
+	* man/ipmi-oem.8.pre.in: Ditto.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_get_nic_selection_failover):
 	Terminate both output lines with a newline.
 

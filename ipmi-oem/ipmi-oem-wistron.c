@@ -1492,7 +1492,7 @@ ipmi_oem_wistron_set_ipv6_settings (ipmi_oem_state_data_t *state_data)
       pstdout_printf (state_data->pstate,
                       "Option: ipv6=enable|disable\n"
                       "Option: ipv6address=ipaddress\n"
-                      "Option: ipv6gatewayaddress=ipaddress\n"
+                      "Option: ipv6gatewayipaddress=ipaddress\n"
                       "Option: ipv6prefixlength=length\n"
                       "Option: ipv6autoconfig=enable|disable\n"
                       "Option: ipv6autodns=enable|disable\n"
