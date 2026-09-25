@@ -1,5 +1,17 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/record-format/ipmi-sdr-record-format.c
+	(tmpl_sdr_bmc_message_channel_info_record): Add the
+	messaging_interrupt_type, event_message_buffer_interrupt_type and
+	reserved body bytes (record bytes 14-16), which the template omitted.
+	* libfreeipmi/include/freeipmi/record-format/ipmi-sdr-record-format.h
+	(IPMI_SDR_MESSAGE_INTERRUPT_TYPE_*): New macros for the interrupt
+	type encoding.
+	* libfreeipmi/include/freeipmi/templates/ipmi-sdr-record-format-templates.h:
+	Update accordingly.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c
 	(tmpl_fru_dimm_spd_ddr4_record): Shrink module_revision_code from 16
 	to 8 bits.  JEDEC Annex L byte 349 is a single byte; the 16 bit field

@@ -199,6 +199,30 @@ extern "C" {
 #define IPMI_SDR_ACPI_SYSTEM_POWER_STATE_NOTIFICATION_REQUIRED     0x0
 #define IPMI_SDR_NO_ACPI_SYSTEM_POWER_STATE_NOTIFICATION_REQUIRED  0x1
 
+/* Encoding shared by the Messaging Interrupt Type and Event Message
+ * Buffer Interrupt Type bytes of the BMC Message Channel Info record.
+ */
+#define IPMI_SDR_MESSAGE_INTERRUPT_TYPE_IRQ_MIN                      0x00
+#define IPMI_SDR_MESSAGE_INTERRUPT_TYPE_IRQ_MAX                      0x0F
+#define IPMI_SDR_MESSAGE_INTERRUPT_TYPE_PCI_A                        0x10
+#define IPMI_SDR_MESSAGE_INTERRUPT_TYPE_PCI_B                        0x11
+#define IPMI_SDR_MESSAGE_INTERRUPT_TYPE_PCI_C                        0x12
+#define IPMI_SDR_MESSAGE_INTERRUPT_TYPE_PCI_D                        0x13
+#define IPMI_SDR_MESSAGE_INTERRUPT_TYPE_SMI                          0x14
+#define IPMI_SDR_MESSAGE_INTERRUPT_TYPE_SCI                          0x15
+#define IPMI_SDR_MESSAGE_INTERRUPT_TYPE_SYSTEM_INTERRUPT_MIN         0x20
+#define IPMI_SDR_MESSAGE_INTERRUPT_TYPE_SYSTEM_INTERRUPT_MAX         0x5F
+#define IPMI_SDR_MESSAGE_INTERRUPT_TYPE_ASSIGNED_BY_ACPI_PLUG_N_PLAY 0x60
+#define IPMI_SDR_MESSAGE_INTERRUPT_TYPE_NO_INTERRUPT                 0xFF
+
+#define IPMI_SDR_MESSAGE_INTERRUPT_TYPE_IS_IRQ(__val)                    \
+  ((((__val) + 1) >= (IPMI_SDR_MESSAGE_INTERRUPT_TYPE_IRQ_MIN + 1)       \
+    && (__val) <= IPMI_SDR_MESSAGE_INTERRUPT_TYPE_IRQ_MAX) ? 1 : 0)
+
+#define IPMI_SDR_MESSAGE_INTERRUPT_TYPE_IS_SYSTEM_INTERRUPT(__val)       \
+  (((__val) >= IPMI_SDR_MESSAGE_INTERRUPT_TYPE_SYSTEM_INTERRUPT_MIN      \
+    && (__val) <= IPMI_SDR_MESSAGE_INTERRUPT_TYPE_SYSTEM_INTERRUPT_MAX) ? 1 : 0)
+
 #define IPMI_SDR_MAX_ID_STRING_LENGTH        16
 #define IPMI_SDR_MAX_DEVICE_ID_STRING_LENGTH 16
 

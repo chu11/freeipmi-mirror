@@ -1186,6 +1186,13 @@ FIID Template: tmpl_sdr_bmc_message_channel_info_record
     { 3, "channel_7_message_receive_lun", REQUIRED, LENGTH-FIXED }
     { 1, "channel_7_transmit_supported", REQUIRED, LENGTH-FIXED }
 
+    /*********************
+     * Record Body Bytes *
+     *********************/
+    { 8, "messaging_interrupt_type", REQUIRED, LENGTH-FIXED }
+    { 8, "event_message_buffer_interrupt_type", REQUIRED, LENGTH-FIXED }
+    { 8, "reserved", REQUIRED, LENGTH-FIXED }
+
 SDR OEM Record
 --------------
 

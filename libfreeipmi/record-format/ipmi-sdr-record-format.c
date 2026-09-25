@@ -1152,6 +1152,13 @@ fiid_template_t tmpl_sdr_bmc_message_channel_info_record =
     { 4, "channel_7_protocol", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3, "channel_7_message_receive_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "channel_7_transmit_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+
+    /*********************
+     * Record Body Bytes *
+     *********************/
+    { 8, "messaging_interrupt_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "event_message_buffer_interrupt_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 0, "", 0}
   };
 
