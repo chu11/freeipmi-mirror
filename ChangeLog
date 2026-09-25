@@ -1,5 +1,10 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Close the italic font in the Dell
+	reset-power-consumption-data heading with \fR instead of \fI.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Document the Wistron
 	write-proprietary-string command under its real name rather than
 	set-proprietary-string.
