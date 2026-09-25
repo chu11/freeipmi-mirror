@@ -1,5 +1,12 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-messaging-support-cmds.c
+	(fill_cmd_get_channel_authentication_capabilities,
+	fill_cmd_get_system_guid, fill_cmd_get_channel_cipher_suites): Clear
+	the request object before filling it, like every other fill.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/cmds/ipmi-lan-cmds.c
 	(tmpl_cmd_get_lan_configuration_parameters_ipv4_header_parameters_rs,
 	tmpl_cmd_get_lan_configuration_parameters_primary_rmcp_port_number_rs,

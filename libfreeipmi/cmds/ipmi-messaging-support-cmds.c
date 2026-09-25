@@ -1352,6 +1352,7 @@ fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
       return (-1);
     }
 
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
@@ -1377,6 +1378,7 @@ fill_cmd_get_system_guid (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SYSTEM_GUID);
 
   return (0);
@@ -1892,6 +1894,7 @@ fill_cmd_get_channel_cipher_suites (uint8_t channel_number,
       return (-1);
     }
 
+  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_CIPHER_SUITES);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FILL_FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
