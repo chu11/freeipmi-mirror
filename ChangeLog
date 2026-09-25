@@ -1,6 +1,13 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/payload/ipmi-sol-payload.c (fill_sol_payload_data)
+	(fill_sol_payload_data_remote_console_to_bmc): Return EINVAL when
+	character_data is NULL but character_data_len is nonzero, instead
+	of silently building a packet without character data.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/payload/ipmi-sol-payload.c (fill_sol_payload_data)
 	(fill_sol_payload_data_remote_console_to_bmc): Reject
 	packet_sequence_number and packet_ack_nack_sequence_number values
 	above IPMI_SOL_PACKET_SEQUENCE_NUMBER_MAX with EINVAL.  The fields
