@@ -276,7 +276,7 @@ ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (ipmi_c
       return (-1);
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy_rq)))
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;

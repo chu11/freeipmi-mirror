@@ -104,7 +104,6 @@ fiid_template_t tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_boot_tim
     { 1,  "policy_target_limit.platform_booting_mode", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 7,  "policy_target_limit.cores_disabled", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 8,  "policy_target_limit.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 16, "policy_target_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "correction_time_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "policy_trigger_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 16, "statistics_reporting_period", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -729,7 +728,7 @@ fill_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy (uint8_
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);

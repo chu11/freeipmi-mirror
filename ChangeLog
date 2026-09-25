@@ -1,5 +1,21 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-oem-intel-node-manager-cmds.c
+	(tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy_rq):
+	Remove the stray 16 bit policy_target_limit field that followed the
+	split platform_booting_mode/cores_disabled/reserved fields and made
+	the request two bytes too long.
+	(fill_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy):
+	Compare against the boot time policy request template instead of
+	the generic one, which made the function always fail.
+	* libfreeipmi/api/ipmi-oem-intel-node-manager-cmds-api.c
+	(ipmi_cmd_oem_intel_node_manager_set_node_manager_policy_boot_time_policy):
+	Create the request object from the boot time policy template.
+	* libfreeipmi/include/freeipmi/templates/ipmi-oem-intel-node-manager-cmds-templates.h:
+	Update accordingly.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/cmds/ipmi-firmware-firewall-command-discovery-cmds.c
 	(fill_cmd_set_command_sub_function_enables_defining_body_code,
 	fill_cmd_set_command_sub_function_enables_oem_iana): Compare
