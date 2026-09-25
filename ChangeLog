@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_set_nic_selection_failover):
+	Store the failover NIC in request byte 2 instead of overwriting the
+	NIC selection in byte 1 and sending an uninitialized byte 2.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-pet.8.pre.in: Fix the NAME line to say ipmi-pet rather
 	than IPMI so apropos and whatis find the page.  Fix two \FR typos
 	that should be \fR.
