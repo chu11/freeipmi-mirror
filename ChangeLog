@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-pet/ipmi-pet.c (_output_date): Name
+	ipmi_sel_parse_read_record_string, the function actually called, in
+	the error message.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-pet/ipmi-pet.c (_ipmi_pet): Remove a pet_acknowledge check
 	nested inside a block already guarded by the same condition.
 
