@@ -1,5 +1,11 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/record-format/ipmi-fru-dimmspd-record-format.h
+	(IPMI_FRU_DIMMSPD_DDR4_MODULE_NOMINAL_HEIGHT_MAX_28_TO_29): Rename
+	from _28_TO_39, fixing the typo.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c
 	(tmpl_fru_dimm_spd_ddr4_module_specific_load_reduction_memory_module):
 	Fix byte offset comments: the RTT_PARK entry for 2400-3200 is byte
