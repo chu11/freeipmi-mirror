@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-inventec.c (_ipmi_oem_inventec_clear_eeprom_at24c256n):
+	Increment the progress percentage before printing it so the output
+	does not repeat 0% and lag one step behind.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-common.c (ipmi_oem_parse_ip_address): Reject
 	octets greater than 255 and any text after the fourth octet.
 

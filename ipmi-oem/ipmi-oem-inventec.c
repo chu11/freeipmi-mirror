@@ -2656,8 +2656,8 @@ _ipmi_oem_inventec_clear_eeprom_at24c256n (ipmi_oem_state_data_t *state_data)
         {
           if ((unsigned int)(((double)count/IPMI_OEM_INVENTEC_EEPROM_AT24C256N_ADDRESS_MAX) * 100) > percent)
             {
-              fprintf (stderr, "%u%%\r", percent);
               percent++;
+              fprintf (stderr, "%u%%\r", percent);
             }
         }
 
