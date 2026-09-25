@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-wistron.c (ipmi_oem_wistron_set_chassis_led_status):
+	Select the fault LED state from the second option, not the first.
+	Code is currently disabled.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-inventec.c (_ipmi_oem_inventec_clear_eeprom_at24c256n):
 	Increment the progress percentage before printing it so the output
 	does not repeat 0% and lag one step behind.
