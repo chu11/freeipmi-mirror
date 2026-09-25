@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-fujitsu.c (ipmi_oem_fujitsu_get_sel_entry_long_text):
+	ipmi_get_oem_data() returns 0 on success, so the <= 0 test always
+	forced the iRMC S1 read lengths.  Test for < 0 and fail the command
+	if the device id cannot be read.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-wistron.c (ipmi_oem_wistron_set_ipv6_settings):
 	Document the gateway key as ipv6gatewayipaddress, the key the
 	parser actually accepts.

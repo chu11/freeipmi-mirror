@@ -1245,10 +1245,12 @@ ipmi_oem_fujitsu_get_sel_entry_long_text (ipmi_oem_state_data_t *state_data)
   memset (data_buf, '\0', IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_MAX_DATA_LENGTH + 1);
 
   /* HLiebig: Note: Documentation is for iRMC S2 version */
-  if ((ipmi_get_oem_data (state_data->pstate,
-                          state_data->ipmi_ctx,
-                          &oem_data) <= 0)
-      || (IPMI_FUJITSU_PRODUCT_ID_IS_IRMC_S1 (oem_data.product_id)))
+  if (ipmi_get_oem_data (state_data->pstate,
+                         state_data->ipmi_ctx,
+                         &oem_data) < 0)
+    goto cleanup;
+
+  if (IPMI_FUJITSU_PRODUCT_ID_IS_IRMC_S1 (oem_data.product_id))
     {
       max_read_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_READ_LENGTH;
       data_length = IPMI_OEM_FUJITSU_SEL_ENTRY_LONG_TEXT_IRMC_S1_MAX_DATA_LENGTH;
