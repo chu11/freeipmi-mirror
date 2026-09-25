@@ -1243,7 +1243,7 @@ ipmi_oem_intel_set_power_restore_delay (ipmi_oem_state_data_t *state_data)
    *
    * Response
    *
-   * 0x55 - OEM cmd
+   * 0x54 - OEM cmd
    * 0x?? - Completion Code
    *
    * delay setting is 11 bits total.

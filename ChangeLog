@@ -1,5 +1,10 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-intel.c (ipmi_oem_intel_set_power_restore_delay):
+	Fix the response comment to name command 0x54, not 0x55.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Spell the GIGABYTE set-bmc-services option
 	avocentkvm, as the code accepts it.
 	* ipmi-oem/ipmi-oem.c (oem_gigabyte): Ditto in the command list.
