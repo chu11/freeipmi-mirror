@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Document the Dell set-nic-selection and
+	set-nic-selection-failover commands under their real names rather
+	than set-nic-section.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Spell the GIGABYTE set-bmc-services option
 	avocentkvm, as the code accepts it.
 	* ipmi-oem/ipmi-oem.c (oem_gigabyte): Ditto in the command list.

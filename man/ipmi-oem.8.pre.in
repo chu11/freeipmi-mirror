@@ -101,7 +101,7 @@ available on NIC1 w/ failover to all other NICs in the event of NIC
 failure.  Command confirmed to work on Dell Poweredge 2900, 2950,
 R610, R710, and R905.
 .TP
-.B set-nic-section \fIdedicated|shared|shared_failover_nic2|shared_failover_all\fR
+.B set-nic-selection \fIdedicated|shared|shared_failover_nic2|shared_failover_all\fR
 This OEM command will set the current NIC selection to dedicated,
 shared, shared_failover_nic2, or shared_failover_all.  (See
 \fIget\-nic\-selection\fR above for description on inputs.)  On older
@@ -114,7 +114,7 @@ This OEM command will determine the current NIC selection for IPMI and
 the failover NIC.  Command confirmed to work on Dell Poweredge R720
 (Dell 12G Poweredge systems).
 .TP
-.B set-nic-section-failover \fIdedicated|lom1|lom2|lom3|lom4\fR \fInone|lom1|lom2|lom3|lom4|all\fR
+.B set-nic-selection-failover \fIdedicated|lom1|lom2|lom3|lom4\fR \fInone|lom1|lom2|lom3|lom4|all\fR
 This OEM command will set the current NIC selection for IPMI and the
 failover NIC.  The first option sets the IPMI NIC and the second
 option the failover NIC.  Command confirmed to work on Dell Poweredge
