@@ -1950,7 +1950,7 @@ _ipmi_fru_output_dimm_ddr4 (ipmi_fru_state_data_t *state_data,
   uint32_t module_serial_number;
   char module_part_number[IPMI_FRU_STR_BUFLEN + 1];
   int module_part_number_len;
-  uint16_t module_revision_code;
+  uint8_t module_revision_code;
   uint8_t number_of_continuation_codes_dram_manufacturer;
   uint8_t last_non_zero_dram_manufacturer;
   const char *dram_manufacturer_str;
@@ -2562,7 +2562,7 @@ _ipmi_fru_output_dimm_ddr4 (ipmi_fru_state_data_t *state_data,
 
   /* Revision Code vendor defined, so just output hex  */
   pstdout_printf (state_data->pstate,
-                  "  FRU Module Revision Code : 0x%04X\n",
+                  "  FRU Module Revision Code : 0x%02X\n",
                   module_revision_code);
 
   if (FIID_OBJ_GET (obj_record,

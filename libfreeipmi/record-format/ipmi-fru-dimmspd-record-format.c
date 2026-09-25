@@ -344,7 +344,7 @@ fiid_template_t tmpl_fru_dimm_spd_ddr4_record =
     /* Bytes 329-348: Module Part Number */
     { 160, "module_part_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* ASCII */
     /* Byte 349: Module Revision Code */
-    { 16, "module_revision_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 8, "module_revision_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Bytes 350-351: DRAM Manufacturer's ID Code */
     { 7, "number_of_continuation_codes_dram_manufacturer", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "odd_parity_byte_dram_manufacturer", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

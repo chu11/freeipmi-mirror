@@ -1,5 +1,16 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c
+	(tmpl_fru_dimm_spd_ddr4_record): Shrink module_revision_code from 16
+	to 8 bits.  JEDEC Annex L byte 349 is a single byte; the 16 bit field
+	shifted the DRAM manufacturer ID and DRAM stepping by one byte.
+	* libfreeipmi/include/freeipmi/templates/ipmi-fru-dimmspd-record-format-templates.h:
+	Update accordingly.
+	* ipmi-fru/ipmi-fru-output.c (_ipmi_fru_output_dimm_ddr4): Output the
+	module revision code as one byte.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/spec/ipmi-device-types-spec.c,
 	libfreeipmi/include/freeipmi/spec/ipmi-device-types-spec.h,
 	libfreeipmi/util/ipmi-device-types-util.c

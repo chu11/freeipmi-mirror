@@ -361,7 +361,7 @@ FIID Template: tmpl_fru_dimm_spd_ddr4_record
     /* Bytes 329-348: Module Part Number */
     { 160, "module_part_number", REQUIRED, LENGTH-FIXED } /* ASCII */
     /* Byte 349: Module Revision Code */
-    { 16, "module_revision_code", REQUIRED, LENGTH-FIXED }
+    { 8, "module_revision_code", REQUIRED, LENGTH-FIXED }
     /* Bytes 350-351: DRAM Manufacturer's ID Code */
     { 7, "number_of_continuation_codes_dram_manufacturer", REQUIRED, LENGTH-FIXED }
     { 1, "odd_parity_byte_dram_manufacturer", REQUIRED, LENGTH-FIXED }
