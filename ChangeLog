@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-ibm.c (IPMI_OEM_IBM_LED_NAME_BUFLEN): Increase to
+	18 so the 17 character "ServeRAID 8k Batt" LED name is not
+	truncated by snprintf.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-intel.c (ipmi_oem_intel_get_smtp_config,
 	ipmi_oem_intel_set_smtp_config): Drop the unused error string
 	argument from the "no LAN channels discovered" message.
