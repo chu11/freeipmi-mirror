@@ -906,7 +906,7 @@ const char * const ipmi_sensor_type_chip_set_short[] =
     "Thermal Trip",
     NULL
   };
-unsigned int ipmi_sensor_type_chip_set_short_max_index = 0x00;
+unsigned int ipmi_sensor_type_chip_set_short_max_index = 0x01;
 
 const char * const ipmi_sensor_type_cable_interconnect_short[] =
   {
