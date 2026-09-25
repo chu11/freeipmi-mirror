@@ -1311,7 +1311,7 @@ fill_cmd_set_sensor_event_enable_threshold (uint8_t sensor_number,
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sensor_event_enable_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sensor_event_enable_threshold_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -1432,7 +1432,7 @@ fill_cmd_set_sensor_event_enable_discrete (uint8_t sensor_number,
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sensor_event_enable_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_sensor_event_enable_discrete_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
