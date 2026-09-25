@@ -138,7 +138,7 @@ ipmi_oem_thirdparty_get_system_info_block_pstring (ipmi_oem_state_data_t *state_
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "Cannot handle non-ASCII encoding: %Xh\n",
-                       configuration_parameter_data[0]);
+                       string_encoding);
       goto cleanup;
     }
 

@@ -271,7 +271,7 @@ _get_dell_system_info_long_string (ipmi_oem_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "Cannot handle non-ASCII encoding: %Xh\n",
-                       configuration_parameter_data[0]);
+                       string_encoding);
       goto cleanup;
     }
 
@@ -628,7 +628,7 @@ _get_dell_system_info_idrac_info (ipmi_oem_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "Cannot handle non-ASCII encoding: %Xh\n",
-                       configuration_parameter_data[0]);
+                       string_encoding);
       goto cleanup;
     }
 
@@ -979,7 +979,7 @@ _output_dell_system_info_cmc_info (ipmi_oem_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "Cannot handle non-ASCII encoding: %Xh\n",
-                       configuration_parameter_data[0]);
+                       string_encoding);
       goto cleanup;
     }
 
@@ -1271,7 +1271,7 @@ _output_dell_system_info_cmc_ipv6_info (ipmi_oem_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "Cannot handle non-ASCII encoding: %Xh\n",
-                       configuration_parameter_data[0]);
+                       string_encoding);
       goto cleanup;
     }
 
@@ -1442,7 +1442,7 @@ _output_dell_system_info_snmp_ipv6_info (ipmi_oem_state_data_t *state_data)
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "Cannot handle non-ASCII encoding: %Xh\n",
-                       configuration_parameter_data[0]);
+                       string_encoding);
       goto cleanup;
     }
 
