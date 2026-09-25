@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_power_monitoring_over_interval):
+	Select the subsystem from the second option argument, not the
+	interval in the first.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_power_monitoring_over_interval,
 	ipmi_oem_dell_power_monitoring_interval_range): Fix the inverted
 	strcasecmp test for "systempower", which selected the system power

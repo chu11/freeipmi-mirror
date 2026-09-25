@@ -6828,31 +6828,31 @@ ipmi_oem_dell_power_monitoring_over_interval (ipmi_oem_state_data_t *state_data)
   bytes_rq[1] = (power_monitoring_averaging_interval & 0x00FF);
   bytes_rq[2] = (power_monitoring_averaging_interval & 0xFF00) >> 8;
 
-  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "systempower"))
+  if (!strcasecmp (state_data->prog_data->args->oem_options[1], "systempower"))
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_SYSTEM_POWER;
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "cpu1"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "cpu1"))
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_CPU1_SUBSYSTEM;
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "cpu2"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "cpu2"))
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_CPU2_SUBSYSTEM;
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "cpu3"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "cpu3"))
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_CPU3_SUBSYSTEM;
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "cpu4"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "cpu4"))
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_CPU4_SUBSYSTEM;
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "memory1"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "memory1"))
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_MEMORY_POWER_OF_CPU_DOMAIN1;
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "memory2"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "memory2"))
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_MEMORY_POWER_OF_CPU_DOMAIN2;
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "memory3"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "memory3"))
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_MEMORY_POWER_OF_CPU_DOMAIN3;
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "memory4"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "memory4"))
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_MEMORY_POWER_OF_CPU_DOMAIN4;
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "drives"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "drives"))
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_DRIVES;
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "fans"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "fans"))
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_FANS;
-  else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "pciecards"))
+  else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "pciecards"))
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_PCIE_ADD_IN_CARDS;
-  else /* !strcasecmp (state_data->prog_data->args->oem_options[0], "gpucables") */
+  else /* !strcasecmp (state_data->prog_data->args->oem_options[1], "gpucables") */
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_GPU_CABLES;
 
   if (power_monitoring_averaging_interval > IPMI_OEM_DELL_POWER_MONITORING_INTERVAL_AVG_MIN_MAX_MIN)
