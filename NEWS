@@ -210,9 +210,13 @@ o Fix following configuration field typos:
 Libraries:
 ----------
 
-o In libfreeipmi, fix typos in function names or template names.
+o In libfreeipmi, fix typos in function names or template names or arrays.
   - ipmi_device_type_modifer_message() -> ipmi_device_type_modifier_message()
   - tmpl_cmd_get_sensor_event_status_discerete_rs -> tmpl_cmd_get_sensor_event_status_discrete_rs
+  - ipmi_device_type_modifier_ds1621_temperature_sensor_eeprom_or_equivalent* ->
+      ipmi_device_type_modifier_ds1621_temperature_sensor_or_equivalent*
+  - ipmi_device_type_modifier_lm75_temperature_sensor_eeprom_or_equivalent* ->
+      ipmi_device_type_modifier_lm75_temperature_sensor_or_equivalent*
 o In libfreeipmi, fix typos in macro names.
   - IPMI_FRU_LANGUAGE_CODE_UKRANIAN -> IPMI_FRU_LANGUAGE_CODE_UKRAINIAN
   - IPMI_BMC_GLOBAL_ENALBES_DISABLED -> IPMI_BMC_GLOBAL_ENABLES_DISABLED
@@ -268,12 +272,16 @@ o In libfreeipmi, fix typos in macro names.
   - IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_BROADWELL_POST_ERROR_CODE_DIMM_(***)_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED ->
       IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_BROADWELL_POST_ERROR_CODE_DIMM_(***)_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURE ->
   - IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_CORRECTABLE_RROR -> IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_CORRECTABLE_ERROR
+  - IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA2_OFFSET_SYSTEM_FIRMWARE_ERROR_UNRECOVERABLE_HARD_DISK_ATPI_IDE_DEVICE_FAILURE ->
+      IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA2_OFFSET_SYSTEM_FIRMWARE_ERROR_UNRECOVERABLE_HARD_DISK_ATAPI_IDE_DEVICE_FAILURE
 o In libfreeipmi, fix output typos related to:
   - RMCPPLUS_STATUS_NO_MATCHING_INTEGRITY_PAYLOAD_STR
   - IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_WARN
   - IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT
   - IPMI_FRU_LANGUAGE_CODE_UKRAINIAN
   - IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_INTERRUPT_OCCURRED
+o In libfreeipmi, fix macro name inconsistencies related to:
+  - IPMI_SENSOR_TYPE_CHIP_EVENT* -> IPMI_SENSOR_TYPE_CHIP_SET_EVENT*
 o In libipmimonitoring, fix typos in macro names.
   - IPMI_MONITORING_SENSOR_BITMASK_VERSION_CHANGE_HARDWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY ->
       IPMI_MONITORING_SENSOR_BITMASK_VERSION_CHANGE_HARDWARE_INCOMPATIBILITY_DETECTED_WITH_ASSOCIATED_ENTITY
