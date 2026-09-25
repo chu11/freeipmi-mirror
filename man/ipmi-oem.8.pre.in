@@ -410,7 +410,7 @@ GIGABYTE MD90-FS0-ZB.
 This OEM command will display the enable/disable state of BMC services
 besides IPMI.  Command confirmed to work on GIGABYTE MD90-FS0-ZB.
 .TP
-.B set-bmc-services \fIenable|disable\fR \fIssh|http|rpcbind|svrloc|https|avocenkvm|wbem-http|wbem-https\fR
+.B set-bmc-services \fIenable|disable\fR \fIssh|http|rpcbind|svrloc|https|avocentkvm|wbem-http|wbem-https\fR
 This OEM command will enable or disable BMC services besides IPMI.
 Command confirmed to work on GIGABYTE MD90-FS0-ZB.
 .RE

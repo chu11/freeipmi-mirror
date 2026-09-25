@@ -528,7 +528,7 @@ struct ipmi_oem_command oem_gigabyte[] =
     },
     {
       "set-bmc-services",
-      "<enable|disable> <ssh|http|rpcbind|svrloc|https|avocenkvm|wbem-http|wbem-https>",
+      "<enable|disable> <ssh|http|rpcbind|svrloc|https|avocentkvm|wbem-http|wbem-https>",
       2,
       IPMI_OEM_COMMAND_FLAGS_DEFAULT,
       ipmi_oem_gigabyte_set_bmc_services
