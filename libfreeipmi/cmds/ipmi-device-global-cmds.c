@@ -332,8 +332,7 @@ fill_cmd_get_device_guid (fiid_obj_t obj_cmd_rq)
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_device_guid_rq) < 0
-      && FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_device_guid_format_rs) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_get_device_guid_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
