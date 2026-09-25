@@ -1,5 +1,16 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-dcmi-cmds.h
+	(IPMI_DCMI_DHCP_INCLUDE_OPTION_VALID,
+	IPMI_DCMI_DHCP_RANDOM_BACK_OFF_VALID): Accept either legal value
+	instead of requiring both, which made the macros always false.
+	* libfreeipmi/cmds/ipmi-dcmi-cmds.c
+	(fill_cmd_dcmi_set_dcmi_configuration_parameters_discovery_configuration):
+	Reject invalid option_12 and option_60_with_option_43 values rather
+	than valid ones.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/cmds/ipmi-messaging-support-cmds.c
 	(fill_cmd_set_system_info_parameters_set_in_progress): Send
 	parameter selector 0 (set in progress) instead of 1 (system

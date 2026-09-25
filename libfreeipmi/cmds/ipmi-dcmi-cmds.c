@@ -716,8 +716,8 @@ fill_cmd_dcmi_set_dcmi_configuration_parameters_discovery_configuration (uint8_t
                                                                          uint8_t random_back_off,
                                                                          fiid_obj_t obj_cmd_rq)
 {
-  if (IPMI_DCMI_DHCP_INCLUDE_OPTION_VALID (option_12)
-      || IPMI_DCMI_DHCP_INCLUDE_OPTION_VALID (option_60_with_option_43)
+  if (!IPMI_DCMI_DHCP_INCLUDE_OPTION_VALID (option_12)
+      || !IPMI_DCMI_DHCP_INCLUDE_OPTION_VALID (option_60_with_option_43)
       || !IPMI_DCMI_DHCP_RANDOM_BACK_OFF_VALID (random_back_off)
       || !fiid_obj_valid (obj_cmd_rq))
     {
