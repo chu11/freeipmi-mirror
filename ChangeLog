@@ -1,5 +1,12 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
+	(_get_system_event_event_data2_message_offset_entry_added_to_auxiliary_log):
+	Index the log entry action table with the log entry action nibble and
+	the log type table with the log type nibble.  They were swapped.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-dell-spec.c
 	(ipmi_sensor_type_oem_dell_non_fatal_error),
 	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-hp-spec.c
