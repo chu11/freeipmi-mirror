@@ -34,7 +34,7 @@ extern "C" {
 
 /* Add +1 to avoid compiler warnings */
 #define IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SELECTOR_VALID(__parameter_selector)              \
-  ((((__parameter_selector + 1)) > (IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SET_IN_PROGRESS+1) && \
+  ((((__parameter_selector) + 1) >= (IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SET_IN_PROGRESS + 1) && \
     (__parameter_selector) <= IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_INITIATOR_MAILBOX) ? 1 : 0)
 
 #define IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SELECTOR_IS_OEM(__parameter_selector) \

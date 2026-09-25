@@ -86,7 +86,7 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_LAN_CONFIGURATION_PARAMETER_SELECTOR_VALID(__parameter_selector)             \
-  ((((__parameter_selector) + 1) > (IPMI_LAN_CONFIGURATION_PARAMETER_SET_IN_PROGRESS + 1) \
+  ((((__parameter_selector) + 1) >= (IPMI_LAN_CONFIGURATION_PARAMETER_SET_IN_PROGRESS + 1) \
     && (__parameter_selector) <= IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_NEIGHBOR_DISCOVERY_SLAAC_TIMING_CONFIGURATION) ? 1 : 0)
 
 /* To avoid gcc warnings, subtract -1 in comparison */

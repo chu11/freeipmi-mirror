@@ -44,7 +44,7 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_PEF_CONFIGURATION_PARAMETER_SELECTOR_VALID(__parameter_selector)         \
-  ((((__parameter_selector) + 1) > (IPMI_PEF_CONFIGURATION_PARAMETER_SET_IN_PROGRESS + 1) \
+  ((((__parameter_selector) + 1) >= (IPMI_PEF_CONFIGURATION_PARAMETER_SET_IN_PROGRESS + 1) \
     && (__parameter_selector) <= IPMI_PEF_CONFIGURATION_PARAMETER_GROUP_CONTROL_TABLE) ? 1 : 0)
 
 #define IPMI_PEF_CONFIGURATION_PARAMETER_SELECTOR_IS_OEM(__parameter_selector) \
