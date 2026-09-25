@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-pet/ipmi-pet.c (_ipmi_pet_process): Always report an SDR
+	cache search failure that aborts the tool rather than only under
+	--debug, and name ipmi_sdr_cache_search_sensor, the function that
+	failed, in both messages.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-pet/ipmi-pet-argp.c (cmdline_parse): Reject a specific trap
 	or --manufacturer-id larger than 32 bits instead of silently
 	truncating it.
