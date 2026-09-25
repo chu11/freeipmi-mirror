@@ -160,7 +160,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || !tmp
           || tmp > UINT_MAX)
         {
-          fprintf (stderr, "invalid manufacturer id: %lu\n", tmp);
+          fprintf (stderr, "invalid manufacturer id: %s\n", arg);
           exit (EXIT_FAILURE);
         }
       cmd_args->manufacturer_id = tmp;
@@ -174,7 +174,7 @@ cmdline_parse (int key, char *arg, struct argp_state *state)
           || endptr[0] != '\0'
           || tmp > USHRT_MAX)
         {
-          fprintf (stderr, "invalid product id: %lu\n", tmp);
+          fprintf (stderr, "invalid product id: %s\n", arg);
           exit (EXIT_FAILURE);
         }
       cmd_args->product_id = tmp;
