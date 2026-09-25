@@ -673,7 +673,7 @@ _set_smtp_configuration_data (ipmi_oem_state_data_t *state_data,
                                                    bytes_rs,
                                                    rs_len,
                                                    2,
-                                                   IPMI_CMD_OEM_INTEL_GET_SMTP_CONFIGURATION,
+                                                   IPMI_CMD_OEM_INTEL_SET_SMTP_CONFIGURATION,
                                                    IPMI_NET_FN_OEM_INTEL_CONFIG_RS,
                                                    NULL) < 0)
     goto cleanup;
