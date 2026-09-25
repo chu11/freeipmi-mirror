@@ -1,5 +1,12 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-spec.c
+	(ipmi_sensor_type_chip_set_short_max_index): Fix to 0x01, the array
+	has two entries.  Previously the "Thermal Trip" short string could
+	never be returned, so ipmi-sensors reported "Unrecognized Event".
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h
 	(fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing,
 	fill_cmd_set_system_boot_options_boot_flags),
