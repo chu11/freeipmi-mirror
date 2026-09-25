@@ -6828,7 +6828,7 @@ ipmi_oem_dell_power_monitoring_over_interval (ipmi_oem_state_data_t *state_data)
   bytes_rq[1] = (power_monitoring_averaging_interval & 0x00FF);
   bytes_rq[2] = (power_monitoring_averaging_interval & 0xFF00) >> 8;
 
-  if (strcasecmp (state_data->prog_data->args->oem_options[0], "systempower"))
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "systempower"))
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_SYSTEM_POWER;
   else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "cpu1"))
     bytes_rq[3] = IPMI_OEM_DELL_POWER_MONITORING_CPU1_SUBSYSTEM;
@@ -6989,7 +6989,7 @@ ipmi_oem_dell_power_monitoring_interval_range (ipmi_oem_state_data_t *state_data
 
   bytes_rq[0] = IPMI_CMD_OEM_DELL_POWER_MONITORING_AVERAGING_INTERVAL_RANGE2;
 
-  if (strcasecmp (state_data->prog_data->args->oem_options[0], "systempower"))
+  if (!strcasecmp (state_data->prog_data->args->oem_options[0], "systempower"))
     bytes_rq[1] = IPMI_OEM_DELL_POWER_MONITORING_SYSTEM_POWER;
   else if (!strcasecmp (state_data->prog_data->args->oem_options[0], "cpu1"))
     bytes_rq[1] = IPMI_OEM_DELL_POWER_MONITORING_CPU1_SUBSYSTEM;
