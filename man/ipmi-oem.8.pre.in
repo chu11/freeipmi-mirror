@@ -560,7 +560,7 @@ that will lead to exception actions is the value specified by the
 \fImissingpowerreadingtimeout\fR, or
 \fItimeafterplatformresettrigger\fR, the trigger that will lead to
 exception actions is the value specified by \fIpolicytriggerlimit\fR.
-When the \fIfIpolicytrigger\fR is \fIboottimepolicy\fR, a power
+When the \fIpolicytrigger\fR is \fIboottimepolicy\fR, a power
 profile will simply be maintained by the value specified by
 \fIpolicytargetlimit\fR.  \fIaggressivepowercorrection\fR defaults to
 automatic.  It can only be set to \fInotaggressive\fR or
@@ -580,7 +580,7 @@ performance or power to indicate optimization mode.
 \fIpolicytrigger\fR.  The units of the \fIpolicytriggerlimit\fR will
 depend on the \fIpolicytrigger\fR selected.  If the
 \fIpolicytrigger\fR is \fIinlettemperaturelimitpolicytrigger\fR, the
-units of \fRpolicytriggerlimit\fR will be in Celsius.  If the
+units of \fIpolicytriggerlimit\fR will be in Celsius.  If the
 \fIpolicytrigger\fR is \fImissingpowerreadingtimeout\fR or
 \fItimeafterplatformresettrigger\fR, the units will be in seconds.  If
 the \fIpolicytrigger\fR is \fInone\fR or \fIboottimepolicy\fR, the
@@ -692,10 +692,10 @@ This OEM command will get the current Turbo Synchronization Ratio.  If
 \fIcpusocket\fR is not set to a specific cpu socket, all sockets will
 return maximum settings.
 .TP
-.B set-turbo-synchronization-ratio \fIturboratiolimit=num|default\fR \fI[cpusocket=num|all]\fR \fI[activecoresconfig=num|all]\fR,
+.B set-turbo-synchronization-ratio \fIturboratiolimit=num|default\fR \fI[cpusocket=num|all]\fR \fI[activecoresconfig=num|all]\fR
 This OEM command will set the Turbo Synchronization Ratio.  If
 \fIcpusocket\fR is not set to a specific cpu socket, it assumed to be
-applied to all cores.  If \fIactivecore\fR is not set, it is assumed
+applied to all cores.  If \fIactivecoresconfig\fR is not set, it is assumed
 to be for all cores.
 .TP
 .B get-node-manager-version

@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Fix font escape typos in the Intel Node
+	Manager section (\fIfI, \fR opening an italic), a stray trailing
+	comma on the set-turbo-synchronization-ratio heading, and refer to
+	the activecoresconfig option by its name.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Close the italic font in the Dell
 	reset-power-consumption-data heading with \fR instead of \fI.
 
