@@ -201,11 +201,11 @@ _get_system_event_event_data2_message_offset_entry_added_to_auxiliary_log (unsig
     }
   log_entry_action = val;
 
-  if (log_type <= ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_entry_action_max_index)
-    str1 = (char *)ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_entry_action[log_type];
+  if (log_entry_action <= ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_entry_action_max_index)
+    str1 = (char *)ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_entry_action[log_entry_action];
 
-  if (log_entry_action <= ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_type_max_index)
-    str2 = (char *)ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_type[log_entry_action];
+  if (log_type <= ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_type_max_index)
+    str2 = (char *)ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_type[log_type];
 
   if (str1 || str2)
     rv = _snprintf (buf, buflen, "%s%s%s",
