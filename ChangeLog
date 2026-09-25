@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem.c (oem_dell): Require zero options for
+	set-active-directory-config, like the other KEY=VALUE commands, so
+	running it with no arguments lists the available keys as documented
+	instead of failing the option count check.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-common.c (ipmi_oem_parse_string): Reject strings
 	longer than 255 bytes, since the length is returned through a
 	uint8_t and a 256 byte string was reported as empty.

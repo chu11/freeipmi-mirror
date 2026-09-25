@@ -169,7 +169,7 @@ struct ipmi_oem_command oem_dell[] =
     {
       "set-active-directory-config",
       "KEY=VALUE ...",
-      1,
+      0,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_dell_set_active_directory_config
     },
