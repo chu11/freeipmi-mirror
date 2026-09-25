@@ -1,5 +1,12 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-spec.c
+	(ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_hang,
+	ipmi_sensor_type_system_firmware_progress_event_data2_offset_system_firmware_progress):
+	Fix "calling Unsigned Int 19h" to "calling Int 19h" per spec.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/spec/ipmi-device-types-spec.c
 	(ipmi_device_type_modifier_fru_inventory_device_behind_management_controller),
 	libfreeipmi/include/freeipmi/spec/ipmi-device-types-spec.h
