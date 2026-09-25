@@ -462,7 +462,7 @@ _find_sensor (ipmi_oem_state_data_t *state_data,
       pstdout_fprintf (state_data->pstate,
                        stderr,
                        "ipmi_sdr_cache_iterate: %s\n",
-                       ipmi_sdr_ctx_errormsg (state_data->sdr_ctx));
+                       ipmi_sdr_ctx_errormsg (tmp_sdr_ctx));
       goto cleanup;
     }
 

@@ -1,5 +1,10 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-ibm.c (_find_sensor): Report the error from the
+	temporary SDR context that was iterated, not the main one.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-inventec.c (ipmi_oem_inventec_set_sol_inactivity_timeout):
 	Name ipmi_cmd_set_sol_configuration_parameters, not the get
 	function, in the error message.
