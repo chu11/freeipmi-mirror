@@ -206,7 +206,7 @@ FIID Template: tmpl_sdr_full_sensor_record_non_threshold_based_sensors
     { 1, "sensor_initialization.init_thresholds", REQUIRED, LENGTH-FIXED }
     { 1, "sensor_initialization.init_events", REQUIRED, LENGTH-FIXED }
     { 1, "sensor_initialization.init_scanning", REQUIRED, LENGTH-FIXED }
-    { 1, "sensor_initialization.reserved", REQUIRED, LENGTH-FIXED }
+    { 1, "sensor_initialization.settable_sensor", REQUIRED, LENGTH-FIXED }
 
     { 2, "sensor_capabilities.event_message_control_support", REQUIRED, LENGTH-FIXED }
     { 2, "sensor_capabilities.threshold_access_support", REQUIRED, LENGTH-FIXED }
@@ -354,7 +354,7 @@ FIID Template: tmpl_sdr_full_sensor_record_threshold_based_sensors
     { 1, "sensor_initialization.init_thresholds", REQUIRED, LENGTH-FIXED }
     { 1, "sensor_initialization.init_events", REQUIRED, LENGTH-FIXED }
     { 1, "sensor_initialization.init_scanning", REQUIRED, LENGTH-FIXED }
-    { 1, "sensor_initialization.reserved", REQUIRED, LENGTH-FIXED }
+    { 1, "sensor_initialization.settable_sensor", REQUIRED, LENGTH-FIXED }
 
     { 2, "sensor_capabilities.event_message_control_support", REQUIRED, LENGTH-FIXED }
     { 2, "sensor_capabilities.threshold_access_support", REQUIRED, LENGTH-FIXED }
@@ -502,7 +502,7 @@ FIID Template: tmpl_sdr_compact_sensor_record
     { 1, "sensor_initialization.init_thresholds", REQUIRED, LENGTH-FIXED }
     { 1, "sensor_initialization.init_events", REQUIRED, LENGTH-FIXED }
     { 1, "sensor_initialization.init_scanning", REQUIRED, LENGTH-FIXED }
-    { 1, "sensor_initialization.reserved", REQUIRED, LENGTH-FIXED }
+    { 1, "sensor_initialization.settable_sensor", REQUIRED, LENGTH-FIXED }
 
     { 2, "sensor_capabilities.event_message_control_support", REQUIRED, LENGTH-FIXED }
     { 2, "sensor_capabilities.threshold_access_support", REQUIRED, LENGTH-FIXED }
@@ -577,7 +577,7 @@ FIID Template: tmpl_sdr_compact_sensor_record_non_threshold_based_sensors
     { 1, "sensor_initialization.init_thresholds", REQUIRED, LENGTH-FIXED }
     { 1, "sensor_initialization.init_events", REQUIRED, LENGTH-FIXED }
     { 1, "sensor_initialization.init_scanning", REQUIRED, LENGTH-FIXED }
-    { 1, "sensor_initialization.reserved", REQUIRED, LENGTH-FIXED }
+    { 1, "sensor_initialization.settable_sensor", REQUIRED, LENGTH-FIXED }
 
     { 2, "sensor_capabilities.event_message_control_support", REQUIRED, LENGTH-FIXED }
     { 2, "sensor_capabilities.threshold_access_support", REQUIRED, LENGTH-FIXED }
@@ -697,7 +697,7 @@ FIID Template: tmpl_sdr_compact_sensor_record_threshold_based_sensors
     { 1, "sensor_initialization.init_thresholds", REQUIRED, LENGTH-FIXED }
     { 1, "sensor_initialization.init_events", REQUIRED, LENGTH-FIXED }
     { 1, "sensor_initialization.init_scanning", REQUIRED, LENGTH-FIXED }
-    { 1, "sensor_initialization.reserved", REQUIRED, LENGTH-FIXED }
+    { 1, "sensor_initialization.settable_sensor", REQUIRED, LENGTH-FIXED }
 
     { 2, "sensor_capabilities.event_message_control_support", REQUIRED, LENGTH-FIXED }
     { 2, "sensor_capabilities.threshold_access_support", REQUIRED, LENGTH-FIXED }

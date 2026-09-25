@@ -176,7 +176,7 @@ fiid_template_t tmpl_sdr_full_sensor_record_non_threshold_based_sensors =
     { 1, "sensor_initialization.init_thresholds", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "sensor_initialization.init_events", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "sensor_initialization.init_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "sensor_initialization.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "sensor_initialization.settable_sensor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
     { 2, "sensor_capabilities.event_message_control_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "sensor_capabilities.threshold_access_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -323,7 +323,7 @@ fiid_template_t tmpl_sdr_full_sensor_record_threshold_based_sensors =
     { 1, "sensor_initialization.init_thresholds", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "sensor_initialization.init_events", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "sensor_initialization.init_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "sensor_initialization.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "sensor_initialization.settable_sensor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
     { 2, "sensor_capabilities.event_message_control_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "sensor_capabilities.threshold_access_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -471,7 +471,7 @@ fiid_template_t tmpl_sdr_compact_sensor_record =
     { 1, "sensor_initialization.init_thresholds", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "sensor_initialization.init_events", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "sensor_initialization.init_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "sensor_initialization.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "sensor_initialization.settable_sensor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
     /* Sensor Capabilities */
     { 2, "sensor_capabilities.event_message_control_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -546,7 +546,7 @@ fiid_template_t tmpl_sdr_compact_sensor_record_non_threshold_based_sensors =
     { 1, "sensor_initialization.init_thresholds", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "sensor_initialization.init_events", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "sensor_initialization.init_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "sensor_initialization.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "sensor_initialization.settable_sensor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
     { 2, "sensor_capabilities.event_message_control_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "sensor_capabilities.threshold_access_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -667,7 +667,7 @@ fiid_template_t tmpl_sdr_compact_sensor_record_threshold_based_sensors =
     { 1, "sensor_initialization.init_thresholds", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "sensor_initialization.init_events", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 1, "sensor_initialization.init_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 1, "sensor_initialization.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 1, "sensor_initialization.settable_sensor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
     { 2, "sensor_capabilities.event_message_control_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "sensor_capabilities.threshold_access_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
