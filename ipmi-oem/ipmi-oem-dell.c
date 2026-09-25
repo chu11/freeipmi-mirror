@@ -2638,11 +2638,11 @@ ipmi_oem_dell_get_nic_selection_failover (ipmi_oem_state_data_t *state_data)
     }
 
   pstdout_printf (state_data->pstate,
-                  "NIC selection        : %s",
+                  "NIC selection        : %s\n",
                   nic_str);
 
   pstdout_printf (state_data->pstate,
-                  "NIC failover network : %s",
+                  "NIC failover network : %s\n",
                   failover_str);
 
   rv = 0;
