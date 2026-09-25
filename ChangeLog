@@ -1,5 +1,12 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-quanta.c (_ipmi_oem_quanta_write_mac_address_s99q):
+	Require the MAC address to be exactly 17 characters, as the
+	Inventec set-mac-address does, so trailing garbage and signed
+	octets are rejected.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-intel.c (ipmi_oem_intel_set_smtp_config): Error
 	out if the only argument is a channel number and there are no
 	KEY=VALUE options to set, instead of silently doing nothing.

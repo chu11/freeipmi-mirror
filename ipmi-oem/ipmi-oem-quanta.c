@@ -796,14 +796,15 @@ _ipmi_oem_quanta_write_mac_address_s99q (ipmi_oem_state_data_t *state_data)
       goto cleanup;
     }
 
-  if (sscanf (state_data->prog_data->args->oem_options[2],
-              "%02x:%02x:%02x:%02x:%02x:%02x",
-              &b1,
-              &b2,
-              &b3,
-              &b4,
-              &b5,
-              &b6) != 6)
+  if (strlen (state_data->prog_data->args->oem_options[2]) != 17
+      || sscanf (state_data->prog_data->args->oem_options[2],
+                 "%02x:%02x:%02x:%02x:%02x:%02x",
+                 &b1,
+                 &b2,
+                 &b3,
+                 &b4,
+                 &b5,
+                 &b6) != 6)
     {
       pstdout_fprintf (state_data->pstate,
                        stderr,
