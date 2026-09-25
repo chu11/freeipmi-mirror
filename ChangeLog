@@ -1,5 +1,10 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-pet/ipmi-pet.c (_ipmi_pet): Remove a pet_acknowledge check
+	nested inside a block already guarded by the same condition.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-pet/ipmi-pet-argp.c (cmdline_parse): Print the offending
 	argument in the invalid manufacturer id and product id messages
 	instead of the partially parsed number.
