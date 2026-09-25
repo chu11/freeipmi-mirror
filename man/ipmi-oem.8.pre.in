@@ -391,7 +391,8 @@ S5.
 .TP
 .B GIGABYTE
 .RS
-.TP .B get-nic-mode
+.TP
+.B get-nic-mode
 This OEM command will determine the current NIC mode as dedicated,
 shared, or failover.  Dedicated indicates IPMI is only available on
 the dedicated management port.  Shared indicates IPMI is also

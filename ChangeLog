@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Put the .B macro for the GIGABYTE
+	get-nic-mode entry on its own line rather than as an argument to
+	.TP.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Put the .TP and .B macros for the Fujitsu
 	get-power-off-source, get-remote-storage-status, get-system-status
 	and get-eeprom-version-info entries on their own lines so they are
