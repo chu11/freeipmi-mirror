@@ -1177,7 +1177,7 @@ fiid_template_t tmpl_sdr_oem_record =
      * Record Key Bytes *
      ********************/
     { 24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    { 448, "oem_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 448, "oem_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     { 0, "", 0}
   };
 

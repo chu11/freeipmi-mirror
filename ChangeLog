@@ -1,5 +1,13 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/record-format/ipmi-sdr-record-format.c
+	(tmpl_sdr_oem_record): Mark oem_data optional and variable length;
+	the OEM data is "up to 56 bytes".
+	* libfreeipmi/include/freeipmi/templates/ipmi-sdr-record-format-templates.h:
+	Update accordingly.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/record-format/ipmi-fru-dimmspd-record-format.h
 	(IPMI_FRU_DIMMSPD_DDR4_MODULE_NOMINAL_HEIGHT_MAX_28_TO_29): Rename
 	from _28_TO_39, fixing the typo.
