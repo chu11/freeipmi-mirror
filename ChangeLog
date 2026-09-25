@@ -1,5 +1,13 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/payload/ipmi-sol-payload.h
+	(IPMI_SOL_ASSERT_RI, IPMI_SOL_DEASSERT_RI): Swap values.  Per IPMI
+	2.0 Table 15-2 the SOL Ring WOR bit is 1 to assert RI and 0 to
+	deassert it, the opposite sense of the Drop DCD/DSR and CTS pause
+	bits these were copied from.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/record-format/ipmi-sdr-record-format.c
 	(tmpl_sdr_generic_device_locator_record): Add the missing "Record
 	Body Bytes" comment divider; the key bytes are only bytes 6-8.

@@ -63,8 +63,9 @@ extern "C" {
   (((__val) == IPMI_SOL_GENERATE_BREAK       \
     || (__val) == IPMI_SOL_DO_NOT_GENERATE_BREAK) ? 1 : 0)
 
-#define IPMI_SOL_ASSERT_RI       0x0
-#define IPMI_SOL_DEASSERT_RI     0x1
+/* Unlike DCD/DSR and CTS above, the Ring WOR bit is set to assert RI */
+#define IPMI_SOL_ASSERT_RI       0x1
+#define IPMI_SOL_DEASSERT_RI     0x0
 
 #define IPMI_SOL_ASSERT_RI_VALID(__val) \
   (((__val) == IPMI_SOL_ASSERT_RI       \
