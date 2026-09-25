@@ -848,8 +848,16 @@ extern unsigned int ipmi_sensor_type_system_event_event_data2_offset_entry_added
 extern const char * const ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_type[];
 extern unsigned int ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_type_max_index;
 
+/* Event data 2 is a bitmask for the PEF Action offset, see the
+ * IPMI_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_OFFSET_PEF_ACTION_BITMASK_*
+ * macros above.  This array is indexed by bit position, so there is no
+ * max_index.
+ */
 extern const char * const ipmi_sensor_type_system_event_event_data2_offset_pef_action[];
+#if 0
+/* Not used, not defined in the library */
 extern unsigned int ipmi_sensor_type_system_event_event_data2_offset_pef_action_max_index;
+#endif
 
 extern const char * const ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_first_second[];
 extern unsigned int ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_first_second_max_index;

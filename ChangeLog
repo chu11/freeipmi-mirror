@@ -1,5 +1,12 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h
+	(ipmi_sensor_type_system_event_event_data2_offset_pef_action_max_index):
+	Wrap the extern in #if 0 and note it is not used.  The library never
+	defined it, so referencing it was a link error.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-spec.c
 	(ipmi_sensor_type_chip_set_short_max_index): Fix to 0x01, the array
 	has two entries.  Previously the "Thermal Trip" short string could
