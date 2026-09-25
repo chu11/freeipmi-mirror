@@ -1,5 +1,13 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Put the .B argument on the same line as the
+	macro for the Intel set-bmc-services heading and the disabled
+	Wistron reset-to-defaults bmc-device reference, and remove the
+	blank line after the Sun get-led heading that broke its hanging
+	indent.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Fix font escape typos in the Intel Node
 	Manager section (\fIfI, \fR opening an italic), a stray trailing
 	comma on the set-turbo-synchronization-ratio heading, and refer to

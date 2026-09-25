@@ -466,8 +466,7 @@ restore delay).  Command confirmed to work on Intel S2600JF (Appro
 This OEM command will get the current status of BMC services such as
 ssh, http, rmcp, and kvm.  Command confirmed to work on Intel S2600WT2.
 .TP
-.B
-set-bmc-services \fIenable|disable\fR \fIssh|http|rmcp|kvm\fR
+.B set-bmc-services \fIenable|disable\fR \fIssh|http|rmcp|kvm\fR
 This OEM command will enable or disable BMC services besides IPMI.
 Note that \fIhttp\fR refers to both http and https.  Command confirmed
 to work on Intel S2600WT2.
@@ -1141,7 +1140,6 @@ Command confirmed to work on Quanta S99Q (Dell FS12-TY) for
 .RS
 .TP
 .B get-led
-
 This OEM command will output current LED mode.  \fIoff\fR indicates
 the LED is steady off, \fIon\fR indicates the LED is steady on,
 \fIstandby\fR indicates the LED blinks at a 100ms on, 2900ms off rate,
@@ -1503,8 +1501,7 @@ be complete.  Command confirmed to work on Wistron / Dell Poweredge
 C6220.  After running this command, the BMC must be reset to return it
 to functioning status.  This may be accomplished by executing a
 cold-reset with
-.B
-bmc-device(8).
+.B bmc-device(8).
 \}
 .RE
 #include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
