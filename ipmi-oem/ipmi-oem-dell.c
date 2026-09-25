@@ -2734,17 +2734,17 @@ ipmi_oem_dell_set_nic_selection_failover (ipmi_oem_state_data_t *state_data)
     bytes_rq[1] = IPMI_OEM_DELL_NIC_SELECTION_FAILOVER_NIC_LOM4;
 
   if (!strcasecmp (state_data->prog_data->args->oem_options[1], "none"))
-    bytes_rq[1] = IPMI_OEM_DELL_NIC_SELECTION_FAILOVER_FAILOVER_NONE;
+    bytes_rq[2] = IPMI_OEM_DELL_NIC_SELECTION_FAILOVER_FAILOVER_NONE;
   else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "lom1"))
-    bytes_rq[1] = IPMI_OEM_DELL_NIC_SELECTION_FAILOVER_FAILOVER_LOM1;
+    bytes_rq[2] = IPMI_OEM_DELL_NIC_SELECTION_FAILOVER_FAILOVER_LOM1;
   else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "lom2"))
-    bytes_rq[1] = IPMI_OEM_DELL_NIC_SELECTION_FAILOVER_FAILOVER_LOM2;
+    bytes_rq[2] = IPMI_OEM_DELL_NIC_SELECTION_FAILOVER_FAILOVER_LOM2;
   else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "lom3"))
-    bytes_rq[1] = IPMI_OEM_DELL_NIC_SELECTION_FAILOVER_FAILOVER_LOM3;
+    bytes_rq[2] = IPMI_OEM_DELL_NIC_SELECTION_FAILOVER_FAILOVER_LOM3;
   else if (!strcasecmp (state_data->prog_data->args->oem_options[1], "lom4"))
-    bytes_rq[1] = IPMI_OEM_DELL_NIC_SELECTION_FAILOVER_FAILOVER_LOM4;
+    bytes_rq[2] = IPMI_OEM_DELL_NIC_SELECTION_FAILOVER_FAILOVER_LOM4;
   else /* !strcasecmp (state_data->prog_data->args->oem_options[1], "all") */
-    bytes_rq[1] = IPMI_OEM_DELL_NIC_SELECTION_FAILOVER_FAILOVER_ALL;
+    bytes_rq[2] = IPMI_OEM_DELL_NIC_SELECTION_FAILOVER_FAILOVER_ALL;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */

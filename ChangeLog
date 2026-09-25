@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_set_nic_selection_failover):
+	Store the failover NIC in request byte 2 instead of overwriting the
+	NIC selection in byte 1 and sending an uninitialized byte 2.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-pet/ipmi-pet.c (_ipmi_pet_form_sel_record): Report the
 	length fiid_obj_get_all() produced in the invalid length message,
 	not the size of the caller's buffer.
