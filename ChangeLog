@@ -1,3 +1,11 @@
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/cmds/ipmi-sensor-cmds.c
+	(fill_cmd_set_sensor_event_enable_threshold,
+	fill_cmd_set_sensor_event_enable_discrete): Compare against the
+	threshold and discrete request templates instead of the generic
+	one, which made both functions always fail.
+
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Put the .B argument on the same line as the
