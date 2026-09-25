@@ -160,7 +160,7 @@ int fill_cmd_set_serial_modem_configuration_call_retry_interval (uint8_t channel
                                                                  fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_get_serial_modem_configuration (uint8_t channel_number,
-                                             uint8_t parameter_type,
+                                             uint8_t get_parameter,
                                              uint8_t parameter_selector,
                                              uint8_t set_selector,
                                              uint8_t block_selector,

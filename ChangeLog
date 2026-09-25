@@ -1,5 +1,22 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h
+	(fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing,
+	fill_cmd_set_system_boot_options_boot_flags),
+	libfreeipmi/include/freeipmi/cmds/ipmi-pef-and-alerting-cmds.h
+	(fill_cmd_set_pef_configuration_parameters_event_filter_table,
+	fill_cmd_set_pef_configuration_parameters_event_filter_table_data1),
+	libfreeipmi/include/freeipmi/cmds/ipmi-serial-modem-cmds.h
+	(fill_cmd_get_serial_modem_configuration),
+	libfreeipmi/include/freeipmi/cmds/ipmi-sol-cmds.h
+	(fill_cmd_set_sol_configuration_parameters,
+	fill_cmd_set_sol_configuration_parameters_set_in_progress,
+	fill_cmd_set_sol_configuration_parameters_sol_enable,
+	fill_cmd_get_sol_configuration_parameters): Match prototype
+	parameter names to the definitions.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/cmds/ipmi-lan-cmds.c
 	(fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_length):
 	Remove unreachable return.

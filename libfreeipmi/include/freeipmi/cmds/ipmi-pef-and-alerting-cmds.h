@@ -406,7 +406,7 @@ int fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (uint8_t p
 
 int fill_cmd_set_pef_configuration_parameters_event_filter_table (uint8_t filter_number,
                                                                   uint8_t filter_configuration_type,
-                                                                  uint8_t filter_configuration_enable,
+                                                                  uint8_t filter_configuration_filter,
                                                                   uint8_t event_filter_action_alert,
                                                                   uint8_t event_filter_action_power_off,
                                                                   uint8_t event_filter_action_reset,
@@ -436,7 +436,7 @@ int fill_cmd_set_pef_configuration_parameters_event_filter_table (uint8_t filter
 
 int fill_cmd_set_pef_configuration_parameters_event_filter_table_data1 (uint8_t filter_number,
                                                                         uint8_t filter_configuration_type,
-                                                                        uint8_t filter_configuration_enable,
+                                                                        uint8_t filter_configuration_filter,
                                                                         fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_pef_configuration_parameters_alert_string_keys (uint8_t string_selector,

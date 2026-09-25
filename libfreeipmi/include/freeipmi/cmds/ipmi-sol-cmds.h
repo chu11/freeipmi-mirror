@@ -117,15 +117,15 @@ int fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
                                                uint8_t parameter_selector,
                                                const void *configuration_parameter_data,
                                                unsigned int configuration_parameter_data_len,
-                                               fiid_obj_t obj_data_rq);
+                                               fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_sol_configuration_parameters_set_in_progress (uint8_t channel_number,
                                                                uint8_t state,
-                                                               fiid_obj_t obj_data_rq);
+                                                               fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
                                                           uint8_t sol_enable,
-                                                          fiid_obj_t obj_data_rq);
+                                                          fiid_obj_t obj_cmd_rq);
 
 int fill_cmd_set_sol_configuration_parameters_sol_authentication (uint8_t channel_number,
                                                                   uint8_t sol_privilege_level,
@@ -160,7 +160,7 @@ int fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
                                                uint8_t parameter_selector,
                                                uint8_t set_selector,
                                                uint8_t block_selector,
-                                               fiid_obj_t obj_data_rq);
+                                               fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }
