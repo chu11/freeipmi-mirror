@@ -143,7 +143,7 @@ FIID Template: tmpl_fru_dimm_spd_ddr3_record
     /* Byte 23: Minimum Active to Active/Refresh Delay Time (t_rc min), LSB (MTB Units) */
     { 8, "minimum_active_to_active_refresh_time", REQUIRED, LENGTH-FIXED }
     /* Byte 24-25: Minimum Refresh Recovery Delay Time (t_rfc min) (MTB Units) */
-    { 16, "minimum_active_to_active_refresh_time", REQUIRED, LENGTH-FIXED }
+    { 16, "minimum_refresh_recovery_delay_time", REQUIRED, LENGTH-FIXED }
     /* Byte 26: Minimum Internal Write to Read Command Delay Time (t_wtr min) (MTB Units) */
     { 8, "internal_write_to_read_delay_time", REQUIRED, LENGTH-FIXED }
     /* Byte 27: Minimum Internal Read to Precharge Command Delay Time (t_rtp min) (MTB Units) */
@@ -304,7 +304,7 @@ FIID Template: tmpl_fru_dimm_spd_ddr4_record
     /* Byte 32-33: Minimum Refresh Recovery Delay Time (t_RFC2 min) */
     { 16, "minimum_refresh_recovery_delay_time1", REQUIRED, LENGTH-FIXED }
     /* Byte 34-35: Minimum Refresh Recovery Delay Time (t_RFC4 min) */
-    { 16, "minimum_refrsh_recovery_delay_time4", REQUIRED, LENGTH-FIXED }
+    { 16, "minimum_refresh_recovery_delay_time4", REQUIRED, LENGTH-FIXED }
     /* Byte 36: Minimum Four Activate Window Time (t_FAW min), Most Significant Nibble */
     { 4, "tfaw_msn", REQUIRED, LENGTH-FIXED }
     { 4, "reserved16", REQUIRED, LENGTH-FIXED }

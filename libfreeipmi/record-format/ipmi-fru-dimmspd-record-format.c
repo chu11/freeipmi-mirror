@@ -287,7 +287,7 @@ fiid_template_t tmpl_fru_dimm_spd_ddr4_record =
     /* Byte 32-33: Minimum Refresh Recovery Delay Time (t_RFC2 min) */
     { 16, "minimum_refresh_recovery_delay_time1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Byte 34-35: Minimum Refresh Recovery Delay Time (t_RFC4 min) */
-    { 16, "minimum_refrsh_recovery_delay_time4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    { 16, "minimum_refresh_recovery_delay_time4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Byte 36: Minimum Four Activate Window Time (t_FAW min), Most Significant Nibble */
     { 4, "tfaw_msn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 4, "reserved16", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

@@ -1,5 +1,16 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c
+	(tmpl_fru_dimm_spd_ddr4_record): Rename
+	minimum_refrsh_recovery_delay_time4 to
+	minimum_refresh_recovery_delay_time4, fixing the typo.
+	* libfreeipmi/include/freeipmi/templates/ipmi-fru-dimmspd-record-format-templates.h:
+	Update accordingly.  Also correct the documented DDR3 bytes 24-25
+	field name to minimum_refresh_recovery_delay_time, matching the
+	template.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/record-format/ipmi-sdr-record-format.c
 	(tmpl_sdr_full_sensor_record_non_threshold_based_sensors,
 	tmpl_sdr_full_sensor_record_threshold_based_sensors,
