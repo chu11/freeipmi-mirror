@@ -694,7 +694,7 @@ fill_cmd_set_command_sub_function_enables_defining_body_code (uint8_t channel_nu
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_command_sub_function_enables_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_command_sub_function_enables_defining_body_code_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -737,7 +737,7 @@ fill_cmd_set_command_sub_function_enables_oem_iana (uint8_t channel_number,
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_command_sub_function_enables_rq) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_cmd_set_command_sub_function_enables_oem_iana_rq) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);

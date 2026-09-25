@@ -1,5 +1,13 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-firmware-firewall-command-discovery-cmds.c
+	(fill_cmd_set_command_sub_function_enables_defining_body_code,
+	fill_cmd_set_command_sub_function_enables_oem_iana): Compare
+	against the defining body code and OEM IANA request templates
+	instead of the generic one, which made both functions always fail.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/cmds/ipmi-sensor-cmds.c
 	(fill_cmd_set_sensor_event_enable_threshold,
 	fill_cmd_set_sensor_event_enable_discrete): Compare against the
