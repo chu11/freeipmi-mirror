@@ -1,5 +1,11 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-sun.c (_sun_get_led_sdr_callback,
+	ipmi_oem_sun_set_led): Name ipmi_sdr_parse_entity_id_instance_type,
+	the function actually called, in the error message.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_power_monitoring_interval_range):
 	Pass the command constant, not the control switch data value, to
 	the completion code check so the Dell OEM error strings are found.
