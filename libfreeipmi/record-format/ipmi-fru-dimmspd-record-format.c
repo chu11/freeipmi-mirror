@@ -507,7 +507,7 @@ fiid_template_t tmpl_fru_dimm_spd_ddr4_module_specific_load_reduction_memory_mod
     { 3, "dram_odt_strength_rtt_nom_lt_2400", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3, "dram_odt_strength_rtt_wr_lt_2400", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "reserved16", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* Byte 151: DRAM ODT (RTT_WR, RTT_NOM) for 2400 < data rat e<= 3200 */
+    /* Byte 151: DRAM ODT (RTT_WR, RTT_NOM) for 2400 < data rate <= 3200 */
     { 3, "dram_odt_strength_rtt_nom_lt_3200", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3, "dram_odt_strength_rtt_wr_lt_3200", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "reserved17", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -519,11 +519,11 @@ fiid_template_t tmpl_fru_dimm_spd_ddr4_module_specific_load_reduction_memory_mod
     { 3, "dram_odt_strength_rtt_park_ranks_0_1_lt_2400", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3, "dram_odt_strength_rtt_park_ranks_2_3_lt_2400", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "reserved19", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* Byte 153: DRAM ODT (RTT_PARK) for 2400 < data rate <= 3200 */
+    /* Byte 154: DRAM ODT (RTT_PARK) for 2400 < data rate <= 3200 */
     { 3, "dram_odt_strength_rtt_park_ranks_0_1_lt_3200", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 3, "dram_odt_strength_rtt_park_ranks_2_3_lt_3200", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 2, "reserved20", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* Bytes 139-253: Reserved */
+    /* Bytes 155-253: Reserved */
     { 792, "reserved21", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Bytes 254-255: CRC */
     { 16, "crc", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

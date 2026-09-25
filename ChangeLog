@@ -1,6 +1,16 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c
+	(tmpl_fru_dimm_spd_ddr4_module_specific_load_reduction_memory_module):
+	Fix byte offset comments: the RTT_PARK entry for 2400-3200 is byte
+	154, not 153, and the trailing reserved run is bytes 155-253, not
+	139-253.  Fix "data rat e<=" typo.
+	* libfreeipmi/include/freeipmi/templates/ipmi-fru-dimmspd-record-format-templates.h:
+	Update accordingly.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/record-format/ipmi-fru-dimmspd-record-format.c
 	(tmpl_fru_dimm_spd_ddr3_record): Rename reserve6 to reserved6.
 	(tmpl_fru_dimm_spd_ddr4_record): Rename reserve11 to reserved11.
 	(tmpl_fru_dimm_spd_ddr4_module_specific_load_reduction_memory_module):
