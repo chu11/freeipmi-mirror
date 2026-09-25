@@ -1,5 +1,14 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/record-format/ipmi-sdr-record-format.h
+	(IPMI_SDR_ACPI_DEVICE_POWER_STATE_NOTIFICATION_REQUIRED,
+	IPMI_SDR_NO_ACPI_DEVICE_POWER_STATE_NOTIFICATION_REQUIRED,
+	IPMI_SDR_ACPI_SYSTEM_POWER_STATE_NOTIFICATION_REQUIRED,
+	IPMI_SDR_NO_ACPI_SYSTEM_POWER_STATE_NOTIFICATION_REQUIRED): Swap the
+	values; the spec defines a set bit as "notification required".
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/record-format/ipmi-sdr-record-format.c
 	(tmpl_sdr_bmc_message_channel_info_record): Add the
 	messaging_interrupt_type, event_message_buffer_interrupt_type and
