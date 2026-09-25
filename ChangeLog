@@ -1,5 +1,10 @@
 2026-09-24 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Note that the Inventec set-board-id ID is
+	parsed as hex.
+
+2026-09-24 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Remove httpsportnumber from the Inventec
 	set-authentication-config key list; the command does not accept it.
 

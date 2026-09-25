@@ -915,8 +915,9 @@ This OEM command can get the board ID.  Command confirmed to work on
 Inventec 5441/5442 (Dell Xanadu II/III).
 .TP
 .B set-board-id \fIID\fR
-This OEM command can set the board ID.  Command confirmed to work on
-Inventec 5441/5442 (Dell Xanadu II/III).
+This OEM command can set the board ID.  The \fIID\fR must be specified
+in hex.  Command confirmed to work on Inventec 5441/5442 (Dell Xanadu
+II/III).
 .TP
 .B get-fcb-version
 This OEM command can get the fan control board (FCB) version number.
