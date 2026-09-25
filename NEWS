@@ -43,7 +43,6 @@ o Fix many minor output errors (i.e. typos, space alignment, lack of
 o In libfreeipmi, add missing fields for BMC Message Channel SDR
   record format.
 
-
 Remove Large Amount of Legacy Support
 -------------------------------------
 
@@ -210,6 +209,16 @@ o Fix following configuration field typos:
   - ipmi-pet-output-output-event-severity -> ipmi-pet-output-event-severity
     ipmi-pet-output-output-event-state -> ipmi-pet-output-event-state
     ipmi-sel-output-output-event-state -> ipmi-sel-output-event-state
+o In freeipmi_interpret_sel.conf fix field name typos:
+  - IPMI_Version_Change_Hardware_Incompatability_Detected_With_Associated_Entity ->
+      IPMI_Version_Change_Hardware_Incompatibility_Detected_With_Associated_Entity
+  - IPMI_Version_Change_Firmware_Or_Software_Incompatability_Detected_With_Associated_Entity ->
+      IPMI_Version_Change_Firmware_Or_Software_Incompatibility_Detected_With_Associated_Entity
+o In freeipmi_interpret_sensor.conf fix field name typos:
+  - IPMI_Version_Change_Hardware_Incompatability_Detected_With_Associated_Entity ->
+      IPMI_Version_Change_Hardware_Incompatibility_Detected_With_Associated_Entity
+  - IPMI_Version_Change_Firmware_Or_Software_Incompatability_Detected_With_Associated_Entity ->
+      IPMI_Version_Change_Firmware_Or_Software_Incompatibility_Detected_With_Associated_Entity
 
 Libraries:
 ----------
@@ -299,16 +308,6 @@ o In libipmimonitoring, fix typos in macro names.
       IPMI_MONITORING_EVENT_OFFSET_VERSION_CHANGE_HARDWARE_INCOMPATIBILITY_DETECTED_WITH_ASSOCIATED_ENTITY
   - IPMI_MONITORING_EVENT_OFFSET_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY ->
       IPMI_MONITORING_EVENT_OFFSET_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATIBILITY_DETECTED_WITH_ASSOCIATED_ENTITY
-o In freeipmi_interpret_sel.conf fix field name typos:
-  - IPMI_Version_Change_Hardware_Incompatability_Detected_With_Associated_Entity
-      IPMI_Version_Change_Hardware_Incompatibility_Detected_With_Associated_Entity
-  - IPMI_Version_Change_Firmware_Or_Software_Incompatability_Detected_With_Associated_Entity
-      IPMI_Version_Change_Firmware_Or_Software_Incompatibility_Detected_With_Associated_Entity
-o In freeipmi_interpret_sensor.conf fix field name typos:
-  - IPMI_Version_Change_Hardware_Incompatability_Detected_With_Associated_Entity
-      IPMI_Version_Change_Hardware_Incompatibility_Detected_With_Associated_Entity
-  - IPMI_Version_Change_Firmware_Or_Software_Incompatability_Detected_With_Associated_Entity
-      IPMI_Version_Change_Firmware_Or_Software_Incompatibility_Detected_With_Associated_Entity
 
 FreeIPMI 1.6.1 - 02/02/18
 -------------------------
