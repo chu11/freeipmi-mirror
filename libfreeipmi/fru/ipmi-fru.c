@@ -992,6 +992,12 @@ ipmi_fru_next (ipmi_fru_ctx_t ctx)
       return (-1);
     }
 
+  if (!ctx->device_opened)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_DEVICE_ID_NOT_OPEN);
+      return (-1);
+    }
+
   if (ctx->chassis_info_area_starting_offset && !ctx->chassis_info_area_parsed)
     {
       ctx->chassis_info_area_parsed++;
@@ -1450,6 +1456,12 @@ ipmi_fru_read_data_area (ipmi_fru_ctx_t ctx,
       return (-1);
     }
 
+  if (!ctx->device_opened)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_DEVICE_ID_NOT_OPEN);
+      return (-1);
+    }
+
   if (!area_type
       || !area_length
       || !areabuf
@@ -1525,6 +1537,12 @@ ipmi_fru_read_multirecord_record_type_id (ipmi_fru_ctx_t ctx,
   if (!ctx->ipmi_ctx && !ctx->device_opened_with_buffer)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_IPMI_ERROR);
+      return (-1);
+    }
+
+  if (!ctx->device_opened)
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_DEVICE_ID_NOT_OPEN);
       return (-1);
     }
 

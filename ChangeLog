@@ -1,5 +1,14 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fru/ipmi-fru.c (ipmi_fru_next, ipmi_fru_read_data_area)
+	(ipmi_fru_read_multirecord_record_type_id): Return
+	IPMI_FRU_ERR_DEVICE_ID_NOT_OPEN if no device is open, instead of
+	silently returning success.  With IPMI_FRU_FLAGS_READ_RAW the raw
+	read path reached fru_dump_hex with a zero length, tripping an
+	assert in debug builds.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/fru/ipmi-fru.c (_read_info_area_data): Check
 	areabuflen against the number of bytes actually copied, which
 	excludes the info area header, rather than the full info area
