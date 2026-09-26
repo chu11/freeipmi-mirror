@@ -1504,6 +1504,7 @@ ipmi_fru_read_data_area (ipmi_fru_ctx_t ctx,
 
  out:
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   return (rv);
 }
@@ -1566,6 +1567,7 @@ ipmi_fru_read_multirecord_record_type_id (ipmi_fru_ctx_t ctx,
 
  out:
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   return (rv);
 }
@@ -1886,6 +1888,7 @@ ipmi_fru_type_length_field_to_string (ipmi_fru_ctx_t ctx,
 
  out:
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   return (rv);
 }

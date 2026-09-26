@@ -278,6 +278,7 @@ ipmi_fru_chassis_info_area (ipmi_fru_ctx_t ctx,
 
  out:
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   return (rv);
 }
@@ -540,6 +541,7 @@ ipmi_fru_board_info_area (ipmi_fru_ctx_t ctx,
 
  out:
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   return (rv);
 }
@@ -786,6 +788,7 @@ ipmi_fru_product_info_area (ipmi_fru_ctx_t ctx,
 
  out:
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   return (rv);
 }
@@ -1109,6 +1112,7 @@ ipmi_fru_multirecord_power_supply_information (ipmi_fru_ctx_t ctx,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_record);
   return (rv);
@@ -1265,6 +1269,7 @@ ipmi_fru_multirecord_dc_output (ipmi_fru_ctx_t ctx,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_record);
   return (rv);
@@ -1409,6 +1414,7 @@ ipmi_fru_multirecord_dc_load (ipmi_fru_ctx_t ctx,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_record);
   return (rv);
@@ -1499,6 +1505,7 @@ ipmi_fru_multirecord_management_access_record (ipmi_fru_ctx_t ctx,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_record);
   return (rv);
@@ -1628,6 +1635,7 @@ ipmi_fru_multirecord_base_compatibility_record (ipmi_fru_ctx_t ctx,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_record);
   return (rv);
@@ -1757,6 +1765,7 @@ ipmi_fru_multirecord_extended_compatibility_record (ipmi_fru_ctx_t ctx,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_record);
   return (rv);
@@ -1934,6 +1943,7 @@ ipmi_fru_multirecord_extended_dc_output (ipmi_fru_ctx_t ctx,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_record);
   return (rv);
@@ -2099,6 +2109,7 @@ ipmi_fru_multirecord_extended_dc_load (ipmi_fru_ctx_t ctx,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_record);
   return (rv);
@@ -2188,6 +2199,7 @@ ipmi_fru_multirecord_oem_record (ipmi_fru_ctx_t ctx,
     }
 
   rv = 0;
+  ctx->errnum = IPMI_FRU_ERR_SUCCESS;
  cleanup:
   fiid_obj_destroy (obj_record);
   return (rv);
