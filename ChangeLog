@@ -1,5 +1,14 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/libcommon/ipmi-crypt-gcrypt.c (_cipher_crypt): Query
+	the cipher key and block lengths through _crypt_cipher_info rather
+	than the public crypt_cipher_key_len / crypt_cipher_block_len, which
+	re-validate the algorithm and re-check crypt_initialized and invert
+	the crypt / gcrypt layering.
+	(_crypt_cipher_info): Move above _cipher_crypt.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/libcommon/ipmi-crypt.c (crypt_initialized): Define
 	only when WITH_ENCRYPTION is set; every use is inside that
 	conditional, so --without-encryption builds warned about an unused

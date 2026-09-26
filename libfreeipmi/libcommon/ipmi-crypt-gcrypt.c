@@ -234,6 +234,42 @@ gcrypt_hash_digest_len (unsigned int hash_algorithm)
 }
 
 static int
+_crypt_cipher_info (unsigned int cipher_algorithm, unsigned int cipher_info)
+{
+  int gcry_cipher_algorithm, gcry_crypt_cipher_info_what;
+  gcry_error_t e;
+  size_t len;
+
+  assert (cipher_algorithm == IPMI_CRYPT_CIPHER_AES);
+  assert (IPMI_CRYPT_CIPHER_INFO_VALID (cipher_info));
+
+  gcry_cipher_algorithm = GCRY_CIPHER_AES;
+
+  if (cipher_info == IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH)
+    gcry_crypt_cipher_info_what = GCRYCTL_GET_KEYLEN;
+  else
+    gcry_crypt_cipher_info_what = GCRYCTL_GET_BLKLEN;
+
+  if ((e = gcry_cipher_algo_info (gcry_cipher_algorithm,
+                                  gcry_crypt_cipher_info_what,
+                                  NULL,
+                                  &len)) != GPG_ERR_NO_ERROR)
+    {
+      ERR_GCRYPT_TRACE (e);
+      SET_ERRNO (_gpg_error_to_errno (e));
+      return (-1);
+    }
+
+  if (len > INT_MAX)
+    {
+      SET_ERRNO (EMSGSIZE);
+      return (-1);
+    }
+
+  return (len);
+}
+
+static int
 _cipher_crypt (unsigned int cipher_algorithm,
                unsigned int cipher_mode,
                const void *key,
@@ -267,13 +303,15 @@ _cipher_crypt (unsigned int cipher_algorithm,
   else
     gcry_cipher_mode = GCRY_CIPHER_MODE_CBC;
 
-  if ((cipher_keylen = crypt_cipher_key_len (cipher_algorithm)) < 0)
+  if ((cipher_keylen = _crypt_cipher_info (cipher_algorithm,
+                                           IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH)) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
 
-  if ((cipher_blocklen = crypt_cipher_block_len (cipher_algorithm)) < 0)
+  if ((cipher_blocklen = _crypt_cipher_info (cipher_algorithm,
+                                             IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH)) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
@@ -416,42 +454,6 @@ gcrypt_cipher_decrypt (unsigned int cipher_algorithm,
                          data,
                          data_len,
                          0));
-}
-
-static int
-_crypt_cipher_info (unsigned int cipher_algorithm, unsigned int cipher_info)
-{
-  int gcry_cipher_algorithm, gcry_crypt_cipher_info_what;
-  gcry_error_t e;
-  size_t len;
-
-  assert (cipher_algorithm == IPMI_CRYPT_CIPHER_AES);
-  assert (IPMI_CRYPT_CIPHER_INFO_VALID (cipher_info));
-
-  gcry_cipher_algorithm = GCRY_CIPHER_AES;
-
-  if (cipher_info == IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH)
-    gcry_crypt_cipher_info_what = GCRYCTL_GET_KEYLEN;
-  else
-    gcry_crypt_cipher_info_what = GCRYCTL_GET_BLKLEN;
-
-  if ((e = gcry_cipher_algo_info (gcry_cipher_algorithm,
-                                  gcry_crypt_cipher_info_what,
-                                  NULL,
-                                  &len)) != GPG_ERR_NO_ERROR)
-    {
-      ERR_GCRYPT_TRACE (e);
-      SET_ERRNO (_gpg_error_to_errno (e));
-      return (-1);
-    }
-
-  if (len > INT_MAX)
-    {
-      SET_ERRNO (EMSGSIZE);
-      return (-1);
-    }
-
-  return (len);
 }
 
 int
