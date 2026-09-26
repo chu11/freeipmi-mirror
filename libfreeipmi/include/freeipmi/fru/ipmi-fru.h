@@ -86,6 +86,8 @@ extern "C" {
 #define IPMI_FRU_AREA_TYPE_MULTIRECORD_OEM                           15
 #define IPMI_FRU_AREA_TYPE_MULTIRECORD_UNKNOWN                       16
 #define IPMI_FRU_AREA_TYPE_RAW_DATA                                  17
+/* returned w/ area_length 0 when no area remains to be read */
+#define IPMI_FRU_AREA_TYPE_NONE                                      18
 
 /* multirecord length field is 1 byte => max 256 chars.  Round up to
  * 512 for good measure.
@@ -155,6 +157,9 @@ int ipmi_fru_next (ipmi_fru_ctx_t ctx);
 /* if reading in raw mode, read as much data as you can into buffer
  * - area_length will return total size of data that exists
  * - area_type will return IPMI_FRU_AREA_TYPE_RAW_DATA
+ */
+/* if no area remains to be read (iterator exhausted), returns 0 with
+ * area_length 0 and area_type IPMI_FRU_AREA_TYPE_NONE
  */
 int ipmi_fru_read_data_area (ipmi_fru_ctx_t ctx,
                              unsigned int *area_type,

@@ -1491,6 +1491,10 @@ ipmi_fru_read_data_area (ipmi_fru_ctx_t ctx,
 
           goto out;
         }
+
+      /* nothing left to read, don't leave outputs uninitialized */
+      (*area_type) = IPMI_FRU_AREA_TYPE_NONE;
+      (*area_length) = 0;
     }
   else
     {
@@ -1562,6 +1566,9 @@ ipmi_fru_read_multirecord_record_type_id (ipmi_fru_ctx_t ctx,
 
       goto out;
     }
+
+  /* nothing left to read, don't leave record_type_id uninitialized */
+  (*record_type_id) = 0;
 
  out:
   rv = 0;

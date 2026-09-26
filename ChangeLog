@@ -1,5 +1,16 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fru/ipmi-fru.c (ipmi_fru_read_data_area): Set
+	area_length to 0 and area_type to IPMI_FRU_AREA_TYPE_NONE when no
+	area remains to be read, instead of returning success with the
+	outputs untouched.
+	(ipmi_fru_read_multirecord_record_type_id): Set record_type_id to
+	0 when no multirecord remains, instead of leaving it untouched.
+	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h
+	(IPMI_FRU_AREA_TYPE_NONE): New define.  Document the behavior.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/fru/ipmi-fru-data.c (ipmi_fru_board_info_area): Return
 	IPMI_FRU_MFG_DATE_TIME_UNSPECIFIED unconverted when the FRU mfg
 	date/time is 0x000000.  The unconditional conversion to the unix
