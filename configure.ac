@@ -485,6 +485,7 @@ AC_CHECK_FUNCS([strchr strndup strchrnul strsep stristr])
 AC_CHECK_FUNCS([memcpy mempcpy memset mlock])
 AC_CHECK_FUNCS([getline getprogname])
 AC_CHECK_FUNCS([strerror strerror_r])
+AC_FUNC_STRERROR_R
 AC_CHECK_FUNCS([flockfile fputs_unlocked fwrite_unlocked])
 AC_CHECK_FUNCS([iopl])
 AC_CHECK_DECL([inb], [AC_DEFINE(HAVE_INB, [1], [Define to 1 if you have `inb' function.])], [], [

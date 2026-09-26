@@ -1,5 +1,16 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* configure.ac: Add AC_FUNC_STRERROR_R to detect which strerror_r
+	variant is in use.
+	* libfreeipmi/libcommon/ipmi-trace.h (TRACE_STRERROR_R): New macro
+	returning the error string for either the GNU or XSI strerror_r.
+	(TRACE_ERRNO_OUT): Use it.  AC_USE_SYSTEM_EXTENSIONS defines
+	_GNU_SOURCE, so glibc supplied the GNU strerror_r, which returns
+	the message and leaves the buffer untouched for known errno values;
+	every errno trace printed an empty string.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/payload/ipmi-sol-payload.c (fill_sol_payload_data)
 	(fill_sol_payload_data_remote_console_to_bmc): Return EINVAL when
 	character_data is NULL but character_data_len is nonzero, instead

@@ -49,13 +49,27 @@
     fflush (stderr);                                    \
   } while (0)
 
+/* The GNU strerror_r returns the message and may leave the buffer
+ * untouched; the XSI one fills the buffer and returns an int.
+ */
+#if defined (STRERROR_R_CHAR_P)
+#define TRACE_STRERROR_R(__errnum, __buf, __buflen)     \
+  strerror_r ((__errnum), (__buf), (__buflen))
+#else /* !STRERROR_R_CHAR_P */
+#define TRACE_STRERROR_R(__errnum, __buf, __buflen)             \
+  (strerror_r ((__errnum), (__buf), (__buflen)), (__buf))
+#endif /* !STRERROR_R_CHAR_P */
+
 #define TRACE_ERRNO_OUT(__errno_orig)                                   \
   do {                                                                  \
     extern int errno;                                                   \
     int __save_errno = __errno_orig;                                    \
-    char __errnostr[ERR_WRAPPER_STR_MAX_LEN + 1];                       \
-    memset (__errnostr, '\0', ERR_WRAPPER_STR_MAX_LEN + 1);             \
-    strerror_r (__save_errno, __errnostr, ERR_WRAPPER_STR_MAX_LEN);     \
+    char __errnobuf[ERR_WRAPPER_STR_MAX_LEN + 1];                       \
+    const char *__errnostr;                                             \
+    memset (__errnobuf, '\0', ERR_WRAPPER_STR_MAX_LEN + 1);             \
+    __errnostr = TRACE_STRERROR_R (__save_errno,                        \
+                                   __errnobuf,                          \
+                                   ERR_WRAPPER_STR_MAX_LEN);            \
     fprintf (stderr,                                                    \
              "%s: %d: %s: errno '%s' (%d)\n",                           \
              __FILE__, __LINE__, __FUNCTION__,                          \
