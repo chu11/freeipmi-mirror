@@ -363,36 +363,45 @@ ipmi_fru_board_info_area (ipmi_fru_ctx_t ctx,
       mfg_date_time_tmp |= (areabufptr[area_offset] << 16);
       area_offset++;
 
-      /* mfg_date_time is in minutes, so multiple by 60 to get seconds */
-      mfg_date_time_tmp *= 60;
-
-      /* Posix says individual calls need not clear/set all portions of
-       * 'struct tm', thus passing 'struct tm' between functions could
-       * have issues.  So we need to memset.
+      /* 0 means unspecified in the FRU spec; pass it through
+       * unconverted so callers can distinguish it from an actual
+       * timestamp.
        */
-      memset (&tm, '\0', sizeof(struct tm));
-
-      /* In FRU, epoch is 0:00 hrs 1/1/96
-       *
-       * So convert into ansi epoch
-       */
-
-      tm.tm_year = 96;          /* years since 1900 */
-      tm.tm_mon = 0;            /* months since January */
-      tm.tm_mday = 1;           /* 1-31 */
-      tm.tm_hour = 0;
-      tm.tm_min = 0;
-      tm.tm_sec = 0;
-      tm.tm_isdst = -1;
-
-      if ((t = mktime (&tm)) == (time_t)-1)
+      if (mfg_date_time_tmp == IPMI_FRU_MFG_DATE_TIME_UNSPECIFIED)
+        (*mfg_date_time) = IPMI_FRU_MFG_DATE_TIME_UNSPECIFIED;
+      else
         {
-          FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_SYSTEM_ERROR);
-          goto cleanup;
-        }
+          /* mfg_date_time is in minutes, so multiple by 60 to get seconds */
+          mfg_date_time_tmp *= 60;
 
-      mfg_date_time_tmp += (uint32_t)t;
-      (*mfg_date_time) = mfg_date_time_tmp;
+          /* Posix says individual calls need not clear/set all portions of
+           * 'struct tm', thus passing 'struct tm' between functions could
+           * have issues.  So we need to memset.
+           */
+          memset (&tm, '\0', sizeof(struct tm));
+
+          /* In FRU, epoch is 0:00 hrs 1/1/96
+           *
+           * So convert into ansi epoch
+           */
+
+          tm.tm_year = 96;          /* years since 1900 */
+          tm.tm_mon = 0;            /* months since January */
+          tm.tm_mday = 1;           /* 1-31 */
+          tm.tm_hour = 0;
+          tm.tm_min = 0;
+          tm.tm_sec = 0;
+          tm.tm_isdst = -1;
+
+          if ((t = mktime (&tm)) == (time_t)-1)
+            {
+              FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_SYSTEM_ERROR);
+              goto cleanup;
+            }
+
+          mfg_date_time_tmp += (uint32_t)t;
+          (*mfg_date_time) = mfg_date_time_tmp;
+        }
     }
   else
     area_offset += 3;

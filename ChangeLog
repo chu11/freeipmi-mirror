@@ -1,5 +1,14 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fru/ipmi-fru-data.c (ipmi_fru_board_info_area): Return
+	IPMI_FRU_MFG_DATE_TIME_UNSPECIFIED unconverted when the FRU mfg
+	date/time is 0x000000.  The unconditional conversion to the unix
+	epoch turned "unspecified" into 1996-01-01 00:00, so ipmi-fru's
+	check for the unspecified value never matched.
+	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h: Document it.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/libcommon/ipmi-trace.h (TRACE_ERRNO_OUT): Drop the
 	block-scope "extern int errno;" declaration; errno.h is already
 	included and on glibc the macro expands to a redundant

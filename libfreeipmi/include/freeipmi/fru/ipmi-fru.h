@@ -178,7 +178,10 @@ int ipmi_fru_chassis_info_area (ipmi_fru_ctx_t ctx,
                                 ipmi_fru_field_t *chassis_custom_fields,
                                 unsigned int chassis_custom_fields_len);
 
-/* mfg_date_time returned in seconds since unix epoch, not FRU defined epoch */
+/* mfg_date_time returned in seconds since unix epoch, not FRU defined
+ * epoch.  IPMI_FRU_MFG_DATE_TIME_UNSPECIFIED (0) is returned unconverted
+ * if the FRU indicates the date/time is unspecified.
+ */
 int ipmi_fru_board_info_area (ipmi_fru_ctx_t ctx,
                               const void *areabuf,
                               unsigned int areabuflen,
