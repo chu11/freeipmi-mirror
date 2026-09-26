@@ -1,5 +1,12 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/libcommon/ipmi-crypt.c (crypt_initialized): Define
+	only when WITH_ENCRYPTION is set; every use is inside that
+	conditional, so --without-encryption builds warned about an unused
+	variable.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* configure.ac: Add AC_FUNC_STRERROR_R to detect which strerror_r
 	variant is in use.
 	* libfreeipmi/libcommon/ipmi-trace.h (TRACE_STRERROR_R): New macro

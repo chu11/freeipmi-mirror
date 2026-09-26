@@ -33,7 +33,9 @@
 
 #include "freeipmi-portability.h"
 
+#ifdef WITH_ENCRYPTION
 static int crypt_initialized = 0;
+#endif /* WITH_ENCRYPTION */
 
 int
 crypt_init (void)
