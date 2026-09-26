@@ -64,4 +64,4 @@ struct ipmi_fru_ctx {
   unsigned int multirecord_area_offset_in_bytes;
 };
 
-#endif /* IPMI_FRU_PARSE_DEFS_H */
+#endif /* IPMI_FRU_DEFS_H */

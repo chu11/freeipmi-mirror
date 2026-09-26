@@ -1,5 +1,10 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fru/ipmi-fru-defs.h: Fix header guard comment left
+	over from the fru-parse rename.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/fru/ipmi-fru.c (ipmi_fru_next, ipmi_fru_read_data_area)
 	(ipmi_fru_read_multirecord_record_type_id): Return
 	IPMI_FRU_ERR_DEVICE_ID_NOT_OPEN if no device is open, instead of
