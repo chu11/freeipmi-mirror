@@ -1220,15 +1220,16 @@ _read_info_area_data (ipmi_fru_ctx_t ctx,
       goto cleanup;
     }
 
-  if (areabuflen < info_area_length_bytes)
-    {
-      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_OVERFLOW);
-      goto cleanup;
-    }
-
   if (info_area_header_length > info_area_length_bytes)
     {
       FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_INTERNAL_ERROR);
+      goto cleanup;
+    }
+
+  /* header is stripped, only compare against what is copied */
+  if (areabuflen < (info_area_length_bytes - info_area_header_length))
+    {
+      FRU_SET_ERRNUM (ctx, IPMI_FRU_ERR_OVERFLOW);
       goto cleanup;
     }
 
