@@ -1,5 +1,11 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fru/ipmi-fru.c (_read_fru_data): Remove the second,
+	now unreachable, count_returned > count_to_read check; the first
+	check already rejects it.  Move its comment to the surviving check.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/fru/ipmi-fru.c (ipmi_fru_read_data_area): Set
 	area_length to 0 and area_type to IPMI_FRU_AREA_TYPE_NONE when no
 	area remains to be read, instead of returning success with the
