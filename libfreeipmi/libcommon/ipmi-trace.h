@@ -62,7 +62,6 @@
 
 #define TRACE_ERRNO_OUT(__errno_orig)                                   \
   do {                                                                  \
-    extern int errno;                                                   \
     int __save_errno = __errno_orig;                                    \
     char __errnobuf[ERR_WRAPPER_STR_MAX_LEN + 1];                       \
     const char *__errnostr;                                             \
@@ -85,9 +84,9 @@
     memset (__errorstr, '\0', ERR_WRAPPER_STR_MAX_LEN + 1);             \
     gpg_strerror_r (__error_orig, __errorstr, ERR_WRAPPER_STR_MAX_LEN); \
     fprintf (stderr,                                                    \
-             "%s: %d: %s: gcrypt error '%s' (%d)\n",                    \
+             "%s: %d: %s: gcrypt error '%s' (%u)\n",                    \
              __FILE__, __LINE__, __FUNCTION__,                          \
-             __errorstr, __error_orig);                                 \
+             __errorstr, (unsigned int) (__error_orig));                \
     fflush (stderr);                                                    \
   } while (0)
 #else /* !WITH_ENCRYPTION */

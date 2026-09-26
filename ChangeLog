@@ -1,5 +1,14 @@
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/libcommon/ipmi-trace.h (TRACE_ERRNO_OUT): Drop the
+	block-scope "extern int errno;" declaration; errno.h is already
+	included and on glibc the macro expands to a redundant
+	non-prototype declaration of __errno_location.
+	(TRACE_GCRYPT_OUT): Print the gcry_error_t, an unsigned int, with
+	%u rather than %d.
+
+2026-09-25 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/libcommon/ipmi-crypt-gcrypt.c (_cipher_crypt): Query
 	the cipher key and block lengths through _crypt_cipher_info rather
 	than the public crypt_cipher_key_len / crypt_cipher_block_len, which
