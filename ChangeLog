@@ -1,6 +1,15 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interpret/ipmi-interpret-config-sel.c
+	(_fill_sel_config_options, interpret_sel_config_parse),
+	libfreeipmi/interpret/ipmi-interpret-config-sensor.c
+	(_fill_sensor_config_options, interpret_sensor_config_parse):
+	Assert that the conffile option array cannot overflow
+	IPMI_INTERPRET_CONFIG_FILE_OPTIONS_MAX when tables are appended.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/interpret/ipmi-interpret-config-sel.c
 	(interpret_sel_config_parse),
 	libfreeipmi/interpret/ipmi-interpret-config-sensor.c
 	(interpret_sensor_config_parse): Test the caller's file argument,

@@ -2582,6 +2582,7 @@ _fill_sensor_config_options (struct conffile_option *to_options,
           && to_options_len
           && from_config
           && from_config_len);
+  assert ((*to_options_len) + from_config_len <= IPMI_INTERPRET_CONFIG_FILE_OPTIONS_MAX);
 
   memset (from_config_flags, '\0', sizeof (int) * from_config_len);
 
@@ -3160,6 +3161,8 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
                                ctx->interpret_sensor.ipmi_interpret_sensor_fru_state_config,
                                ipmi_interpret_sensor_fru_state_flags,
                                ipmi_interpret_sensor_fru_state_config_len);
+
+  assert (config_file_options_len + 2 <= IPMI_INTERPRET_CONFIG_FILE_OPTIONS_MAX);
 
   config_file_options[config_file_options_len].optionname = "IPMI_OEM_Bitmask";
   config_file_options[config_file_options_len].option_type = CONFFILE_OPTION_LIST_STRING;
