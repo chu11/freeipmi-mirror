@@ -1,5 +1,11 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
+	(_ipmi_acpi_get_table_sysfs): Remove assert (table_instance >= 0);
+	table_instance is unsigned, so the test is always true.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/locate/ipmi-locate-defs.h: Put the license header
 	first and close the HAVE_CONFIG_H #endif comment properly; the
 	license block had been swallowed into that comment.

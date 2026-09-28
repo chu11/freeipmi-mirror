@@ -1184,7 +1184,6 @@ _ipmi_acpi_get_table_sysfs (ipmi_locate_ctx_t ctx,
   assert (ctx);
   assert (ctx->magic == IPMI_LOCATE_CTX_MAGIC);
   assert (signature);
-  assert (table_instance >= 0);
   assert (acpi_table);
   assert (acpi_table_length);
 
