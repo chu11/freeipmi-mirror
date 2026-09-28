@@ -1,5 +1,11 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/debug/ipmi-debug-rmcpplus.c
+	(_dump_rmcpplus_payload_confidentiality_aes_cbc_128): Test the
+	unsigned cmd_data_len with !cmd_data_len rather than <= 0.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/debug/ipmi-debug-common.h: Include
 	freeipmi/fiid/fiid.h for fiid_template_t, used in the
 	debug_dump_ipmb prototype, rather than relying on every includer

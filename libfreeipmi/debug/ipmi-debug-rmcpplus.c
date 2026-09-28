@@ -684,7 +684,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128 (int fd,
 
   cmd_data_len = payload_data_len - pad_len - 1;
 
-  if (cmd_data_len <= 0)
+  if (!cmd_data_len)
     {
       rv = 0;
       goto cleanup;
