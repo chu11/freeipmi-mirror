@@ -89,7 +89,7 @@
 #define IPMI_SMBIOS_REGISTER_SPACING_16BYTE_BOUND   0x02
 #define IPMI_SMBIOS_REGISTER_SPACING_RESERVED       0x03
 
-fiid_template_t tmpl_smbios_ipmi_device_info_record =
+static fiid_template_t tmpl_smbios_ipmi_device_info_record =
   {
     { 8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED | FIID_FIELD_MAKES_PACKET_SUFFICIENT},

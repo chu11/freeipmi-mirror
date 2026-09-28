@@ -1,5 +1,16 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
+	(tmpl_acpi_rsdp_descriptor, tmpl_acpi_table_hdr,
+	tmpl_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor_ssif,
+	tmpl_acpi_spmi_table_descriptor_pci_ipmi),
+	libfreeipmi/locate/ipmi-locate-smbios.c
+	(tmpl_smbios_ipmi_device_info_record): Make static.  freeipmi.map
+	exports every tmpl* symbol, so these internal templates were part of
+	the library ABI without any header declaring them.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interpret/ipmi-interpret-config-sel.c
 	(ipmi_interpret_sel_post_memory_resize_state_config),
 	libfreeipmi/interpret/ipmi-interpret-config-sensor.c

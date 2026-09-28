@@ -86,7 +86,7 @@
 #define IPMI_ACPI_RSDP_CHECKSUM_LENGTH       20
 #define IPMI_ACPI_RSDP_XCHECKSUM_LENGTH      36
 
-fiid_template_t tmpl_acpi_rsdp_descriptor =  /* Root System Descriptor Pointer */
+static fiid_template_t tmpl_acpi_rsdp_descriptor =  /* Root System Descriptor Pointer */
   {
     /* ACPI signature, contains "RSD PTR " */
     { 64, "signature", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -109,7 +109,7 @@ fiid_template_t tmpl_acpi_rsdp_descriptor =  /* Root System Descriptor Pointer *
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_acpi_table_hdr =
+static fiid_template_t tmpl_acpi_table_hdr =
   {
     /* ACPI signature (4 ASCII characters) */
     { 32, "signature", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -132,7 +132,7 @@ fiid_template_t tmpl_acpi_table_hdr =
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_acpi_spmi_table_descriptor =
+static fiid_template_t tmpl_acpi_spmi_table_descriptor =
   {
     /* `SPMI'. Signature for the Service Processor Management
        Interface Table. */
@@ -270,7 +270,7 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor =
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_acpi_spmi_table_descriptor_ssif =
+static fiid_template_t tmpl_acpi_spmi_table_descriptor_ssif =
   {
     /* `SPMI'. Signature for the Service Processor Management
        Interface Table. */
@@ -411,7 +411,7 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor_ssif =
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_acpi_spmi_table_descriptor_pci_ipmi =
+static fiid_template_t tmpl_acpi_spmi_table_descriptor_pci_ipmi =
   {
     /* `SPMI'. Signature for the Service Processor Management
        Interface Table. */
