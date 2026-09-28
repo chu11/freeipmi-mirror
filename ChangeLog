@@ -1,5 +1,16 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi_interpret_sel.conf.5.pre.in: In the IPMI_OEM
+	section refer to IPMI_OEM_Sensor_System_Event_Record by its real
+	name rather than "IPMI_OEM_System_Event_Record", and fix the
+	non-timestamped record type range typo "0xEO" to 0xE0.
+	* man/freeipmi_interpret_sel.conf.5.pre.in,
+	man/freeipmi_interpret_sensor.conf.5.pre.in: State the severity
+	ordering as Nominal < Warning < Critical; it was written
+	backwards.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi_interpret_sel.conf.5.pre.in,
 	man/freeipmi_interpret_sensor.conf.5.pre.in: Document the
 	IPMI_Physical_Security_State, IPMI_Power_Unit_State,

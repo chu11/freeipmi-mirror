@@ -2091,8 +2091,8 @@ specific interpretations.  Users should be aware that both
 an identical \fIManufacturer\-ID\fR, \fIProduct\-ID\fR,
 \fIEvent\-Reading\-Type\-Code\fR, and \fISensor\-Type\fR combination.  All
 interpretations rules for a specific combination are iterated through
-and the worst resulting sensor state is returned (i.e. Warning <
-Nominal, Critical < Warning).  If no match is found, no sensor state
+and the worst resulting sensor state is returned (i.e. Nominal <
+Warning < Critical).  If no match is found, no sensor state
 is returned for the OEM sensor reading.
 
 For each of the configuration options below, \fI<Manufacturer\-ID>\fR
