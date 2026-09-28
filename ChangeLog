@@ -1,5 +1,13 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi_interpret_sel.conf.5.pre.in,
+	man/freeipmi_interpret_sensor.conf.5.pre.in: Spell the
+	IPMI_Version_Change_*_Incompatibility_Detected_With_Associated_Entity
+	options as the parser does; the documented "Incompatability"
+	spelling produced a config file parse error when used.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interpret/ipmi-interpret-defs.h
 	(IPMI_OEM_HASH_KEY_BUFLEN): Fix comment; a full uint32 manufacturer
 	id makes the key up to 24 characters plus NUL, not 22 bytes.
