@@ -136,7 +136,7 @@ struct ipmi_inteldcmi_ctx {
   int io_init;
 };
 
-fiid_template_t tmpl_inteldcmi_request =
+static fiid_template_t tmpl_inteldcmi_request =
   {
     { 32, "flags", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     { 32, "timeout", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* in u-sec */
@@ -150,7 +150,7 @@ fiid_template_t tmpl_inteldcmi_request =
     { 0, "", 0}
   };
 
-fiid_template_t tmpl_inteldcmi_response =
+static fiid_template_t tmpl_inteldcmi_response =
   {
     { 8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* Max bytes = 256, 256 * 8 = 2048 */

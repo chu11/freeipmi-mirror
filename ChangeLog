@@ -1,5 +1,12 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/driver/ipmi-inteldcmi-driver.c (tmpl_inteldcmi_request,
+	tmpl_inteldcmi_response): Make static.  freeipmi.map exports every
+	tmpl* symbol, so these internal templates were part of the library
+	ABI without any header declaring them.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/driver/ipmi-kcs-driver.c (IPMI_KCS_STATE_ERROR): OR
 	the S0 and S1 bits rather than AND them; the AND evaluated to 0,
 	which is IPMI_KCS_STATE_IDLE.
