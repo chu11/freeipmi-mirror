@@ -65,16 +65,16 @@ _ipmi_dump_inband_packet (int fd,
   unsigned int indx = 0;
   unsigned int obj_cmd_len;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
-  char *kcs_hdr =
+  const char *kcs_hdr =
     "KCS Header:\n"
     "------------";
-  char *ssif_hdr =
+  const char *ssif_hdr =
     "SSIF Header:\n"
     "------------";
-  char *cmd_hdr =
+  const char *cmd_hdr =
     "IPMI Command Data:\n"
     "------------------";
-  char *unexpected_hdr =
+  const char *unexpected_hdr =
     "Unexpected Data:\n"
     "----------------";
   fiid_obj_t obj_kcs_hdr = NULL;

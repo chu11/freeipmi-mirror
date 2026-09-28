@@ -64,22 +64,22 @@ _ipmi_dump_lan_packet (int fd,
   int obj_lan_msg_trlr_len;
   unsigned int obj_cmd_len;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
-  char *rmcp_hdr =
+  const char *rmcp_hdr =
     "RMCP Header:\n"
     "------------";
-  char *session_hdr =
+  const char *session_hdr =
     "IPMI Session Header:\n"
     "--------------------";
-  char *msg_hdr =
+  const char *msg_hdr =
     "IPMI Message Header:\n"
     "--------------------";
-  char *cmd_hdr =
+  const char *cmd_hdr =
     "IPMI Command Data:\n"
     "------------------";
-  char *trlr_hdr =
+  const char *trlr_hdr =
     "IPMI Trailer:\n"
     "--------------";
-  char *unexpected_hdr =
+  const char *unexpected_hdr =
     "Unexpected Data:\n"
     "----------------";
   fiid_obj_t obj_rmcp_hdr = NULL;

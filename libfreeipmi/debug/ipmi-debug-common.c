@@ -222,16 +222,16 @@ debug_dump_ipmb (int fd,
                  fiid_template_t tmpl_ipmb_msg_hdr,
                  fiid_template_t tmpl_ipmb_cmd)
 {
-  char *ipmb_msg_hdr =
+  const char *ipmb_msg_hdr =
     "IPMB Message Header:\n"
     "--------------------";
-  char *ipmb_cmd_hdr =
+  const char *ipmb_cmd_hdr =
     "IPMB Message Data:\n"
     "------------------";
-  char *ipmb_msg_trlr_hdr =
+  const char *ipmb_msg_trlr_hdr =
     "IPMB Message Trailer:\n"
     "---------------------";
-  char *ipmb_unexpected_hdr =
+  const char *ipmb_unexpected_hdr =
     "IPMB Unexpected Data:\n"
     "---------------------";
   fiid_obj_t obj_ipmb_msg_hdr = NULL;

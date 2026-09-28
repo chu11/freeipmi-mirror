@@ -200,7 +200,7 @@ ipmi_obj_dump_ipmb (int fd,
                     fiid_template_t tmpl_ipmb_msg_hdr,
                     fiid_template_t tmpl_ipmb_cmd)
 {
-  char *cmd_hdr =
+  const char *cmd_hdr =
     "IPMI Command Data:\n"
     "------------------";
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];

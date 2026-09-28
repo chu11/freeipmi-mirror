@@ -53,13 +53,13 @@ ipmi_dump_rmcp_packet (int fd,
 {
   unsigned int indx = 0;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
-  char *rmcp_hdr =
+  const char *rmcp_hdr =
     "RMCP Header:\n"
     "------------";
-  char *rmcp_cmd =
+  const char *rmcp_cmd =
     "RMCP Command Data:\n"
     "------------------";
-  char *unexpected_hdr =
+  const char *unexpected_hdr =
     "Unexpected Data:\n"
     "----------------";
   fiid_obj_t obj_rmcp_hdr = NULL;

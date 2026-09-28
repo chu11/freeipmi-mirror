@@ -214,7 +214,7 @@ _dump_rmcpplus_payload_data (int fd,
                              const void *pkt,
                              uint16_t ipmi_payload_len)
 {
-  char *payload_unexpected_hdr =
+  const char *payload_unexpected_hdr =
     "Payload Unexpected Data:\n"
     "------------------------";
   fiid_obj_t obj_lan_msg_hdr = NULL;
@@ -1176,37 +1176,37 @@ _ipmi_dump_rmcpplus_packet (int fd,
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   fiid_obj_t obj_rmcp_hdr = NULL;
   fiid_obj_t obj_unexpected_data = NULL;
-  char *rmcp_hdr =
+  const char *rmcp_hdr =
     "RMCP Header:\n"
     "------------";
-  char *session_hdr =
+  const char *session_hdr =
     "IPMI RMCPPLUS Session Header:\n"
     "-----------------------------";
-  char *payload_hdr =
+  const char *payload_hdr =
     "IPMI RMCPPLUS Payload:\n"
     "----------------------";
-  char *msg_hdr =
+  const char *msg_hdr =
     "IPMI Message Header:\n"
     "--------------------";
-  char *cmd_hdr =
+  const char *cmd_hdr =
     "IPMI Command Data:\n"
     "------------------";
-  char *ipmb_msg_hdr =
+  const char *ipmb_msg_hdr =
     "IPMB Message Header:\n"
     "--------------------";
-  char *ipmb_cmd_hdr =
+  const char *ipmb_cmd_hdr =
     "IPMB Message Data:\n"
     "------------------";
-  char *ipmb_msg_trlr_hdr =
+  const char *ipmb_msg_trlr_hdr =
     "IPMB Message Trailer:\n"
     "---------------------";
-  char *trailer_hdr =
+  const char *trailer_hdr =
     "IPMI Trailer:\n"
     "-------------";
-  char *session_trailer_hdr =
+  const char *session_trailer_hdr =
     "IPMI RMCPPLUS Session Trailer:\n"
     "------------------------------";
-  char *extra_hdr =
+  const char *extra_hdr =
     "Unexpected Data:\n"
     "----------------";
   unsigned int indx = 0;

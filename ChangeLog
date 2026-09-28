@@ -1,5 +1,14 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/debug/ipmi-debug.c, libfreeipmi/debug/ipmi-debug-common.c,
+	libfreeipmi/debug/ipmi-debug-inband.c,
+	libfreeipmi/debug/ipmi-debug-lan.c, libfreeipmi/debug/ipmi-debug-rmcp.c,
+	libfreeipmi/debug/ipmi-debug-rmcpplus.c: Declare the section title
+	strings pointing at literals as const char * so they compile
+	cleanly with -Wwrite-strings.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/debug/ipmi-debug.c (ipmi_dump_hex): Return directly
 	on error instead of jumping to a cleanup label that only returned
 	rv; the function has nothing to clean up.
