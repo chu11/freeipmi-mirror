@@ -29,8 +29,8 @@
  * appended ": " and terminating NUL
  */
 #define IPMI_DEBUG_MAX_PREFIX_LEN (FREEIPMI_MAXHOSTNAMELEN + 3)
-#define IPMI_DEBUG_MAX_HDR_LEN 1024
-#define IPMI_DEBUG_MAX_PKT_LEN 65536
+#define IPMI_DEBUG_MAX_BUF_LEN    65536
+#define IPMI_DEBUG_MAX_PKT_LEN    65536
 
 /* Portable version of the extremely unportable Linux dprintf() */
 int debug_dprintf (int fd, const char *fmt, ...);

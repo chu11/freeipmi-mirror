@@ -1,5 +1,16 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/debug/ipmi-debug-common.h: Define
+	IPMI_DEBUG_MAX_BUF_LEN alongside IPMI_DEBUG_MAX_PKT_LEN and drop
+	the unused IPMI_DEBUG_MAX_HDR_LEN.
+	* libfreeipmi/debug/ipmi-debug-common.c, libfreeipmi/debug/ipmi-debug.c:
+	Remove local duplicate definitions of IPMI_DEBUG_MAX_BUF_LEN and
+	IPMI_DEBUG_MAX_PKT_LEN and the unused IPMI_DEBUG_DEFAULT_FD.  Keep
+	IPMI_DEBUG_CHAR_PER_LINE only in ipmi-debug-common.c, where it is
+	used.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/debug/ipmi-debug-common.c (debug_dprintf): Clamp the
 	vsnprintf return to IPMI_DEBUG_MAX_BUF_LEN - 1 rather than
 	IPMI_DEBUG_MAX_BUF_LEN.  vsnprintf stores at most buflen - 1

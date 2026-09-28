@@ -42,10 +42,7 @@
 
 #include "freeipmi-portability.h"
 
-#define IPMI_DEBUG_MAX_BUF_LEN        65536
-#define IPMI_DEBUG_MAX_PKT_LEN        65536
-#define IPMI_DEBUG_CHAR_PER_LINE          8
-#define IPMI_DEBUG_DEFAULT_FD STDERR_FILENO
+#define IPMI_DEBUG_CHAR_PER_LINE 8
 
 static int
 _write (int fd, const void *buf, size_t n)
