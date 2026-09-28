@@ -1,5 +1,12 @@
 2026-09-27 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fiid/fiid.c (fiid_obj_create): Save and restore errno
+	around the cleanup frees.  hash_destroy (NULL) sets errno to
+	EINVAL, so an out of memory failure before the lookup hash was
+	created was reported to the caller as EINVAL.
+
+2026-09-27 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/fiid/fiid.c (fiid_obj_copy): Set the source object's
 	errnum when the alternate template is invalid or the destination
 	object cannot be created.  Both helpers report only through errno,

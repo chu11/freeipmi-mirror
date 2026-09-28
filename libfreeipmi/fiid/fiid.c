@@ -1029,10 +1029,16 @@ fiid_obj_create (fiid_template_t tmpl)
  cleanup:
   if (obj)
     {
+      /* hash_destroy (NULL) sets errno = EINVAL, which would clobber
+       * the ENOMEM/EINVAL we are reporting to the caller.
+       */
+      int save_errno = errno;
+
       free (obj->data);
       free (obj->field_data);
       hash_destroy (obj->lookup);
       free (obj);
+      errno = save_errno;
     }
 
   return (NULL);
