@@ -1,6 +1,18 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
 	* man/freeipmi_interpret_sel.conf.5.pre.in,
+	man/freeipmi_interpret_sensor.conf.5.pre.in: Correct documented
+	defaults to match the code: IPMI_Power_Supply_State_Deasserted is
+	Nominal and _Asserted is Warning (not Critical/Nominal), and
+	IPMI_Entity_Presence_Device_Present_Device_Removed_Device_Absent is
+	Critical (not Nominal).
+	* man/freeipmi_interpret_sel.conf.5.pre.in: The three
+	IPMI_Button_Switch_*_Button_Pressed events default to Nominal;
+	"Info" is not a valid state.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
+	* man/freeipmi_interpret_sel.conf.5.pre.in,
 	man/freeipmi_interpret_sensor.conf.5.pre.in: Spell the
 	IPMI_Version_Change_*_Incompatibility_Detected_With_Associated_Entity
 	options as the parser does; the documented "Incompatability"

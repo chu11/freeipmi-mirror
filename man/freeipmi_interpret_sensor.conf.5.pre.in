@@ -612,10 +612,10 @@ assertion or deassertion.
 Defaults to Nominal.
 .TP
 \fBIPMI_Power_Supply_State_Deasserted\fR
-Defaults to Critical.
+Defaults to Nominal.
 .TP
 \fBIPMI_Power_Supply_State_Asserted\fR
-Defaults to Nominal.
+Defaults to Warning.
 .RE
 .TP
 .B IPMI_Power_Supply_Redundancy
@@ -1727,7 +1727,7 @@ device installation.
 Defaults to Nominal.
 .TP
 \fBIPMI_Entity_Presence_Device_Present_Device_Removed_Device_Absent\fR
-Defaults to Nominal.
+Defaults to Critical.
 .TP
 \fBIPMI_Entity_Presence_Device_Present_Device_Inserted_Device_Present\fR
 Defaults to Nominal.

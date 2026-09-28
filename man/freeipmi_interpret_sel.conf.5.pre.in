@@ -531,10 +531,10 @@ assertion or deassertion.
 .RS
 .TP
 \fBIPMI_Power_Supply_State_Deasserted\fR
-Defaults to Critical.
+Defaults to Nominal.
 .TP
 \fBIPMI_Power_Supply_State_Asserted\fR
-Defaults to Nominal.
+Defaults to Warning.
 .RE
 .TP
 .B IPMI_Power_Supply_Transition_Severity
@@ -1069,13 +1069,13 @@ Button/Switch specific output events.
 .RS
 .TP
 \fBIPMI_Button_Switch_Power_Button_Pressed\fR
-Defaults to Info.
+Defaults to Nominal.
 .TP
 \fBIPMI_Button_Switch_Sleep_Button_Pressed\fR
-Defaults to Info.
+Defaults to Nominal.
 .TP
 \fBIPMI_Button_Switch_Reset_Button_Pressed\fR
-Defaults to Info.
+Defaults to Nominal.
 .TP
 \fBIPMI_Button_Switch_FRU_Latch_Open\fR
 Defaults to Warning.
@@ -1620,7 +1620,7 @@ device installation.
 .RS
 .TP
 \fBIPMI_Entity_Presence_Device_Present_Device_Removed_Device_Absent\fR
-Defaults to Nominal.
+Defaults to Critical.
 .TP
 \fBIPMI_Entity_Presence_Device_Present_Device_Inserted_Device_Present\fR
 Defaults to Nominal.
