@@ -1,5 +1,17 @@
 2026-09-27 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fiid/fiid.c (fiid_obj_destroy): Secure memset the
+	object data before freeing it if the template requested
+	FIID_FIELD_SECURE_MEMSET_ON_CLEAR.  Objects were commonly
+	destroyed without a preceding fiid_obj_clear, leaving e.g. the
+	LAN authentication code in freed memory.  This also covers the
+	duplicate held by a fiid iterator.
+	(fiid_obj_set): Secure memset the temporary copy of the object
+	data before freeing it under the same condition.
+	(fiid_obj_copy): Ditto for the staging buffer of the source data.
+
+2026-09-27 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/fiid/fiid.c (fiid_obj_create): Save and restore errno
 	around the cleanup frees.  hash_destroy (NULL) sets errno to
 	EINVAL, so an out of memory failure before the lookup hash was

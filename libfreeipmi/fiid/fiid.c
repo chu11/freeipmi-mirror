@@ -1052,6 +1052,8 @@ fiid_obj_destroy (fiid_obj_t obj)
 
   obj->magic = ~FIID_OBJ_MAGIC;
   obj->errnum = FIID_ERR_SUCCESS;
+  if (obj->secure_memset_on_clear)
+    secure_memset (obj->data, '\0', obj->data_len);
   free (obj->data);
   free (obj->field_data);
   hash_destroy (obj->lookup);
@@ -1174,12 +1176,17 @@ fiid_obj_copy (fiid_obj_t src_obj, fiid_template_t alt_tmpl)
       goto cleanup;
     }
 
+  if (src_obj->secure_memset_on_clear)
+    secure_memset (databuf, '\0', src_obj->data_len);
   free (databuf);
   return (dest_obj);
 
  cleanup:
   if (dest_obj)
     fiid_obj_destroy (dest_obj);
+  /* databuf is only allocated after src_obj has been validated */
+  if (databuf && src_obj->secure_memset_on_clear)
+    secure_memset (databuf, '\0', src_obj->data_len);
   free (databuf);
   return (NULL);
 }
@@ -1956,11 +1963,16 @@ fiid_obj_set (fiid_obj_t obj,
       obj->field_data[key_index].set_field_len = field_len;
     }
 
+  if (temp_data && obj->secure_memset_on_clear)
+    secure_memset (temp_data, '\0', obj->data_len);
   free (temp_data);
   obj->errnum = FIID_ERR_SUCCESS;
   return (0);
 
  cleanup:
+  /* temp_data is only allocated after obj has been validated */
+  if (temp_data && obj->secure_memset_on_clear)
+    secure_memset (temp_data, '\0', obj->data_len);
   free (temp_data);
   return (-1);
 }
