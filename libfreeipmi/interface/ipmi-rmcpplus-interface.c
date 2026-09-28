@@ -457,10 +457,11 @@ fill_rmcpplus_rakp_message_1 (uint8_t message_tag,
                               fiid_obj_t obj_cmd_rq)
 {
   if (!remote_console_random_number
-      || (remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
+      || (remote_console_random_number_len != IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
       || !IPMI_PRIVILEGE_LEVEL_VALID (requested_maximum_privilege_level)
       || !IPMI_USER_NAME_LOOKUP_VALID (name_only_lookup_flag)
       || (user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
+      || (!user_name && user_name_len)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);

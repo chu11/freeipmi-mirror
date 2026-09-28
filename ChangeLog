@@ -1,5 +1,14 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interface/ipmi-rmcpplus-interface.c
+	(fill_rmcpplus_rakp_message_1): Reject a NULL user_name with a
+	non-zero user_name_len, which advertised a name that was not in the
+	message.  Require remote_console_random_number_len to be exactly
+	IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH rather than silently
+	truncating a longer buffer.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interface/ipmi-lan-interface.c (assemble_ipmi_lan_pkt):
 	Set errno from the fiid object when FIID_OBJ_GET of
 	authentication_type fails; FIID_OBJ_GET only sets the object errnum,
