@@ -243,7 +243,7 @@ _set_kcs_errnum_by_fiid_object (ipmi_kcs_ctx_t ctx, fiid_obj_t obj)
 
   if (!fiid_obj_valid (obj))
     {
-      KCS_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
+      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_INTERNAL_ERROR);
       return;
     }
 

@@ -1,5 +1,15 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/driver/ipmi-kcs-driver.c
+	(_set_kcs_errnum_by_fiid_object): Set IPMI_KCS_ERR_INTERNAL_ERROR,
+	not the API-layer IPMI_ERR_INTERNAL_ERROR (34), which is outside the
+	KCS errnum range.
+	* libfreeipmi/driver/ipmi-ssif-driver.c
+	(_set_ssif_errnum_by_fiid_object): Ditto with
+	IPMI_SSIF_ERR_INTERNAL_ERROR.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/driver/ipmi-kcs-driver.c (_ipmi_kcs_cmd_read),
 	libfreeipmi/driver/ipmi-ssif-driver.c (_ipmi_ssif_cmd_read): Release
 	the driver mutex at cleanup.  When template lookup, header object

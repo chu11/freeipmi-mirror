@@ -186,7 +186,7 @@ _set_ssif_errnum_by_fiid_object (ipmi_ssif_ctx_t ctx, fiid_obj_t obj)
 
   if (!fiid_obj_valid (obj))
     {
-      SSIF_SET_ERRNUM (ctx, IPMI_ERR_INTERNAL_ERROR);
+      SSIF_SET_ERRNUM (ctx, IPMI_SSIF_ERR_INTERNAL_ERROR);
       return;
     }
 
