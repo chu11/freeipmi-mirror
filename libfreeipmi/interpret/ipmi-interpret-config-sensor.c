@@ -3200,7 +3200,7 @@ interpret_sensor_config_parse (ipmi_interpret_ctx_t ctx,
       if (conffile_errnum (cf) == CONFFILE_ERR_EXIST)
         {
           /* Its not an error if the default configuration file doesn't exist */
-          if (!config_file)
+          if (!sensor_config_file)
             {
               rv = 0;
               goto cleanup;

@@ -1,5 +1,15 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interpret/ipmi-interpret-config-sel.c
+	(interpret_sel_config_parse),
+	libfreeipmi/interpret/ipmi-interpret-config-sensor.c
+	(interpret_sensor_config_parse): Test the caller's file argument,
+	not the local config_file already set to the default path, when
+	deciding that a missing default configuration file is not an
+	error.  The old test could never be true.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interpret/ipmi-interpret.c (ipmi_interpret_sel):
 	Reject a NULL sel_record or zero sel_record_len with
 	IPMI_INTERPRET_ERR_PARAMETERS.  Previously these were passed to
