@@ -1,10 +1,4 @@
-
-#ifndef IPMI_LOCATE_DEFS_H
-#define IPMI_LOCATE_DEFS_H
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif /*
+/*
  * Copyright (C) 2003-2015 FreeIPMI Core Team
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,6 +15,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+#ifndef IPMI_LOCATE_DEFS_H
+#define IPMI_LOCATE_DEFS_H
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif /* HAVE_CONFIG_H */
 
 #include <stdint.h>
 
