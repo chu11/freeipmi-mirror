@@ -1201,6 +1201,11 @@ _ipmi_kcs_cmd_read (ipmi_kcs_ctx_t ctx,
 
   rv = 0;
  cleanup:
+  /* The mutex taken by _ipmi_kcs_cmd_write is normally released by
+   * ipmi_kcs_read; if we failed before getting that far it is still
+   * held.  No-op once ipmi_kcs_read has run.
+   */
+  _ipmi_kcs_unlock (ctx);
   fiid_template_free (tmpl);
   fiid_obj_destroy (obj_hdr);
   free (pkt);

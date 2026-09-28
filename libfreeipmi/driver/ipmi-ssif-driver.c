@@ -1046,6 +1046,11 @@ _ipmi_ssif_cmd_read (ipmi_ssif_ctx_t ctx,
 
   rv = 0;
  cleanup:
+  /* The mutex taken by _ipmi_ssif_cmd_write is normally released by
+   * ipmi_ssif_read; if we failed before getting that far it is still
+   * held.  No-op once ipmi_ssif_read has run.
+   */
+  _ipmi_ssif_unlock (ctx);
   fiid_template_free (tmpl);
   fiid_obj_destroy (obj_hdr);
   free (pkt);

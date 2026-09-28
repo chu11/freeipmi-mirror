@@ -1,5 +1,14 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/driver/ipmi-kcs-driver.c (_ipmi_kcs_cmd_read),
+	libfreeipmi/driver/ipmi-ssif-driver.c (_ipmi_ssif_cmd_read): Release
+	the driver mutex at cleanup.  When template lookup, header object
+	creation or the packet malloc failed, the function returned without
+	ever calling ipmi_kcs_read/ipmi_ssif_read, leaving the mutex taken
+	by the preceding write held.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/driver/ipmi-kcs-driver.c (struct ipmi_kcs_ctx): Add
 	lock_held.
 	(_ipmi_kcs_lock, _ipmi_kcs_unlock): New static helpers that acquire
