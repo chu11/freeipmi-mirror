@@ -1,5 +1,13 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interface/ipmi-lan-interface.c (assemble_ipmi_lan_pkt):
+	Check the return of _ipmi_lan_pkt_rq_min_size before the buffer
+	size comparison.  A -1 promoted to UINT_MAX in the unsigned compare,
+	so the failure was reported as EMSGSIZE rather than the errno the
+	helper set.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interface/ipmi-rmcpplus-interface.c
 	(assemble_ipmi_rmcpplus_pkt, unassemble_ipmi_rmcpplus_pkt): Reject
 	an unencrypted IPMI or SOL payload when the confidentiality

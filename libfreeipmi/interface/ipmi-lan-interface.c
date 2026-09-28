@@ -349,7 +349,12 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 
   /* no need for overflow checks, handled w/ _ipmi_lan_pkt_rq_min_size check */
 
-  required_len = _ipmi_lan_pkt_rq_min_size (authentication_type, obj_cmd);
+  if ((required_len = _ipmi_lan_pkt_rq_min_size (authentication_type, obj_cmd)) < 0)
+    {
+      ERRNO_TRACE (errno);
+      return (-1);
+    }
+
   if (pkt_len < required_len)
     {
       SET_ERRNO (EMSGSIZE);
