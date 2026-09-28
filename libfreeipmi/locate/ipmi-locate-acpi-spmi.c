@@ -53,9 +53,6 @@
 #define IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_IO     IPMI_ADDRESS_SPACE_ID_SYSTEM_IO
 #define IPMI_ACPI_ADDRESS_SPACE_ID_SMBUS         IPMI_ADDRESS_SPACE_ID_SMBUS
 
-/* Certain ACPI table field widths are architecture specific */
-#define IPMI_ACPI_MACHINE_WIDTH         (sizeof (void *) * 8)
-
 /* Constants used in searching for the RSDP (Root System Description
    Pointer) in low memory */
 #define IPMI_ACPI_LO_RSDP_WINDOW_BASE        0           /* Physical Address */
@@ -612,7 +609,9 @@ static int _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
                                       uint8_t interface_type,
                                       fiid_obj_t obj_acpi_spmi_table_descriptor);
 
-#define IPMI_INTERFACE_COUNT 5
+/* Maximum number of SPMI table instances to search for the requested
+   interface type */
+#define IPMI_ACPI_SPMI_TABLE_INSTANCES_MAX 5
 
 static uint64_t physical_memory_size = 0;
 
@@ -1583,7 +1582,7 @@ _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
   assert (fiid_obj_valid (obj_acpi_spmi_table_descriptor));
   assert (fiid_obj_template_compare (obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor) == 1);
 
-  for (instance = 0; instance < IPMI_INTERFACE_COUNT; instance++)
+  for (instance = 0; instance < IPMI_ACPI_SPMI_TABLE_INSTANCES_MAX; instance++)
     {
       if (_ipmi_acpi_get_firmware_table (ctx,
                                          IPMI_ACPI_SPMI_SIG,

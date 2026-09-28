@@ -1,5 +1,12 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c: Remove the unused
+	IPMI_ACPI_MACHINE_WIDTH macro.  Rename IPMI_INTERFACE_COUNT to
+	IPMI_ACPI_SPMI_TABLE_INSTANCES_MAX; it bounds the number of SPMI
+	table instances searched, not the number of interface types.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
 	(_ipmi_acpi_get_table_sysfs): Keep the lseek result in an off_t and
 	test it against (off_t)-1 before storing it in the uint32_t table
