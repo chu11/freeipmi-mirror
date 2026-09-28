@@ -1133,7 +1133,10 @@ fiid_obj_copy (fiid_obj_t src_obj, fiid_template_t alt_tmpl)
     }
 
   if ((data_len = _fiid_template_len_bytes (alt_tmpl, &field_data_len)) < 0)
-    goto cleanup;
+    {
+      src_obj->errnum = FIID_ERR_TEMPLATE_INVALID;
+      goto cleanup;
+    }
 
   if (src_obj->data_len != data_len)
     {
@@ -1142,7 +1145,13 @@ fiid_obj_copy (fiid_obj_t src_obj, fiid_template_t alt_tmpl)
     }
 
   if (!(dest_obj = fiid_obj_create (alt_tmpl)))
-    goto cleanup;
+    {
+      if (errno == ENOMEM)
+        src_obj->errnum = FIID_ERR_OUT_OF_MEMORY;
+      else
+        src_obj->errnum = FIID_ERR_TEMPLATE_INVALID;
+      goto cleanup;
+    }
 
   if (!(databuf = (uint8_t *)malloc (src_obj->data_len)))
     {

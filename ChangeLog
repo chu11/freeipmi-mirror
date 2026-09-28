@@ -1,3 +1,11 @@
+2026-09-27 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/fiid/fiid.c (fiid_obj_copy): Set the source object's
+	errnum when the alternate template is invalid or the destination
+	object cannot be created.  Both helpers report only through errno,
+	so callers using fiid_obj_errnum on the source object saw a stale
+	value, often FIID_ERR_SUCCESS.
+
 2026-09-25 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/fru/ipmi-fru-defs.h: Fix header guard comment left
