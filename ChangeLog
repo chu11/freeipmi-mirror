@@ -1,5 +1,11 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interpret/ipmi-interpret-defs.h
+	(IPMI_OEM_HASH_KEY_BUFLEN): Fix comment; a full uint32 manufacturer
+	id makes the key up to 24 characters plus NUL, not 22 bytes.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interpret/ipmi-interpret-config-sel.c
 	(_interpret_sel_oem_intel_nmi_state): Fix comment; the S5000PAL NMI
 	State sensor type is C0h, not F3h (that is the SMI Timeout sensor).

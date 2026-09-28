@@ -46,9 +46,10 @@
 #define IPMI_OEM_STATE_TYPE_BITMASK 0
 #define IPMI_OEM_STATE_TYPE_VALUE   1
 
-/* manufacturing_id:product_id:event_type_code:sensor_type
+/* manufacturer_id:product_id:event_reading_type_code:sensor_type
  *
- * Based on value limits, can't be more than 22 bytes
+ * Based on value limits (uint32:uint16:uint8:uint8 in decimal),
+ * can't be more than 24 characters plus the terminating NUL.
  */
 #define IPMI_OEM_HASH_KEY_BUFLEN                32
 
