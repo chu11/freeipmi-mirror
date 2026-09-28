@@ -1514,7 +1514,7 @@ _interpret_sel_oem_intel_nmi_state (ipmi_interpret_ctx_t ctx)
   return (0);
 }
 
-int
+static int
 _interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper (ipmi_interpret_ctx_t ctx,
                                                          uint32_t manufacturer_id,
                                                          uint16_t product_id)

@@ -1,6 +1,12 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interpret/ipmi-interpret-config-sel.c
+	(_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper): Declare
+	static like the other OEM wrappers.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/interpret/ipmi-interpret-config-sel.c
 	(_fill_sel_config_options, interpret_sel_config_parse),
 	libfreeipmi/interpret/ipmi-interpret-config-sensor.c
 	(_fill_sensor_config_options, interpret_sensor_config_parse):
