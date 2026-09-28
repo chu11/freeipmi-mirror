@@ -1,5 +1,11 @@
 2026-09-27 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/fiid/fiid.c (fiid_obj_clear_field, fiid_obj_get_data):
+	Set errnum to FIID_ERR_SUCCESS when returning 0 for a field with
+	no data set, as every other success path does.
+
+2026-09-27 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/fiid/fiid.c (fiid_obj_destroy): Secure memset the
 	object data before freeing it if the template requested
 	FIID_FIELD_SECURE_MEMSET_ON_CLEAR.  Objects were commonly

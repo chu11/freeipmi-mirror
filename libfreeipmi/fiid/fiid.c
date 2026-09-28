@@ -1729,7 +1729,10 @@ fiid_obj_clear_field (fiid_obj_t obj, const char *field)
     return (-1);
 
   if (!obj->field_data[key_index].set_field_len)
-    return (0);
+    {
+      obj->errnum = FIID_ERR_SUCCESS;
+      return (0);
+    }
 
   if ((bits_len = _fiid_obj_field_len (obj, field)) < 0)
     return (-1);
@@ -2221,7 +2224,10 @@ fiid_obj_get_data (fiid_obj_t obj,
     return (-1);
 
   if (!obj->field_data[key_index].set_field_len)
-    return (0);
+    {
+      obj->errnum = FIID_ERR_SUCCESS;
+      return (0);
+    }
 
   /* achu: We assume the field must start on a byte boundary and end
    * on a byte boundary.
