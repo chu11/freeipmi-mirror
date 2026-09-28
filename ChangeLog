@@ -1,5 +1,17 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi_interpret_sensor.conf.5.pre.in: The
+	IPMI_Session_Audit section listed the Version Change options.
+	Document the five IPMI_Session_Audit_* options under it and add the
+	missing IPMI_Version_Change section header for the Version Change
+	options.
+	* man/freeipmi_interpret_sel.conf.5.pre.in: Rename the
+	"IPMI_Version_Change_Transition_Severity" section header to
+	IPMI_Version_Change and fix the "IIPMI_Session_Audit_Invalid_Username_Or_Password"
+	typo.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi_interpret_sel.conf.5.pre.in,
 	man/freeipmi_interpret_sensor.conf.5.pre.in: Correct documented
 	defaults to match the code: IPMI_Power_Supply_State_Deasserted is
