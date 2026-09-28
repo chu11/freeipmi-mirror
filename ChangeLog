@@ -1,5 +1,21 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/driver/ipmi-kcs-driver.c (struct ipmi_kcs_ctx): Add
+	lock_held.
+	(_ipmi_kcs_lock, _ipmi_kcs_unlock): New static helpers that acquire
+	the driver mutex only when not already held and release it only when
+	held.
+	(ipmi_kcs_ctx_create, ipmi_kcs_ctx_destroy, ipmi_kcs_write,
+	ipmi_kcs_read): Use them.  ipmi_kcs_read previously released the
+	mutex unconditionally, so a read retried after a failure (or a read
+	without a preceding write) did an extra semop(+1) and left the
+	cross-process mutex admitting two owners.
+	* libfreeipmi/driver/ipmi-ssif-driver.c (struct ipmi_ssif_ctx,
+	_ipmi_ssif_lock, _ipmi_ssif_unlock, ipmi_ssif_ctx_create,
+	ipmi_ssif_ctx_destroy, ipmi_ssif_write, ipmi_ssif_read): Ditto.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c: Remove the unused
 	IPMI_ACPI_MACHINE_WIDTH macro.  Rename IPMI_INTERFACE_COUNT to
 	IPMI_ACPI_SPMI_TABLE_INSTANCES_MAX; it bounds the number of SPMI

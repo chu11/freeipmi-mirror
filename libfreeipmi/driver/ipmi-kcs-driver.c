@@ -204,6 +204,7 @@ struct ipmi_kcs_ctx {
 #endif /* __FreeBSD__ */
   int io_init;
   int semid;
+  int lock_held;
 };
 
 static void
@@ -281,6 +282,7 @@ ipmi_kcs_ctx_create (void)
 #endif
 #endif /* __FreeBSD__ */
   ctx->io_init = 0;
+  ctx->lock_held = 0;
 
   if ((ctx->semid = driver_mutex_init ()) < 0)
     {
@@ -303,6 +305,9 @@ ipmi_kcs_ctx_destroy (ipmi_kcs_ctx_t ctx)
 
   ctx->magic = ~IPMI_KCS_CTX_MAGIC;
   ctx->errnum = IPMI_KCS_ERR_SUCCESS;
+  /* ignore potential error, destroy path */
+  if (ctx->lock_held)
+    driver_mutex_unlock (ctx->semid);
 #ifdef __FreeBSD__
 #ifndef USE_IOPERM
   /* ignore potential error, destroy path */
@@ -801,6 +806,59 @@ _ipmi_kcs_clear_obf (ipmi_kcs_ctx_t ctx)
     _ipmi_kcs_read_byte (ctx);
 }
 
+/*
+ * The driver mutex is held from a successful ipmi_kcs_write through
+ * the following ipmi_kcs_read, so a request/response pair is atomic
+ * with respect to other in-band users.  ctx->lock_held records
+ * ownership so the lock is never released by a caller that does not
+ * hold it (semop(+1) on a mutex we do not own would let two owners in)
+ * and never re-acquired by one that already does (semop(-1) would
+ * self-deadlock).
+ */
+static int
+_ipmi_kcs_lock (ipmi_kcs_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_KCS_CTX_MAGIC);
+
+  if (ctx->lock_held)
+    return (0);
+
+  if (!(ctx->flags & IPMI_KCS_FLAGS_NONBLOCKING))
+    {
+      if (driver_mutex_lock (ctx->semid) < 0)
+        {
+          KCS_ERRNO_TO_KCS_ERRNUM (ctx, errno);
+          return (-1);
+        }
+    }
+  else
+    {
+      if (driver_mutex_lock_interruptible (ctx->semid) < 0)
+        {
+          KCS_ERRNO_TO_KCS_ERRNUM (ctx, errno);
+          return (-1);
+        }
+    }
+
+  ctx->lock_held = 1;
+  return (0);
+}
+
+static void
+_ipmi_kcs_unlock (ipmi_kcs_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_KCS_CTX_MAGIC);
+
+  if (!ctx->lock_held)
+    return;
+
+  /* ignore potential error, nothing more we can do */
+  driver_mutex_unlock (ctx->semid);
+  ctx->lock_held = 0;
+}
+
 int
 ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
                 const void *buf,
@@ -808,7 +866,6 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
 {
   const uint8_t *p = buf;
   unsigned int count = 0;
-  int lock_flag = 0;
 
   if (!ctx || ctx->magic != IPMI_KCS_CTX_MAGIC)
     {
@@ -828,23 +885,8 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
       return (-1);
     }
 
-  if (!(ctx->flags & IPMI_KCS_FLAGS_NONBLOCKING))
-    {
-      if (driver_mutex_lock (ctx->semid) < 0)
-        {
-          KCS_ERRNO_TO_KCS_ERRNUM (ctx, errno);
-          goto cleanup;
-        }
-    }
-  else
-    {
-      if (driver_mutex_lock_interruptible (ctx->semid) < 0)
-        {
-          KCS_ERRNO_TO_KCS_ERRNUM (ctx, errno);
-          goto cleanup;
-        }
-    }
-  lock_flag++;
+  if (_ipmi_kcs_lock (ctx) < 0)
+    return (-1);
 
   if (_ipmi_kcs_wait_for_ibf_clear (ctx) < 0)
     goto cleanup;
@@ -919,8 +961,7 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   return (count);
 
  cleanup:
-  if (lock_flag)
-    driver_mutex_unlock (ctx->semid);
+  _ipmi_kcs_unlock (ctx);
   return (-1);
 }
 
@@ -1008,7 +1049,7 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
   rv = count;
  cleanup:
   if (ctx && ctx->magic == IPMI_KCS_CTX_MAGIC)
-    driver_mutex_unlock (ctx->semid);
+    _ipmi_kcs_unlock (ctx);
   return (rv);
 }
 

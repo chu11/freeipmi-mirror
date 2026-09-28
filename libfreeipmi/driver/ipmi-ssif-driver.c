@@ -143,6 +143,7 @@ struct ipmi_ssif_ctx {
   int device_fd;
   int io_init;
   int semid;
+  int lock_held;
 };
 
 static void
@@ -499,6 +500,7 @@ ipmi_ssif_ctx_create (void)
   ctx->device_fd = -1;
   ctx->io_init = 0;
   ctx->semid = -1;
+  ctx->lock_held = 0;
 
   if (!(ctx->driver_device = strdup (IPMI_DEFAULT_I2C_DEVICE)))
     {
@@ -533,7 +535,9 @@ ipmi_ssif_ctx_destroy (ipmi_ssif_ctx_t ctx)
   ctx->magic = ~IPMI_SSIF_CTX_MAGIC;
   ctx->errnum = IPMI_SSIF_ERR_SUCCESS;
   free (ctx->driver_device);
-  /* ignore potential error, destroy path */
+  /* ignore potential errors, destroy path */
+  if (ctx->lock_held)
+    driver_mutex_unlock (ctx->semid);
   close (ctx->device_fd);
   free (ctx);
 }
@@ -746,12 +750,65 @@ ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx)
   return (-1);
 }
 
+/*
+ * The driver mutex is held from a successful ipmi_ssif_write through
+ * the following ipmi_ssif_read, so a request/response pair is atomic
+ * with respect to other in-band users.  ctx->lock_held records
+ * ownership so the lock is never released by a caller that does not
+ * hold it (semop(+1) on a mutex we do not own would let two owners in)
+ * and never re-acquired by one that already does (semop(-1) would
+ * self-deadlock).
+ */
+static int
+_ipmi_ssif_lock (ipmi_ssif_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SSIF_CTX_MAGIC);
+
+  if (ctx->lock_held)
+    return (0);
+
+  if (!(ctx->flags & IPMI_SSIF_FLAGS_NONBLOCKING))
+    {
+      if (driver_mutex_lock (ctx->semid) < 0)
+        {
+          SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
+          return (-1);
+        }
+    }
+  else
+    {
+      if (driver_mutex_lock_interruptible (ctx->semid) < 0)
+        {
+          SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
+          return (-1);
+        }
+    }
+
+  ctx->lock_held = 1;
+  return (0);
+}
+
+static void
+_ipmi_ssif_unlock (ipmi_ssif_ctx_t ctx)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_SSIF_CTX_MAGIC);
+
+  if (!ctx->lock_held)
+    return;
+
+  /* ignore potential error, nothing more we can do */
+  driver_mutex_unlock (ctx->semid);
+  ctx->lock_held = 0;
+}
+
 int
 ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
                  const void *buf,
                  unsigned int buf_len)
 {
-  int count, lock_flag = 0;
+  int count;
 
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
     {
@@ -771,23 +828,8 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
       return (-1);
     }
 
-  if (!(ctx->flags & IPMI_SSIF_FLAGS_NONBLOCKING))
-    {
-      if (driver_mutex_lock (ctx->semid) < 0)
-        {
-          SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
-          goto cleanup;
-        }
-    }
-  else
-    {
-      if (driver_mutex_lock_interruptible (ctx->semid) < 0)
-        {
-          SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
-          goto cleanup;
-        }
-    }
-  lock_flag++;
+  if (_ipmi_ssif_lock (ctx) < 0)
+    return (-1);
 
   if (buf_len <= IPMI_I2C_SMBUS_BLOCK_MAX)
     {
@@ -810,8 +852,7 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
   return (count);
 
  cleanup:
-  if (lock_flag)
-    driver_mutex_unlock (ctx->semid);
+  _ipmi_ssif_unlock (ctx);
   return (-1);
 }
 
@@ -853,7 +894,7 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
   ctx->errnum = IPMI_SSIF_ERR_SUCCESS;
  cleanup:
   if (ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC)
-    driver_mutex_unlock (ctx->semid);
+    _ipmi_ssif_unlock (ctx);
   return (rv);
 }
 
