@@ -1686,15 +1686,15 @@ Defaults to Nominal.
 \fBIPMI_Session_Audit_Session_Deactivated\fR
 Defaults to Nominal.
 .TP
-\fBIIPMI_Session_Audit_Invalid_Username_Or_Password\fR
+\fBIPMI_Session_Audit_Invalid_Username_Or_Password\fR
 Defaults to Warning.
 .TP
 \fBIPMI_Session_Audit_Invalid_Password_Disable\fR
 Defaults to Critical.
 .RE
 .TP
-.B IPMI_Version_Change_Transition_Severity
-The following states correspond to Version Change sensor events that
+.B IPMI_Version_Change
+The following states correspond to Version Change sensor events w/
 Version Change specific output events.
 .RS
 .TP

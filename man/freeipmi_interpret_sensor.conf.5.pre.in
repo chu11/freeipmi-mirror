@@ -1780,7 +1780,28 @@ Defaults to Nominal.
 .TP
 .B IPMI_Session_Audit
 The following states correspond to Session Audit sensors w/
-Session_Audit specific output states.
+Session Audit specific output states.
+.RS
+.TP
+\fBIPMI_Session_Audit_No_Event\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Session_Audit_Session_Activated\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Session_Audit_Session_Deactivated\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Session_Audit_Invalid_Username_Or_Password\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Session_Audit_Invalid_Password_Disable\fR
+Defaults to Critical.
+.RE
+.TP
+.B IPMI_Version_Change
+The following states correspond to Version Change sensors w/
+Version Change specific output states.
 .RS
 .TP
 \fBIPMI_Version_Change_No_Event\fR
