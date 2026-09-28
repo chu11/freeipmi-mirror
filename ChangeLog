@@ -1,5 +1,13 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/debug/ipmi-debug-common.h (IPMI_DEBUG_MAX_PREFIX_LEN):
+	Size the debug prefix buffer from FREEIPMI_MAXHOSTNAMELEN instead
+	of a fixed 32 bytes.  Callers pass the BMC hostname as the prefix,
+	and hostnames longer than 29 characters were silently truncated,
+	making multi-host debug output ambiguous.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/debug/ipmi-debug-rmcpplus.c
 	(_dump_rmcpplus_session_trlr): Return 0 when the computed integrity
 	pad is longer than the "integrity_pad" field.  fiid_obj_set_data

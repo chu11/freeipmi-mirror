@@ -23,7 +23,12 @@
 
 #include "libcommon/ipmi-trace.h"
 
-#define IPMI_DEBUG_MAX_PREFIX_LEN 32
+#include "freeipmi-portability.h"
+
+/* callers pass the BMC hostname as the prefix; leave room for the
+ * appended ": " and terminating NUL
+ */
+#define IPMI_DEBUG_MAX_PREFIX_LEN (FREEIPMI_MAXHOSTNAMELEN + 3)
 #define IPMI_DEBUG_MAX_HDR_LEN 1024
 #define IPMI_DEBUG_MAX_PKT_LEN 65536
 
