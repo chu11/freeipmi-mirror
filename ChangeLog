@@ -1,5 +1,12 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interpret/ipmi-interpret-config-sel.c
+	(_interpret_sel_oem_intel_node_manager_wrapper): Fix comment; the
+	Node Manager Operational Capabilities Change Event uses
+	event/reading type code 74h, not 73h.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interpret/ipmi-interpret-util.c,
 	libfreeipmi/interpret/ipmi-interpret-util.h
 	(interpret_set_interpret_errnum_by_errno): Rename the __errno

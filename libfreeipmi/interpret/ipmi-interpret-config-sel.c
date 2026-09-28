@@ -1195,7 +1195,7 @@ _interpret_sel_oem_intel_node_manager_wrapper (ipmi_interpret_ctx_t ctx,
 
   /* Intel Node Manager Operational Capabilities Change Event
    *
-   * Event/Reading Type Code = 73h (Node Manager Operational Capabilities Change Event)
+   * Event/Reading Type Code = 74h (Node Manager Operational Capabilities Change Event)
    * Sensor Type = DCh (Node Manager)
    */
 
