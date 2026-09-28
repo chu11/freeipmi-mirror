@@ -720,13 +720,13 @@ ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx)
   flags = fcntl(ctx->device_fd, F_GETFD);
   if (flags < 0)
     {
-      SSIF_SET_ERRNUM (ctx, errno);
+      SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
       goto cleanup;
     }
   flags |= FD_CLOEXEC;
   if (fcntl(ctx->device_fd, F_SETFD, flags) < 0)
     {
-      SSIF_SET_ERRNUM (ctx, errno);
+      SSIF_ERRNO_TO_SSIF_ERRNUM (ctx, errno);
       goto cleanup;
     }
 
