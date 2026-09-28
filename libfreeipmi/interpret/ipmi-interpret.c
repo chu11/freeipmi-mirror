@@ -627,7 +627,9 @@ ipmi_interpret_sel (ipmi_interpret_ctx_t ctx,
       return (-1);
     }
 
-  if (!sel_state)
+  if (!sel_record
+      || !sel_record_len
+      || !sel_state)
     {
       INTERPRET_SET_ERRNUM (ctx, IPMI_INTERPRET_ERR_PARAMETERS);
       return (-1);

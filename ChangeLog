@@ -1,5 +1,13 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interpret/ipmi-interpret.c (ipmi_interpret_sel):
+	Reject a NULL sel_record or zero sel_record_len with
+	IPMI_INTERPRET_ERR_PARAMETERS.  Previously these were passed to
+	the SEL parser, whose error was mapped to
+	IPMI_INTERPRET_ERR_INTERNAL_ERROR.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interpret/ipmi-interpret-config-common.c
 	(interpret_config_parse_strtoul): Range check the unsigned long
 	returned by strtoul before narrowing it to uint32_t, so values
