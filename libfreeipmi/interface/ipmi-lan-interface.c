@@ -333,7 +333,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
                     "authentication_type",
                     &val) < 0)
     {
-      ERRNO_TRACE (errno);
+      FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_session_hdr);
       return (-1);
     }
   authentication_type = val;

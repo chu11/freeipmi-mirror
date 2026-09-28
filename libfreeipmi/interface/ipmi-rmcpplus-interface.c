@@ -1403,7 +1403,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
         }
       if (FIID_OBJ_PACKET_VALID (obj_lan_msg_hdr) < 0)
         {
-          ERRNO_TRACE (errno);
+          FIID_OBJECT_ERROR_TO_ERRNO (obj_lan_msg_hdr);
           return (-1);
         }
     }

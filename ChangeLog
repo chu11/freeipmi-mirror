@@ -1,6 +1,16 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interface/ipmi-lan-interface.c (assemble_ipmi_lan_pkt):
+	Set errno from the fiid object when FIID_OBJ_GET of
+	authentication_type fails; FIID_OBJ_GET only sets the object errnum,
+	so ERRNO_TRACE (errno) reported a stale value.
+	* libfreeipmi/interface/ipmi-rmcpplus-interface.c
+	(assemble_ipmi_rmcpplus_pkt): Ditto for FIID_OBJ_PACKET_VALID of
+	obj_lan_msg_hdr, matching the obj_rmcp_hdr check above it.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/interface/ipmi-lan-interface.c (assemble_ipmi_lan_pkt):
 	Check the return of _ipmi_lan_pkt_rq_min_size before the buffer
 	size comparison.  A -1 promoted to UINT_MAX in the unsigned compare,
 	so the failure was reported as EMSGSIZE rather than the errno the
