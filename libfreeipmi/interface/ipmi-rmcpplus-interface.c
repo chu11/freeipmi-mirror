@@ -937,10 +937,10 @@ _construct_payload (uint8_t payload_type,
           && IPMI_AUTHENTICATION_ALGORITHM_SUPPORTED (authentication_algorithm)
           && IPMI_CONFIDENTIALITY_ALGORITHM_SUPPORTED (confidentiality_algorithm)
           && !(payload_type == IPMI_PAYLOAD_TYPE_IPMI
-               && !fiid_obj_valid (obj_lan_msg_hdr))
+               && !(fiid_obj_valid (obj_lan_msg_hdr)
+                    && fiid_obj_template_compare (obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1))
           && fiid_obj_valid (obj_cmd)
           && fiid_obj_valid (obj_rmcpplus_payload)
-          && fiid_obj_template_compare (obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
           && fiid_obj_template_compare (obj_rmcpplus_payload, tmpl_rmcpplus_payload) == 1);
 
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI

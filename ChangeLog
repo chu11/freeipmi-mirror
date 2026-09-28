@@ -1,6 +1,15 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interface/ipmi-rmcpplus-interface.c
+	(_construct_payload): Only assert the obj_lan_msg_hdr template for
+	IPMI payloads.  The header is documented and checked by
+	assemble_ipmi_rmcpplus_pkt as required only for that payload type,
+	but the unconditional assert aborted a --enable-debug build when a
+	caller passed NULL for SOL or RAKP payloads.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/interface/ipmi-rmcpplus-interface.c
 	(fill_rmcpplus_rakp_message_1): Reject a NULL user_name with a
 	non-zero user_name_len, which advertised a name that was not in the
 	message.  Require remote_console_random_number_len to be exactly
