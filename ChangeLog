@@ -1,5 +1,15 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interface/ipmi-rmcpplus-interface.c
+	(assemble_ipmi_rmcpplus_pkt, unassemble_ipmi_rmcpplus_pkt): Reject
+	an unencrypted IPMI or SOL payload when the confidentiality
+	algorithm is AES-CBC-128, mirroring the existing check for an
+	encrypted payload with algorithm none.  Previously only an assert
+	in the AES payload handlers caught this, and asserts are compiled
+	out of release builds.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/driver/ipmi-ssif-driver.c (ipmi_ssif_write): Return
 	buf_len on success, as the header documents and as ipmi_kcs_write
 	does, rather than the ioctl result (0).  Reject buf_len > INT_MAX

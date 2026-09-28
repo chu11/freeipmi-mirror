@@ -1380,7 +1380,10 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128
                || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128))
       || (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-          && payload_encrypted != IPMI_PAYLOAD_FLAG_UNENCRYPTED))
+          && payload_encrypted != IPMI_PAYLOAD_FLAG_UNENCRYPTED)
+      || (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
+          && !IPMI_PAYLOAD_TYPE_SESSION_SETUP (payload_type)
+          && payload_encrypted != IPMI_PAYLOAD_FLAG_ENCRYPTED))
     {
       SET_ERRNO (EINVAL);
       return (-1);
@@ -2400,6 +2403,9 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA256_128))
       || (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
           && payload_encrypted != IPMI_PAYLOAD_FLAG_UNENCRYPTED)
+      || (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
+          && !IPMI_PAYLOAD_TYPE_SESSION_SETUP (payload_type)
+          && payload_encrypted != IPMI_PAYLOAD_FLAG_ENCRYPTED)
       || !ipmi_payload_len)
     {
       /* cannot parse packet */
