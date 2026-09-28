@@ -38,10 +38,10 @@
     TRACE_MSG_OUT (ipmi_interpret_ctx_errormsg ((__ctx)), (__errnum));                      \
   } while (0)
 
-#define INTERPRET_ERRNO_TO_INTERPRET_ERRNUM(__ctx, __errno)                                 \
+#define INTERPRET_ERRNO_TO_INTERPRET_ERRNUM(__ctx, __errno_val)                             \
   do {                                                                                      \
-    interpret_set_interpret_errnum_by_errno ((__ctx), (__errno));                           \
-    TRACE_ERRNO_OUT ((__errno));                                                            \
+    interpret_set_interpret_errnum_by_errno ((__ctx), (__errno_val));                       \
+    TRACE_ERRNO_OUT ((__errno_val));                                                        \
   } while (0)
 
 #define INTERPRET_SEL_CTX_ERROR_TO_INTERPRET_ERRNUM(__ctx, __sel_ctx)                       \

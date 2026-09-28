@@ -36,14 +36,14 @@
 #include "freeipmi-portability.h"
 
 void
-interpret_set_interpret_errnum_by_errno (ipmi_interpret_ctx_t ctx, int __errno)
+interpret_set_interpret_errnum_by_errno (ipmi_interpret_ctx_t ctx, int errno_val)
 {
   if (!ctx || ctx->magic != IPMI_INTERPRET_CTX_MAGIC)
     return;
 
-  if (__errno == 0)
+  if (errno_val == 0)
     ctx->errnum = IPMI_INTERPRET_ERR_SUCCESS;
-  else if (__errno == ENOMEM)
+  else if (errno_val == ENOMEM)
     ctx->errnum = IPMI_INTERPRET_ERR_OUT_OF_MEMORY;
   else
     ctx->errnum = IPMI_INTERPRET_ERR_INTERNAL_ERROR;

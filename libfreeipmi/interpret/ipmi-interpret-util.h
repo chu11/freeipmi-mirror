@@ -35,7 +35,7 @@
 
 #include "ipmi-interpret-defs.h"
 
-void interpret_set_interpret_errnum_by_errno (ipmi_interpret_ctx_t ctx, int __errno);
+void interpret_set_interpret_errnum_by_errno (ipmi_interpret_ctx_t ctx, int errno_val);
 
 void interpret_set_interpret_errnum_by_sel_ctx (ipmi_interpret_ctx_t ctx, ipmi_sel_ctx_t sel_ctx);
 

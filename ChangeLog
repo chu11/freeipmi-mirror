@@ -1,5 +1,17 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interpret/ipmi-interpret-util.c,
+	libfreeipmi/interpret/ipmi-interpret-util.h
+	(interpret_set_interpret_errnum_by_errno): Rename the __errno
+	parameter to errno_val; identifiers beginning with a double
+	underscore are reserved and __errno is a libc symbol on some
+	platforms.
+	* libfreeipmi/interpret/ipmi-interpret-trace.h
+	(INTERPRET_ERRNO_TO_INTERPRET_ERRNUM): Likewise for the macro
+	parameter.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interpret/ipmi-interpret-config-sel.c
 	(_interpret_sel_oem_supermicro_discrete_cpu_temp_wrapper): Declare
 	static like the other OEM wrappers.
