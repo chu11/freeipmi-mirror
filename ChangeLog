@@ -1,5 +1,11 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/debug/ipmi-debug.c (ipmi_obj_dump): Cast the int
+	field length and its byte count to unsigned int for the %u
+	conversions, silencing -Wformat-signedness.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/debug/ipmi-debug.c, libfreeipmi/debug/ipmi-debug-common.c,
 	libfreeipmi/debug/ipmi-debug-inband.c,
 	libfreeipmi/debug/ipmi-debug-lan.c, libfreeipmi/debug/ipmi-debug-rmcp.c,
