@@ -808,8 +808,6 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
                  const void *buf,
                  unsigned int buf_len)
 {
-  int count;
-
   if (!ctx || ctx->magic != IPMI_SSIF_CTX_MAGIC)
     {
       ERR_TRACE (ipmi_ssif_ctx_errormsg (ctx), ipmi_ssif_ctx_errnum (ctx));
@@ -819,6 +817,12 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
   if (!buf || !buf_len)
     {
       SSIF_SET_ERRNUM (ctx, IPMI_SSIF_ERR_PARAMETERS);
+      return (-1);
+    }
+
+  if (buf_len > INT_MAX)
+    {
+      SSIF_SET_ERRNUM (ctx, IPMI_SSIF_ERR_OVERFLOW);
       return (-1);
     }
 
@@ -833,23 +837,23 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 
   if (buf_len <= IPMI_I2C_SMBUS_BLOCK_MAX)
     {
-      if ((count = _ipmi_ssif_single_part_write (ctx,
-                                                 ctx->device_fd,
-                                                 buf,
-                                                 buf_len)) < 0)
+      if (_ipmi_ssif_single_part_write (ctx,
+                                        ctx->device_fd,
+                                        buf,
+                                        buf_len) < 0)
         goto cleanup;
     }
   else
     {
-      if ((count = _ipmi_ssif_multi_part_write (ctx,
-                                                ctx->device_fd,
-                                                buf,
-                                                buf_len)) < 0)
+      if (_ipmi_ssif_multi_part_write (ctx,
+                                       ctx->device_fd,
+                                       buf,
+                                       buf_len) < 0)
         goto cleanup;
     }
 
   ctx->errnum = IPMI_SSIF_ERR_SUCCESS;
-  return (count);
+  return (buf_len);
 
  cleanup:
   _ipmi_ssif_unlock (ctx);
