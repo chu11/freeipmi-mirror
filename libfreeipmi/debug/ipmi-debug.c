@@ -299,7 +299,6 @@ ipmi_dump_hex (int fd,
                unsigned int buf_len)
 {
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
-  int rv = -1;
 
   if (!buf || !buf_len)
     {
@@ -324,29 +323,27 @@ ipmi_dump_hex (int fd,
       if (debug_dprintf (fd, "%s", prefix_buf) < 0)
         {
           ERRNO_TRACE (errno);
-          goto cleanup;
+          return (-1);
         }
     }
 
   if (debug_dprintf (fd, "[  HEX DUMP ..... ] = %s[%2uB]\n", "HEX", buf_len) < 0)
     {
       ERRNO_TRACE (errno);
-      goto cleanup;
+      return (-1);
     }
 
   if (debug_output_byte_array (fd, prefix_buf, buf, buf_len) < 0)
     {
       ERRNO_TRACE (errno);
-      goto cleanup;
+      return (-1);
     }
 
   if (debug_output_str (fd, prefix_buf, trlr) < 0)
     {
       ERRNO_TRACE (errno);
-      goto cleanup;
+      return (-1);
     }
 
-  rv = 0;
- cleanup:
-  return (rv);
+  return (0);
 }
