@@ -1,5 +1,13 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/driver/ipmi-kcs-driver.c (IPMI_KCS_STATE_ERROR): OR
+	the S0 and S1 bits rather than AND them; the AND evaluated to 0,
+	which is IPMI_KCS_STATE_IDLE.
+	(IPMI_KCS_STATUS_SUCCESS, IPMI_KCS_STATUS_OK): Expand to
+	IPMI_KCS_STATUS_NO_ERROR; IPMI_KCS_STATUS_NO_ERR was never defined.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/driver/ipmi-ssif-driver.c (ipmi_ssif_ctx_io_init): Map
 	fcntl errors through SSIF_ERRNO_TO_SSIF_ERRNUM instead of storing the
 	raw errno as the context errnum.
