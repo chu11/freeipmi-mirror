@@ -1,6 +1,13 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
+	(_ipmi_acpi_get_table_sysfs): Keep the lseek result in an off_t and
+	test it against (off_t)-1 before storing it in the uint32_t table
+	length, rather than comparing the unsigned length against -1.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
 	(_ipmi_acpi_get_table_sysfs): Remove assert (table_instance >= 0);
 	table_instance is unsigned, so the test is always true.
 

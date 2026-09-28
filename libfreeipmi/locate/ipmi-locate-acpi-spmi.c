@@ -1179,6 +1179,7 @@ _ipmi_acpi_get_table_sysfs (ipmi_locate_ctx_t ctx,
   char *sysfs_path;
   int instance_length;
   int sysfs_path_length;
+  off_t table_size;
   uint8_t *acpi_table_buf = NULL;
 
   assert (ctx);
@@ -1216,12 +1217,13 @@ _ipmi_acpi_get_table_sysfs (ipmi_locate_ctx_t ctx,
       if ((sysfs_acpi_fd = open (sysfs_path, O_RDONLY)) < 0)
 	  goto cleanup;
     }
-  if ((*acpi_table_length = lseek (sysfs_acpi_fd, 0, SEEK_END)) == -1)
+  if ((table_size = lseek (sysfs_acpi_fd, 0, SEEK_END)) == (off_t)-1)
     {
       LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
-  if ((lseek (sysfs_acpi_fd, 0, SEEK_SET)) == -1)
+  *acpi_table_length = table_size;
+  if ((lseek (sysfs_acpi_fd, 0, SEEK_SET)) == (off_t)-1)
     {
       LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_SYSTEM_ERROR);
       goto cleanup;
