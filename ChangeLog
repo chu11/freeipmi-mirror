@@ -1,6 +1,12 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/interpret/ipmi-interpret-config-sel.c
+	(_interpret_sel_oem_intel_nmi_state): Fix comment; the S5000PAL NMI
+	State sensor type is C0h, not F3h (that is the SMI Timeout sensor).
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/interpret/ipmi-interpret-config-sel.c
 	(_interpret_sel_oem_intel_node_manager_wrapper): Fix comment; the
 	Node Manager Operational Capabilities Change Event uses
 	event/reading type code 74h, not 73h.

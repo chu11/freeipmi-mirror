@@ -1467,7 +1467,7 @@ _interpret_sel_oem_intel_nmi_state (ipmi_interpret_ctx_t ctx)
    * Manufacturer ID = 343 (Intel)
    * Product ID = 40 (Intel S5000PAL)
    * Event/Reading Type Code = 3h (State Asserted/Deasserted)
-   * Sensor Type = F3h (OEM)
+   * Sensor Type = C0h (OEM)
    * EventData1 0x00 = "State Deasserted"
    * EventData1 0x01 = "State Asserted"
    */
