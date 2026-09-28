@@ -497,8 +497,8 @@ static unsigned int ipmi_interpret_sel_drive_slot_device_present_config_len = 2;
 
 static struct ipmi_interpret_sel_config ipmi_interpret_sel_post_memory_resize_state_config[] =
   {
-    { "IPMI_Post_Memory_Resize_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
-    { "IPMI_Post_Memory_Resize_State_Asserted", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
+    { "IPMI_POST_Memory_Resize_State_Deasserted", IPMI_INTERPRET_STATE_NOMINAL, IPMI_INTERPRET_STATE_NOMINAL},
+    { "IPMI_POST_Memory_Resize_State_Asserted", IPMI_INTERPRET_STATE_WARNING, IPMI_INTERPRET_STATE_WARNING},
   };
 static unsigned int ipmi_interpret_sel_post_memory_resize_state_config_len = 2;
 

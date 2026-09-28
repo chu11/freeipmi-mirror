@@ -1,5 +1,16 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interpret/ipmi-interpret-config-sel.c
+	(ipmi_interpret_sel_post_memory_resize_state_config),
+	libfreeipmi/interpret/ipmi-interpret-config-sensor.c
+	(ipmi_interpret_sensor_post_memory_resize_state_config): Spell the
+	option names IPMI_POST_Memory_Resize_State_* as the man pages and
+	etc/ files do and as other acronyms in option names are spelled.
+	Option matching is case insensitive, so existing configuration
+	files are unaffected.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi_interpret_sel.conf.5.pre.in: In the IPMI_OEM
 	section refer to IPMI_OEM_Sensor_System_Event_Record by its real
 	name rather than "IPMI_OEM_System_Event_Record", and fix the
