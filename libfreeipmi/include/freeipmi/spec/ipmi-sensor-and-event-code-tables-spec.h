@@ -511,6 +511,7 @@ extern unsigned int ipmi_generic_event_reading_type_code_acpi_power_state_short_
 #define IPMI_SENSOR_TYPE_SLOT_CONNECTOR_EVENT_DATA2_SATA_SAS                                                      0x0B
 #define IPMI_SENSOR_TYPE_SLOT_CONNECTOR_EVENT_DATA2_USB                                                           0x0C
 
+/* achu: spec says 0x0E "unknown", does not list 0x0D ... is typo? */
 #define IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE_S0_G0                             0x00
 #define IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE_S1                                0x01
 #define IPMI_SENSOR_TYPE_SYSTEM_ACPI_POWER_STATE_S2                                0x02
