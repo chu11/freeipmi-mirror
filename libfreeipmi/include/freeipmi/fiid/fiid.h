@@ -593,9 +593,9 @@ int fiid_obj_set_data (fiid_obj_t obj,
  * fiid_obj_get_data
  *
  * Get an array of data in the object for the specified field.
- * Returns length of data read on success, -1 on error.  The field
- * specified must begin on a byte boundary and have a data bit length
- * that is a multiple of 8.
+ * Returns length of data read on success, 0 if no data was available
+ * for the field, -1 on error.  The field specified must begin on a
+ * byte boundary and have a data bit length that is a multiple of 8.
  */
 int fiid_obj_get_data (fiid_obj_t obj,
                        const char *field,
