@@ -100,7 +100,7 @@ ipmi_dump_sdr_record (int fd,
     {
       if (ipmi_obj_dump (fd,
                          prefix,
-                         hdr,
+                         NULL,
                          trlr,
                          obj_sdr_record_header) < 0)
         {

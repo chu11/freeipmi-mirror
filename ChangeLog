@@ -1,3 +1,11 @@
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/debug/ipmi-debug-sdr.c (ipmi_dump_sdr_record): Do not
+	pass hdr to ipmi_obj_dump for records no longer than the SDR
+	header.  The header string was already output at the top of the
+	function, so truncated records were dumped with the banner
+	printed twice.
+
 2026-09-27 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/fiid/fiid.h (fiid_obj_get_data):
