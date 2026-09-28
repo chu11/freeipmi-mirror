@@ -1,5 +1,14 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/debug/ipmi-debug-rmcpplus.c
+	(_dump_rmcpplus_session_trlr): Return 0 when the computed integrity
+	pad is longer than the "integrity_pad" field.  fiid_obj_set_data
+	clamped the copy to the field size while indx advanced by the full
+	pad length, so the excess bytes appeared nowhere in the output.
+	The caller now dumps the whole trailer as unexpected data.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/debug/ipmi-debug-sdr.c (ipmi_dump_sdr_record): Do not
 	pass hdr to ipmi_obj_dump for records no longer than the SDR
 	header.  The header string was already output at the top of the

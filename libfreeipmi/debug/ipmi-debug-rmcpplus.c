@@ -1002,7 +1002,7 @@ _dump_rmcpplus_session_trlr (int fd,
                              const void *pkt,
                              unsigned int pkt_len)
 {
-  int pad_length_field_len, next_header_field_len, rv = -1;
+  int integrity_pad_field_len, pad_length_field_len, next_header_field_len, rv = -1;
   unsigned int pad_length, authentication_code_len = 0;
   fiid_obj_t obj_rmcpplus_session_trlr = NULL;
   unsigned int indx = 0;
@@ -1027,6 +1027,13 @@ _dump_rmcpplus_session_trlr (int fd,
     authentication_code_len = 0; /* just in case IPMI implementation is bogus */
 
   if (!(obj_rmcpplus_session_trlr = fiid_obj_create (tmpl_rmcpplus_session_trlr)))
+    {
+      ERRNO_TRACE (errno);
+      goto cleanup;
+    }
+
+  if ((integrity_pad_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr,
+                                                                "integrity_pad")) < 0)
     {
       ERRNO_TRACE (errno);
       goto cleanup;
@@ -1062,6 +1069,17 @@ _dump_rmcpplus_session_trlr (int fd,
     authentication_code_len = pkt_len - pad_length_field_len - next_header_field_len;
 
   pad_length = pkt_len - pad_length_field_len - next_header_field_len - authentication_code_len;
+
+  /* fiid_obj_set_data would silently truncate the copy to the field
+   * size while indx advanced by the full amount, hiding the excess
+   * bytes from the output.  Let the caller dump the whole trailer as
+   * unexpected data instead.
+   */
+  if (pad_length > integrity_pad_field_len)
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   if (pad_length)
     {
