@@ -1,5 +1,13 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/debug/ipmi-debug-common.c (debug_dprintf): Clamp the
+	vsnprintf return to IPMI_DEBUG_MAX_BUF_LEN - 1 rather than
+	IPMI_DEBUG_MAX_BUF_LEN.  vsnprintf stores at most buflen - 1
+	characters plus the NUL, so a truncated message would have written
+	the terminating NUL to the descriptor.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/debug/ipmi-debug-common.h (IPMI_DEBUG_MAX_PREFIX_LEN):
 	Size the debug prefix buffer from FREEIPMI_MAXHOSTNAMELEN instead
 	of a fixed 32 bytes.  Callers pass the BMC hostname as the prefix,

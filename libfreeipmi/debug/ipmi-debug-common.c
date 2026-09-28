@@ -83,11 +83,13 @@ debug_dprintf (int fd, const char *fmt, ...)
   len = vsnprintf (buf, IPMI_DEBUG_MAX_BUF_LEN, fmt, ap);
   /* vsnprintf() returns the length that *would* have been written; on
    * truncation this exceeds the buffer size, and it is negative on error.
-   * Clamp before handing the length to _write() so we never read past buf. */
+   * Clamp before handing the length to _write() so we never read past buf.
+   * At most IPMI_DEBUG_MAX_BUF_LEN - 1 characters are stored; the last
+   * byte is the terminating NUL, which must not be written out. */
   if (len < 0)
     len = 0;
-  else if (len > IPMI_DEBUG_MAX_BUF_LEN)
-    len = IPMI_DEBUG_MAX_BUF_LEN;
+  else if (len > IPMI_DEBUG_MAX_BUF_LEN - 1)
+    len = IPMI_DEBUG_MAX_BUF_LEN - 1;
   rv = _write (fd, buf, len);
   va_end (ap);
 
