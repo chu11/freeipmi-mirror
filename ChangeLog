@@ -1,5 +1,14 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interpret/ipmi-interpret-config-common.c
+	(interpret_config_parse_strtoul): Range check the unsigned long
+	returned by strtoul before narrowing it to uint32_t, so values
+	such as 0x100000005 are rejected rather than silently truncated,
+	and reject empty fields (endptr == str), which previously parsed
+	as 0.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/debug/ipmi-debug.c (ipmi_obj_dump): Cast the int
 	field length and its byte count to unsigned int for the %u
 	conversions, silencing -Wformat-signedness.

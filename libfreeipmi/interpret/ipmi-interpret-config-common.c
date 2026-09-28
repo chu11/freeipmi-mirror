@@ -84,6 +84,7 @@ interpret_config_parse_strtoul (conffile_t cf,
                                 uint32_t *value)
 {
   char *endptr = NULL;
+  unsigned long tmp;
 
   assert (cf);
   assert (str);
@@ -91,16 +92,18 @@ interpret_config_parse_strtoul (conffile_t cf,
 
   errno = 0;
 
-  (*value) = strtoul (str, &endptr, 0);
+  tmp = strtoul (str, &endptr, 0);
 
   if (errno
+      || endptr == str
       || endptr[0] != '\0'
-      || (*value) > max)
+      || tmp > max)
     {
       conffile_seterrnum (cf, CONFFILE_ERR_PARSE_ARG_INVALID);
       return (-1);
     }
 
+  (*value) = tmp;
   return (0);
 }
 
