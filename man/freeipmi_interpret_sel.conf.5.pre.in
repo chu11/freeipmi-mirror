@@ -1950,7 +1950,7 @@ The following configuration options can be used to configure OEM
 system event log events.  Interpretations rules for a specific
 combination of \fIManufacturer\-ID\fR, \fIProduct\-ID\fR, and
 \fIRecord-Type\fR, are iterated through and the worst resulting sensor
-state is returned (i.e. Warning < Nominal, Critical < Warning).  If no
+state is returned (i.e. Nominal < Warning < Critical).  If no
 match is found, no state is returned for the OEM event.
 
 For each of the configuration options below, \fI<Manufacturer\-ID>\fR
@@ -1967,7 +1967,7 @@ input separated by commas.
 .RS
 .TP
 \fBIPMI_OEM_Sensor_System_Event_Record\fR \fI<Manufacturer\-ID>\fR:\fI<Product\-ID>\fR,... \fIEvent\-Reading\-Type\-Code\fR \fISensor\-Type\fR \fIEvent\-Direction\fR \fIEventData1\fR \fIEventData2\fR \fIEventData3\fR \fIState\fR
-\fBIPMI_OEM_System_Event_Record\fR can be used to configure a state
+\fBIPMI_OEM_Sensor_System_Event_Record\fR can be used to configure a state
 interpretation for a specific \fIManufacturer\-ID\fR,
 \fIProduct\-ID\fR, \fIEvent\-Reading\-Type\-Code\fR, and
 \fISensor\-Type\fR combination, and a specific \fIEvent\-Direction\fR,
@@ -1993,7 +1993,7 @@ to match or the keyword \fIANY\fR to match anything.
 interpretation for a specific \fIManufacturer\-ID\fR, \fIProduct\-ID\fR,
 \fIRecord\-Type\fR, and OEM data combination.  The \fIRecord\-Type\fR
 must be a legal record type for OEM Non-Timestamped Records (currently
-0xEO-0xFF).  Each of the \fIOEMDATA\fR fields must specify a hex byte
+0xE0-0xFF).  Each of the \fIOEMDATA\fR fields must specify a hex byte
 to match or the keyword \fIANY\fR to match anything.
 .RE
 
