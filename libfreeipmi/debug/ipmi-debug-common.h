@@ -21,6 +21,8 @@
 
 #include <stdint.h>
 
+#include "freeipmi/fiid/fiid.h"
+
 #include "libcommon/ipmi-trace.h"
 
 #include "freeipmi-portability.h"
