@@ -1,5 +1,11 @@
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interface/ipmi-ipmb-interface.c: Remove unused
+	includes of alloca.h and secure.h; the file uses neither alloca
+	nor secure_memset.
+
+2026-09-28 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interface/ipmi-rmcpplus-interface.c
 	(_construct_payload): Only assert the obj_lan_msg_hdr template for
 	IPMI payloads.  The header is documented and checked by

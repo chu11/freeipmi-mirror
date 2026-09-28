@@ -25,9 +25,6 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#if HAVE_ALLOCA_H
-#include <alloca.h>
-#endif /* HAVE_ALLOCA_H */
 #include <assert.h>
 #include <errno.h>
 
@@ -45,7 +42,6 @@
 #include "libcommon/ipmi-trace.h"
 
 #include "freeipmi-portability.h"
-#include "secure.h"
 
 fiid_template_t tmpl_ipmb_msg_hdr_rq =
   {
