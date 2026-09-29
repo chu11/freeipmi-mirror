@@ -1,5 +1,12 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-dell.c
+	(ipmi_oem_dell_get_power_consumption_data): Fix the response layout
+	comment; the peak amp and peak watt readings are 2 bytes each
+	(bytes 18-19 and 24-25), as the code reads them, not 4.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-system-info-parameters-oem-dell-spec.h
 	(IPMI_OEM_DELL_SYSTEM_INFO_CMC_INFO_CMC_FIRMWARE_VERSION_STRING_LENGTH):
 	Correct to 20.  The CMC firmware version occupies bytes 21-40 of

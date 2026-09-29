@@ -5182,9 +5182,9 @@ ipmi_oem_dell_get_power_consumption_data (ipmi_oem_state_data_t *state_data)
    * bytes 6-9 - cumulative reading (in WH)
    * bytes 10-13 - peak start time
    * bytes 14-17 - peak amp time
-   * bytes 18-21 - peak amp reading
-   * bytes 22-25 - peak watt time
-   * bytes 26-29 - peak watt reading
+   * bytes 18-19 - peak amp reading
+   * bytes 20-23 - peak watt time
+   * bytes 24-25 - peak watt reading
    */
 
   bytes_rq[0] = IPMI_CMD_OEM_DELL_GET_POWER_CONSUMPTION_DATA;
