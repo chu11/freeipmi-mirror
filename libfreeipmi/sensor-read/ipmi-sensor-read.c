@@ -630,7 +630,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
    * Discovered on Fujitsu RX300S2
    *
    * On some motherboards, the sensor owner is invalid.  The sensor
-   * owner as actually the BMC.
+   * owner is actually the BMC.
    */
   if (ctx->flags & IPMI_SENSOR_READ_FLAGS_ASSUME_BMC_OWNER)
     {
@@ -649,7 +649,7 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
    * achu: according to ipmitool code, this should work on most
    * systems.  Although I don't remember why, it was done differently
    * in FreeIPMI.  Perhaps some random system(s) did not work with
-   * this technique in the current bridging technique was used instead.
+   * this technique so the current bridging technique was used instead.
    */
   else if (ctx->flags & IPMI_SENSOR_READ_FLAGS_ALTERNATE_BRIDGING)
     {

@@ -1,5 +1,11 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sensor-read/ipmi-sensor-read.c (ipmi_sensor_read): Fix
+	two typos in the assume-BMC-owner and alternate bridging workaround
+	comments.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sensor-read/ipmi-sensor-read-defs.h: Drop the unused
 	sys/param.h and list.h includes and the MAXPATHLEN fallback, carried
 	over from the sdr defs header.
