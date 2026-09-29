@@ -1,5 +1,10 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_close): Drop
+	the operation reset after sdr_init_ctx, which already performs it.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sdr/ipmi-sdr-cache-create.c (_sdr_cache_header_write,
 	_sdr_cache_trailer_write, _sdr_cache_record_write): Assert fd >= 0
 	rather than fd != 0; descriptor 0 is valid.  Drop the ipmi_ctx

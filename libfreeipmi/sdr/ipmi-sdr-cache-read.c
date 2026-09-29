@@ -991,7 +991,6 @@ ipmi_sdr_cache_close (ipmi_sdr_ctx_t ctx)
     munmap ((void *)ctx->sdr_cache, ctx->file_size);
   sdr_init_ctx (ctx);
 
-  ctx->operation = IPMI_SDR_OPERATION_UNINITIALIZED;
   ctx->errnum = IPMI_SDR_ERR_SUCCESS;
   return (0);
 }
