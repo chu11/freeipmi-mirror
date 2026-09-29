@@ -1,5 +1,14 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/api/ipmi-api.h (IPMI_FLAGS_NONBLOCKING,
+	ipmi_ctx_set_flags): Document which flags take effect when changed
+	on an open context.  NONBLOCKING is only read by ipmi_ctx_open_inband()
+	and NOSESSION cannot change after open, but ipmi_ctx_set_flags()
+	accepts both, so callers could reasonably expect a mid-session change
+	to do something.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_outofband,
 	ipmi_ctx_open_outofband_2_0, _ipmi_outofband_close,
 	_ipmi_outofband_2_0_close): Reset the out-of-band socket descriptor

@@ -188,7 +188,9 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 #define IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS                 0x00000001
 #define IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL                              0x00000002
 
-/* NONBLOCKING - for inband only, do no block if device busy.
+/* NONBLOCKING - for inband only, do no block if device busy.  Only
+ * applied when the device is opened; changing it later with
+ * ipmi_ctx_set_flags() has no effect on the already open driver.
  *
  * NOSESSION - for outofband only, do not create an IPMI session.
  * Useful for the few IPMI payloads that do not require a session for
@@ -248,7 +250,16 @@ char *ipmi_ctx_errormsg (ipmi_ctx_t ctx);
 
 int ipmi_ctx_get_flags (ipmi_ctx_t ctx, unsigned int *flags);
 
-/* for changing flags mid-operation for corner cases */
+/* for changing flags mid-operation for corner cases
+ *
+ * Only DEBUG_DUMP, NO_VALID_CHECK, NO_LEGAL_CHECK, and
+ * IGNORE_AUTHENTICATION_CODE take effect when changed on an open
+ * context.  NOSESSION cannot be changed after opening.  NONBLOCKING
+ * is only read when the device is opened, so setting or clearing it
+ * here is accepted but does nothing.  Flags that do not apply to the
+ * open interface (e.g. IGNORE_AUTHENTICATION_CODE on an inband
+ * device) are accepted but ignored.
+ */
 int ipmi_ctx_set_flags (ipmi_ctx_t ctx, unsigned int flags);
 
 /* For IPMI 1.5 sessions */
