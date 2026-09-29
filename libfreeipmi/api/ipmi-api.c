@@ -867,6 +867,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
        && driver_type != IPMI_DEVICE_OPENIPMI
        && driver_type != IPMI_DEVICE_SUNBMC
        && driver_type != IPMI_DEVICE_INTELDCMI)
+      || (driver_device && strlen (driver_device) >= IPMI_LOCATE_PATH_MAX)
       || (workaround_flags & ~workaround_flags_mask)
       || (flags & ~flags_mask))
     {
@@ -914,8 +915,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
           locate_info.interface_type = IPMI_INTERFACE_KCS;
           if (driver_device)
             {
-              strncpy (locate_info.driver_device, driver_device, IPMI_LOCATE_PATH_MAX);
-              locate_info.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+              strcpy (locate_info.driver_device, driver_device);
             }
           locate_info.address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
           locate_info.driver_address = driver_address;
@@ -932,10 +932,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
             }
           if (driver_device)
             {
-              strncpy (locate_info.driver_device,
-                       driver_device,
-                       IPMI_LOCATE_PATH_MAX);
-              locate_info.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+              strcpy (locate_info.driver_device, driver_device);
             }
           if (driver_address)
             locate_info.driver_address = driver_address;
@@ -1040,8 +1037,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
           locate_info.interface_type = IPMI_INTERFACE_SSIF;
           if (driver_device)
             {
-              strncpy (locate_info.driver_device, driver_device, IPMI_LOCATE_PATH_MAX);
-              locate_info.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+              strcpy (locate_info.driver_device, driver_device);
             }
           locate_info.address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
           locate_info.driver_address = driver_address;
@@ -1058,10 +1054,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
             }
           if (driver_device)
             {
-              strncpy (locate_info.driver_device,
-                       driver_device,
-                       IPMI_LOCATE_PATH_MAX);
-              locate_info.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
+              strcpy (locate_info.driver_device, driver_device);
             }
           if (driver_address)
             locate_info.driver_address = driver_address;

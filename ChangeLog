@@ -1,5 +1,15 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_inband): Return
+	IPMI_ERR_PARAMETERS if driver_device does not fit in
+	IPMI_LOCATE_PATH_MAX instead of truncating it.  The KCS and SSIF
+	paths strncpy'd the path into locate_info and opened whatever was
+	left, while the OpenIPMI, SunBMC, and Intel DCMI paths passed it
+	through untruncated, so the same too-long path behaved differently
+	per driver.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_inband): Also reset
 	inteldcmi_ctx to NULL alongside the other four driver context
 	pointers.
