@@ -759,7 +759,7 @@ _sdr_cache_record_write (ipmi_sdr_ctx_t ctx,
   if (n != buflen)
     {
       /* Try to lseek back to our original spot */
-      lseek (fd, SEEK_SET, *total_bytes_written);
+      lseek (fd, *total_bytes_written, SEEK_SET);
       SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_SYSTEM_ERROR);
       return (-1);
     }

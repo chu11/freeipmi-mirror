@@ -1,5 +1,11 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sdr/ipmi-sdr-cache-create.c (_sdr_cache_record_write):
+	Pass the offset and whence arguments to lseek in the right order
+	when seeking back after a short write.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sdr/ipmi-sdr-oem-intel-node-manager.c
 	(ipmi_sdr_oem_parse_intel_node_manager): Return 0 unless the record
 	type is IPMI_SDR_FORMAT_OEM_RECORD.  The subtype/version bytes
