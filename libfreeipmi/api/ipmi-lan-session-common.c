@@ -447,10 +447,8 @@ _ipmi_check_session_sequence_number (ipmi_ctx_t ctx,
                                                         &(ctx->io.outofband.previously_received_list),
                                                         0)) < 0)
         {
-          {
-            API_ERRNO_TO_API_ERRNUM (ctx, errno);
-            goto cleanup;
-          }
+          API_ERRNO_TO_API_ERRNUM (ctx, errno);
+          goto cleanup;
         }
     }
   else
@@ -460,10 +458,8 @@ _ipmi_check_session_sequence_number (ipmi_ctx_t ctx,
                                                         &(ctx->io.outofband.previously_received_list),
                                                         0)) < 0)
         {
-          {
-            API_ERRNO_TO_API_ERRNUM (ctx, errno);
-            goto cleanup;
-          }
+          API_ERRNO_TO_API_ERRNUM (ctx, errno);
+          goto cleanup;
         }
     }
 

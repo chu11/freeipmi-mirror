@@ -1,5 +1,11 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-lan-session-common.c
+	(_ipmi_check_session_sequence_number): Remove a redundant nested
+	block around the two error paths.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-lan-session-common.c (api_lan_cmd_wrapper): Fix
 	"descriptrs" typo in the Get Session Challenge workaround comment.
 
