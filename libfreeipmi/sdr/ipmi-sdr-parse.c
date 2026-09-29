@@ -3474,7 +3474,10 @@ ipmi_sdr_parse_generic_device_locator_parameters (ipmi_sdr_ctx_t ctx,
           SDR_FIID_OBJECT_ERROR_TO_SDR_ERRNUM (ctx, obj_sdr_record);
           goto cleanup;
         }
-      *channel_number = ((uint8_t)val1 << 3) | (uint8_t)val2;
+      /* channel_number_ms is the single high bit, channel_number_ls
+       * the low three bits
+       */
+      *channel_number = ((uint8_t)val2 << 3) | (uint8_t)val1;
     }
   if (device_slave_address)
     {

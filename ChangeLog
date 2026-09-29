@@ -1,5 +1,12 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sdr/ipmi-sdr-parse.c
+	(ipmi_sdr_parse_generic_device_locator_parameters): Assemble the
+	channel number as (ms bit << 3) | ls bits; the two pieces were
+	swapped, so only channel 0 decoded correctly.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sdr/ipmi-sdr-parse-util.c (_get_shared_sensor_name):
 	Build alpha instance-modifier suffixes from the ID string instance
 	modifier offset rather than the modifier type field, which is
