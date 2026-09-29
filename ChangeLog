@@ -1,5 +1,15 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h
+	(ipmi_sdr_parse_hysteresis, ipmi_sdr_parse_sensor_record_sharing):
+	Document the record types actually accepted: hysteresis also takes
+	Compact records, record sharing also takes Event-Only records.
+	* libfreeipmi/sdr/ipmi-sdr-cache-create.c (ipmi_sdr_cache_create):
+	Drop a stray "Version cannot be 0h" comment above the parameter
+	check; the sentence is repeated where the version is stored.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sdr/ipmi-sdr-cache-create.c (_sdr_cache_get_record):
 	Treat a successful Get SDR response carrying zero record bytes as
 	IPMI_SDR_ERR_IPMI_ERROR; the partial-read loop would otherwise

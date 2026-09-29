@@ -809,7 +809,6 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
       return (-1);
     }
 
-  /* Version cannot be 0h according to the IPMI spec */
   if (!ipmi_ctx
       || !filename
       || (strlen (filename) > MAXPATHLEN)
