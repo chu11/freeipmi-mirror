@@ -1219,6 +1219,10 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
   ctx->target.channel_number_is_set = 0;
   ctx->target.rs_addr_is_set = 0;
 
+  /* Tracking request: the BMC routes the response back to us over the
+   * session as a normal packet, unlike the in-band KCS/SSIF path which
+   * uses no tracking and polls Get Message for it.
+   */
   ret = ipmi_cmd_send_message (ctx,
                                target_save.channel_number,
                                IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,

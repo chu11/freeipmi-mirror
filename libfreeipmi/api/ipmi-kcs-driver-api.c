@@ -468,6 +468,11 @@ _api_kcs_ipmb_send (ipmi_ctx_t ctx,
   ctx->target.channel_number_is_set = 0;
   ctx->target.rs_addr_is_set = 0;
 
+  /* No tracking: the response is retrieved by polling Get Message
+   * from the receive message queue, unlike the LAN path which asks
+   * the BMC to track the request and route the response back over
+   * the session.
+   */
   ret = ipmi_cmd_send_message (ctx,
                                target_save.channel_number,
                                IPMI_SEND_MESSAGE_AUTHENTICATION_NOT_REQUIRED,

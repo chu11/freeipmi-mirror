@@ -1,5 +1,14 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-lan-session-common.c (_ipmi_cmd_send_ipmb),
+	libfreeipmi/api/ipmi-kcs-driver-api.c (_api_kcs_ipmb_send),
+	libfreeipmi/api/ipmi-ssif-driver-api.c (_api_ssif_ipmb_send): Comment
+	why the LAN path sends bridged requests with tracking and the
+	in-band paths without; the two copies of the code differ only in
+	that argument and it looked like a copy-paste slip.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-lan-session-common.c (api_lan_cmd_wrapper_ipmb,
 	api_lan_2_0_cmd_wrapper_ipmb),
 	libfreeipmi/api/ipmi-kcs-driver-api.c (api_kcs_cmd_ipmb),
