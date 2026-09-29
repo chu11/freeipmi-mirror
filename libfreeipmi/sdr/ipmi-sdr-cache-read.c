@@ -899,6 +899,7 @@ ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
       uint8_t sdr_record[IPMI_SDR_MAX_RECORD_LENGTH];
       int sdr_record_len;
       uint8_t record_type;
+      int saved_callback_lock;
       int next_ret;
       int ret;
 
@@ -914,13 +915,17 @@ ipmi_sdr_cache_iterate (ipmi_sdr_ctx_t ctx,
 
       record_type = sdr_record[IPMI_SDR_RECORD_TYPE_INDEX];
 
+      /* Iteration may nest (e.g. ipmi_sdr_stats_compile from within a
+       * callback), so restore rather than clear the lock.
+       */
+      saved_callback_lock = ctx->callback_lock;
       ctx->callback_lock = 1;
       ret = iterate_callback (ctx,
                               record_type,
                               sdr_record,
                               (unsigned int)sdr_record_len,
                               iterate_callback_data);
-      ctx->callback_lock = 0;
+      ctx->callback_lock = saved_callback_lock;
 
       if (ret < 0)
         {

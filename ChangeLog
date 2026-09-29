@@ -1,5 +1,12 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_iterate):
+	Save and restore ctx->callback_lock around the callback instead of
+	clearing it, so a nested iteration (ipmi_sdr_stats_compile from
+	within a callback) does not unlock the outer one.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_seek): Return
 	IPMI_SDR_ERR_NOT_FOUND when the records end before the requested
 	index instead of silently positioning at end-of-records, and
