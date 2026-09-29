@@ -1,5 +1,12 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_inband): Drop the "No
+	workaround flags currently supported" comment; the check below it
+	accepts IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS and
+	IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-lan-session-common.c (_ipmi_cmd_send_ipmb),
 	libfreeipmi/api/ipmi-kcs-driver-api.c (_api_kcs_ipmb_send),
 	libfreeipmi/api/ipmi-ssif-driver-api.c (_api_ssif_ipmb_send): Comment

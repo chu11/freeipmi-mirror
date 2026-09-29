@@ -859,7 +859,6 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
       return (-1);
     }
 
-  /* No workaround flags currently supported */
   if ((driver_type != IPMI_DEVICE_KCS
        && driver_type != IPMI_DEVICE_SMIC
        && driver_type != IPMI_DEVICE_BT
