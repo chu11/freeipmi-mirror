@@ -1,5 +1,10 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-lan-session-common.c (api_lan_cmd_wrapper): Fix
+	"descriptrs" typo in the Get Session Challenge workaround comment.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-api.c (_is_ctx_fatal_error,
 	_is_locate_ctx_fatal_error): Fix "outfoband" typo in comments.
 

@@ -1024,7 +1024,7 @@ api_lan_cmd_wrapper (ipmi_ctx_t ctx,
            *
            * In the event we need to resend this packet multiple times, we
            * do not want the chance that old ports will be used again.  We
-           * store the old file descriptrs (which are bound to the old
+           * store the old file descriptors (which are bound to the old
            * ports) on a list, and close all of them after we have gotten
            * past the Get Session Challenge phase of the protocol.
            */
