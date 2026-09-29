@@ -1,5 +1,11 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_open): Test
+	the mmap result against MAP_FAILED and reset ctx->sdr_cache to NULL
+	on failure so the cleanup path does not munmap (void *)-1.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sdr/ipmi-sdr-cache-create.c (_sdr_cache_record_write):
 	Pass the offset and whence arguments to lseek in the right order
 	when seeking back after a short write.

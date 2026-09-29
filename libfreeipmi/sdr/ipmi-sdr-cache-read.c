@@ -135,10 +135,11 @@ ipmi_sdr_cache_open (ipmi_sdr_ctx_t ctx,
                                     MAP_PRIVATE,
                                     ctx->fd,
                                     0);
-  if (!ctx->sdr_cache || ctx->sdr_cache == ((void *) -1))
+  if (ctx->sdr_cache == MAP_FAILED)
     {
       ERRNO_TRACE (errno);
       SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_SYSTEM_ERROR);
+      ctx->sdr_cache = NULL;
       goto cleanup;
     }
 
