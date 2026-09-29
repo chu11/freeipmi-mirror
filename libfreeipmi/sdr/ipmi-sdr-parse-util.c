@@ -96,6 +96,8 @@ _get_shared_sensor_name (ipmi_sdr_ctx_t ctx,
 
       if (id_string_instance_modifier_type == IPMI_SDR_ID_STRING_INSTANCE_MODIFIER_TYPE_ALPHA)
         {
+          unsigned int alpha_offset = id_string_instance_modifier_offset + sensor_number_offset;
+
           /* IPMI spec example is:
            *
            * "If the modifier = alpha, offset=0
@@ -104,28 +106,28 @@ _get_shared_sensor_name (ipmi_sdr_ctx_t ctx,
            * offset=26 the sensors could be identified as:
            * Temp AA, Temp AB, Temp AC."
            *
-           * achu note: id_string_instance_modifier_type
-           * is a 7 bit field, so we cannot reach a
-           * situation of 'AAA' or 'AAB'.  The max is
-           * 'EX':
+           * achu note: id_string_instance_modifier_offset
+           * is a 7 bit field and share_count a 4 bit field,
+           * so alpha_offset is at most 127 + 14 = 141 and
+           * two characters always suffice.  The max is 'EL':
            *
-           * 'A' + (127/26) = 4 => 'E'
-           * 'A' + (127 % 26) = 23 => 'X'
+           * 'A' + (141/26) - 1 = 4 => 'E'
+           * 'A' + (141 % 26) = 11 => 'L'
            */
 
-          if ((id_string_instance_modifier_type + sensor_number_offset) < IPMI_SDR_CHARS_IN_ALPHABET)
+          if (alpha_offset < IPMI_SDR_CHARS_IN_ALPHABET)
             snprintf (buf,
                       buflen,
                       "%s %c",
                       id_string,
-                      'A' + ((id_string_instance_modifier_type + sensor_number_offset)/IPMI_SDR_CHARS_IN_ALPHABET));
+                      'A' + alpha_offset);
           else
             snprintf (buf,
                       buflen,
                       "%s %c%c",
                       id_string,
-                      'A' + ((id_string_instance_modifier_type + sensor_number_offset)/IPMI_SDR_CHARS_IN_ALPHABET),
-                      'A' + (id_string_instance_modifier_type % IPMI_SDR_CHARS_IN_ALPHABET));
+                      'A' + (alpha_offset / IPMI_SDR_CHARS_IN_ALPHABET) - 1,
+                      'A' + (alpha_offset % IPMI_SDR_CHARS_IN_ALPHABET));
         }
       else
         {

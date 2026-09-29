@@ -1,5 +1,14 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sdr/ipmi-sdr-parse-util.c (_get_shared_sensor_name):
+	Build alpha instance-modifier suffixes from the ID string instance
+	modifier offset rather than the modifier type field, which is
+	always 1 in that branch, so every shared sensor received the same
+	letter.  Also fix the two-letter case so offset 26 yields "AA" per
+	the spec rather than "BB".
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-lan-session-common.c
 	(_ipmi_check_session_sequence_number): Remove a redundant nested
 	block around the two error paths.
