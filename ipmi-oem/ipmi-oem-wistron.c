@@ -1699,7 +1699,7 @@ ipmi_oem_wistron_get_ipv6_trap_settings (ipmi_oem_state_data_t *state_data)
 
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
                                                      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
-                                                     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING,
+                                                     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_NUMBER_OF_IPV6_SNMP_TRAP_DESTINATION,
                                                      0,
                                                      1,
                                                      &tmpvalue) < 0)
@@ -1834,7 +1834,7 @@ ipmi_oem_wistron_set_ipv6_trap_settings (ipmi_oem_state_data_t *state_data)
 
   if (ipmi_oem_thirdparty_get_extended_config_value (state_data,
                                                      IPMI_OEM_WISTRON_EXTENDED_CONFIGURATION_ID_IPV6_TRAP_SETTING,
-                                                     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_IPV6_SNMP_TRAP_DESTINATION_SETTING,
+                                                     IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_NUMBER_OF_IPV6_SNMP_TRAP_DESTINATION,
                                                      0,
                                                      1,
                                                      &tmpvalue) < 0)
