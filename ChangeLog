@@ -1,5 +1,11 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_inband): Also reset
+	inteldcmi_ctx to NULL alongside the other four driver context
+	pointers.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-api.c (_setup_hostname): Return
 	IPMI_ERR_HOSTNAME_INVALID, not IPMI_ERR_PARAMETERS, when
 	host_is_valid() rejects the hostname or port.  A hostname longer than

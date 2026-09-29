@@ -887,6 +887,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
   ctx->io.inband.ssif_ctx = NULL;
   ctx->io.inband.openipmi_ctx = NULL;
   ctx->io.inband.sunbmc_ctx = NULL;
+  ctx->io.inband.inteldcmi_ctx = NULL;
 
   /* Random number generation */
   seedp = (unsigned int) clock () + (unsigned int) time (NULL);
