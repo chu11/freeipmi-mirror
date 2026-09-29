@@ -24,16 +24,9 @@
 #endif /* HAVE_CONFIG_H */
 
 #include <stdint.h>
-#include <sys/param.h>
 
 #include "freeipmi/sdr/ipmi-sdr.h"
 #include "freeipmi/sensor-read/ipmi-sensor-read.h"
-
-#include "list.h"
-
-#ifndef MAXPATHLEN
-#define MAXPATHLEN 4096
-#endif /* MAXPATHLEN */
 
 #define IPMI_SENSOR_READ_CTX_MAGIC 0xABCD1246
 

@@ -1,5 +1,13 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sensor-read/ipmi-sensor-read-defs.h: Drop the unused
+	sys/param.h and list.h includes and the MAXPATHLEN fallback, carried
+	over from the sdr defs header.
+	* libfreeipmi/sensor-read/ipmi-sensor-read.c: Drop the unused
+	unistd.h include.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sensor-read/ipmi-sensor-read.c (ipmi_sensor_read): Drop
 	the save/restore of ctx->errnum around the cleanup ipmi_ctx_set_flags
 	call; that function only touches the ipmi_ctx's errnum, so the
