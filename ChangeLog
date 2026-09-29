@@ -1,3 +1,13 @@
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
+	* ipmi-oem/ipmi-oem-wistron.c (ipmi_oem_wistron_get_ipv6_trap_settings,
+	ipmi_oem_wistron_set_ipv6_trap_settings): Read the number of IPv6
+	SNMP trap destinations from the NUMBER_OF_IPV6_SNMP_TRAP_DESTINATION
+	attribute.  Both functions read it from index 0 of the per-index
+	destination setting attribute, which returned the destination type
+	of entry 0 (0 for a PET trap), so get printed nothing and set
+	rejected every index as out of range.
+
 2026-09-28 Albert Chu <chu11@llnl.gov>
 
 	* man/freeipmi_interpret_sel.conf.5.pre.in: In the IPMI_OEM
