@@ -1,5 +1,17 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-system-info-parameters-oem-dell-spec.h
+	(IPMI_OEM_DELL_SYSTEM_INFO_CMC_INFO_CMC_FIRMWARE_VERSION_STRING_LENGTH):
+	Correct to 20.  The CMC firmware version occupies bytes 21-40 of
+	the CMC Info parameter data; at 22 the copy in ipmi-oem's
+	get-system-info cmc-info also swept the type byte (0x09) and the
+	GUI status byte into the printed string.
+
+	* ipmi-oem/ipmi-oem-dell.c (_output_dell_system_info_cmc_info): Fix
+	the layout comment's NIC status offset; it is byte 43, not 53.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-wistron.c (ipmi_oem_wistron_get_ipv6_trap_settings,
 	ipmi_oem_wistron_set_ipv6_trap_settings): Read the number of IPv6
 	SNMP trap destinations from the NUMBER_OF_IPV6_SNMP_TRAP_DESTINATION

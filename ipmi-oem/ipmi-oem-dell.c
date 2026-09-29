@@ -860,7 +860,7 @@ _output_dell_system_info_cmc_info (ipmi_oem_state_data_t *state_data)
    * bytes 41 - type (0x09 for CMC)
    * byte 42 - gui status
    * - 0 = disabled, 1 = enabled
-   * byte 53 - nic status
+   * byte 43 - nic status
    * - bit 0 - nic enable/disable - 0 = disabled, 1 = enabled
    * - bit 1 - link connect/disconnect - 0 = disconnected, 1 = connected
    * - bit 2 - cmc failover or racreset - 0 = not from failover, 1 = from failover
