@@ -1,5 +1,11 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_next): Set
+	ctx->errnum to IPMI_SDR_ERR_SUCCESS on the end-of-records 0 return,
+	as on every other success return.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_open): Test
 	the mmap result against MAP_FAILED and reset ctx->sdr_cache to NULL
 	on failure so the cleanup path does not munmap (void *)-1.

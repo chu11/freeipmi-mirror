@@ -469,7 +469,10 @@ ipmi_sdr_cache_next (ipmi_sdr_ctx_t ctx)
     }
 
   if ((ctx->current_offset.offset + record_length + IPMI_SDR_RECORD_HEADER_LENGTH) == ctx->records_end_offset)
-    return (0);
+    {
+      ctx->errnum = IPMI_SDR_ERR_SUCCESS;
+      return (0);
+    }
 
   _sdr_set_current_offset (ctx, ctx->current_offset.offset + IPMI_SDR_RECORD_HEADER_LENGTH + record_length);
 
