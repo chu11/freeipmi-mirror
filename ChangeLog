@@ -1,5 +1,14 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sensor-read/ipmi-sensor-read.c
+	(_get_sensor_reading_not_bmc_lun): Check the completion code after
+	ipmi_cmd, which unlike the ipmi_cmd_get_sensor_reading wrappers does
+	not do so itself.  An error response on the alternate bridging path
+	was otherwise parsed as a reading and failed with "internal system
+	error" instead of the per-sensor unavailable/busy classification.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_close): Drop
 	the operation reset after sdr_init_ctx, which already performs it.
 

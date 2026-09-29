@@ -340,6 +340,7 @@ _get_sensor_reading_not_bmc_lun (ipmi_sensor_read_ctx_t ctx,
                                  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
+  int ret;
   int rv = -1;
 
   assert (ctx);
@@ -364,6 +365,23 @@ _get_sensor_reading_not_bmc_lun (ipmi_sensor_read_ctx_t ctx,
                 IPMI_NET_FN_SENSOR_EVENT_RQ,
                 obj_cmd_rq,
                 obj_cmd_rs) < 0)
+    {
+      if (_sensor_reading_corner_case_checks (ctx, obj_cmd_rs) < 0)
+        goto cleanup;
+      SENSOR_READ_SET_ERRNUM (ctx, IPMI_SENSOR_READ_ERR_IPMI_ERROR);
+      goto cleanup;
+    }
+
+  /* Unlike the ipmi_cmd_get_sensor_reading* wrappers, ipmi_cmd() does
+   * not check the completion code, so do it here.
+   */
+  if ((ret = ipmi_check_completion_code_success (obj_cmd_rs)) < 0)
+    {
+      SENSOR_READ_ERRNO_TO_SENSOR_READ_ERRNUM (ctx, errno);
+      goto cleanup;
+    }
+
+  if (!ret)
     {
       if (_sensor_reading_corner_case_checks (ctx, obj_cmd_rs) < 0)
         goto cleanup;
