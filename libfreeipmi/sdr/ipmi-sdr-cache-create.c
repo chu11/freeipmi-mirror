@@ -668,6 +668,15 @@ _sdr_cache_get_record (ipmi_sdr_ctx_t ctx,
           goto cleanup;
         }
 
+      /* A successful response with no record bytes would otherwise
+       * re-request the same offset forever.
+       */
+      if (!record_data_len)
+        {
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_IPMI_ERROR);
+          goto cleanup;
+        }
+
       offset_into_record += record_data_len;
     }
 

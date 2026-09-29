@@ -1,5 +1,12 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sdr/ipmi-sdr-cache-create.c (_sdr_cache_get_record):
+	Treat a successful Get SDR response carrying zero record bytes as
+	IPMI_SDR_ERR_IPMI_ERROR; the partial-read loop would otherwise
+	re-request the same offset indefinitely.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_iterate):
 	Save and restore ctx->callback_lock around the callback instead of
 	clearing it, so a nested iteration (ipmi_sdr_stats_compile from
