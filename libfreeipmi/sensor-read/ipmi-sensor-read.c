@@ -1022,6 +1022,8 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
       ipmi_ctx_set_flags (ctx->ipmi_ctx, ctx_flags_orig);
       ctx->errnum = sensor_read_errnum;
     }
+  if (rv == 1)
+    ctx->errnum = IPMI_SENSOR_READ_ERR_SUCCESS;
   fiid_obj_destroy (obj_cmd_rs);
   if (rv <= 0)
     free (tmp_sensor_reading);
