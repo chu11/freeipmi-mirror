@@ -1015,13 +1015,9 @@ ipmi_sensor_read (ipmi_sensor_read_ctx_t ctx,
     }
 
  cleanup:
+  /* best effort restore, the error already recorded takes precedence */
   if (ctx_flags_changed)
-    {
-      int sensor_read_errnum = ctx->errnum;
-
-      ipmi_ctx_set_flags (ctx->ipmi_ctx, ctx_flags_orig);
-      ctx->errnum = sensor_read_errnum;
-    }
+    ipmi_ctx_set_flags (ctx->ipmi_ctx, ctx_flags_orig);
   if (rv == 1)
     ctx->errnum = IPMI_SENSOR_READ_ERR_SUCCESS;
   fiid_obj_destroy (obj_cmd_rs);

@@ -1,5 +1,12 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sensor-read/ipmi-sensor-read.c (ipmi_sensor_read): Drop
+	the save/restore of ctx->errnum around the cleanup ipmi_ctx_set_flags
+	call; that function only touches the ipmi_ctx's errnum, so the
+	save/restore was a no-op.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sensor-read/ipmi-sensor-read.c
 	(_sensor_reading_corner_case_checks, _get_sensor_reading,
 	_get_sensor_reading_not_bmc_lun, _get_sensor_reading_ipmb): Make
