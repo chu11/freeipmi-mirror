@@ -1,5 +1,16 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-lan-session-common.c (api_lan_cmd_wrapper_ipmb,
+	api_lan_2_0_cmd_wrapper_ipmb),
+	libfreeipmi/api/ipmi-kcs-driver-api.c (api_kcs_cmd_ipmb),
+	libfreeipmi/api/ipmi-ssif-driver-api.c (api_ssif_cmd_ipmb): Only
+	build the request/response templates kept for debug dumping when
+	IPMI_FLAGS_DEBUG_DUMP is set.  They were allocated and freed on
+	every bridged command regardless; all consumers are already inside
+	debug-dump blocks and handle a NULL template.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-api.c (ipmi_cmd): Do not set ctx->errnum when
 	the debug-dump code fails to read "cmd" or
 	"group_extension_identification" from the request object; just

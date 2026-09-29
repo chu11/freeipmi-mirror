@@ -626,8 +626,11 @@ api_ssif_cmd_ipmb (ipmi_ctx_t ctx,
     }
 
   /* for debugging */
-  ctx->tmpl_ipmb_cmd_rq = fiid_obj_template (obj_cmd_rq);
-  ctx->tmpl_ipmb_cmd_rs = fiid_obj_template (obj_cmd_rs);
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    {
+      ctx->tmpl_ipmb_cmd_rq = fiid_obj_template (obj_cmd_rq);
+      ctx->tmpl_ipmb_cmd_rs = fiid_obj_template (obj_cmd_rs);
+    }
 
   if (_api_ssif_ipmb_send (ctx, obj_cmd_rq) < 0)
     goto cleanup;

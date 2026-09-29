@@ -1407,8 +1407,11 @@ api_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
     }
 
   /* for debugging */
-  ctx->tmpl_ipmb_cmd_rq = fiid_obj_template (obj_cmd_rq);
-  ctx->tmpl_ipmb_cmd_rs = fiid_obj_template (obj_cmd_rs);
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    {
+      ctx->tmpl_ipmb_cmd_rq = fiid_obj_template (obj_cmd_rq);
+      ctx->tmpl_ipmb_cmd_rs = fiid_obj_template (obj_cmd_rs);
+    }
 
   /* ipmb response packet will use the request sequence number from
    * the earlier packet.  Save it for verification.
@@ -3200,8 +3203,11 @@ api_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
     }
 
   /* for debugging */
-  ctx->tmpl_ipmb_cmd_rq = fiid_obj_template (obj_cmd_rq);
-  ctx->tmpl_ipmb_cmd_rs = fiid_obj_template (obj_cmd_rs);
+  if (ctx->flags & IPMI_FLAGS_DEBUG_DUMP)
+    {
+      ctx->tmpl_ipmb_cmd_rq = fiid_obj_template (obj_cmd_rq);
+      ctx->tmpl_ipmb_cmd_rs = fiid_obj_template (obj_cmd_rs);
+    }
 
   /* ipmb response packet will use the request sequence number from
    * the earlier packet.  Save it for verification.
