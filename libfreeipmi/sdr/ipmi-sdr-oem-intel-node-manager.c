@@ -69,6 +69,7 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
   int expected_record_len;
   void *sdr_record_to_use;
   unsigned int sdr_record_len_to_use;
+  uint8_t record_type;
   uint64_t val;
   int rv = -1;
 
@@ -104,6 +105,23 @@ ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
     {
       sdr_record_to_use = (void *)sdr_record;
       sdr_record_len_to_use = sdr_record_len;
+    }
+
+  /* The subtype and version bytes checked below sit where a sensor
+   * record's entity id and instance do, so confirm this is an OEM
+   * record before trusting them.
+   */
+  if (ipmi_sdr_parse_record_id_and_type (ctx,
+                                         sdr_record_to_use,
+                                         sdr_record_len_to_use,
+                                         NULL,
+                                         &record_type) < 0)
+    goto cleanup;
+
+  if (record_type != IPMI_SDR_FORMAT_OEM_RECORD)
+    {
+      rv = 0;
+      goto cleanup;
     }
 
   if ((expected_record_len = fiid_template_len_bytes (tmpl_sdr_oem_intel_node_manager_record)) < 0)
