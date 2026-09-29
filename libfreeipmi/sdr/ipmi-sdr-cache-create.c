@@ -75,7 +75,6 @@
 
 static int
 _sdr_cache_header_write (ipmi_sdr_ctx_t ctx,
-                         ipmi_ctx_t ipmi_ctx,
                          int fd,
                          unsigned int *total_bytes_written,
                          uint8_t sdr_version,
@@ -95,8 +94,7 @@ _sdr_cache_header_write (ipmi_sdr_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
-  assert (ipmi_ctx);
-  assert (fd);
+  assert (fd >= 0);
   assert (total_bytes_written);
 
   sdr_cache_magic_buf[0] = IPMI_SDR_CACHE_FILE_MAGIC_0;
@@ -234,7 +232,6 @@ _sdr_cache_header_write (ipmi_sdr_ctx_t ctx,
 
 static int
 _sdr_cache_trailer_write (ipmi_sdr_ctx_t ctx,
-                          ipmi_ctx_t ipmi_ctx,
                           int fd,
                           unsigned int total_bytes_written,
                           uint8_t trailer_checksum)
@@ -244,8 +241,7 @@ _sdr_cache_trailer_write (ipmi_sdr_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
-  assert (ipmi_ctx);
-  assert (fd);
+  assert (fd >= 0);
 
   /* + 4 for this value, + 1 for checksum at end */
   total_bytes_written += 4;
@@ -702,7 +698,7 @@ _sdr_cache_record_write (ipmi_sdr_ctx_t ctx,
 
   assert (ctx);
   assert (ctx->magic == IPMI_SDR_CTX_MAGIC);
-  assert (fd);
+  assert (fd >= 0);
   assert (total_bytes_written);
   assert (!record_ids || (record_ids && record_ids_count));
   assert (buf);
@@ -872,7 +868,6 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
     }
 
   if (_sdr_cache_header_write (ctx,
-                               ipmi_ctx,
                                fd,
                                &total_bytes_written,
                                sdr_version,
@@ -1027,7 +1022,6 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
             }
 
           if (_sdr_cache_header_write (ctx,
-                                       ipmi_ctx,
                                        fd,
                                        &total_bytes_written_temp,
                                        ctx->sdr_version,
@@ -1053,7 +1047,6 @@ ipmi_sdr_cache_create (ipmi_sdr_ctx_t ctx,
     }
 
   if (_sdr_cache_trailer_write (ctx,
-                                ipmi_ctx,
                                 fd,
                                 total_bytes_written,
                                 trailer_checksum) < 0)
