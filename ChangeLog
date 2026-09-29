@@ -1,5 +1,10 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-api.c (_is_ctx_fatal_error,
+	_is_locate_ctx_fatal_error): Fix "outfoband" typo in comments.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_inband): Drop the "No
 	workaround flags currently supported" comment; the check below it
 	accepts IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS and

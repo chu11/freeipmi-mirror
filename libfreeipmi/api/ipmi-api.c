@@ -1213,7 +1213,7 @@ ipmi_ctx_open_inband (ipmi_ctx_t ctx,
 static int
 _is_ctx_fatal_error (ipmi_ctx_t ctx)
 {
-  /* some are fatal b/c they are outfoband and shouldn't happen */
+  /* some are fatal b/c they are outofband and shouldn't happen */
   /* note parameters is not fatal, for some drivers, inputs from users may not be ok */
   /* note internal error is not fatal, could be a bad errno from a syscall */
 
@@ -1245,7 +1245,7 @@ _is_ctx_fatal_error (ipmi_ctx_t ctx)
 static int
 _is_locate_ctx_fatal_error (ipmi_locate_ctx_t locate_ctx)
 {
-  /* some are fatal b/c they are outfoband and shouldn't happen */
+  /* some are fatal b/c they are outofband and shouldn't happen */
   /* note parameters is not fatal, for some drivers, inputs from users may not be ok */
   /* note internal error is not fatal, could be a bad errno from a syscall */
 
