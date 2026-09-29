@@ -1,5 +1,15 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-api.c (ipmi_cmd): Do not set ctx->errnum when
+	the debug-dump code fails to read "cmd" or
+	"group_extension_identification" from the request object; just
+	trace it.  The response dump runs after the command completes, so
+	with IPMI_FLAGS_DEBUG_DUMP on the OpenIPMI, SunBMC, and Intel DCMI
+	paths a successful group-extension command whose request template
+	lacks that field returned 0 with errnum set to an error.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_inband): Return
 	IPMI_ERR_PARAMETERS if driver_device does not fit in
 	IPMI_LOCATE_PATH_MAX instead of truncating it.  The KCS and SSIF

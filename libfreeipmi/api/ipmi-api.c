@@ -1658,21 +1658,21 @@ ipmi_cmd (ipmi_ctx_t ctx,
           uint8_t group_extension = 0;
           uint64_t val;
 
-          /* ignore error, continue on */
+          /* ignore error, continue on; do not touch ctx->errnum */
           if (FIID_OBJ_GET (obj_cmd_rq,
                             "cmd",
                             &val) < 0)
-            API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+            ERR_TRACE (fiid_obj_errormsg (obj_cmd_rq), fiid_obj_errnum (obj_cmd_rq));
           else
             cmd = val;
 
           if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
             {
-              /* ignore error, continue on */
+              /* ignore error, continue on; do not touch ctx->errnum */
               if (FIID_OBJ_GET (obj_cmd_rq,
                                 "group_extension_identification",
                                 &val) < 0)
-                API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+                ERR_TRACE (fiid_obj_errormsg (obj_cmd_rq), fiid_obj_errnum (obj_cmd_rq));
               else
                 group_extension = val;
             }
@@ -1792,21 +1792,21 @@ ipmi_cmd (ipmi_ctx_t ctx,
           uint8_t group_extension = 0;
           uint64_t val;
 
-          /* ignore error, continue on */
+          /* ignore error, continue on; do not touch ctx->errnum */
           if (FIID_OBJ_GET (obj_cmd_rq,
                             "cmd",
                             &val) < 0)
-            API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+            ERR_TRACE (fiid_obj_errormsg (obj_cmd_rq), fiid_obj_errnum (obj_cmd_rq));
           else
             cmd = val;
 
           if (IPMI_NET_FN_GROUP_EXTENSION (ctx->target.net_fn))
             {
-              /* ignore error, continue on */
+              /* ignore error, continue on; do not touch ctx->errnum */
               if (FIID_OBJ_GET (obj_cmd_rq,
                                 "group_extension_identification",
                                 &val) < 0)
-                API_FIID_OBJECT_ERROR_TO_API_ERRNUM (ctx, obj_cmd_rq);
+                ERR_TRACE (fiid_obj_errormsg (obj_cmd_rq), fiid_obj_errnum (obj_cmd_rq));
               else
                 group_extension = val;
             }
