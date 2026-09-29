@@ -1,5 +1,12 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_seek): Return
+	IPMI_SDR_ERR_NOT_FOUND when the records end before the requested
+	index instead of silently positioning at end-of-records, and
+	validate the target record's header and length before selecting it.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sdr/ipmi-sdr-cache-read.c (ipmi_sdr_cache_next): Set
 	ctx->errnum to IPMI_SDR_ERR_SUCCESS on the end-of-records 0 return,
 	as on every other success return.

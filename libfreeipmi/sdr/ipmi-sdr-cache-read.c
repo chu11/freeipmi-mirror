@@ -504,10 +504,20 @@ ipmi_sdr_cache_seek (ipmi_sdr_ctx_t ctx, unsigned int index)
       return (-1);
     }
 
+  /* The header's record count may exceed the records actually stored
+   * (see the Fujitsu workaround in ipmi_sdr_cache_create), so an
+   * in-range index can still run off the end of the records.
+   */
   offset = ctx->records_start_offset;
-  for (i = 0; i < index; i++)
+  for (i = 0; i <= index; i++)
     {
       unsigned int record_length;
+
+      if (offset >= ctx->records_end_offset)
+        {
+          SDR_SET_ERRNUM (ctx, IPMI_SDR_ERR_NOT_FOUND);
+          return (-1);
+        }
 
       if ((offset + IPMI_SDR_RECORD_HEADER_LENGTH) > ctx->records_end_offset)
         {
@@ -523,11 +533,11 @@ ipmi_sdr_cache_seek (ipmi_sdr_ctx_t ctx, unsigned int index)
           return (-1);
         }
 
+      if (i == index)
+        break;
+
       offset += IPMI_SDR_RECORD_HEADER_LENGTH;
       offset += record_length;
-
-      if (offset == ctx->records_end_offset)
-        break;
     }
 
   _sdr_set_current_offset (ctx, offset);
