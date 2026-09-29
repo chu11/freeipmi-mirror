@@ -366,7 +366,7 @@ _setup_hostname (ipmi_ctx_t ctx, const char *hostname)
 
   if (!ret)
     {
-      API_SET_ERRNUM (ctx, IPMI_ERR_PARAMETERS);
+      API_SET_ERRNUM (ctx, IPMI_ERR_HOSTNAME_INVALID);
       goto cleanup;
     }
 
