@@ -1,5 +1,17 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_outofband,
+	ipmi_ctx_open_outofband_2_0, _ipmi_outofband_close,
+	_ipmi_outofband_2_0_close): Reset the out-of-band socket descriptor
+	to 0 after closing it.  The descriptor number was left in the
+	context, so a context that was closed and re-opened, or re-opened
+	after a failed open, closed the stale descriptor again in the open
+	cleanup path if the new open failed before creating its socket,
+	potentially closing an unrelated descriptor the process had since
+	reused.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-dell.c
 	(ipmi_oem_dell_get_power_consumption_data): Fix the response layout
 	comment; the peak amp and peak watt readings are 2 bytes each

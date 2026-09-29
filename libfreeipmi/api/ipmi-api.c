@@ -605,6 +605,7 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   /* ignore potential error, cleanup path */
   if (ctx->io.outofband.sockfd)
     close (ctx->io.outofband.sockfd);
+  ctx->io.outofband.sockfd = 0;
   _ipmi_outofband_free (ctx);
   ctx->type = IPMI_DEVICE_UNKNOWN;
   return (-1);
@@ -825,6 +826,7 @@ ipmi_ctx_open_outofband_2_0 (ipmi_ctx_t ctx,
   /* ignore potential error, cleanup path */
   if (ctx->io.outofband.sockfd)
     close (ctx->io.outofband.sockfd);
+  ctx->io.outofband.sockfd = 0;
   _ipmi_outofband_free (ctx);
   ctx->type = IPMI_DEVICE_UNKNOWN;
   return (-1);
@@ -2180,6 +2182,7 @@ _ipmi_outofband_close (ipmi_ctx_t ctx)
   /* ignore potential error, destroy path */
   if (ctx->io.outofband.sockfd)
     close (ctx->io.outofband.sockfd);
+  ctx->io.outofband.sockfd = 0;
   _ipmi_outofband_free (ctx);
 }
 
@@ -2202,6 +2205,7 @@ _ipmi_outofband_2_0_close (ipmi_ctx_t ctx)
   /* ignore potential error, destroy path */
   if (ctx->io.outofband.sockfd)
     close (ctx->io.outofband.sockfd);
+  ctx->io.outofband.sockfd = 0;
   _ipmi_outofband_free (ctx);
 }
 
