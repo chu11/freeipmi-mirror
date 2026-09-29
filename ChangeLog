@@ -1,5 +1,12 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sensor-read/ipmi-sensor-read.c
+	(_sensor_reading_corner_case_checks, _get_sensor_reading,
+	_get_sensor_reading_not_bmc_lun, _get_sensor_reading_ipmb): Make
+	static; they are file-local helpers with no prototypes.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sensor-read/ipmi-sensor-read.c (ipmi_sensor_read): Set
 	ctx->errnum to IPMI_SENSOR_READ_ERR_SUCCESS on a successful read so
 	the context does not keep reporting the previous sensor's error, as

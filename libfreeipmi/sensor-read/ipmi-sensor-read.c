@@ -208,7 +208,7 @@ ipmi_sensor_read_ctx_set_flags (ipmi_sensor_read_ctx_t ctx, unsigned int flags)
   return (0);
 }
 
-int
+static int
 _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
                                     fiid_obj_t obj_cmd_rs)
 {
@@ -307,7 +307,7 @@ _sensor_reading_corner_case_checks (ipmi_sensor_read_ctx_t ctx,
   return (0);
 }
 
-int
+static int
 _get_sensor_reading (ipmi_sensor_read_ctx_t ctx,
                      uint8_t sensor_number,
                      fiid_obj_t obj_cmd_rs)
@@ -333,7 +333,7 @@ _get_sensor_reading (ipmi_sensor_read_ctx_t ctx,
   return (rv);
 }
 
-int
+static int
 _get_sensor_reading_not_bmc_lun (ipmi_sensor_read_ctx_t ctx,
                                  uint8_t sensor_owner_lun,
                                  uint8_t sensor_number,
@@ -395,7 +395,7 @@ _get_sensor_reading_not_bmc_lun (ipmi_sensor_read_ctx_t ctx,
   return (rv);
 }
 
-int
+static int
 _get_sensor_reading_ipmb (ipmi_sensor_read_ctx_t ctx,
                           uint8_t slave_address,
                           uint8_t lun,
