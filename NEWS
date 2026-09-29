@@ -5,6 +5,8 @@ o The format specifier %h was used for two different format fields.
 o Fix minor output errors in Intel Node Manager DIMMs and Windmill
   device IDs.
 o Fix ipmi-oem command line parsing bugs.
+o In ipmi-oem, fix error in with wistron get/set-ipv6-trap-settings.
+o In ipmi-oem, fix output error in dell get-system-info cmc-info.
 o In libipmidetect fix hostname sscanf bound.
 o Fix ipmiconsole workaround flag parsing issues.
 o Fix minor libfreeipmi corner cases (mostly parameter input corner cases).
