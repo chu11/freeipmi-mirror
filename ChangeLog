@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-rmcpplus-util.c (ipmi_calculate_k2): Name the
+	output parameters k2 and k2_len, as the prototype in
+	ipmi-rmcpplus-util.h does.  They were k1 and k1_len, copied from
+	ipmi_calculate_k1().
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
 	(ipmi_locate_acpi_spmi_get_device_info): Name the parameter
 	interface_type, as the prototype in ipmi-locate.h does, instead of

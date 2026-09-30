@@ -413,8 +413,8 @@ int
 ipmi_calculate_k2 (uint8_t authentication_algorithm,
                    const void *sik_key,
                    unsigned int sik_key_len,
-                   void *k1,
-                   unsigned int k1_len)
+                   void *k2,
+                   unsigned int k2_len)
 {
   uint8_t constant[IPMI_KEY_CONSTANT_LENGTH] = { 0x02, 0x02, 0x02, 0x02, 0x02,
                                                  0x02, 0x02, 0x02, 0x02, 0x02,
@@ -423,8 +423,8 @@ ipmi_calculate_k2 (uint8_t authentication_algorithm,
   return (_ipmi_calculate_k (authentication_algorithm,
                              sik_key,
                              sik_key_len,
-                             k1,
-                             k1_len,
+                             k2,
+                             k2_len,
                              constant,
                              IPMI_KEY_CONSTANT_LENGTH));
 }
