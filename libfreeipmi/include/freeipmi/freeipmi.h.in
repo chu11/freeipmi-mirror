@@ -60,6 +60,7 @@ extern "C" {
 #include <freeipmi/cmds/ipmi-sol-cmds.h>
 #include <freeipmi/cmds/rmcp-cmds.h>
 #include <freeipmi/debug/ipmi-debug.h>
+#include <freeipmi/driver/ipmi-inteldcmi-driver.h>
 #include <freeipmi/driver/ipmi-kcs-driver.h>
 #include <freeipmi/driver/ipmi-ssif-driver.h>
 #include <freeipmi/driver/ipmi-openipmi-driver.h>
@@ -120,6 +121,7 @@ extern "C" {
 #include <freeipmi/spec/ipmi-system-boot-option-parameters-spec.h>
 #include <freeipmi/spec/ipmi-system-info-parameters-spec.h>
 #include <freeipmi/spec/ipmi-system-software-id-spec.h>
+#include <freeipmi/spec/ipmi-timestamp-spec.h>
 #include <freeipmi/spec/oem/ipmi-cmd-oem-dell-spec.h>
 #include <freeipmi/spec/oem/ipmi-cmd-oem-gigabyte-spec.h>
 #include <freeipmi/spec/oem/ipmi-cmd-oem-fujitsu-spec.h>

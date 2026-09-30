@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/freeipmi.h.in: Include
+	freeipmi/driver/ipmi-inteldcmi-driver.h and
+	freeipmi/spec/ipmi-timestamp-spec.h.  Both are installed but were
+	reachable from no other header, so users of freeipmi.h saw
+	IPMI_DEVICE_INTELDCMI without the ipmi_inteldcmi_ctx API and had no
+	IPMI_TIMESTAMP_* constants.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-oem-wistron-spec.h:
 	Include freeipmi/cmds/ipmi-lan-cmds.h, which defines the
 	IPMI_DESTINATION_TYPE_* constants the IPv6 SNMP trap destination
