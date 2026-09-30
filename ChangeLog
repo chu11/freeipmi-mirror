@@ -1,6 +1,13 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-comp-code-spec.h
+	(IPMI_COMP_CODE_SUSPEND_RESUME_PAYLOAD_ENCRYPTION_OPERATION_NOT_ALLOWED_UNDER_PRESENT_CONFIGURATION_STR):
+	Fix "now allowed" to "not allowed"; the text said the opposite of
+	the error.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-comp-code-spec.h
 	(IPMI_COMP_CODE_SET_SYSTEM_INFO_PARAMETERS_INVALID_SET_IN_PROGRESS_STR,
 	IPMI_COMP_CODE_SET_BOOT_OPTIONS_INVALID_SET_IN_PROGRESS_STR,
 	IPMI_COMP_CODE_SET_PEF_CONFIGURATION_PARAMETERS_INVALID_SET_IN_PROGRESS_STR,
