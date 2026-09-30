@@ -1,5 +1,10 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-quanta-spec.h
+	(IPMI_OEM_QUANTA_EVENT_DATA): Remove this empty, unused macro.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-system-boot-option-parameters-spec.h
 	(IPMI_SYSTEM_BOOT_OPTION_PARAMETER_OEM_MIN,
 	IPMI_SYSTEM_BOOT_OPTION_PARAMETER_OEM_MAX): Define, and use them in
