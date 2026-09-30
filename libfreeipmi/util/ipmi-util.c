@@ -272,7 +272,7 @@ ipmi_cmd_str (uint8_t net_fn, uint8_t cmd)
         case IPMI_CMD_SET_BRIDGE_STATE:
           return "Set Bridge State";
         case IPMI_CMD_GET_ICMB_ADDRESS:
-          return "Get ICM Address";
+          return "Get ICMB Address";
         case IPMI_CMD_SET_ICMB_ADDRESS:
           return "Set ICMB Address";
         case IPMI_CMD_SET_BRIDGE_PROXY_ADDRESS:

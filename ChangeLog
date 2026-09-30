@@ -1,5 +1,10 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-util.c (ipmi_cmd_str): Fix "Get ICM Address"
+	typo; the command is Get ICMB Address.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-entity-ids-util.c (ipmi_get_entity_id_string):
 	Return "reserved" for entity ids 0x36-0x3F and 0x43-0x8F rather than
 	"OEM System Integrator", which is only correct for 0xD0-0xFF.
