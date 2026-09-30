@@ -416,10 +416,11 @@ _get_system_event_event_data2_message_offset_timestamp_clock_synch (unsigned int
   if (first_second <= ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_first_second_max_index)
     str2 = (char *)ipmi_sensor_type_system_event_event_data2_offset_timestamp_clock_synch_first_second[first_second];
 
-  rv = _snprintf (buf, buflen, "%s%s%s",
-                  str1 ? str1 : "",
-                  _ipmi_event_message_separator,
-                  str2 ? str2 : "");
+  if (str1 || str2)
+    rv = _snprintf (buf, buflen, "%s%s%s",
+                    (str1 ? str1 : ""),
+                    ((str1 && str2) ? _ipmi_event_message_separator : ""),
+                    (str2 ? str2 : ""));
 
  cleanup:
   fiid_obj_destroy (obj);

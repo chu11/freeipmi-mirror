@@ -1,3 +1,12 @@
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
+	(_get_system_event_event_data2_message_offset_timestamp_clock_synch):
+	Only emit the separator when both the clock type and first/second
+	strings are known, and return -1 when neither is, matching the other
+	two-field event data2 decoders.  Previously an unknown clock type
+	produced a message beginning with " ; ".
+
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/sel/ipmi-sel-string-supermicro-common.c
