@@ -128,12 +128,12 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_ENTITY_INSTANCE_SYSTEM_RELATIVE(__entity_instance) \
-  (((__entity_instance + 1) >= (IPMI_ENTITY_INSTANCE_SYSTEM_RELATIVE_MIN + 1)) \
-   && ((__entity_instance) >= IPMI_ENTITY_INSTANCE_SYSTEM_RELATIVE_MAX) ? 1 : 0)
+  ((((__entity_instance) + 1) >= (IPMI_ENTITY_INSTANCE_SYSTEM_RELATIVE_MIN + 1)) \
+   && ((__entity_instance) <= IPMI_ENTITY_INSTANCE_SYSTEM_RELATIVE_MAX) ? 1 : 0)
 
 #define IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE(__entity_instance) \
   (((__entity_instance) >= IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE_MIN)    \
-   && ((__entity_instance) >= IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE_MAX) ? 1 : 0)
+   && ((__entity_instance) <= IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE_MAX) ? 1 : 0)
 
 extern const char *const ipmi_entity_ids[];
 extern const char *const ipmi_entity_id_chassis_specific;

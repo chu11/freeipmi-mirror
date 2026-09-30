@@ -1,5 +1,15 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h
+	(IPMI_ENTITY_INSTANCE_SYSTEM_RELATIVE,
+	IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE): Compare against the _MAX
+	bound with <= rather than >=.  DEVICE_RELATIVE was true only for
+	0x7F, so ipmi_sdr_parse_sensor_name() never subtracted the 0x60
+	device relative offset from entity instances; SYSTEM_RELATIVE was
+	inverted.  Parenthesize the macro argument.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-cmd-spec.h
 	(IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION): Correct to 0x55 per
 	IPMI 2.0 Table G-1.  It was 0x53, an unassigned command number, so
