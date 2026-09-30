@@ -1,5 +1,16 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/driver/ipmi-kcs-driver.h
+	(ipmi_kcs_write, ipmi_kcs_read),
+	libfreeipmi/include/freeipmi/driver/ipmi-ssif-driver.h
+	(ipmi_ssif_write, ipmi_ssif_read): Document that a successful write
+	acquires the inter-process driver lock and only the following read
+	releases it, so the two must be paired.  An unpaired write holds the
+	semaphore until the process exits, blocking every other in-band
+	FreeIPMI user on the host.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/util/ipmi-device-types-util.h,
 	libfreeipmi/include/freeipmi/util/ipmi-iana-enterprise-numbers-util.h,
 	libfreeipmi/include/freeipmi/util/ipmi-sensor-and-event-code-tables-util.h,

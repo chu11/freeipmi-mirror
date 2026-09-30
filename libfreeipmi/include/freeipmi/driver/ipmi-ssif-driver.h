@@ -71,12 +71,23 @@ int ipmi_ssif_ctx_set_flags (ipmi_ssif_ctx_t ctx, unsigned int flags);
 
 int ipmi_ssif_ctx_io_init (ipmi_ssif_ctx_t ctx);
 
-/* returns length written on success, -1 on error */
+/* returns length written on success, -1 on error
+ *
+ * On success, ipmi_ssif_write() acquires the inter-process driver lock
+ * and holds it so the response can be read.  The lock is released
+ * only by the following ipmi_ssif_read(), so every successful write
+ * must be paired with a read (or use ipmi_ssif_cmd(), which does
+ * both).  A write not followed by a read blocks other in-band users of
+ * the device until this process exits.
+ */
 int ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
                      const void *buf,
                      unsigned int buf_len);
 
-/* returns length read on success, -1 on error */
+/* returns length read on success, -1 on error
+ *
+ * Releases the driver lock acquired by ipmi_ssif_write().
+ */
 int ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
                     void *buf,
                     unsigned int buf_len);
