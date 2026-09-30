@@ -1101,16 +1101,16 @@ sel_string_output_intel_quanta_qssc_s4r_event_data2_event_data3 (ipmi_sel_ctx_t 
           switch (spared_dimm_information)
             {
             case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_1B_LOCKSTEP_DIMM_1D:
-              spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
+              spared_dimm_information_str = "DIMM_1B lockstep with DIMM_1D";
               break;
             case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_1A_LOCKSTEP_DIMM_1C:
-              spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
+              spared_dimm_information_str = "DIMM_1A lockstep with DIMM_1C";
               break;
             case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_2B_LOCKSTEP_DIMM_2D:
-              spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
+              spared_dimm_information_str = "DIMM_2B lockstep with DIMM_2D";
               break;
             case IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_QUANTA_QSSC_S4R_SPARED_DIMM_INFORMATION_LOCAL_SPARING_DIMM_2A_LOCKSTEP_DIMM_2C:
-              spared_dimm_information_str = "DIMM_1B lock steep with DIMM 1D";
+              spared_dimm_information_str = "DIMM_2A lockstep with DIMM_2C";
               break;
             default:
               spared_dimm_information_str = "Unknown";
