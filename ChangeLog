@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-entity-ids-util.c (ipmi_get_entity_id_string):
+	Return "reserved" for entity ids 0x36-0x3F and 0x43-0x8F rather than
+	"OEM System Integrator", which is only correct for 0xD0-0xFF.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-jedec-manufacturer-identification-code-util.c
 	(_find_str): Make static; it is a file-local helper that was exported
 	as an external symbol.
