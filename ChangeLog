@@ -1,5 +1,28 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-timestamp-util.c (ipmi_timestamp_string):
+	Fail with EINVAL if utc_offset is outside IPMI_UTC_OFFSET_VALID()
+	or if both IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME and
+	IPMI_TIMESTAMP_FLAG_LOCALTIME_TO_UTC are set.  The offset was
+	applied unchecked and the conflicting flags silently resolved in
+	favor of UTC_TO_LOCALTIME.
+	* libfreeipmi/include/freeipmi/util/ipmi-timestamp-util.h: Document
+	the utc_offset range, that the two conversion flags are mutually
+	exclusive, and the 0 / -1 return.
+	* libfreeipmi/sel/ipmi-sel.c (ipmi_sel_parse_read_record_string):
+	Reject IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME together with
+	IPMI_SEL_STRING_FLAGS_LOCALTIME_TO_UTC with IPMI_SEL_ERR_PARAMETERS
+	rather than letting the timestamp failure surface as an internal
+	error.
+	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h: Document that the two
+	SEL string conversion flags are mutually exclusive.
+	* common/toolcommon/tool-cmdline-common.c (verify_common_cmd_args):
+	Reject --utc-to-localtime together with --localtime-to-utc with a
+	clear message, as is done for --buffer-output and
+	--consolidate-output.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h
 	(IPMI_SEL_STRING_FLAGS_RESERVED): Remove.  It was not in the flags
 	mask, so passing it failed with IPMI_SEL_ERR_PARAMETERS, and nothing

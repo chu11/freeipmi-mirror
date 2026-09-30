@@ -2081,7 +2081,9 @@ ipmi_sel_parse_read_record_string (ipmi_sel_ctx_t ctx,
   if (!fmt
       || !buf
       || !buflen
-      || (flags & ~IPMI_SEL_STRING_FLAGS_MASK))
+      || (flags & ~IPMI_SEL_STRING_FLAGS_MASK)
+      || ((flags & IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME)
+          && (flags & IPMI_SEL_STRING_FLAGS_LOCALTIME_TO_UTC)))
     {
       SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
       return (-1);

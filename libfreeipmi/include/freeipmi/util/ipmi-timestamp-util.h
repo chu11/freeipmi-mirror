@@ -34,7 +34,8 @@ extern "C" {
 /* Assume timestamp is UTC instead of localtime, convert to localtime.
  */
 #define IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME 0x02
-/* Assume timestamp is localtime, convert to UTC
+/* Assume timestamp is localtime, convert to UTC.  Mutually exclusive
+ * with IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME.
  */
 #define IPMI_TIMESTAMP_FLAG_LOCALTIME_TO_UTC 0x04
 
@@ -52,7 +53,11 @@ extern "C" {
  * into the buffer instead of the actual time/date.
  */
 
-/* format uses format from strftime(), pass NULL for default one */
+/* format uses format from strftime(), pass NULL for default one.
+ * utc_offset is in seconds and must satisfy IPMI_UTC_OFFSET_VALID().
+ * Returns 0 on success, -1 on error with errno set (EINVAL for bad
+ * arguments).
+ */
 int ipmi_timestamp_string (uint32_t timestamp,
                            int utc_offset,
                            unsigned int flags,

@@ -60,7 +60,12 @@ ipmi_timestamp_string (uint32_t timestamp,
   struct tm tm;
   time_t t;
 
-  if ((flags & ~IPMI_TIMESTAMP_FLAG_MASK) || !buf || !buflen)
+  if (!IPMI_UTC_OFFSET_VALID (utc_offset)
+      || (flags & ~IPMI_TIMESTAMP_FLAG_MASK)
+      || ((flags & IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME)
+          && (flags & IPMI_TIMESTAMP_FLAG_LOCALTIME_TO_UTC))
+      || !buf
+      || !buflen)
     {
       SET_ERRNO (EINVAL);
       return (-1);

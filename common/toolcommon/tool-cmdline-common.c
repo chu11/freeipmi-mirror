@@ -693,4 +693,10 @@ verify_common_cmd_args (struct common_cmd_args *common_args)
       fprintf (stderr, "cannot buffer and consolidate hostrange output, please select only one\n");
       exit (EXIT_FAILURE);
     }
+
+  if (common_args->utc_to_localtime && common_args->localtime_to_utc)
+    {
+      fprintf (stderr, "cannot convert both UTC to localtime and localtime to UTC, please select only one\n");
+      exit (EXIT_FAILURE);
+    }
 }

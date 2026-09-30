@@ -70,7 +70,8 @@ extern "C" {
  */
 #define IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME              0x0200
 /* Convert localtimes to UTC times, as it may be convenient
- * for certain purposes.
+ * for certain purposes.  Mutually exclusive with
+ * IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME.
  */
 #define IPMI_SEL_STRING_FLAGS_LOCALTIME_TO_UTC              0x0400
 
