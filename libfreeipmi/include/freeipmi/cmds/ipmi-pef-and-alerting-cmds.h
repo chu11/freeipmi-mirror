@@ -50,13 +50,6 @@ extern "C" {
   (((__val) == IPMI_PEF_ENABLE \
     || (__val) == IPMI_PEF_DISABLE) ? 1 : 0)
 
-#define IPMI_PEF_ENABLE  0x1
-#define IPMI_PEF_DISABLE 0x0
-
-#define IPMI_PEF_VALID(__val)  \
-  (((__val) == IPMI_PEF_ENABLE \
-    || (__val) == IPMI_PEF_DISABLE) ? 1 : 0)
-
 #define IPMI_PEF_EVENT_MESSAGES_ENABLE  0x1
 #define IPMI_PEF_EVENT_MESSAGES_DISABLE 0x0
 

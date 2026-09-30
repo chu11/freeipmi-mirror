@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-pef-and-alerting-cmds.h:
+	Remove the second, identical copy of the IPMI_PEF_ENABLE,
+	IPMI_PEF_DISABLE and IPMI_PEF_VALID definitions.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h:
 	Remove the duplicate declaration of
 	tmpl_cmd_oem_intel_node_manager_set_node_manager_policy_rs, which
