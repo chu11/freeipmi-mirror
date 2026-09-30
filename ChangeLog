@@ -1,5 +1,23 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-lan-util.c
+	(ipmi_lan_check_session_authentication_code, ipmi_lan_check_checksum),
+	libfreeipmi/util/ipmi-ipmb-util.c (ipmi_ipmb_check_checksum),
+	libfreeipmi/util/ipmi-rmcpplus-util.c
+	(ipmi_rmcpplus_check_payload_pad, ipmi_rmcpplus_check_integrity_pad,
+	ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code,
+	ipmi_rmcpplus_check_rakp_4_integrity_check_value,
+	ipmi_rmcpplus_check_packet_session_authentication_code,
+	ipmi_rmcpplus_check_payload_type, ipmi_rmcpplus_check_status_code,
+	ipmi_rmcpplus_check_message_tag,
+	ipmi_rmcpplus_check_remote_console_session_id,
+	ipmi_rmcpplus_check_session_id): Set errno to EINVAL when an object
+	does not match the expected template.  FIID_OBJ_TEMPLATE_COMPARE only
+	records the error in the fiid object, so the ERRNO_TRACE (errno)
+	these paths used returned whatever errno happened to hold.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
 	(get_management_subsystem_health_event_data2_message): Remove the
 	inner rv declaration in the FRU failure block that shadowed the

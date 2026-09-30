@@ -91,12 +91,12 @@ ipmi_ipmb_check_checksum (uint8_t rq_addr,
 
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_ipmb_msg_hdr, tmpl_ipmb_msg_hdr_rs) < 0)
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       goto cleanup;
     }
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_ipmb_msg_trlr, tmpl_ipmb_msg_trlr) < 0)
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       goto cleanup;
     }
 

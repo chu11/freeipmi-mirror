@@ -828,7 +828,7 @@ ipmi_rmcpplus_check_payload_pad (uint8_t confidentiality_algorithm,
 
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_rmcpplus_payload, tmpl_rmcpplus_payload) < 0)
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -885,7 +885,7 @@ ipmi_rmcpplus_check_integrity_pad (fiid_obj_t obj_rmcpplus_session_trlr)
 
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr) < 0)
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -977,7 +977,7 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code (uint8_t authenticat
 
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_rmcpplus_rakp_message_2) < 0)
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -1133,7 +1133,7 @@ ipmi_rmcpplus_check_rakp_4_integrity_check_value (uint8_t authentication_algorit
 
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_rmcpplus_rakp_message_4) < 0)
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -1272,7 +1272,7 @@ ipmi_rmcpplus_check_packet_session_authentication_code (uint8_t integrity_algori
 
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr) < 0)
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -1437,7 +1437,7 @@ ipmi_rmcpplus_check_payload_type (fiid_obj_t obj_rmcpplus_session_hdr, uint8_t p
 
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr) < 0)
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -1465,7 +1465,7 @@ ipmi_rmcpplus_check_status_code (fiid_obj_t obj_cmd,
           && FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_rmcpplus_rakp_message_3) < 0
           && FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_rmcpplus_rakp_message_4) < 0))
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -1493,7 +1493,7 @@ ipmi_rmcpplus_check_message_tag (fiid_obj_t obj_cmd, uint8_t message_tag)
           && FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_rmcpplus_rakp_message_3) < 0
           && FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_rmcpplus_rakp_message_4) < 0))
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -1519,7 +1519,7 @@ ipmi_rmcpplus_check_remote_console_session_id (fiid_obj_t obj_cmd, uint32_t remo
           && FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_rmcpplus_rakp_message_2) < 0
           && FIID_OBJ_TEMPLATE_COMPARE (obj_cmd, tmpl_rmcpplus_rakp_message_4) < 0))
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -1548,7 +1548,7 @@ ipmi_rmcpplus_check_session_id (fiid_obj_t obj_rmcpplus_session_hdr,
 
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr) < 0)
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 

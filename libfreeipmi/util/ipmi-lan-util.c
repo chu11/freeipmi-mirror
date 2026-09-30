@@ -135,17 +135,17 @@ ipmi_lan_check_session_authentication_code (fiid_obj_t obj_lan_session_hdr_rs,
 
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_session_hdr_rs, tmpl_lan_session_hdr) < 0)
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_msg_hdr_rs, tmpl_lan_msg_hdr_rs) < 0)
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_msg_trlr_rs, tmpl_lan_msg_trlr) < 0)
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       return (-1);
     }
 
@@ -604,12 +604,12 @@ ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
 
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs) < 0)
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       goto cleanup;
     }
   if (FIID_OBJ_TEMPLATE_COMPARE (obj_lan_msg_trlr, tmpl_lan_msg_trlr) < 0)
     {
-      ERRNO_TRACE (errno);
+      SET_ERRNO (EINVAL);
       goto cleanup;
     }
 
