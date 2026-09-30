@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/api/ipmi-chassis-cmds-api.h
+	(ipmi_cmd_set_system_boot_options_service_partition_selector,
+	ipmi_cmd_set_system_boot_options_service_partition_scan): Declare.
+	Both have been defined and exported from libfreeipmi, and their
+	getters and fill_cmd counterparts declared, but the prototypes were
+	never added to the header.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-s2600bpb-spec.h
 	(IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_EVENT_DATA_JTAG_DEBUG_CONSENT_BITMASK,
 	IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_EVENT_DATA_PECI_SESSION_STATE_BITMASK,

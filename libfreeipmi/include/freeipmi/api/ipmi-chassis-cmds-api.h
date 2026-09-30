@@ -80,6 +80,17 @@ int ipmi_cmd_set_system_boot_options_set_in_progress (ipmi_ctx_t ctx,
                                                       uint8_t state,
                                                       fiid_obj_t obj_cmd_rs);
 
+int ipmi_cmd_set_system_boot_options_service_partition_selector (ipmi_ctx_t ctx,
+                                                                 uint8_t parameter_valid,
+                                                                 uint8_t service_partition_selector,
+                                                                 fiid_obj_t obj_cmd_rs);
+
+int ipmi_cmd_set_system_boot_options_service_partition_scan (ipmi_ctx_t ctx,
+                                                             uint8_t parameter_valid,
+                                                             uint8_t service_partition_discovered,
+                                                             uint8_t service_partition_scan,
+                                                             fiid_obj_t obj_cmd_rs);
+
 int ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
                                                                        uint8_t parameter_valid,
                                                                        uint8_t dont_clear_on_power_up,
