@@ -387,16 +387,16 @@ sel_string_output_intel_xeon_broadwell_event_data2_event_data3 (ipmi_sel_ctx_t c
           error_code_str = "Processor 04 unable to apply microcode update";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_BROADWELL_POST_ERROR_CODE_PROCESSOR_01_FAILED_SELF_TEST_BIST:
-          error_code_str = "Processor 01 failed Self Test (BIST) ";
+          error_code_str = "Processor 01 failed Self Test (BIST)";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_BROADWELL_POST_ERROR_CODE_PROCESSOR_02_FAILED_SELF_TEST_BIST:
-          error_code_str = "Processor 02 failed Self Test (BIST) ";
+          error_code_str = "Processor 02 failed Self Test (BIST)";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_BROADWELL_POST_ERROR_CODE_PROCESSOR_03_FAILED_SELF_TEST_BIST:
-          error_code_str = "Processor 03 failed Self Test (BIST) ";
+          error_code_str = "Processor 03 failed Self Test (BIST)";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_BROADWELL_POST_ERROR_CODE_PROCESSOR_04_FAILED_SELF_TEST_BIST:
-          error_code_str = "Processor 04 failed Self Test (BIST) ";
+          error_code_str = "Processor 04 failed Self Test (BIST)";
           break;
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_BROADWELL_POST_ERROR_CODE_PROCESSOR_01_MICROCODE_UPDATE_NOT_FOUND:
           error_code_str = "Processor 01 microcode update not found";

@@ -1,5 +1,12 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sel/ipmi-sel-string-intel-xeon-broadwell-common.c
+	(sel_string_output_intel_xeon_broadwell_event_data2_event_data3):
+	Remove trailing spaces from the four "failed Self Test (BIST)" POST
+	error strings.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sel/ipmi-sel-string-dell-poweredge.c
 	(sel_string_output_dell_poweredge_event_data3_discrete_oem): Fix
 	"SINI ACM" typo in the TXT error type string.
