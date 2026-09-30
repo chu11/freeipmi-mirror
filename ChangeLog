@@ -1,5 +1,15 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-fru-language-codes-spec.h
+	(IPMI_FRU_LANGUAGE_CODE_SERBO_CROATIAN): Rename from
+	IPMI_FRU_LANGUAGE_CODE_SERBO_CROATION, the specification's
+	spelling.
+	* libfreeipmi/spec/ipmi-fru-language-codes-spec.c
+	(ipmi_fru_language_codes): Spell "Serbo-Croatian" correctly and
+	capitalize "Burmese" like every other entry.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-spec.c
 	(ipmi_sensor_type_session_audit_event_data3_offset_session_deactivated_deactivation_cause):
 	Fix "deactivatation" to "deactivation".
