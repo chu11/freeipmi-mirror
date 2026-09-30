@@ -1,5 +1,11 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sel/ipmi-sel-string-intel-node-manager.c: Add the
+	S2600KPR and S2600BPB to the list of motherboards in the header
+	comment; both route through this decoder via the Xeon common code.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sel/ipmi-sel-string-intel-xeon-broadwell-common.c
 	(sel_string_output_intel_xeon_broadwell_event_data2_event_data3):
 	Remove trailing spaces from the four "failed Self Test (BIST)" POST
