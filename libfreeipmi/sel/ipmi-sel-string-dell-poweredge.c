@@ -253,7 +253,7 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
   if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_SENSOR_SPECIFIC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY)
     {
-      if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_INTRUSION_WHILE_SYSTEM_ON)
+      if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_EVENT_DATA2_OEM_DELL_INTRUSION_WHILE_SYSTEM_ON)
         {
           snprintf (tmpbuf,
                     tmpbuflen,
@@ -261,7 +261,7 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
 
           return (1);
         }
-      else if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_INTRUSION_WHILE_SYSTEM_OFF)
+      else if (system_event_record_data->event_data2 == IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_EVENT_DATA2_OEM_DELL_INTRUSION_WHILE_SYSTEM_OFF)
         {
           snprintf (tmpbuf,
                     tmpbuflen,

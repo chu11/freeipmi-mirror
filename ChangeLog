@@ -1,5 +1,19 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-dell-spec.h
+	(IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_EVENT_DATA2_OEM_DELL_INTRUSION_WHILE_SYSTEM_ON,
+	IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_EVENT_DATA2_OEM_DELL_INTRUSION_WHILE_SYSTEM_OFF):
+	Rename from IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_INTRUSION_WHILE_SYSTEM_ON
+	and _OFF.  These are Dell OEM event data 2 values, but the old names
+	used the prefix of the generic physical security sensor offsets in
+	ipmi-sensor-and-event-code-tables-spec.h, where 0x01 and 0x02 mean
+	drive bay and I/O card area intrusion.
+	* libfreeipmi/sel/ipmi-sel-string-dell-poweredge.c
+	(sel_string_output_dell_poweredge_event_data2_discrete_oem): Use the
+	new names.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-oem-wistron-spec.h
 	(IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_REMOTE_UPDATE_ENABLE_FALSE,
 	IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_REMOTE_UPDATE_ENABLE_TRUE):
