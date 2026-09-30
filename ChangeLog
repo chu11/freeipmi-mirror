@@ -1,5 +1,13 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-messaging-support-cmds.h:
+	Include freeipmi/spec/ipmi-privilege-level-spec.h, which defines the
+	IPMI_PRIVILEGE_LEVEL_* constants that IPMI_PRIVILEGE_LEVEL_LIMIT_VALID
+	expands to.  The macro could only be used by code that had already
+	included the spec header itself or freeipmi.h.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/interface/ipmi-rmcpplus-interface.h
 	(IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID): Compare against
 	IPMI_PAYLOAD_FLAG_UNAUTHENTICATED and IPMI_PAYLOAD_FLAG_AUTHENTICATED
