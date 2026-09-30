@@ -140,7 +140,7 @@ int fill_cmd_set_command_enables (uint8_t channel_number,
                                   uint8_t net_fn,
                                   uint8_t operation,
                                   uint8_t lun,
-                                  uint8_t *enable_disable_bitmask,
+                                  const uint8_t *enable_disable_bitmask,
                                   unsigned int enable_disable_bitmask_len,
                                   uint32_t net_fn_data,
                                   fiid_obj_t obj_cmd_rq);

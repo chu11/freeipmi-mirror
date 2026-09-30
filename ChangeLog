@@ -1,5 +1,16 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-firmware-firewall-command-discovery-cmds.h,
+	libfreeipmi/cmds/ipmi-firmware-firewall-command-discovery-cmds.c
+	(fill_cmd_set_command_enables),
+	libfreeipmi/include/freeipmi/api/ipmi-firmware-firewall-command-discovery-cmds-api.h,
+	libfreeipmi/api/ipmi-firmware-firewall-command-discovery-cmds-api.c
+	(ipmi_cmd_set_command_enables): Take
+	enable_disable_bitmask as const uint8_t *.  It is only read, and
+	every other input buffer in the fill and cmd APIs is const.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-lan-cmds-api.c
 	(ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address,
 	ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address):
