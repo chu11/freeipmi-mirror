@@ -1,6 +1,19 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
+	(_get_system_event_event_data2_message_offset_entry_added_to_auxiliary_log,
+	_get_system_event_event_data2_message_offset_timestamp_clock_synch,
+	get_system_boot_initiated_event_data2_message,
+	get_slot_connector_event_data2_message,
+	get_watchdog2_event_data2_message,
+	get_power_supply_event_data3_message): Set errno to EINVAL when the
+	event data value is outside the string table.  These paths returned
+	-1 with errno untouched, so callers reporting strerror (errno) showed
+	a stale error.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
 	(_get_system_event_event_data2_message_offset_timestamp_clock_synch):
 	Only emit the separator when both the clock type and first/second
 	strings are known, and return -1 when neither is, matching the other

@@ -212,6 +212,8 @@ _get_system_event_event_data2_message_offset_entry_added_to_auxiliary_log (unsig
                     (str1 ? str1 : ""),
                     ((str1 && str2) ? _ipmi_event_message_separator : ""),
                     (str2 ? str2 : ""));
+  else
+    SET_ERRNO (EINVAL);
 
  cleanup:
   fiid_obj_destroy (obj);
@@ -421,6 +423,8 @@ _get_system_event_event_data2_message_offset_timestamp_clock_synch (unsigned int
                     (str1 ? str1 : ""),
                     ((str1 && str2) ? _ipmi_event_message_separator : ""),
                     (str2 ? str2 : ""));
+  else
+    SET_ERRNO (EINVAL);
 
  cleanup:
   fiid_obj_destroy (obj);
@@ -495,6 +499,8 @@ get_system_boot_initiated_event_data2_message (unsigned int offset, uint8_t even
 
       if (val <= ipmi_sensor_type_system_boot_initiated_event_data2_offset_system_restart_restart_cause_max_index)
         rv = _snprintf (buf, buflen, ipmi_sensor_type_system_boot_initiated_event_data2_offset_system_restart_restart_cause[val]);
+      else
+        SET_ERRNO (EINVAL);
 
     cleanup:
       fiid_obj_destroy (obj);
@@ -540,6 +546,8 @@ get_slot_connector_event_data2_message (unsigned int offset, uint8_t event_data2
 
   if (val <= ipmi_sensor_type_slot_connector_event_data2_offset_slot_holds_spare_device_slot_connector_type_max_index)
     rv = _snprintf (buf, buflen, ipmi_sensor_type_slot_connector_event_data2_offset_slot_holds_spare_device_slot_connector_type[val]);
+  else
+    SET_ERRNO (EINVAL);
 
  cleanup:
   fiid_obj_destroy (obj);
@@ -602,6 +610,8 @@ get_watchdog2_event_data2_message (unsigned int offset, uint8_t event_data2, cha
                     (str1 ? str1 : ""),
                     ((str1 && str2) ? _ipmi_event_message_separator : ""),
                     (str2 ? str2 : ""));
+  else
+    SET_ERRNO (EINVAL);
 
  cleanup:
   fiid_obj_destroy (obj);
@@ -852,6 +862,8 @@ get_power_supply_event_data3_message (unsigned int offset, uint8_t event_data2, 
 
       if (val <= ipmi_sensor_type_power_supply_event_data3_offset_configuration_error_error_type_max_index)
         rv = _snprintf (buf, buflen, ipmi_sensor_type_power_supply_event_data3_offset_configuration_error_error_type[val]);
+      else
+        SET_ERRNO (EINVAL);
 
     cleanup:
       fiid_obj_destroy (obj);
