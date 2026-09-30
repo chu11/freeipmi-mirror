@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/record-format/oem/ipmi-sdr-oem-intel-record-format.h
+	(IPMI_SDR_OEM_INTEL_QUANTA_QSSC_S4R_THERMAL_PROFILE_DATA_RECORD_CONTROL_EVENT_MODE_BITMASK):
+	Change to 0x08, the bit its _SHIFT of 3 selects and the next bit after
+	the hysteresis field.  0x04 overlapped hysteresis, so the shifted
+	result was always zero and ipmi-sensors always reported the control
+	event mode as "Assert Not Only Critical".
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sel/ipmi-sel.c (ipmi_sel_errmsgs): Swap the strings at
 	indexes 8 and 9 so they line up with
 	IPMI_SEL_ERR_SEL_ENTRIES_LIST_END (8) and
