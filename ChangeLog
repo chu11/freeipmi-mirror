@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h
+	(IPMI_SEL_STRING_FLAGS_RESERVED): Remove.  It was not in the flags
+	mask, so passing it failed with IPMI_SEL_ERR_PARAMETERS, and nothing
+	used it.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h: Document that
 	IPMI_SDR_SENSOR_NAME_FLAGS_ALWAYS_OUTPUT_INSTANCE_NUMBER is rejected
 	by ipmi_sdr_parse_sensor_name(), not merely ignored, and the
