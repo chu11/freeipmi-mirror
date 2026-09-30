@@ -492,7 +492,7 @@ struct sel_string_oem sel_string_oem_inventec_5442 =
     NULL,
     sel_string_output_inventec_5442_event_data3_discrete_oem,
     sel_string_output_inventec_5442_event_data3_class_oem,
-    NULL,
+    sel_string_output_inventec_5442_event_data2_event_data3,
     NULL,
     NULL,
   };
