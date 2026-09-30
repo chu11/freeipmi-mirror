@@ -1,5 +1,15 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/cmds/ipmi-lan-cmds.c
+	(fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control):
+	Validate the arguments with IPMI_BMC_GENERATED_GRATUITOUS_ARPS_VALID
+	and IPMI_BMC_GENERATED_ARP_RESPONSES_VALID, the macros defined for
+	the BMC-generated ARP control parameter, rather than the
+	Suspend BMC ARPs macros, which merely happen to accept the same
+	values.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.h
 	(IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_BITMASK,
 	IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_DIMM_SLOT_BITMASK):
