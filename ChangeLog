@@ -1,5 +1,13 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/util/ipmi-sensor-util.h
+	(ipmi_sensor_decode_tolerance): Declare the parameters in the order
+	the definition and its caller use, (linearization, raw_data).  The
+	prototype listed them the other way around; both are uint8_t so the
+	compiler could not catch a caller following the header.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-error-util.c (ipmi_completion_code_strerror_r):
 	Fall through to the "No error message found" text for command
 	specific completion codes on the group extension and OEM network
