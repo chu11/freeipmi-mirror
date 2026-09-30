@@ -1,5 +1,13 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/util/ipmi-util.h: Remove the
+	duplicate prototypes for ipmi_is_ipmi_1_5_packet,
+	ipmi_is_ipmi_2_0_packet and the ipmi_check_session_sequence_number_*
+	functions; they are declared in ipmi-outofband-util.h, which
+	freeipmi.h also includes.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-util.c: Remove the unused
 	IPMI_SEQUENCE_NUMBER_* macros left behind when the sequence number
 	code moved to ipmi-outofband-util.c.
