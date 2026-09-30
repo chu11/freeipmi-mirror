@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-lan-configuration-parameters-spec.h
+	(IPMI_LAN_CONFIGURATION_PARAMETER_SELECTOR_VALID): Accept only the
+	assigned selectors 0 through 26 and 50 through 80.  The single
+	0 to 80 range also accepted the reserved selectors 27 through 49,
+	which the generic Set/Get LAN Configuration Parameters fill
+	functions then sent to the BMC.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-product-id-spec.h,
 	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-types-oem-fujitsu-spec.h:
 	Use C style comments, as every other public header does, so the
