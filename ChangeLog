@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h
+	(IPMI_ENTITY_ID_CHASSIS_BACK_PANEL_BOARD): Rename from
+	IPMI_ENTITY_ID_CHASSI_BACK_PANEL_BOARD.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/api/ipmi-pef-and-alerting-cmds-api.h,
 	libfreeipmi/api/ipmi-pef-and-alerting-cmds-api.c
 	(ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1,

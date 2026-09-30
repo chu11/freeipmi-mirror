@@ -45,7 +45,7 @@ extern "C" {
 #define IPMI_ENTITY_ID_POWER_UNIT_POWER_DOMAIN                   0x13
 #define IPMI_ENTITY_ID_POWER_MODULE_DC_TO_DC_CONVERTER           0x14
 #define IPMI_ENTITY_ID_POWER_MANAGEMENT_POWER_DISTRIBUTION_BOARD 0x15
-#define IPMI_ENTITY_ID_CHASSI_BACK_PANEL_BOARD                   0x16
+#define IPMI_ENTITY_ID_CHASSIS_BACK_PANEL_BOARD                  0x16
 #define IPMI_ENTITY_ID_SYSTEM_CHASSIS                            0x17
 #define IPMI_ENTITY_ID_SUB_CHASSIS                               0x18
 #define IPMI_ENTITY_ID_OTHER_CHASSIS_BOARD                       0x19
