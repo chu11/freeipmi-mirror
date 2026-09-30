@@ -635,7 +635,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_turbo_synchronization_ratio_r
 Get Limiting Policy ID Request
 ------------------------------
 
-FIID Template: tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rq =
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rq
 
     { 8,  "cmd", REQUIRED, LENGTH-FIXED }
     { 24, "manufacturer_id", REQUIRED, LENGTH-FIXED }
@@ -645,7 +645,7 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rq =
 Get Limiting Policy ID Response
 -------------------------------
 
-FIID Template: tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rs =
+FIID Template: tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rs
 
     { 8,  "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8,  "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }

@@ -108,16 +108,16 @@ Reserve Device SDR Repository Request
 
 FIID Template: tmpl_cmd_reserve_device_sdr_repository_rq
 
-    { 8, "cmd", REQUIRED, LENGTH-FIXED },
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
 
 Reserve Device SDR Repository Response
 --------------------------------------
 
 FIID Template: tmpl_cmd_reserve_device_sdr_repository_rs
 
-    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT },
-    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT },
-    { 16, "reservation_id", REQUIRED, LENGTH-FIXED },  /* LS byte first */
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 16, "reservation_id", REQUIRED, LENGTH-FIXED }  /* LS byte first */
 
 Get Sensor Reading Factors Request
 ----------------------------------

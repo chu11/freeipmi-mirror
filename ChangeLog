@@ -1,5 +1,20 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/templates/ipmi-lan-cmds-templates.h:
+	Write the IPv6 template rows in the "REQUIRED, LENGTH-FIXED" form
+	the documentation legend defines rather than C bitwise syntax, and
+	replace the nonexistent flag "FIXED" in four rows with LENGTH-FIXED.
+	* libfreeipmi/include/freeipmi/templates/ipmi-oem-intel-node-manager-cmds-templates.h:
+	Drop a stray " =" from two template headings.
+	* libfreeipmi/include/freeipmi/templates/ipmi-fru-dimmspd-record-format-templates.h:
+	Drop a terminator row copied from the C definition.
+	* libfreeipmi/include/freeipmi/templates/ipmi-sensor-cmds-templates.h:
+	Drop trailing commas from four rows.
+	* libfreeipmi/include/freeipmi/templates/ipmi-lan-interface-templates.h:
+	Spell SECURE-MEMSET-ON-CLEAR with hyphens like the other flags.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/ipmi-firmware-firewall-command-discovery-cmds.h,
 	libfreeipmi/cmds/ipmi-firmware-firewall-command-discovery-cmds.c
 	(fill_cmd_set_command_enables),

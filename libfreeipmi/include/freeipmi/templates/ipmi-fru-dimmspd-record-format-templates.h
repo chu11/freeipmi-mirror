@@ -547,7 +547,6 @@ FIID Template: tmpl_fru_dimm_spd_ddr4_module_specific_load_reduction_memory_modu
     { 792, "reserved21", REQUIRED, LENGTH-FIXED }
     /* Bytes 254-255: CRC */
     { 16, "crc", REQUIRED, LENGTH-FIXED }
-    { 0, "", 0}
 
 
 #endif  /* 0 */
