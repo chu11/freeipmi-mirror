@@ -1,5 +1,16 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sel/ipmi-sel-string-dell-poweredge.c
+	(_dell_calculate_dimm_location,
+	sel_string_output_dell_poweredge_event_data2_event_data3): Remove
+	the unconditional break left in the DIMM bitmap loops when multi-DIMM
+	output was added, so every DIMM indicated in event data3 is listed
+	rather than only the first.  Drop the extra "DIMM " prefix in the
+	no-memory-card case, which printed "DIMM DIMM N"; dimmstr already
+	carries it.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sel/ipmi-sel-string-sun-x4140.c
 	(_sel_string_output_sun_x4140_event_data3_fru_position_number): Return
 	1 after formatting the FRU position number.  Returning 0 told the

@@ -1642,8 +1642,6 @@ _dell_calculate_dimm_location (ipmi_sel_ctx_t ctx,
 
           if (offset >= DELL_EVENT_BUFFER_LENGTH)
             break;
-
-          break;
         }
     }
 
@@ -1872,8 +1870,6 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
                   if (offset >= DELL_EVENT_BUFFER_LENGTH)
                     break;
-
-                  break;
                 }
             }
 
@@ -1896,7 +1892,7 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                   if (sel_string_snprintf (buf,
                                            buflen,
                                            wlen,
-                                           "DIMM %s",
+                                           "%s",
                                            dimmstr))
                     (*oem_rv) = 1;
                   else
