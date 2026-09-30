@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-cmd-oem-intel-s2600wt2-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-oem-intel-s2600wt2-spec.h:
+	Include the Intel common counterpart header, as the S2600JF and
+	S5500WB board headers do.  The S2600WT2 headers only saw the common
+	definitions because the aggregators happen to include the other
+	boards first.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-quanta-spec.h
 	(IPMI_OEM_QUANTA_EVENT_DATA): Remove this empty, unused macro.
 

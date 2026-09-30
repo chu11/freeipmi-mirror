@@ -23,6 +23,8 @@
 extern "C" {
 #endif
 
+#include <freeipmi/spec/oem/intel/ipmi-cmd-oem-intel-common-spec.h>
+
 /*
  * Intel S2600WT2
  */
