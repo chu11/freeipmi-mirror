@@ -312,11 +312,11 @@ alert_string_checkout (ipmi_config_state_data_t *state_data,
     {
       int j;
 
-      if (ipmi_cmd_get_pef_configuration_parameters_alert_string (state_data->ipmi_ctx,
-                                                                  IPMI_GET_PEF_PARAMETER,
-                                                                  string_selector,
-                                                                  i + 1,
-                                                                  obj_cmd_rs) < 0)
+      if (ipmi_cmd_get_pef_configuration_parameters_alert_strings (state_data->ipmi_ctx,
+                                                                   IPMI_GET_PEF_PARAMETER,
+                                                                   string_selector,
+                                                                   i + 1,
+                                                                   obj_cmd_rs) < 0)
         {
           ipmi_config_err_t ret;
 
@@ -329,7 +329,7 @@ alert_string_checkout (ipmi_config_state_data_t *state_data,
               || state_data->prog_data->args->common_args.debug)
             pstdout_fprintf (state_data->pstate,
                              stderr,
-                             "ipmi_cmd_get_pef_configuration_parameters_alert_string: %s\n",
+                             "ipmi_cmd_get_pef_configuration_parameters_alert_strings: %s\n",
                              ipmi_ctx_errormsg (state_data->ipmi_ctx));
 
           goto cleanup;

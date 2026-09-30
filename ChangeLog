@@ -1,5 +1,16 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/api/ipmi-pef-and-alerting-cmds-api.h,
+	libfreeipmi/api/ipmi-pef-and-alerting-cmds-api.c
+	(ipmi_cmd_get_pef_configuration_parameters_alert_strings): Rename
+	from the singular ..._alert_string to match the setter, the
+	templates and the IPMI_PEF_CONFIGURATION_PARAMETER_ALERT_STRINGS
+	selector.
+	* ipmi-config/ipmi-config-category-pef-alert-string.c
+	(alert_string_checkout): Use the new name.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-spec.h
 	(IPMI_SENSOR_TYPE_SYSTEM_EVENT_EVENT_DATA2_OFFSET_ENTRY_ADDED_TO_AUXILIARY_LOG_LOG_ENTRY_ACTION_ENTRY_ADDED_BECAUSE_EVENT_DID_NOT_MAP_TO_STANDARD_IPMI_EVENT):
 	Rename from ..._EVENT_DID_NOT_BE_MAP_TO_STANDARD_IPMI_EVENT.

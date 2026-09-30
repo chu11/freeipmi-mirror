@@ -1210,11 +1210,11 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string_keys (ipmi_ctx_t ctx,
 }
 
 int
-ipmi_cmd_get_pef_configuration_parameters_alert_string (ipmi_ctx_t ctx,
-                                                        uint8_t get_parameter,
-                                                        uint8_t set_selector,
-                                                        uint8_t block_selector,
-                                                        fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_pef_configuration_parameters_alert_strings (ipmi_ctx_t ctx,
+                                                         uint8_t get_parameter,
+                                                         uint8_t set_selector,
+                                                         uint8_t block_selector,
+                                                         fiid_obj_t obj_cmd_rs)
 {
   if (_ipmi_cmd_get_pef_configuration_parameters_common (ctx,
                                                          get_parameter,
