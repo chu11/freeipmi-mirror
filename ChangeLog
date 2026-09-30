@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-outofband-util.c (ipmi_is_ipmi_1_5_packet,
+	ipmi_is_ipmi_2_0_packet): Reject a NULL pkt with EINVAL rather than
+	dereferencing it, as the other packet helpers do.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-rmcpplus-util.c
 	(ipmi_rmcpplus_check_integrity_pad): Return 0 when the trailer holds
 	fewer integrity pad bytes than pad_length claims, instead of comparing

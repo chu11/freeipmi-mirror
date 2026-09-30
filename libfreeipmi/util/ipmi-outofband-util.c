@@ -68,6 +68,12 @@ ipmi_is_ipmi_1_5_packet (const void *pkt, unsigned int pkt_len)
   int rmcp_hdr_len;
   uint8_t auth_type;
 
+  if (!pkt)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
+
   if ((rmcp_hdr_len = fiid_template_len_bytes (tmpl_rmcp_hdr)) < 0)
     {
       ERRNO_TRACE (errno);
@@ -90,6 +96,12 @@ ipmi_is_ipmi_2_0_packet (const void *pkt, unsigned int pkt_len)
 {
   int rmcp_hdr_len;
   uint8_t auth_type;
+
+  if (!pkt)
+    {
+      SET_ERRNO (EINVAL);
+      return (-1);
+    }
 
   if ((rmcp_hdr_len = fiid_template_len_bytes (tmpl_rmcp_hdr)) < 0)
     {
