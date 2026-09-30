@@ -267,6 +267,13 @@ int ipmi_fru_multirecord_dc_load (ipmi_fru_ctx_t ctx,
                                   unsigned int *minimum_current_load,
                                   unsigned int *maximum_current_load);
 
+/* In the multirecord functions below, sub_record_data_len,
+ * code_range_mask_len and oem_data_len are in/out values.  On input
+ * they give the size of the accompanying buffer; on output the number
+ * of bytes written to it.  If the buffer pointer is NULL or the input
+ * length is 0, the data is not returned and the length is left
+ * unchanged.
+ */
 int ipmi_fru_multirecord_management_access_record (ipmi_fru_ctx_t ctx,
                                                    const void *areabuf,
                                                    unsigned int areabuflen,

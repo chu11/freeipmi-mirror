@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h: Document that the
+	sub_record_data_len, code_range_mask_len and oem_data_len parameters
+	of the multirecord parsers are in/out values, buffer size on input
+	and bytes written on output, and that the data is skipped when the
+	buffer pointer is NULL or the input length is 0.  Only strbuflen of
+	ipmi_fru_type_length_field_to_string() was documented this way.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h: Point the %I format
 	note at ipmi_sel_ctx_set_parameter() with
 	IPMI_SEL_PARAMETER_INTERPRET_CONTEXT.  It referred to
