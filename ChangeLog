@@ -1,5 +1,15 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/record-format/ipmi-platform-event-trap-record-format.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-fru-chassis-types-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-fru-language-codes-spec.h,
+	libfreeipmi/include/freeipmi/util/ipmi-dcmi-util.h: Drop the unused
+	include of freeipmi/fiid/fiid.h.
+	* libfreeipmi/include/freeipmi/util/ipmi-sensor-util.h: Drop the
+	unused include of freeipmi/sdr/ipmi-sdr.h.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/interface/ipmi-rmcpplus-interface.h
 	(IPMI_MAX_PAYLOAD_LENGTH): Change to 65535, the largest value the
 	16 bit ipmi_payload_len field can hold, from 65536.  The RMCP+

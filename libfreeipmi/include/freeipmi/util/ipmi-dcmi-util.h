@@ -47,7 +47,6 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid/fiid.h>
 
 const char *ipmi_cmd_dcmi_str (uint8_t cmd);
 

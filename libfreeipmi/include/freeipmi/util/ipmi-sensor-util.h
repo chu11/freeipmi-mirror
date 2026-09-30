@@ -24,7 +24,6 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/sdr/ipmi-sdr.h>
 
 /* return length of string on success, -1 on error.  As with
  * snprintf(3), the length returned is that of the full string, so a
