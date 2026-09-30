@@ -463,6 +463,7 @@ ipmi_sel_ctx_set_parameter (ipmi_sel_ctx_t ctx,
       if (ptr)
         {
           ipmi_interpret_ctx_t interpret_ctx;
+          unsigned int interpret_flags;
           uint16_t tmp;
 
           interpret_ctx = *((ipmi_interpret_ctx_t *)ptr);
@@ -473,6 +474,38 @@ ipmi_sel_ctx_set_parameter (ipmi_sel_ctx_t ctx,
               SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_PARAMETERS);
               return (-1);
             }
+
+          /* The set_flags/set_manufacturer_id/set_product_id functions
+           * only propagate to an interpret ctx that is already attached,
+           * so push the current values into this one now so callers need
+           * not order those calls after this one.
+           */
+          if (ipmi_interpret_ctx_set_manufacturer_id (interpret_ctx,
+                                                      ctx->manufacturer_id) < 0
+              || ipmi_interpret_ctx_set_product_id (interpret_ctx,
+                                                    ctx->product_id) < 0)
+            {
+              SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERNAL_ERROR);
+              return (-1);
+            }
+
+          if (ipmi_interpret_ctx_get_flags (interpret_ctx, &interpret_flags) < 0)
+            {
+              SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_ERROR);
+              return (-1);
+            }
+
+          if (ctx->flags & IPMI_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORDS)
+            interpret_flags |= IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS;
+          else
+            interpret_flags &= ~IPMI_INTERPRET_FLAGS_SEL_ASSUME_SYSTEM_EVENT_RECORDS;
+
+          if (ipmi_interpret_ctx_set_flags (interpret_ctx, interpret_flags) < 0)
+            {
+              SEL_SET_ERRNUM (ctx, IPMI_SEL_ERR_INTERPRET_ERROR);
+              return (-1);
+            }
+
           ctx->interpret_ctx = interpret_ctx;
         }
       else

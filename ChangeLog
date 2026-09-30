@@ -1,5 +1,15 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sel/ipmi-sel.c (ipmi_sel_ctx_set_parameter): When an
+	interpret context is attached, push the current manufacturer id,
+	product id, and ASSUME_SYSTEM_EVENT_RECORDS flag into it.  The
+	set_manufacturer_id/set_product_id/set_flags functions only propagate
+	to an already-attached interpret context, so callers that set those
+	first previously left the interpret context stale.
+	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h: Document it.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sel/ipmi-sel.c (_get_parse_sel_entry_common,
 	_sel_parse_system_event_common): Make static; they are file-local
 	helpers with no prototypes.

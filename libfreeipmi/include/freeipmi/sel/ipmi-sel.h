@@ -123,7 +123,11 @@ int ipmi_sel_ctx_set_ipmi_version (ipmi_sel_ctx_t ctx,
  * For misc uses.
  *
  * INTERPRET_CONTEXT - for use with %I - see below.  interpret_ctx
- * assumed loaded with whatever config desired for interpretation
+ * assumed loaded with whatever config desired for interpretation.
+ * The SEL context's manufacturer id, product id, and
+ * ASSUME_SYSTEM_EVENT_RECORDS flag are pushed into the interpret
+ * context when it is set here and whenever they are changed
+ * afterwards, so the order of those calls does not matter.
  *
  * UTC_OFFSET - specific UTC offset to apply to timestamps (int)
  */
