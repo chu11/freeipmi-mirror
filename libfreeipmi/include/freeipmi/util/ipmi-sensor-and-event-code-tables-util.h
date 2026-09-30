@@ -41,13 +41,19 @@ int ipmi_event_reading_type_code_class (uint8_t event_reading_type_code);
 
 int ipmi_event_message_separator (const char *separator);
 
-/* return length of string written into buffer on success, -1 on error */
+/* return length of string on success, -1 on error.  As with
+ * snprintf(3), the length returned is that of the full string, so a
+ * return >= buflen indicates the output was truncated.
+ */
 int ipmi_get_generic_event_message (uint8_t event_reading_type_code,
                                     unsigned int offset,
                                     char *buf,
                                     unsigned int buflen);
 
-/* return length of string written into buffer on success, -1 on error */
+/* return length of string on success, -1 on error.  As with
+ * snprintf(3), the length returned is that of the full string, so a
+ * return >= buflen indicates the output was truncated.
+ */
 /* this function is for sensor specific messages, sensors with event
  * reading typo codes of 0x6F */
 int ipmi_get_sensor_type_message (uint8_t sensor_type,
@@ -55,28 +61,40 @@ int ipmi_get_sensor_type_message (uint8_t sensor_type,
                                   char *buf,
                                   unsigned int buflen);
 
-/* return length of string written into buffer on success, -1 on error */
+/* return length of string on success, -1 on error.  As with
+ * snprintf(3), the length returned is that of the full string, so a
+ * return >= buflen indicates the output was truncated.
+ */
 /* identical to above but returns "short" strings when appropriate */
 int ipmi_get_generic_event_message_short (uint8_t event_reading_type_code,
                                           unsigned int offset,
                                           char *buf,
                                           unsigned int buflen);
 
-/* return length of string written into buffer on success, -1 on error */
+/* return length of string on success, -1 on error.  As with
+ * snprintf(3), the length returned is that of the full string, so a
+ * return >= buflen indicates the output was truncated.
+ */
 /* identical to above but returns "short" strings when appropriate */
 int ipmi_get_sensor_type_message_short (uint8_t sensor_type,
                                         unsigned int offset,
                                         char *buf,
                                         unsigned int buflen);
 
-/* return length of string written into buffer on success, -1 on error */
+/* return length of string on success, -1 on error.  As with
+ * snprintf(3), the length returned is that of the full string, so a
+ * return >= buflen indicates the output was truncated.
+ */
 int ipmi_get_event_data2_message (uint8_t sensor_type,
                                   unsigned int offset,
                                   uint8_t event_data2,
                                   char *buf,
                                   unsigned int buflen);
 
-/* return length of string written into buffer on success, -1 on error */
+/* return length of string on success, -1 on error.  As with
+ * snprintf(3), the length returned is that of the full string, so a
+ * return >= buflen indicates the output was truncated.
+ */
 int ipmi_get_event_data3_message (uint8_t sensor_type,
                                   unsigned int offset,
                                   uint8_t event_data2,
@@ -84,7 +102,10 @@ int ipmi_get_event_data3_message (uint8_t sensor_type,
                                   char *buf,
                                   unsigned int buflen);
 
-/* return length of string written into buffer on success, -1 on error */
+/* return length of string on success, -1 on error.  As with
+ * snprintf(3), the length returned is that of the full string, so a
+ * return >= buflen indicates the output was truncated.
+ */
 /* this function is for OEM event reading type codes */
 int ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
                                         uint16_t product_id,
@@ -93,7 +114,10 @@ int ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
                                         char *buf,
                                         unsigned int buflen);
 
-/* return length of string written into buffer on success, -1 on error */
+/* return length of string on success, -1 on error.  As with
+ * snprintf(3), the length returned is that of the full string, so a
+ * return >= buflen indicates the output was truncated.
+ */
 /* this function is for sensor specific messages, sensors with event
  * reading typo codes of 0x6F */
 int ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
@@ -104,7 +128,10 @@ int ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
                                       char *buf,
                                       unsigned int buflen);
 
-/* return length of string written into buffer on success, -1 on error */
+/* return length of string on success, -1 on error.  As with
+ * snprintf(3), the length returned is that of the full string, so a
+ * return >= buflen indicates the output was truncated.
+ */
 /* this function is for string mappings from vendors that are specific
  * to a event reading typo code and sensor type combination. */
 int ipmi_get_oem_specific_message (uint32_t manufacturer_id,
@@ -115,7 +142,10 @@ int ipmi_get_oem_specific_message (uint32_t manufacturer_id,
                                    char *buf,
                                    unsigned int buflen);
 
-/* return length of string written into buffer on success, -1 on error */
+/* return length of string on success, -1 on error.  As with
+ * snprintf(3), the length returned is that of the full string, so a
+ * return >= buflen indicates the output was truncated.
+ */
 /* some vendors return values instead of event bitmasks in the
  * sensor or SEL event, this is to handle this special case
  */

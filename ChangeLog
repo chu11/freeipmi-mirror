@@ -1,5 +1,18 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/util/ipmi-device-types-util.h,
+	libfreeipmi/include/freeipmi/util/ipmi-iana-enterprise-numbers-util.h,
+	libfreeipmi/include/freeipmi/util/ipmi-sensor-and-event-code-tables-util.h,
+	libfreeipmi/include/freeipmi/util/ipmi-sensor-util.h: Document that
+	the string formatting functions return the full string length as
+	snprintf(3) does, so a return of buflen or more means the output was
+	truncated.  The comments said "length written into buffer", which
+	could lead a caller to index past the end of a short buffer.  Note
+	that ipmi_iana_enterprise_numbers_string() leaves buf untouched
+	when it returns 0.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/util/ipmi-sensor-and-event-code-tables-util.h
 	(ipmi_get_event_messages): Fix the comment.  The OEM bitmask helper
 	is ipmi_get_oem_event_bitmask_message(), the flag is

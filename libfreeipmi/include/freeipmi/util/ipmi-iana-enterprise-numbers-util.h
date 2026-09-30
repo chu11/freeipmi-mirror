@@ -26,8 +26,12 @@ extern "C" {
 
 #include <stdint.h>
 
-/* returns length written into buffer on success, -1 on error */
-/* if 0 bytes written, indicates no strings for manufacturer id
+/* return length of string on success, -1 on error.  As with
+ * snprintf(3), the length returned is that of the full string, so a
+ * return >= buflen indicates the output was truncated.
+ */
+/* if 0 returned, indicates no string for manufacturer id; buf is left
+ * untouched
  * if -1 w/ EINVAL, indicates manufacturer id out of range
  * will handle special case known bad manufacturer ids
  */

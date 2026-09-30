@@ -25,7 +25,10 @@ extern "C" {
 
 #include <stdint.h>
 
-/* return length of string written into buffer on success, -1 on error */
+/* return length of string on success, -1 on error.  As with
+ * snprintf(3), the length returned is that of the full string, so a
+ * return >= buflen indicates the output was truncated.
+ */
 int ipmi_device_type_modifier_message (uint8_t device_type,
                                        uint8_t device_modifier,
                                        char *buf,

@@ -26,7 +26,10 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/sdr/ipmi-sdr.h>
 
-/* return length of string written into buffer on success, -1 on error */
+/* return length of string on success, -1 on error.  As with
+ * snprintf(3), the length returned is that of the full string, so a
+ * return >= buflen indicates the output was truncated.
+ */
 int ipmi_get_threshold_message (uint8_t offset, char *buf, unsigned int buflen);
 
 const char *ipmi_get_sensor_type_string (uint8_t sensor_type);
@@ -36,7 +39,10 @@ const char *ipmi_get_oem_sensor_type_string (uint8_t sensor_type,
                                              uint32_t manufacturer_id,
                                              uint16_t product_id);
 
-/* returns length written into buffer on success, -1 on error */
+/* return length of string on success, -1 on error.  As with
+ * snprintf(3), the length returned is that of the full string, so a
+ * return >= buflen indicates the output was truncated.
+ */
 int ipmi_sensor_units_string (uint8_t sensor_units_percentage,
                               uint8_t sensor_units_modifier,
                               uint8_t sensor_units_rate,
