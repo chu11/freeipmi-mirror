@@ -63,12 +63,12 @@ int ipmi_kcs_ctx_errnum (ipmi_kcs_ctx_t ctx);
 char *ipmi_kcs_ctx_strerror (int errnum);
 char *ipmi_kcs_ctx_errormsg (ipmi_kcs_ctx_t ctx);
 
-int ipmi_kcs_ctx_get_driver_address (ipmi_kcs_ctx_t ctx, uint16_t *bmc_iobase_address);
+int ipmi_kcs_ctx_get_driver_address (ipmi_kcs_ctx_t ctx, uint16_t *driver_address);
 int ipmi_kcs_ctx_get_register_spacing (ipmi_kcs_ctx_t ctx, uint8_t *register_spacing);
 int ipmi_kcs_ctx_get_poll_interval (ipmi_kcs_ctx_t ctx, uint8_t *poll_interval);
 int ipmi_kcs_ctx_get_flags (ipmi_kcs_ctx_t ctx, unsigned int *flags);
 
-int ipmi_kcs_ctx_set_driver_address (ipmi_kcs_ctx_t ctx, uint16_t bmc_iobase_address);
+int ipmi_kcs_ctx_set_driver_address (ipmi_kcs_ctx_t ctx, uint16_t driver_address);
 int ipmi_kcs_ctx_set_register_spacing (ipmi_kcs_ctx_t ctx, uint8_t register_spacing);
 int ipmi_kcs_ctx_set_poll_interval (ipmi_kcs_ctx_t ctx, uint8_t poll_interval);
 int ipmi_kcs_ctx_set_flags (ipmi_kcs_ctx_t ctx, unsigned int flags);

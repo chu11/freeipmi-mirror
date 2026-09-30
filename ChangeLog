@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/driver/ipmi-kcs-driver.h
+	(ipmi_kcs_ctx_get_driver_address, ipmi_kcs_ctx_set_driver_address):
+	Name the parameter driver_address, matching the function names and
+	the definitions, instead of bmc_iobase_address.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h (ipmi_fru_board_info_area):
 	Name the final parameter board_custom_fields_len, as the definition
 	does.  The prototype called it chassis_custom_fields_len, copied
