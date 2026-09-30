@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h: Point the %I format
+	note at ipmi_sel_ctx_set_parameter() with
+	IPMI_SEL_PARAMETER_INTERPRET_CONTEXT.  It referred to
+	ipmi_sel_ctx_set_interpret_ctx(), which does not exist.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/util/ipmi-outofband-util.h
 	(IPMI_SEQUENCE_NUMBER_WINDOW_DEFAULT, IPMI_SEQUENCE_NUMBER_WINDOW_MIN,
 	IPMI_SEQUENCE_NUMBER_WINDOW_MAX): Move here from

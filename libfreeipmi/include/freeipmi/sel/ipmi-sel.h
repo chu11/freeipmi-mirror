@@ -350,8 +350,9 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  * %i - record ID in decimal
  * %I - event nominal vs. warning vs. critical interpretation [1]
  *
- * [1] - see libfreeipmi interpret library for information.  See
- * ipmi_sel_ctx_set_interpret_ctx().  If interpret context not
+ * [1] - see libfreeipmi interpret library for information.  Set the
+ * interpret context with ipmi_sel_ctx_set_parameter() and
+ * IPMI_SEL_PARAMETER_INTERPRET_CONTEXT.  If interpret context not
  * available, returns INTERPRET_ERROR.
  *
  * Available in SEL event and timestamped OEM SEL records
