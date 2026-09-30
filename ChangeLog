@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-jedec-manufacturer-identification-code-util.c
+	(_find_str): Make static; it is a file-local helper that was exported
+	as an external symbol.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-cipher-suite-util.c
 	(ipmi_algorithms_to_cipher_suite_id): Compare the authentication
 	algorithm against IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5, not
