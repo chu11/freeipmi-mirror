@@ -31,6 +31,8 @@ extern "C" {
 #define IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_FLAGS                       0x5
 #define IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_INITIATOR_INFO              0x6
 #define IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_INITIATOR_MAILBOX           0x7
+#define IPMI_SYSTEM_BOOT_OPTION_PARAMETER_OEM_MIN                          96
+#define IPMI_SYSTEM_BOOT_OPTION_PARAMETER_OEM_MAX                          127
 
 /* Add +1 to avoid compiler warnings */
 #define IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SELECTOR_VALID(__parameter_selector)              \
@@ -38,7 +40,8 @@ extern "C" {
     (__parameter_selector) <= IPMI_SYSTEM_BOOT_OPTION_PARAMETER_BOOT_INITIATOR_MAILBOX) ? 1 : 0)
 
 #define IPMI_SYSTEM_BOOT_OPTION_PARAMETER_SELECTOR_IS_OEM(__parameter_selector) \
-  (((__parameter_selector) >= 96 && (__parameter_selector) <= 127) ? 1 : 0)
+  (((__parameter_selector) >= IPMI_SYSTEM_BOOT_OPTION_PARAMETER_OEM_MIN \
+    && (__parameter_selector) <= IPMI_SYSTEM_BOOT_OPTION_PARAMETER_OEM_MAX) ? 1 : 0)
 
 #ifdef __cplusplus
 }
