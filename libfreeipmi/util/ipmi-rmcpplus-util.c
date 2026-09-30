@@ -1591,6 +1591,7 @@ ipmi_rmcpplus_calculate_payload_type (const void *pkt,
     }
 
   auth_type = *((uint8_t *)pkt + rmcp_hdr_len);
+  auth_type &= 0x0F;
 
   if (auth_type != IPMI_AUTHENTICATION_TYPE_RMCPPLUS)
     {
