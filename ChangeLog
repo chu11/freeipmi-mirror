@@ -1,5 +1,13 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.h
+	(IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_EVENT_SPECIAL_CODE_BITMASK):
+	Change to 0x38, the three contiguous bits above the _SHIFT of 3 that
+	hold event special codes 0 through 4.  0x34 dropped bit 3 and kept
+	bit 2, so codes 1 and 3 decoded as 0 and 2 in the SEL string output.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.h
 	(IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATION_VALIDITY_CHECK_BITMASK):
 	Change to 0x08 to match its _SHIFT of 3 and the S5500WB, S2600JF and
