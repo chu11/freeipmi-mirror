@@ -1,5 +1,15 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h
+	(IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_PER_DOMAIN_ENABLE_NODE_MANAGER_POLICIES,
+	IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_PER_POLICY_ENABLE_NODE_MANAGER_POLICIES):
+	Rename from ..._POLITICES, matching the ..._DISABLE_NODE_MANAGER_POLICIES
+	macros beside them.
+	* ipmi-oem/ipmi-oem-intelnm.c (ipmi_oem_intelnm_node_manager_policy_control):
+	Use the new names.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-dell-spec.h
 	(IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_NUMBER_VALID): Name
 	the macro parameter __dimm_number rather than __bank_number, copied

@@ -2126,14 +2126,14 @@ ipmi_oem_intelnm_node_manager_policy_control (ipmi_oem_state_data_t *state_data)
       if (!policyid_specified)
         {
           if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
-            policy_enable_disable = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_PER_DOMAIN_ENABLE_NODE_MANAGER_POLITICES;
+            policy_enable_disable = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_PER_DOMAIN_ENABLE_NODE_MANAGER_POLICIES;
           else
             policy_enable_disable = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_PER_DOMAIN_DISABLE_NODE_MANAGER_POLICIES;
         }
       else
         {
           if (!strcasecmp (state_data->prog_data->args->oem_options[0], "enable"))
-            policy_enable_disable = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_PER_POLICY_ENABLE_NODE_MANAGER_POLITICES;
+            policy_enable_disable = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_PER_POLICY_ENABLE_NODE_MANAGER_POLICIES;
           else
             policy_enable_disable = IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_PER_POLICY_DISABLE_NODE_MANAGER_POLICIES;
         }
