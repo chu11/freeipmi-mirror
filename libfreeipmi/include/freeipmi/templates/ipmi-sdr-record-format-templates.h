@@ -987,8 +987,8 @@ FIID Template: tmpl_sdr_fru_device_locator_record
     /********************
      * Record Key Bytes *
      ********************/
-    { 1, "direct_access_address.reserved", REQUIRED, LENGTH-FIXED }
-    { 7, "direct_access_address", REQUIRED, LENGTH-FIXED }
+    { 1, "device_access_address.reserved", REQUIRED, LENGTH-FIXED }
+    { 7, "device_access_address", REQUIRED, LENGTH-FIXED }
 
     { 8, "logical_fru_device_device_slave_address", REQUIRED, LENGTH-FIXED }
 
@@ -1032,8 +1032,8 @@ FIID Template: tmpl_sdr_fru_device_locator_record_non_intelligent
     /********************
      * Record Key Bytes *
      ********************/
-    { 1, "direct_access_address.reserved", REQUIRED, LENGTH-FIXED }
-    { 7, "direct_access_address", REQUIRED, LENGTH-FIXED }
+    { 1, "device_access_address.reserved", REQUIRED, LENGTH-FIXED }
+    { 7, "device_access_address", REQUIRED, LENGTH-FIXED }
 
     { 1, "non_intelligent_fru_device.reserved", REQUIRED, LENGTH-FIXED }
     { 7, "non_intelligent_fru_device.slave_address", REQUIRED, LENGTH-FIXED }
