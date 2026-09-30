@@ -16,8 +16,8 @@
  *
  */
 
-#ifndef IPMI_SDR_INTEL_NODE_MANAGER_OEM_H
-#define IPMI_SDR_INTEL_NODE_MANAGER_OEM_H
+#ifndef IPMI_SDR_OEM_INTEL_NODE_MANAGER_H
+#define IPMI_SDR_OEM_INTEL_NODE_MANAGER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -63,4 +63,4 @@ int ipmi_sdr_oem_parse_intel_node_manager (ipmi_sdr_ctx_t ctx,
 }
 #endif
 
-#endif /* IPMI_SDR_INTEL_NODE_MANAGER_OEM_H */
+#endif /* IPMI_SDR_OEM_INTEL_NODE_MANAGER_H */

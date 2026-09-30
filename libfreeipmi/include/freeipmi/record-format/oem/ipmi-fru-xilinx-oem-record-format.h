@@ -16,8 +16,8 @@
  *
  */
 
-#ifndef IPMI_FRU_OEM_XILINX_RECORD_FORMAT_H
-#define IPMI_FRU_OEM_XILINX_RECORD_FORMAT_H
+#ifndef IPMI_FRU_XILINX_OEM_RECORD_FORMAT_H
+#define IPMI_FRU_XILINX_OEM_RECORD_FORMAT_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,4 +42,4 @@ extern "C" {
 }
 #endif
 
-#endif /* IPMI_FRU_OEM_XILINX_RECORD_FORMAT_H */
+#endif /* IPMI_FRU_XILINX_OEM_RECORD_FORMAT_H */

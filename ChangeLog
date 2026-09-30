@@ -1,5 +1,21 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/record-format/oem/ipmi-fru-wistron-oem-record-format.h,
+	libfreeipmi/include/freeipmi/record-format/oem/ipmi-fru-xilinx-oem-record-format.h,
+	libfreeipmi/include/freeipmi/sdr/oem/ipmi-sdr-oem-intel-node-manager.h,
+	libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-netfn-oem-intel-s2600jf-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-netfn-oem-intel-s2600wt2-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-netfn-oem-intel-s5500wb-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-sol-configuration-parameters-oem-inventec-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-sol-configuration-parameters-oem-wistron-spec.h,
+	libfreeipmi/include/freeipmi/templates/ipmi-firmware-firewall-command-discovery-cmds-templates.h,
+	libfreeipmi/include/freeipmi/util/ipmi-entity-ids-util.h: Name the
+	header guard macros after the file, as every other header does.
+	The old names transposed words, carried a stray _COMMON_, dropped
+	_UTIL_, or read FIRMWARE_FIRMWARE.  All guards remain unique.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/api/ipmi-chassis-cmds-api.c
 	(ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing):
 	Fix the dont_clear_on_pushbutton_reset_soft_reset parameter name,

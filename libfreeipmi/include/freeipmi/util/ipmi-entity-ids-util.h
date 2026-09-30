@@ -16,8 +16,8 @@
  *
  */
 
-#ifndef IPMI_ENTITY_IDS_H
-#define IPMI_ENTITY_IDS_H
+#ifndef IPMI_ENTITY_IDS_UTIL_H
+#define IPMI_ENTITY_IDS_UTIL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,4 +31,4 @@ const char *ipmi_get_entity_id_string (uint8_t entity_id);
 }
 #endif
 
-#endif /* IPMI_ENTITY_IDS_H */
+#endif /* IPMI_ENTITY_IDS_UTIL_H */
