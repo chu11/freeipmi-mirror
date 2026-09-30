@@ -91,8 +91,8 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_DESTINATION_SELECTOR_VALID(__val)         \
-  (((__val + 1) >= (IPMI_DESTINATION_SELECTOR_MIN + 1) \
-    || (__val) <= IPMI_DESTINATION_SELECTOR_MAX) ? 1 : 0)
+  ((((__val) + 1) >= (IPMI_DESTINATION_SELECTOR_MIN + 1) \
+    && (__val) <= IPMI_DESTINATION_SELECTOR_MAX) ? 1 : 0)
 
 
 #define IPMI_DESTINATION_TYPE_PET_TRAP_DESTINATION      0x0

@@ -1,5 +1,16 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-lan-cmds.h
+	(IPMI_DESTINATION_SELECTOR_VALID): Join the two range checks with
+	&& instead of ||.  The first check is always true for an unsigned
+	value, so the macro accepted every destination selector and
+	fill_cmd_set_lan_configuration_parameters_destination_type() and
+	_destination_addresses() truncated out of range selectors into the
+	4 bit field instead of failing with EINVAL.  Parenthesize the macro
+	argument.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h
 	(IPMI_ENTITY_INSTANCE_SYSTEM_RELATIVE,
 	IPMI_ENTITY_INSTANCE_DEVICE_RELATIVE): Compare against the _MAX
