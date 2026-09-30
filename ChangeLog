@@ -1,5 +1,13 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sel/ipmi-sel.c (ipmi_sel_errmsgs): Swap the strings at
+	indexes 8 and 9 so they line up with
+	IPMI_SEL_ERR_SEL_ENTRIES_LIST_END (8) and
+	IPMI_SEL_ERR_INVALID_SEL_ENTRY (9) in ipmi-sel.h.
+	ipmi_sel_ctx_strerror() reported each error with the other's text.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/ipmi-lan-cmds.h
 	(IPMI_DESTINATION_SELECTOR_VALID): Join the two range checks with
 	&& instead of ||.  The first check is always true for an unsigned
