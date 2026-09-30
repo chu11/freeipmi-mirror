@@ -101,7 +101,7 @@ FIID Template: tmpl_cmd_get_device_sdr_rs
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 16, "next_record_id", REQUIRED, LENGTH-FIXED }
     /* 2040 = 255 * 8, 255 b/c bytes_to_read field in request is 1 byte long */
-    { 2040, "record_data", REQUIRED, LENGTH-VARIABLE }
+    { 2040, "record_data", OPTIONAL, LENGTH-VARIABLE }
 
 Reserve Device SDR Repository Request
 -------------------------------------

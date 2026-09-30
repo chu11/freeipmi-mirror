@@ -299,7 +299,7 @@ FIID Template: tmpl_cmd_get_pef_configuration_parameters_rs
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 4, "present_revision", REQUIRED, LENGTH-FIXED }
     { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
-    { 1024, "configuration_parameter_data", REQUIRED, LENGTH-VARIABLE }
+    { 1024, "configuration_parameter_data", OPTIONAL, LENGTH-VARIABLE }
 
 Get PEF Configuration Parameters (Set In Progress) Response
 -----------------------------------------------------------

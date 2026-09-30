@@ -1,5 +1,16 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/templates/ipmi-lan-cmds-templates.h,
+	libfreeipmi/include/freeipmi/templates/ipmi-pef-and-alerting-cmds-templates.h,
+	libfreeipmi/include/freeipmi/templates/ipmi-serial-modem-cmds-templates.h,
+	libfreeipmi/include/freeipmi/templates/ipmi-sol-cmds-templates.h:
+	Document "configuration_parameter_data" in the Get Configuration
+	Parameters responses as OPTIONAL, matching the templates.
+	* libfreeipmi/include/freeipmi/templates/ipmi-sensor-cmds-templates.h:
+	Likewise for "record_data" in tmpl_cmd_get_device_sdr_rs.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/templates/ipmi-messaging-support-cmds-templates.h:
 	Match the documented templates to their definitions.  The 128 bit
 	"string" fields of the Set and Get System Info Parameters string
