@@ -1,5 +1,16 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-comp-code-spec.h
+	(IPMI_COMP_CODE_SET_SYSTEM_INFO_PARAMETERS_INVALID_SET_IN_PROGRESS_STR,
+	IPMI_COMP_CODE_SET_BOOT_OPTIONS_INVALID_SET_IN_PROGRESS_STR,
+	IPMI_COMP_CODE_SET_PEF_CONFIGURATION_PARAMETERS_INVALID_SET_IN_PROGRESS_STR,
+	IPMI_COMP_CODE_SET_LAN_CONFIGURATION_PARAMETERS_INVALID_SET_IN_PROGRESS_STR,
+	IPMI_COMP_CODE_SET_SERIAL_MODEM_CONFIGURATION_INVALID_SET_IN_PROGRESS_STR,
+	IPMI_COMP_CODE_SET_SOL_CONFIGURATION_PARAMETERS_INVALID_SET_IN_PROGRESS_STR):
+	Fix "not int the" to "not in the".
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/api/ipmi-pef-and-alerting-cmds-api.h,
 	libfreeipmi/api/ipmi-pef-and-alerting-cmds-api.c
 	(ipmi_cmd_get_pef_configuration_parameters_alert_strings): Rename

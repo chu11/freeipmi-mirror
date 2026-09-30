@@ -245,7 +245,7 @@ extern "C" {
 #define IPMI_COMP_CODE_SET_SYSTEM_INFO_PARAMETERS_INVALID_SET_IN_PROGRESS                                             0x81
 #define IPMI_COMP_CODE_SET_SYSTEM_INFO_PARAMETERS_INVALID_SET_IN_PROGRESS_STR \
   "attempt to set the 'set in progress' value (in parameter #0) " \
-  "when not int the 'set complete' state."
+  "when not in the 'set complete' state."
 
 #define IPMI_COMP_CODE_SET_SYSTEM_INFO_PARAMETERS_WRITE_READ_ONLY_PARAMETER                                           0x82
 #define IPMI_COMP_CODE_SET_SYSTEM_INFO_PARAMETERS_WRITE_READ_ONLY_PARAMETER_STR \
@@ -446,7 +446,7 @@ extern "C" {
 #define IPMI_COMP_CODE_SET_BOOT_OPTIONS_INVALID_SET_IN_PROGRESS                                                       0x81
 #define IPMI_COMP_CODE_SET_BOOT_OPTIONS_INVALID_SET_IN_PROGRESS_STR \
   "attempt to set the 'set in progress' value (in parameter #0) " \
-  "when not int the 'set complete' state."
+  "when not in the 'set complete' state."
 
 #define IPMI_COMP_CODE_SET_BOOT_OPTIONS_WRITE_READ_ONLY_PARAMETER                                                     0x82
 #define IPMI_COMP_CODE_SET_BOOT_OPTIONS_WRITE_READ_ONLY_PARAMETER_STR \
@@ -479,7 +479,7 @@ extern "C" {
 #define IPMI_COMP_CODE_SET_PEF_CONFIGURATION_PARAMETERS_INVALID_SET_IN_PROGRESS                                       0x81
 #define IPMI_COMP_CODE_SET_PEF_CONFIGURATION_PARAMETERS_INVALID_SET_IN_PROGRESS_STR \
   "attempt to set the 'set in progress' value (in parameter #0) " \
-  "when not int the 'set complete' state."
+  "when not in the 'set complete' state."
 
 #define IPMI_COMP_CODE_SET_PEF_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER                                     0x82
 #define IPMI_COMP_CODE_SET_PEF_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER_STR \
@@ -592,7 +592,7 @@ extern "C" {
 #define IPMI_COMP_CODE_SET_LAN_CONFIGURATION_PARAMETERS_INVALID_SET_IN_PROGRESS                                       0x81
 #define IPMI_COMP_CODE_SET_LAN_CONFIGURATION_PARAMETERS_INVALID_SET_IN_PROGRESS_STR \
   "attempt to set the 'set in progress' value (in parameter #0) " \
-  "when not int the 'set complete' state."
+  "when not in the 'set complete' state."
 
 #define IPMI_COMP_CODE_SET_LAN_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER                                     0x82
 #define IPMI_COMP_CODE_SET_LAN_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER_STR \
@@ -620,7 +620,7 @@ extern "C" {
 #define IPMI_COMP_CODE_SET_SERIAL_MODEM_CONFIGURATION_INVALID_SET_IN_PROGRESS                                         0x81
 #define IPMI_COMP_CODE_SET_SERIAL_MODEM_CONFIGURATION_INVALID_SET_IN_PROGRESS_STR \
   "attempt to set the 'set in progress' value (in parameter #0) " \
-  "when not int the 'set complete' state."
+  "when not in the 'set complete' state."
 
 #define IPMI_COMP_CODE_SET_SERIAL_MODEM_CONFIGURATION_WRITE_READ_ONLY_PARAMETER                                       0x82
 #define IPMI_COMP_CODE_SET_SERIAL_MODEM_CONFIGURATION_WRITE_READ_ONLY_PARAMETER_STR \
@@ -644,7 +644,7 @@ extern "C" {
 #define IPMI_COMP_CODE_SET_SOL_CONFIGURATION_PARAMETERS_INVALID_SET_IN_PROGRESS                                       0x81
 #define IPMI_COMP_CODE_SET_SOL_CONFIGURATION_PARAMETERS_INVALID_SET_IN_PROGRESS_STR \
   "attempt to set the 'set in progress' value (in parameter #0) " \
-  "when not int the 'set complete' state."
+  "when not in the 'set complete' state."
 
 #define IPMI_COMP_CODE_SET_SOL_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER                                     0x82
 #define IPMI_COMP_CODE_SET_SOL_CONFIGURATION_PARAMETERS_WRITE_READ_ONLY_PARAMETER_STR \
