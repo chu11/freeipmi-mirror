@@ -126,7 +126,7 @@ FIID Template: tmpl_cmd_set_pef_configuration_parameters_set_in_progress_rq
     { 7, "parameter_selector", REQUIRED, LENGTH-FIXED }
     { 1, "reserved1", REQUIRED, LENGTH-FIXED }
     { 2, "state", REQUIRED, LENGTH-FIXED }
-    { 6, "reserved", REQUIRED, LENGTH-FIXED }
+    { 6, "reserved2", REQUIRED, LENGTH-FIXED }
 
 Set PEF Configuration Parameters (PEF Control) Request
 ------------------------------------------------------
@@ -478,7 +478,6 @@ FIID Template: tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs
     { 1, "reserved2", REQUIRED, LENGTH-FIXED }
     /* Not indicated as 8 bits in E451, but all other filter number fields adjusted to 8 bits */
     { 8, "filter_number", REQUIRED, LENGTH-FIXED }
-    { 1, "reserved3", REQUIRED, LENGTH-FIXED }
     { 7, "set_number_for_string", REQUIRED, LENGTH-FIXED }
     { 1, "reserved4", REQUIRED, LENGTH-FIXED }
 

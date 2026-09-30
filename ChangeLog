@@ -1,5 +1,16 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/templates/ipmi-pef-and-alerting-cmds-templates.h:
+	Match the documented templates to their definitions.  Remove the
+	"reserved3" field from
+	tmpl_cmd_get_pef_configuration_parameters_alert_string_keys_rs,
+	which does not exist and left the documented template 49 bits long,
+	and name the trailing field of
+	tmpl_cmd_set_pef_configuration_parameters_set_in_progress_rq
+	"reserved2".
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/templates/ipmi-sdr-record-format-templates.h:
 	Name the FRU device locator record field "device_access_address",
 	as the tmpl_sdr_fru_device_locator_record templates and
