@@ -1,6 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/util/ipmi-rmcpplus-util.c
+	(ipmi_rmcpplus_check_integrity_pad): Return 0 when the trailer holds
+	fewer integrity pad bytes than pad_length claims, instead of comparing
+	uninitialized stack bytes past the data returned by
+	fiid_obj_get_data().
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/util/ipmi-rmcpplus-util.c
 	(ipmi_rmcpplus_calculate_payload_type): Mask the authentication type
 	to its low nibble before comparing to IPMI_AUTHENTICATION_TYPE_RMCPPLUS,
 	as ipmi_is_ipmi_2_0_packet() does, so the two agree on packets with

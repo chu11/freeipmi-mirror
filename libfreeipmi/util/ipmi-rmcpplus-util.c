@@ -873,6 +873,7 @@ int
 ipmi_rmcpplus_check_integrity_pad (fiid_obj_t obj_rmcpplus_session_trlr)
 {
   uint8_t integrity_pad[IPMI_MAX_INTEGRITY_PAD_LENGTH];
+  int integrity_pad_len;
   uint8_t pad_length;
   uint64_t val;
   unsigned int i;
@@ -902,14 +903,17 @@ ipmi_rmcpplus_check_integrity_pad (fiid_obj_t obj_rmcpplus_session_trlr)
   if (pad_length > IPMI_INTEGRITY_PAD_MULTIPLE)
     return (0);
 
-  if (fiid_obj_get_data (obj_rmcpplus_session_trlr,
-                         "integrity_pad",
-                         integrity_pad,
-                         IPMI_MAX_INTEGRITY_PAD_LENGTH) < 0)
+  if ((integrity_pad_len = fiid_obj_get_data (obj_rmcpplus_session_trlr,
+                                              "integrity_pad",
+                                              integrity_pad,
+                                              IPMI_MAX_INTEGRITY_PAD_LENGTH)) < 0)
     {
       FIID_OBJECT_ERROR_TO_ERRNO (obj_rmcpplus_session_trlr);
       return (-1);
     }
+
+  if (integrity_pad_len < pad_length)
+    return (0);
 
   for (i = 0; i < pad_length; i++)
     {
