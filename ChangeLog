@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-system-software-id-spec.h
+	(IPMI_SYSTEM_SOFTWARE_TYPE_BIOS_MIN): Change to 0x00, the start of
+	the BIOS range in IPMI 2.0 Table 5-4 and in ipmi-slave-address-spec.h.
+	(IPMI_SYSTEM_SOFTWARE_TYPE_IS_BIOS): Compare against BIOS_MIN + 1
+	so the +1 idiom is applied to both sides; the macro already
+	accepted 0x00 in effect because the right hand side lacked the +1.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-channel-spec.h
 	(IPMI_CHANNEL_MEDIUM_TYPE_RESERVED_MAX): Extend to 0x5F.  IPMI 2.0
 	Table 6-3 assigns 0x60 to 0x7F to OEM and reserves everything else,
