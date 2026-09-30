@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-dell-spec.h
+	(IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_NUMBER_VALID): Name
+	the macro parameter __dimm_number rather than __bank_number, copied
+	from the BANK_NUMBER_VALID macro above it.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/ipmi-pef-and-alerting-cmds.h
 	(IPMI_STRING_SELECTOR_VALID),
 	libfreeipmi/include/freeipmi/spec/ipmi-channel-spec.h
