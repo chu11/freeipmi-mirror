@@ -1,5 +1,15 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.h
+	(IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATION_VALIDITY_CHECK_BITMASK):
+	Change to 0x08 to match its _SHIFT of 3 and the S5500WB, S2600JF and
+	S2600WP definitions of the same field.  It duplicated the channel
+	validity bit 0x10, so the shifted value was 0 or 2, never
+	..._DIMM_SLOT_ID_VALID, and the Xeon Broadwell memory SEL decoder
+	took DIMM validity from the channel bit.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/record-format/oem/ipmi-sdr-oem-intel-record-format.h
 	(IPMI_SDR_OEM_INTEL_QUANTA_QSSC_S4R_THERMAL_PROFILE_DATA_RECORD_CONTROL_EVENT_MODE_BITMASK):
 	Change to 0x08, the bit its _SHIFT of 3 selects and the next bit after
