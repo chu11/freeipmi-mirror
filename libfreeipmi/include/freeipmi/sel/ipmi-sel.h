@@ -452,8 +452,10 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  * Output a month name (Jan, Feb, Mar, etc.) instead of the month
  * number when outputting the date.
  *
- * Returns length of data written to buffer.  If >= buflen, no null
- * termination exists in buffer.
+ * Returns the length of the string written to buffer.  The buffer is
+ * always null terminated, even if nothing was output.  If the output
+ * did not fit, buflen is returned and the buffer holds the first
+ * buflen - 1 characters.
  */
 int ipmi_sel_parse_read_record_string (ipmi_sel_ctx_t ctx,
                                        const char *fmt,

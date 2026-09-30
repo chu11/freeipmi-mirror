@@ -1,5 +1,15 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sel/ipmi-sel-string.c (sel_format_record_string): Null
+	terminate the output buffer up front so a format whose fields are all
+	unavailable does not leave the caller with an uninitialized buffer.
+	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h
+	(ipmi_sel_parse_read_record_string): Correct the return value
+	comment; the buffer is always null terminated and a return of buflen
+	means the output was truncated.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-windmill-spec.h:
 	Rename the IPMI_SENSOR_TYPE_PROCESSOR_EVENT_DATA2_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_*
 	macros to EVENT_DATA3; the CPU number, source and source-extra fields

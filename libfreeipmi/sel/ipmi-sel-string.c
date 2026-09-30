@@ -2661,6 +2661,9 @@ sel_format_record_string (ipmi_sel_ctx_t ctx,
   memcpy (sel_entry.sel_event_record, sel_record, IPMI_SEL_RECORD_LENGTH);
   sel_entry.sel_event_record_len = IPMI_SEL_RECORD_LENGTH;
 
+  /* A format whose fields are all unavailable may write nothing */
+  buf[0] = '\0';
+
   if (sel_get_record_header_info (ctx,
                                   &sel_entry,
                                   &record_id,
