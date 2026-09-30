@@ -1,5 +1,17 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.h,
+	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.c
+	(ipmi_oem_intel_specific_pcie_correctable_sensor,
+	ipmi_oem_intel_specific_pcie_correctable_sensor_max_index): Rename
+	from ..._pci_correctable_sensor to match the
+	IPMI_OEM_INTEL_SPECIFIC_PCIE_CORRECTABLE_SENSOR_* offsets and event
+	reading type code they describe.
+	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c: Use the
+	new names.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-cmd-oem-intel-s2600wt2-spec.h,
 	libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-oem-intel-s2600wt2-spec.h:
 	Include the Intel common counterpart header, as the S2600JF and

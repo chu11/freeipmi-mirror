@@ -42,8 +42,8 @@ extern "C" {
  * String arrays for above
  */
 
-extern const char * const ipmi_oem_intel_specific_pci_correctable_sensor[];
-extern unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index;
+extern const char * const ipmi_oem_intel_specific_pcie_correctable_sensor[];
+extern unsigned int ipmi_oem_intel_specific_pcie_correctable_sensor_max_index;
 
 /*
  * Intel S2600JF/Appro 512X

@@ -41,7 +41,7 @@
  * Intel S5500WB/Penguin Computing Relion 700
  */
 
-const char * const ipmi_oem_intel_specific_pci_correctable_sensor[] =
+const char * const ipmi_oem_intel_specific_pcie_correctable_sensor[] =
   {
     "Receiver Error",
     "Bad DLLP Error",
@@ -52,7 +52,7 @@ const char * const ipmi_oem_intel_specific_pci_correctable_sensor[] =
     "Link Bandwidth Changed (ECN) Error",
     NULL
   };
-unsigned int ipmi_oem_intel_specific_pci_correctable_sensor_max_index = 0x06;
+unsigned int ipmi_oem_intel_specific_pcie_correctable_sensor_max_index = 0x06;
 
 /*
  * Intel S2600JF/Appro 512X
