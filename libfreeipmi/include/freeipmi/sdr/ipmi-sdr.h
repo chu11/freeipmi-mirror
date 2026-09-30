@@ -117,7 +117,7 @@ typedef void (*Ipmi_Sdr_Cache_Create_Callback)(uint8_t sdr_version,
 
 /* return != 0 to quit iteration, return val will be returned up
  * through original caller.  return < 0 will result in
- * IPMI_SDR_ERR_ERROR_RETURNED_IN_CALLBACK to bet set.
+ * IPMI_SDR_ERR_ERROR_RETURNED_IN_CALLBACK to be set.
  *
  * Users should be mindful of the API calls they make will in a
  * callback.  Calls to some functions, such as ipmi_sdr_cache_first()
@@ -596,7 +596,7 @@ int ipmi_sdr_parse_oem_data (ipmi_sdr_ctx_t ctx,
 
 int ipmi_sdr_cache_delete (ipmi_sdr_ctx_t ctx, const char *filename);
 
-/* ipmi_sensor_parse_sensor_name_string
+/* ipmi_sdr_parse_sensor_name
  * - Wrapper that will return id_string or device_id_string dependent
  *   on SDR type.
  * - Based on flags, will deal with shared sensors and alter sensor
@@ -616,7 +616,7 @@ int ipmi_sdr_parse_sensor_name (ipmi_sdr_ctx_t ctx,
                                 char *buf,
                                 unsigned int buflen);
 
-/* ipmi_sensor_parse_entity_sensor_name
+/* ipmi_sdr_parse_entity_sensor_name
  * - Creates sensor names with the entity id and instance for better
  *   names on some systems.
  * - For example, on some systems sensor ID strings are all called

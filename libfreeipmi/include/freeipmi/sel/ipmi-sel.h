@@ -65,7 +65,7 @@ extern "C" {
 #define IPMI_SEL_STRING_FLAGS_NON_ABBREVIATED_UNITS         0x0020
 #define IPMI_SEL_STRING_FLAGS_ENTITY_SENSOR_NAMES           0x0040
 #define IPMI_SEL_STRING_FLAGS_INTERPRET_OEM_DATA            0x0100
-/* Timestamps are defined as localtime.  If there are UTC and
+/* Timestamps are defined as localtime.  If timestamps are UTC and
  * one wishes to output in localtime, this flag will do so.
  */
 #define IPMI_SEL_STRING_FLAGS_UTC_TO_LOCALTIME              0x0200
@@ -160,7 +160,7 @@ int ipmi_sel_ctx_set_separator (ipmi_sel_ctx_t ctx, const char *separator);
  * - Normally, it is no big deal for a reservation ID to be canceled.
  *   The most normal circumstance is a new SEL event has been generated
  *   while reading the current list of SEL records.  Therefore, under
- *   most circumstances, this library will simple re-retrieve a
+ *   most circumstances, this library will simply re-retrieve a
  *   reservation ID once it has noticed one has been canceled.
  * - These functions allow you to override the default functionality.
  *   You may inform the library to register a specific reservation ID

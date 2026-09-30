@@ -1,5 +1,17 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/api/ipmi-api.h,
+	libfreeipmi/include/freeipmi/fru/ipmi-fru.h,
+	libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h,
+	libfreeipmi/include/freeipmi/sel/ipmi-sel.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-cmd-spec.h,
+	libfreeipmi/include/freeipmi/util/ipmi-sensor-and-event-code-tables-util.h:
+	Fix typos in comments, including the ipmi_cmd_raw() buffer name
+	and the ipmi_sdr_parse_sensor_name() and
+	ipmi_sdr_parse_entity_sensor_name() function names.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-fru-language-codes-spec.h
 	(IPMI_FRU_LANGUAGE_CODE_SERBO_CROATIAN): Rename from
 	IPMI_FRU_LANGUAGE_CODE_SERBO_CROATION, the specification's

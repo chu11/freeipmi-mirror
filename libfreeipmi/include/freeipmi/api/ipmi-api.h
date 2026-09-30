@@ -51,7 +51,7 @@ extern "C" {
  * IPMI completion codes and RMCPPlus codes to their respective error
  * codes.
  *
- * Not that other factors outside of completion codes/RMCPPlus codes
+ * Note that other factors outside of completion codes/RMCPPlus codes
  * could also lead to these IPMI errors.  For example, depending on
  * motherboard support of username types, a IPMI_ERR_USERNAME_INVALID
  * could be returned even though no IPMI error occurred.  In addition,
@@ -187,7 +187,7 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
 #define IPMI_WORKAROUND_FLAGS_INBAND_ASSUME_IO_BASE_ADDRESS                 0x00000001
 #define IPMI_WORKAROUND_FLAGS_INBAND_SPIN_POLL                              0x00000002
 
-/* NONBLOCKING - for inband only, do no block if device busy.  Only
+/* NONBLOCKING - for inband only, do not block if device busy.  Only
  * applied when the device is opened; changing it later with
  * ipmi_ctx_set_flags() has no effect on the already open driver.
  *
@@ -211,7 +211,7 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
  *
  * NO_LEGAL_CHECK - do no check if IPMI response payloads have
  * sufficient data (i.e. completion code fields) to be legal.  Useful
- * to work around non-compliant motherboards.  This flag is ignores
+ * to work around non-compliant motherboards.  This flag ignores
  * the legality of IPMI payloads greater than the NO_VALID_CHECK
  * option.  For example, NO_VALID_CHECK would still return an error if
  * an IPMI payload did not return a completion code in an IPMI
@@ -351,7 +351,7 @@ int ipmi_cmd_ipmb (ipmi_ctx_t ctx,
 
 /* for request/response, byte #1 = cmd */
 /* for response, byte #2 (typically) = completion code */
-/* returns length written into buf_fs on success, -1 on error */
+/* returns length written into buf_rs on success, -1 on error */
 int ipmi_cmd_raw (ipmi_ctx_t ctx,
                   uint8_t lun,
                   uint8_t net_fn,

@@ -55,7 +55,7 @@ int ipmi_get_generic_event_message (uint8_t event_reading_type_code,
  * return >= buflen indicates the output was truncated.
  */
 /* this function is for sensor specific messages, sensors with event
- * reading typo codes of 0x6F */
+ * reading type codes of 0x6F */
 int ipmi_get_sensor_type_message (uint8_t sensor_type,
                                   unsigned int offset,
                                   char *buf,
@@ -119,7 +119,7 @@ int ipmi_get_oem_generic_event_message (uint32_t manufacturer_id,
  * return >= buflen indicates the output was truncated.
  */
 /* this function is for sensor specific messages, sensors with event
- * reading typo codes of 0x6F */
+ * reading type codes of 0x6F */
 int ipmi_get_oem_sensor_type_message (uint32_t manufacturer_id,
                                       uint16_t product_id,
                                       uint8_t sensor_type,

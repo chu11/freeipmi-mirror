@@ -129,7 +129,7 @@ extern "C" {
 #define IPMI_CMD_SET_EVENT_RECEIVER                               0x00
 #define IPMI_CMD_GET_EVENT_RECEIVER                               0x01
 #define IPMI_CMD_PLATFORM_EVENT                                   0x02 /* (a.k.a. Event Message) */
-/* unassigned                                                     0x03h to 0x0F */
+/* unassigned                                                     0x03 to 0x0F */
 
 /* PEF and Alerting Commands */
 #define IPMI_CMD_GET_PEF_CAPABILITIES                             0x10
