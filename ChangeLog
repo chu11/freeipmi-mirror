@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-oem-dell-spec.h
+	(IPMI_OEM_DELL_EXTENDED_CONFIG_IPV6_EXTENDED_GROUP_IPV6_GATEWAY_IP_ADDRESS_MASK):
+	Rename from ..._IPV6_GATEWAYY_IP_ADDRESS_MASK.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-comp-code-oem-wistron-spec.h:
 	Rename the IPMI_COMP_CODE_OEM_WISTON_* completion code macros to
 	IPMI_COMP_CODE_OEM_WISTRON_*.
