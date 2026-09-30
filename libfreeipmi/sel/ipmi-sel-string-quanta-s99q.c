@@ -50,8 +50,6 @@
 
 #include "freeipmi-portability.h"
 
-#define QUANTA_EVENT_BUFFER_LENGTH 4096
-
 int
 sel_string_output_quanta_s99q_sensor_name (ipmi_sel_ctx_t ctx,
                                            struct ipmi_sel_entry *sel_entry,
@@ -310,7 +308,7 @@ sel_string_output_quanta_s99q_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_UNCORRECTABLE_MEMORY_ERROR
           || system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_MEMORY_SPARE))
     {
-      char dimmbuf[QUANTA_EVENT_BUFFER_LENGTH];
+      char dimmbuf[EVENT_BUFFER_LENGTH];
       char *dimm_str = NULL;
 
       switch (system_event_record_data->event_data3)
@@ -371,7 +369,7 @@ sel_string_output_quanta_s99q_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
           break;
         default:
           snprintf (dimmbuf,
-                    QUANTA_EVENT_BUFFER_LENGTH,
+                    EVENT_BUFFER_LENGTH,
                     "Error DIMM %u",
                     system_event_record_data->event_data3);
           dimm_str = dimmbuf;

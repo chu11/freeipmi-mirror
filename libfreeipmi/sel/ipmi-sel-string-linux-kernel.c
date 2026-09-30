@@ -50,8 +50,6 @@
  * Needless to say, this is not for a specific OEM, but for generic panics from the Linux kernel.  Any vendor applies.
  */
 
-#define LINUX_KERNEL_EVENT_BUFFER_LENGTH 4096
-
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
@@ -71,7 +69,7 @@ sel_string_output_linux_kernel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                                                         struct ipmi_sel_system_event_record_data *system_event_record_data,
                                                         int *oem_rv)
 {
-  char panic_str[LINUX_KERNEL_EVENT_BUFFER_LENGTH];
+  char panic_str[EVENT_BUFFER_LENGTH];
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -97,7 +95,7 @@ sel_string_output_linux_kernel_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
    * Event Data3 = Third byte of panic string
    */
 
-  memset (panic_str, '\0', LINUX_KERNEL_EVENT_BUFFER_LENGTH);
+  memset (panic_str, '\0', EVENT_BUFFER_LENGTH);
 
   panic_str[0] = system_event_record_data->sensor_number;
   panic_str[1] = system_event_record_data->event_data2;
@@ -133,7 +131,7 @@ sel_string_output_linux_kernel_oem_record_data (ipmi_sel_ctx_t ctx,
                                                 unsigned int *wlen,
                                                 int *oem_rv)
 {
-  char panic_str[LINUX_KERNEL_EVENT_BUFFER_LENGTH];
+  char panic_str[EVENT_BUFFER_LENGTH];
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
@@ -156,7 +154,7 @@ sel_string_output_linux_kernel_oem_record_data (ipmi_sel_ctx_t ctx,
    * Byte 6-16 - kernel panic string data
    */
 
-  memset (panic_str, '\0', LINUX_KERNEL_EVENT_BUFFER_LENGTH);
+  memset (panic_str, '\0', EVENT_BUFFER_LENGTH);
 
   memcpy (panic_str, &sel_entry->sel_event_record[5], 11);
 

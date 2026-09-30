@@ -52,8 +52,6 @@
 
 #include "freeipmi-portability.h"
 
-#define INTEL_EVENT_BUFFER_LENGTH 4096
-
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error

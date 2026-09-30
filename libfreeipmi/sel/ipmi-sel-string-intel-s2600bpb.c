@@ -54,8 +54,6 @@
 
 #include "freeipmi-portability.h"
 
-#define INTEL_EVENT_BUFFER_LENGTH 4096
-
 int
 sel_string_output_intel_s2600bpb_sensor_name (ipmi_sel_ctx_t ctx,
                                               struct ipmi_sel_entry *sel_entry,
@@ -334,7 +332,7 @@ _sel_string_output_intel_s2600bpb_remote_debug_sensor (ipmi_sel_ctx_t ctx,
                                                        unsigned int *wlen,
                                                        uint8_t event_data)
 {
-  char info_str[INTEL_EVENT_BUFFER_LENGTH + 1];
+  char info_str[EVENT_BUFFER_LENGTH + 1];
   unsigned int lentmp = 0;
 
   assert (ctx);
@@ -347,60 +345,60 @@ _sel_string_output_intel_s2600bpb_remote_debug_sensor (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (ctx->product_id == IPMI_INTEL_PRODUCT_ID_S2600BPB);
 
-  memset (info_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+  memset (info_str, '\0', EVENT_BUFFER_LENGTH + 1);
 
   if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_EVENT_DATA_JTAG_SESSION_STATE_BITMASK)
     {
-      if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Session State In Progress"))
+      if (sel_string_strcat_comma_separate (info_str, EVENT_BUFFER_LENGTH, &lentmp, "JTAG Session State In Progress"))
         return (0);
     }
   else
     {
-      if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Session Idle"))
+      if (sel_string_strcat_comma_separate (info_str, EVENT_BUFFER_LENGTH, &lentmp, "JTAG Session Idle"))
         return (0);
     }
 
   if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_EVENT_DATA_JTAG_ENABLED_BITMASK)
     {
-      if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Enabled"))
+      if (sel_string_strcat_comma_separate (info_str, EVENT_BUFFER_LENGTH, &lentmp, "JTAG Enabled"))
         return (0);
     }
   else
     {
-      if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Disabled"))
+      if (sel_string_strcat_comma_separate (info_str, EVENT_BUFFER_LENGTH, &lentmp, "JTAG Disabled"))
         return (0);
     }
 
   if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_EVENT_DATA_JTAG_DEBUG_CONSENT_BITMASK)
     {
-      if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Debug Consent given"))
+      if (sel_string_strcat_comma_separate (info_str, EVENT_BUFFER_LENGTH, &lentmp, "JTAG Debug Consent given"))
         return (0);
     }
   else
     {
-      if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "JTAG Debug Consent not given"))
+      if (sel_string_strcat_comma_separate (info_str, EVENT_BUFFER_LENGTH, &lentmp, "JTAG Debug Consent not given"))
         return (0);
     }
 
   if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_EVENT_DATA_PECI_SESSION_STATE_BITMASK)
     {
-      if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "PECI Session State In Progress"))
+      if (sel_string_strcat_comma_separate (info_str, EVENT_BUFFER_LENGTH, &lentmp, "PECI Session State In Progress"))
         return (0);
     }
   else
     {
-      if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "PECI Session Idle"))
+      if (sel_string_strcat_comma_separate (info_str, EVENT_BUFFER_LENGTH, &lentmp, "PECI Session Idle"))
         return (0);
     }
 
   if (event_data & IPMI_OEM_INTEL_S2600BPB_SPECIFIC_REMOTE_DEBUG_EVENT_DATA_PECI_ENABLED_BITMASK)
     {
-      if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "PECI Enabled"))
+      if (sel_string_strcat_comma_separate (info_str, EVENT_BUFFER_LENGTH, &lentmp, "PECI Enabled"))
         return (0);
     }
   else
     {
-      if (sel_string_strcat_comma_separate (info_str, INTEL_EVENT_BUFFER_LENGTH, &lentmp, "PECI Disabled"))
+      if (sel_string_strcat_comma_separate (info_str, EVENT_BUFFER_LENGTH, &lentmp, "PECI Disabled"))
         return (0);
     }
 
@@ -489,15 +487,15 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
           || system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_S2600BPB_NVME3_CRIT_WARN)
       && system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING)
     {
-      char smart_warning_str[INTEL_EVENT_BUFFER_LENGTH + 1];
+      char smart_warning_str[EVENT_BUFFER_LENGTH + 1];
       unsigned int lentmp = 0;
 
-      memset (smart_warning_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+      memset (smart_warning_str, '\0', EVENT_BUFFER_LENGTH + 1);
 
       if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_SPARE_SPACE_BELOW_THRESHOLD)
         {
           if (sel_string_strcat_comma_separate (smart_warning_str,
-                                                INTEL_EVENT_BUFFER_LENGTH,
+                                                EVENT_BUFFER_LENGTH,
                                                 &lentmp,
                                                 "Spare space below threshold"))
             return (0);
@@ -505,7 +503,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_TEMPERATURE_ABOVE_OR_BELOW_THRESHOLD)
         {
           if (sel_string_strcat_comma_separate (smart_warning_str,
-                                                INTEL_EVENT_BUFFER_LENGTH,
+                                                EVENT_BUFFER_LENGTH,
                                                 &lentmp,
                                                 "Temperature above or below threshold"))
             return (0);
@@ -513,7 +511,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_NVM_RELIABILITY_DEGRADED)
         {
           if (sel_string_strcat_comma_separate (smart_warning_str,
-                                                INTEL_EVENT_BUFFER_LENGTH,
+                                                EVENT_BUFFER_LENGTH,
                                                 &lentmp,
                                                 "NVM reliability degraded"))
             return (0);
@@ -521,7 +519,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_IN_READ_ONLY_MODE)
         {
           if (sel_string_strcat_comma_separate (smart_warning_str,
-                                                INTEL_EVENT_BUFFER_LENGTH,
+                                                EVENT_BUFFER_LENGTH,
                                                 &lentmp,
                                                 "In read-only mode"))
             return (0);
@@ -529,7 +527,7 @@ sel_string_output_intel_s2600bpb_event_data2_class_oem (ipmi_sel_ctx_t ctx,
       if (system_event_record_data->event_data2 & IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA2_DISK_DRIVE_VOLATILE_BACKUP_SERVICE_FAILED)
         {
           if (sel_string_strcat_comma_separate (smart_warning_str,
-                                                INTEL_EVENT_BUFFER_LENGTH,
+                                                EVENT_BUFFER_LENGTH,
                                                 &lentmp,
                                                 "Volatile backup service failed"))
             return (0);

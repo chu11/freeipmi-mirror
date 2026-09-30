@@ -32,6 +32,13 @@
 
 #include "ipmi-sel-defs.h"
 
+/* Size of the temporary buffers handed to OEM output hooks as
+ * tmpbuf/tmpbuflen, and of the scratch buffers those hooks use
+ * internally.  Shared so the OEM files cannot silently outgrow the
+ * buffer they are given.
+ */
+#define EVENT_BUFFER_LENGTH     4096
+
 typedef int (*Sel_string_output_sensor_name) (ipmi_sel_ctx_t ctx,
                                               struct ipmi_sel_entry *sel_entry,
                                               uint8_t sel_record_type,

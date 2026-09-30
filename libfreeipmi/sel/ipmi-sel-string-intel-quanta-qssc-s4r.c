@@ -52,8 +52,6 @@
 
 #include "freeipmi-portability.h"
 
-#define INTEL_EVENT_BUFFER_LENGTH 4096
-
 int
 sel_string_output_intel_quanta_qssc_s4r_sensor_name (ipmi_sel_ctx_t ctx,
                                                      struct ipmi_sel_entry *sel_entry,
@@ -854,21 +852,21 @@ sel_string_output_intel_quanta_qssc_s4r_event_data3_discrete_oem (ipmi_sel_ctx_t
           && (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_CORRECTABLE_ERROR
               || system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_UNCORRECTABLE_ERROR)))
     {
-      char memory_board_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
-      char dimm_slot_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+      char memory_board_buf[EVENT_BUFFER_LENGTH + 1];
+      char dimm_slot_buf[EVENT_BUFFER_LENGTH + 1];
 
-      memset (memory_board_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
-      memset (dimm_slot_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+      memset (memory_board_buf, '\0', EVENT_BUFFER_LENGTH + 1);
+      memset (dimm_slot_buf, '\0', EVENT_BUFFER_LENGTH + 1);
 
       _sel_string_output_intel_quanta_qssc_s4r_memory_board (ctx,
                                                              memory_board_buf,
-                                                             INTEL_EVENT_BUFFER_LENGTH,
+                                                             EVENT_BUFFER_LENGTH,
                                                              flags,
                                                              system_event_record_data);
 
       _sel_string_output_intel_quanta_qssc_s4r_dimm_slot (ctx,
                                                           dimm_slot_buf,
-                                                          INTEL_EVENT_BUFFER_LENGTH,
+                                                          EVENT_BUFFER_LENGTH,
                                                           flags,
                                                           system_event_record_data);
 
@@ -894,21 +892,21 @@ sel_string_output_intel_quanta_qssc_s4r_event_data3_discrete_oem (ipmi_sel_ctx_t
           && (system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_UNCORRECTABLE_MEMORY_ERROR_UNCORRECTABLE_CRC_ERROR
               || system_event_record_data->offset_from_event_reading_type_code == IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_UNCORRECTABLE_MEMORY_ERROR_UNCORRECTABLE_ALERT_FRAME)))
     {
-      char memory_board_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
-      char smi_link_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+      char memory_board_buf[EVENT_BUFFER_LENGTH + 1];
+      char smi_link_buf[EVENT_BUFFER_LENGTH + 1];
 
-      memset (memory_board_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
-      memset (smi_link_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+      memset (memory_board_buf, '\0', EVENT_BUFFER_LENGTH + 1);
+      memset (smi_link_buf, '\0', EVENT_BUFFER_LENGTH + 1);
 
       _sel_string_output_intel_quanta_qssc_s4r_memory_board (ctx,
                                                              memory_board_buf,
-                                                             INTEL_EVENT_BUFFER_LENGTH,
+                                                             EVENT_BUFFER_LENGTH,
                                                              flags,
                                                              system_event_record_data);
 
       _sel_string_output_intel_quanta_qssc_s4r_smi_link (ctx,
                                                          smi_link_buf,
-                                                         INTEL_EVENT_BUFFER_LENGTH,
+                                                         EVENT_BUFFER_LENGTH,
                                                          flags,
                                                          system_event_record_data);
 
@@ -926,13 +924,13 @@ sel_string_output_intel_quanta_qssc_s4r_event_data3_discrete_oem (ipmi_sel_ctx_t
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_QUANTA_QSSC_S4R_MEMORY_BOARD_STATE
       && system_event_record_data->offset_from_event_reading_type_code == IPMI_SENSOR_TYPE_SLOT_CONNECTOR_FAULT_STATUS_ASSERTED)
     {
-      char memory_board_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+      char memory_board_buf[EVENT_BUFFER_LENGTH + 1];
 
-      memset (memory_board_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+      memset (memory_board_buf, '\0', EVENT_BUFFER_LENGTH + 1);
 
       _sel_string_output_intel_quanta_qssc_s4r_memory_board (ctx,
                                                              memory_board_buf,
-                                                             INTEL_EVENT_BUFFER_LENGTH,
+                                                             EVENT_BUFFER_LENGTH,
                                                              flags,
                                                              system_event_record_data);
 
@@ -1056,16 +1054,16 @@ sel_string_output_intel_quanta_qssc_s4r_event_data2_event_data3 (ipmi_sel_ctx_t 
       uint8_t sparing_type;
       char *domain_instance_str;
       char *sparing_type_str;
-      char sparing_type_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+      char sparing_type_buf[EVENT_BUFFER_LENGTH + 1];
       uint8_t index_of_spared_memory_board;
-      char index_of_spared_memory_board_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+      char index_of_spared_memory_board_buf[EVENT_BUFFER_LENGTH + 1];
       uint8_t spared_dimm_information;
       char *spared_dimm_information_str;
-      char spared_dimm_information_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+      char spared_dimm_information_buf[EVENT_BUFFER_LENGTH + 1];
 
-      memset (sparing_type_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
-      memset (index_of_spared_memory_board_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
-      memset (spared_dimm_information_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+      memset (sparing_type_buf, '\0', EVENT_BUFFER_LENGTH + 1);
+      memset (index_of_spared_memory_board_buf, '\0', EVENT_BUFFER_LENGTH + 1);
+      memset (spared_dimm_information_buf, '\0', EVENT_BUFFER_LENGTH + 1);
 
       domain_instance_type = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SPARING_DOMAIN_INSTANCE_TYPE_BITMASK);
       domain_instance_type >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SPARING_DOMAIN_INSTANCE_TYPE_SHIFT;
@@ -1096,7 +1094,7 @@ sel_string_output_intel_quanta_qssc_s4r_event_data2_event_data3 (ipmi_sel_ctx_t 
             }
 
           snprintf (sparing_type_buf,
-                    INTEL_EVENT_BUFFER_LENGTH,
+                    EVENT_BUFFER_LENGTH,
                     ", Sparing Type = %s",
                     sparing_type_str);
 
@@ -1119,7 +1117,7 @@ sel_string_output_intel_quanta_qssc_s4r_event_data2_event_data3 (ipmi_sel_ctx_t 
             }
 
           snprintf (spared_dimm_information_buf,
-                    INTEL_EVENT_BUFFER_LENGTH,
+                    EVENT_BUFFER_LENGTH,
                     ", Spared DIMM Information = %s",
                     spared_dimm_information_str);
         }
@@ -1129,7 +1127,7 @@ sel_string_output_intel_quanta_qssc_s4r_event_data2_event_data3 (ipmi_sel_ctx_t 
         domain_instance_str = "Unknown";
 
       snprintf (index_of_spared_memory_board_buf,
-                INTEL_EVENT_BUFFER_LENGTH,
+                EVENT_BUFFER_LENGTH,
                 ", Spared Memory Board = %u",
                 index_of_spared_memory_board);
 
@@ -1162,11 +1160,11 @@ sel_string_output_intel_quanta_qssc_s4r_event_data2_event_data3 (ipmi_sel_ctx_t 
       uint8_t dimm_slot_valid;
       uint8_t error_type;
       char *error_type_str;
-      char memory_board_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
-      char dimm_slot_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+      char memory_board_buf[EVENT_BUFFER_LENGTH + 1];
+      char dimm_slot_buf[EVENT_BUFFER_LENGTH + 1];
 
-      memset (memory_board_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
-      memset (dimm_slot_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+      memset (memory_board_buf, '\0', EVENT_BUFFER_LENGTH + 1);
+      memset (dimm_slot_buf, '\0', EVENT_BUFFER_LENGTH + 1);
 
       smi_link_valid = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_VALID_BITMASK);
       smi_link_valid >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_QUANTA_QSSC_S4R_SMI_LINK_VALID_SHIFT;
@@ -1203,7 +1201,7 @@ sel_string_output_intel_quanta_qssc_s4r_event_data2_event_data3 (ipmi_sel_ctx_t 
 
       _sel_string_output_intel_quanta_qssc_s4r_memory_board (ctx,
                                                              memory_board_buf,
-                                                             INTEL_EVENT_BUFFER_LENGTH,
+                                                             EVENT_BUFFER_LENGTH,
                                                              flags,
                                                              system_event_record_data);
 
@@ -1211,7 +1209,7 @@ sel_string_output_intel_quanta_qssc_s4r_event_data2_event_data3 (ipmi_sel_ctx_t 
       if (dimm_slot_valid)
         _sel_string_output_intel_quanta_qssc_s4r_dimm_slot (ctx,
                                                             dimm_slot_buf,
-                                                            INTEL_EVENT_BUFFER_LENGTH,
+                                                            EVENT_BUFFER_LENGTH,
                                                             flags,
                                                             system_event_record_data);
 
@@ -1240,10 +1238,10 @@ sel_string_output_intel_quanta_qssc_s4r_event_data2_event_data3 (ipmi_sel_ctx_t 
     {
       uint16_t error_code;
       char *error_code_str = NULL;
-      char error_code_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+      char error_code_buf[EVENT_BUFFER_LENGTH + 1];
       uint16_t error_code_type;
 
-      memset (error_code_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+      memset (error_code_buf, '\0', EVENT_BUFFER_LENGTH + 1);
 
       error_code = system_event_record_data->event_data2;
       error_code |= (system_event_record_data->event_data3 << 8);
@@ -1431,7 +1429,7 @@ sel_string_output_intel_quanta_qssc_s4r_event_data2_event_data3 (ipmi_sel_ctx_t 
               dimm_slot_str = _sel_string_output_intel_quanta_qssc_s4r_dimm_slot_str (dimm_slot);
 
               snprintf (error_code_buf,
-                        INTEL_EVENT_BUFFER_LENGTH,
+                        EVENT_BUFFER_LENGTH,
                         "%s, CPU Socket = %s, DIMM Slot = %s",
                         memory_error_code_str,
                         cpu_socket_str,

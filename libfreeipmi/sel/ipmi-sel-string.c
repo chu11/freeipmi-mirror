@@ -67,7 +67,6 @@
 #define ASSERTION_EVENT   "Assertion Event"
 #define DEASSERTION_EVENT "Deassertion Event"
 
-#define EVENT_BUFFER_LENGTH     4096
 #define SEL_BUFFER_LENGTH       256
 #define SENSOR_NAME_LENGTH      256
 #define IANA_LENGTH             1024

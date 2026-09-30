@@ -54,8 +54,6 @@
 
 #include "freeipmi-portability.h"
 
-#define INTEL_EVENT_BUFFER_LENGTH 4096
-
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
@@ -255,9 +253,9 @@ sel_string_output_intel_xeon_broadwell_event_data2_event_data3 (ipmi_sel_ctx_t c
     {
       uint8_t channel_information_validity_check, dimm_information_validity_check, error_type;
       char *error_type_str;
-      char dimm_str[INTEL_EVENT_BUFFER_LENGTH + 1];
+      char dimm_str[EVENT_BUFFER_LENGTH + 1];
 
-      memset (dimm_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+      memset (dimm_str, '\0', EVENT_BUFFER_LENGTH + 1);
 
       channel_information_validity_check = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_CHANNEL_INFORMATION_VALIDITY_CHECK_BITMASK);
       channel_information_validity_check >>= IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_CHANNEL_INFORMATION_VALIDITY_CHECK_SHIFT;
@@ -285,7 +283,7 @@ sel_string_output_intel_xeon_broadwell_event_data2_event_data3 (ipmi_sel_ctx_t c
 
       sel_string_output_intel_xeon_memory_dimm (ctx,
                                                 dimm_str,
-                                                INTEL_EVENT_BUFFER_LENGTH,
+                                                EVENT_BUFFER_LENGTH,
                                                 flags,
                                                 system_event_record_data,
                                                 channel_information_validity_check,

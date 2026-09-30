@@ -1,5 +1,25 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sel/ipmi-sel-string.h (EVENT_BUFFER_LENGTH): Define here,
+	moved from ipmi-sel-string.c, so the OEM decoders share the size of
+	the tmpbuf they are handed.
+	* libfreeipmi/sel/ipmi-sel-string.c: Drop the local define.
+	* libfreeipmi/sel/ipmi-sel-string-dell-poweredge.c,
+	libfreeipmi/sel/ipmi-sel-string-intel-node-manager.c,
+	libfreeipmi/sel/ipmi-sel-string-intel-quanta-qssc-s4r.c,
+	libfreeipmi/sel/ipmi-sel-string-intel-s2600bpb.c,
+	libfreeipmi/sel/ipmi-sel-string-intel-s2600jf.c,
+	libfreeipmi/sel/ipmi-sel-string-intel-s2600wp.c,
+	libfreeipmi/sel/ipmi-sel-string-intel-s5500wb.c,
+	libfreeipmi/sel/ipmi-sel-string-intel-windmill.c,
+	libfreeipmi/sel/ipmi-sel-string-intel-xeon-broadwell-common.c,
+	libfreeipmi/sel/ipmi-sel-string-intel-xeon-common.c,
+	libfreeipmi/sel/ipmi-sel-string-linux-kernel.c,
+	libfreeipmi/sel/ipmi-sel-string-quanta-s99q.c: Replace the private
+	4096-byte *_EVENT_BUFFER_LENGTH copies with the shared define.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sel/ipmi-sel-string-intel-node-manager.c: Add the
 	S2600KPR and S2600BPB to the list of motherboards in the header
 	comment; both route through this decoder via the Xeon common code.

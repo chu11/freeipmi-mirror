@@ -52,8 +52,6 @@
 
 #include "freeipmi-portability.h"
 
-#define INTEL_EVENT_BUFFER_LENGTH 4096
-
 int
 sel_string_output_intel_s5500wb_sensor_name (ipmi_sel_ctx_t ctx,
                                              struct ipmi_sel_entry *sel_entry,
@@ -449,7 +447,7 @@ sel_string_output_intel_s5500wb_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
       uint8_t channel_number;
       uint8_t dimm_slot_id;
       char *processor_socket_str;
-      char channel_number_str[INTEL_EVENT_BUFFER_LENGTH + 1];
+      char channel_number_str[EVENT_BUFFER_LENGTH + 1];
       char channel_number_char = 0;
       char *dimm_slot_id_str;
       int processor_socket_valid = 0;
@@ -501,15 +499,15 @@ sel_string_output_intel_s5500wb_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
             channel_number_char += 3;
         }
 
-      memset (channel_number_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+      memset (channel_number_str, '\0', EVENT_BUFFER_LENGTH + 1);
       if (channel_number_valid && channel_number_char)
         snprintf(channel_number_str,
-                 INTEL_EVENT_BUFFER_LENGTH,
+                 EVENT_BUFFER_LENGTH,
                  "%c",
                  channel_number_char);
       else
         snprintf(channel_number_str,
-                 INTEL_EVENT_BUFFER_LENGTH,
+                 EVENT_BUFFER_LENGTH,
                  "Unknown");
 
       if (dimm_slot_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA3_OEM_INTEL_S5500WB_DIMM_SOCKET_1)
@@ -1056,7 +1054,7 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       uint8_t dimm_slot_id;
       char *error_type_str;
       char *processor_socket_str;
-      char channel_number_str[INTEL_EVENT_BUFFER_LENGTH + 1];
+      char channel_number_str[EVENT_BUFFER_LENGTH + 1];
       char channel_number_char = 0;
       char *dimm_slot_id_str;
       int processor_socket_valid = 0;
@@ -1127,15 +1125,15 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
             channel_number_char += 3;
         }
 
-      memset (channel_number_str, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+      memset (channel_number_str, '\0', EVENT_BUFFER_LENGTH + 1);
       if (channel_number_valid && channel_number_char)
         snprintf(channel_number_str,
-                 INTEL_EVENT_BUFFER_LENGTH,
+                 EVENT_BUFFER_LENGTH,
                  "%c",
                  channel_number_char);
       else
         snprintf(channel_number_str,
-                 INTEL_EVENT_BUFFER_LENGTH,
+                 EVENT_BUFFER_LENGTH,
                  "Unknown");
 
       if (dimm_information_validity == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S5500WB_DIMM_INFORMATION_VALID)
@@ -1209,11 +1207,11 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         {
           uint8_t mirroring_domain_local_subinstance;
           uint8_t socket_id;
-          char mirroring_domain_local_subinstance_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
-          char socket_id_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+          char mirroring_domain_local_subinstance_buf[EVENT_BUFFER_LENGTH + 1];
+          char socket_id_buf[EVENT_BUFFER_LENGTH + 1];
 
-          memset (mirroring_domain_local_subinstance_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
-          memset (socket_id_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+          memset (mirroring_domain_local_subinstance_buf, '\0', EVENT_BUFFER_LENGTH + 1);
+          memset (socket_id_buf, '\0', EVENT_BUFFER_LENGTH + 1);
 
           mirroring_domain_local_subinstance = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S5500WB_LOCAL_MIRRORING_DOMAIN_LOCAL_SUBINSTANCE_BITMASK);
           mirroring_domain_local_subinstance >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S5500WB_LOCAL_MIRRORING_DOMAIN_LOCAL_SUBINSTANCE_SHIFT;
@@ -1241,7 +1239,7 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                 }
 
               snprintf (mirroring_domain_local_subinstance_buf,
-                        INTEL_EVENT_BUFFER_LENGTH,
+                        EVENT_BUFFER_LENGTH,
                         ", Subinstance = %s",
                         mirroring_domain_local_subinstance_str);
             }
@@ -1250,11 +1248,11 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
             {
               if (socket_id == IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S5500WB_LOCAL_SOCKET_ID_APPLIES_TO_ALL_SOCKETS)
                 snprintf (socket_id_buf,
-                          INTEL_EVENT_BUFFER_LENGTH,
+                          EVENT_BUFFER_LENGTH,
                           ", Applies to all sockets");
               else
                 snprintf (socket_id_buf,
-                          INTEL_EVENT_BUFFER_LENGTH,
+                          EVENT_BUFFER_LENGTH,
                           ", Applies to Socket ID = %u",
                           socket_id);
             }
@@ -1274,11 +1272,11 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         {
           uint8_t first_socket_id;
           uint8_t second_socket_id;
-          char first_socket_id_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
-          char second_socket_id_buf[INTEL_EVENT_BUFFER_LENGTH + 1];
+          char first_socket_id_buf[EVENT_BUFFER_LENGTH + 1];
+          char second_socket_id_buf[EVENT_BUFFER_LENGTH + 1];
 
-          memset (first_socket_id_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
-          memset (second_socket_id_buf, '\0', INTEL_EVENT_BUFFER_LENGTH + 1);
+          memset (first_socket_id_buf, '\0', EVENT_BUFFER_LENGTH + 1);
+          memset (second_socket_id_buf, '\0', EVENT_BUFFER_LENGTH + 1);
 
           first_socket_id = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S5500WB_GLOBAL_FIRST_SOCKET_ID_BITMASK);
           first_socket_id >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S5500WB_GLOBAL_FIRST_SOCKET_ID_SHIFT;
@@ -1288,13 +1286,13 @@ sel_string_output_intel_s5500wb_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
           if (first_socket_id != IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S5500WB_UNUSED_FIELD)
             snprintf (first_socket_id_buf,
-                      INTEL_EVENT_BUFFER_LENGTH,
+                      EVENT_BUFFER_LENGTH,
                       ", First Socket ID = %u",
                       first_socket_id);
 
           if (second_socket_id != IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_INTEL_S5500WB_UNUSED_FIELD)
             snprintf (second_socket_id_buf,
-                      INTEL_EVENT_BUFFER_LENGTH,
+                      EVENT_BUFFER_LENGTH,
                       ", Second Socket ID = %u",
                       second_socket_id);
 

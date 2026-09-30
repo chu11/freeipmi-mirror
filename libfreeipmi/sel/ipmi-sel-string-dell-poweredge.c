@@ -51,8 +51,6 @@
 
 #include "freeipmi-portability.h"
 
-#define DELL_EVENT_BUFFER_LENGTH 4096
-
 /* return (0) - no OEM match
  * return (1) - OEM match
  * return (-1) - error, cleanup and return error
@@ -1557,7 +1555,7 @@ _dell_calculate_dimm_location (ipmi_sel_ctx_t ctx,
                                int *oem_rv,
                                uint8_t dimms_per_node)
 {
-  char dimmstr[DELL_EVENT_BUFFER_LENGTH + 1];
+  char dimmstr[EVENT_BUFFER_LENGTH + 1];
   uint8_t dimm_counter = 0;
   unsigned int offset = 0;
   int found = 0;
@@ -1607,7 +1605,7 @@ _dell_calculate_dimm_location (ipmi_sel_ctx_t ctx,
    * ...
    */
 
-  memset (dimmstr, '\0', DELL_EVENT_BUFFER_LENGTH + 1);
+  memset (dimmstr, '\0', EVENT_BUFFER_LENGTH + 1);
 
   dimm_counter = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_BITMASK);
   dimm_counter >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_SHIFT;
@@ -1626,13 +1624,13 @@ _dell_calculate_dimm_location (ipmi_sel_ctx_t ctx,
 
           if (!found)
             len = snprintf (dimmstr + offset,
-                            DELL_EVENT_BUFFER_LENGTH - offset,
+                            EVENT_BUFFER_LENGTH - offset,
                             "DIMM %c%u",
                             'A' + node,
                             dimmnum);
           else
             len = snprintf (dimmstr + offset,
-                            DELL_EVENT_BUFFER_LENGTH - offset,
+                            EVENT_BUFFER_LENGTH - offset,
                             ", DIMM %c%u",
                             'A' + node,
                             dimmnum);
@@ -1640,7 +1638,7 @@ _dell_calculate_dimm_location (ipmi_sel_ctx_t ctx,
           offset += len;
           found++;
 
-          if (offset >= DELL_EVENT_BUFFER_LENGTH)
+          if (offset >= EVENT_BUFFER_LENGTH)
             break;
 
           break;
@@ -1838,14 +1836,14 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         }
       else
         {
-          char dimmstr[DELL_EVENT_BUFFER_LENGTH + 1];
+          char dimmstr[EVENT_BUFFER_LENGTH + 1];
           unsigned int offset = 0;
           uint8_t dimm_counter = 0;
           int found = 0;
           int len;
           int i;
 
-          memset (dimmstr, '\0', DELL_EVENT_BUFFER_LENGTH + 1);
+          memset (dimmstr, '\0', EVENT_BUFFER_LENGTH + 1);
 
           dimm_counter = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_BITMASK);
           dimm_counter >>= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_COUNTER_SHIFT;
@@ -1857,12 +1855,12 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
                 {
                   if (!found)
                     len = snprintf (dimmstr + offset,
-                                    DELL_EVENT_BUFFER_LENGTH - offset,
+                                    EVENT_BUFFER_LENGTH - offset,
                                     "DIMM %u",
                                     (dimm_counter + i + 1));
                   else
                     len = snprintf (dimmstr + offset,
-                                    DELL_EVENT_BUFFER_LENGTH - offset,
+                                    EVENT_BUFFER_LENGTH - offset,
                                     ", DIMM %u",
                                     (dimm_counter + i + 1));
 
@@ -1870,7 +1868,7 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 
                   found++;
 
-                  if (offset >= DELL_EVENT_BUFFER_LENGTH)
+                  if (offset >= EVENT_BUFFER_LENGTH)
                     break;
 
                   break;
@@ -2232,8 +2230,8 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       uint8_t data2_number, data3_number;
       char *data2_entity_str = NULL;
       char *data3_entity_str = NULL;
-      char data2_number_str[DELL_EVENT_BUFFER_LENGTH + 1];
-      char data3_number_str[DELL_EVENT_BUFFER_LENGTH + 1];
+      char data2_number_str[EVENT_BUFFER_LENGTH + 1];
+      char data3_number_str[EVENT_BUFFER_LENGTH + 1];
 
       data2_entity = (system_event_record_data->event_data2 & IPMI_SENSOR_TYPE_MEMORY_OEM_DELL_VERSION_CHANGE_ENTITY_BITMASK);
       data2_entity >>= IPMI_SENSOR_TYPE_MEMORY_OEM_DELL_VERSION_CHANGE_ENTITY_SHIFT;
@@ -2250,18 +2248,18 @@ sel_string_output_dell_poweredge_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
       data2_entity_str = _dell_version_change_entity_string (data2_entity);
       data3_entity_str = _dell_version_change_entity_string (data3_entity);
 
-      memset (data2_number_str, '\0', DELL_EVENT_BUFFER_LENGTH + 1);
-      memset (data3_number_str, '\0', DELL_EVENT_BUFFER_LENGTH + 1);
+      memset (data2_number_str, '\0', EVENT_BUFFER_LENGTH + 1);
+      memset (data3_number_str, '\0', EVENT_BUFFER_LENGTH + 1);
 
       if (data2_number != IPMI_SENSOR_TYPE_MEMORY_OEM_DELL_VERSION_CHANGE_NUMBER_INVALID)
         snprintf (data2_number_str,
-                  DELL_EVENT_BUFFER_LENGTH,
+                  EVENT_BUFFER_LENGTH,
                   "%u",
                   data2_number);
 
       if (data3_number != IPMI_SENSOR_TYPE_MEMORY_OEM_DELL_VERSION_CHANGE_NUMBER_INVALID)
         snprintf (data3_number_str,
-                  DELL_EVENT_BUFFER_LENGTH,
+                  EVENT_BUFFER_LENGTH,
                   "%u",
                   data3_number);
 

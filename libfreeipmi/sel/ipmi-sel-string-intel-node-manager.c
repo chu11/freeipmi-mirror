@@ -81,8 +81,6 @@ struct intel_node_manager_sdr_callback
   int found;
 };
 
-#define INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH 4096
-
 /* achu:
  *
  * In Intel NM 2.0 specification, sensor numbers are now fixed and you
@@ -627,16 +625,16 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
           && node_manager_policy_event == IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA1_NODE_MANAGER_POLICY_EVENT_POLICY_CORRECTION_TIME_EXCEEDED)
         {
           uint8_t domain_id;
-          char domain_id_str[INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1];
+          char domain_id_str[EVENT_BUFFER_LENGTH + 1];
 
           domain_id = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA2_DOMAIN_ID_BITMASK);
           domain_id >>= IPMI_OEM_INTEL_NODE_MANAGER_EXCEPTION_EVENT_EVENT_DATA2_DOMAIN_ID_SHIFT;
 
-          memset (domain_id_str, '\0', INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1);
+          memset (domain_id_str, '\0', EVENT_BUFFER_LENGTH + 1);
 
           _sel_string_output_intel_node_manager_domain_id (ctx,
                                                            domain_id_str,
-                                                           INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH,
+                                                           EVENT_BUFFER_LENGTH,
                                                            domain_id);
 
           snprintf (tmpbuf,
@@ -653,7 +651,7 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
         {
           uint8_t domain_id;
           uint8_t error_type;
-          char domain_id_str[INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1];
+          char domain_id_str[EVENT_BUFFER_LENGTH + 1];
           char *error_type_str;
 
           domain_id = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NODE_MANAGER_HEALTH_EVENT_EVENT_DATA2_DOMAIN_ID_BITMASK);
@@ -692,11 +690,11 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
               error_type_str = "Unknown";
             }
 
-          memset (domain_id_str, '\0', INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1);
+          memset (domain_id_str, '\0', EVENT_BUFFER_LENGTH + 1);
 
           _sel_string_output_intel_node_manager_domain_id (ctx,
                                                            domain_id_str,
-                                                           INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH,
+                                                           EVENT_BUFFER_LENGTH,
                                                            domain_id);
 
           snprintf (tmpbuf,
@@ -712,16 +710,16 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
           && system_event_record_data->sensor_number == ctx->intel_node_manager.nm_alert_threshold_exceeded_sensor_number)
         {
           uint8_t domain_id;
-          char domain_id_str[INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1];
+          char domain_id_str[EVENT_BUFFER_LENGTH + 1];
 
           domain_id = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_EVENT_DATA2_DOMAIN_ID_BITMASK);
           domain_id >>= IPMI_OEM_INTEL_NODE_MANAGER_ALERT_THRESHOLD_EXCEEDED_EVENT_DATA2_DOMAIN_ID_SHIFT;
 
-          memset (domain_id_str, '\0', INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1);
+          memset (domain_id_str, '\0', EVENT_BUFFER_LENGTH + 1);
 
           _sel_string_output_intel_node_manager_domain_id (ctx,
                                                            domain_id_str,
-                                                           INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH,
+                                                           EVENT_BUFFER_LENGTH,
                                                            domain_id);
 
           snprintf (tmpbuf,
@@ -801,16 +799,16 @@ sel_string_output_intel_node_manager_event_data2_class_oem (ipmi_sel_ctx_t ctx,
           && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_NODE_MANAGER_CUPS_EVENT_SENSOR)
         {
           uint8_t domain_id;
-          char domain_id_str[INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1];
+          char domain_id_str[EVENT_BUFFER_LENGTH + 1];
 
           domain_id = (system_event_record_data->event_data2 & IPMI_OEM_INTEL_NODE_MANAGER_CUPS_EVENT_EVENT_DATA2_DOMAIN_ID_BITMASK);
           domain_id >>= IPMI_OEM_INTEL_NODE_MANAGER_CUPS_EVENT_EVENT_DATA2_DOMAIN_ID_SHIFT;
 
-          memset (domain_id_str, '\0', INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH + 1);
+          memset (domain_id_str, '\0', EVENT_BUFFER_LENGTH + 1);
 
           _sel_string_output_intel_node_manager_domain_id (ctx,
                                                            domain_id_str,
-                                                           INTEL_NODE_MANAGER_EVENT_BUFFER_LENGTH,
+                                                           EVENT_BUFFER_LENGTH,
                                                            domain_id);
 
           snprintf (tmpbuf,
