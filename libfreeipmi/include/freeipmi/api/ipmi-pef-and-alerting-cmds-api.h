@@ -107,11 +107,11 @@ int ipmi_cmd_set_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx
                                                                   uint8_t event_data3_compare2,
                                                                   fiid_obj_t obj_cmd_rs);
 
-int ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t ctx,
-                                                                         uint8_t filter_number,
-                                                                         uint8_t filter_configuration_type,
-                                                                         uint8_t filter_configuration_filter,
-                                                                         fiid_obj_t obj_cmd_rs);
+int ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1 (ipmi_ctx_t ctx,
+                                                                        uint8_t filter_number,
+                                                                        uint8_t filter_configuration_type,
+                                                                        uint8_t filter_configuration_filter,
+                                                                        fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_pef_configuration_parameters_alert_policy_table (ipmi_ctx_t ctx,
                                                                   uint8_t alert_policy_entry_number,
@@ -186,11 +186,11 @@ int ipmi_cmd_get_pef_configuration_parameters_event_filter_table (ipmi_ctx_t ctx
                                                                   uint8_t block_selector,
                                                                   fiid_obj_t obj_cmd_rs);
 
-int ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_ (ipmi_ctx_t ctx,
-                                                                         uint8_t get_parameter,
-                                                                         uint8_t set_selector,
-                                                                         uint8_t block_selector,
-                                                                         fiid_obj_t obj_cmd_rs);
+int ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1 (ipmi_ctx_t ctx,
+                                                                        uint8_t get_parameter,
+                                                                        uint8_t set_selector,
+                                                                        uint8_t block_selector,
+                                                                        fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (ipmi_ctx_t ctx,
                                                                               uint8_t get_parameter,

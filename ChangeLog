@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/api/ipmi-pef-and-alerting-cmds-api.h,
+	libfreeipmi/api/ipmi-pef-and-alerting-cmds-api.c
+	(ipmi_cmd_set_pef_configuration_parameters_event_filter_table_data1,
+	ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1):
+	Drop the stray trailing underscore from the function names.  The
+	templates and fill functions they use never had one.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h
 	(IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_PER_DOMAIN_ENABLE_NODE_MANAGER_POLICIES,
 	IPMI_OEM_INTEL_NODE_MANAGER_POLICY_ENABLE_DISABLE_PER_POLICY_ENABLE_NODE_MANAGER_POLICIES):
