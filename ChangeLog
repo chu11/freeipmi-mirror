@@ -1,5 +1,10 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-dcmi-util.c (ipmi_cmd_dcmi_str): Fix
+	capitalization of "Set Power Limit".
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-util.c (ipmi_cmd_str): Fix "Get ICM Address"
 	typo; the command is Get ICMB Address.
 

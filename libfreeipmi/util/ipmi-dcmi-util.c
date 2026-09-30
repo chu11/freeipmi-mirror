@@ -73,7 +73,7 @@ ipmi_cmd_dcmi_str (uint8_t cmd)
     case IPMI_CMD_DCMI_GET_POWER_LIMIT:
       return "Get Power Limit";
     case IPMI_CMD_DCMI_SET_POWER_LIMIT:
-      return "Set Power LIMIT";
+      return "Set Power Limit";
     case IPMI_CMD_DCMI_ACTIVATE_DEACTIVATE_POWER_LIMIT:
       return "Activate/Deactivate Power Limit";
     case IPMI_CMD_DCMI_GET_ASSET_TAG:
