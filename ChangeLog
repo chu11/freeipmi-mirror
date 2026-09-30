@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/interface/ipmi-rmcpplus-interface.h
+	(IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID): Compare against
+	IPMI_PAYLOAD_FLAG_UNAUTHENTICATED and IPMI_PAYLOAD_FLAG_AUTHENTICATED
+	rather than the encrypted flag constants.  The values are identical
+	today, so this is a correction of the copy and paste rather than a
+	behavior change.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h
 	(IPMI_ENTITY_ID_VALID): Accept IPMI_ENTITY_ID_AIR_INLET_B (0x37).
 	Parenthesize the macro argument.

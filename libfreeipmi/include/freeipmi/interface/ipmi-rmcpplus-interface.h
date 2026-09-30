@@ -77,8 +77,8 @@ extern "C" {
     || (__payload_flag) == IPMI_PAYLOAD_FLAG_ENCRYPTED) ? 1 : 0)
 
 #define IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID(__payload_flag) \
-  (((__payload_flag) == IPMI_PAYLOAD_FLAG_UNENCRYPTED         \
-    || (__payload_flag) == IPMI_PAYLOAD_FLAG_ENCRYPTED) ? 1 : 0)
+  (((__payload_flag) == IPMI_PAYLOAD_FLAG_UNAUTHENTICATED     \
+    || (__payload_flag) == IPMI_PAYLOAD_FLAG_AUTHENTICATED) ? 1 : 0)
 
 /*********************************************
 * IPMI 2.0 Authentication Algorithm Numbers *
