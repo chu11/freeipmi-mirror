@@ -1,5 +1,17 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-lan-cmds-api.c
+	(ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address,
+	ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address):
+	Check the response object against the dedicated
+	default_gateway_mac_address_rs and backup_gateway_mac_address_rs
+	templates rather than the generic mac_address_rs template.  The
+	three are field for field identical today, so the header's
+	instruction to create the dedicated response object still worked,
+	but only by accident.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/cmds/ipmi-lan-cmds.c
 	(fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control):
 	Validate the arguments with IPMI_BMC_GENERATED_GRATUITOUS_ARPS_VALID

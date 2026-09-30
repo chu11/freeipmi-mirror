@@ -2774,7 +2774,7 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (ipmi_ctx_
                                                          set_selector,
                                                          block_selector,
                                                          obj_cmd_rs,
-                                                         tmpl_cmd_get_lan_configuration_parameters_mac_address_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_default_gateway_mac_address_rs,
                                                          IPMI_LAN_CONFIGURATION_PARAMETER_DEFAULT_GATEWAY_MAC_ADDRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
@@ -2822,7 +2822,7 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (ipmi_ctx_t
                                                          set_selector,
                                                          block_selector,
                                                          obj_cmd_rs,
-                                                         tmpl_cmd_get_lan_configuration_parameters_mac_address_rs,
+                                                         tmpl_cmd_get_lan_configuration_parameters_backup_gateway_mac_address_rs,
                                                          IPMI_LAN_CONFIGURATION_PARAMETER_BACKUP_GATEWAY_MAC_ADDRESS) < 0)
     {
       ERR_TRACE (ipmi_ctx_errormsg (ctx), ipmi_ctx_errnum (ctx));
