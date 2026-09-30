@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h (ipmi_sdr_parse_accuracy):
+	Name the output parameter accuracy, as the definition does.  The
+	prototype called it tolerance, copied from ipmi_sdr_parse_tolerance().
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/templates/ipmi-lan-cmds-templates.h:
 	Document tmpl_cmd_set_lan_configuration_parameters_ipv4_header_parameters_rq,
 	_primary_rmcp_port_number_rq, _secondary_rmcp_port_number_rq and

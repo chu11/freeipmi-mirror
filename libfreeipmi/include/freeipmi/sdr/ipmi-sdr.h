@@ -477,7 +477,7 @@ int ipmi_sdr_parse_tolerance (ipmi_sdr_ctx_t ctx,
 int ipmi_sdr_parse_accuracy (ipmi_sdr_ctx_t ctx,
                              const void *sdr_record,
                              unsigned int sdr_record_len,
-                             double **tolerance);
+                             double **accuracy);
 
 /* For Full, Compact SDR records */
 int ipmi_sdr_parse_hysteresis (ipmi_sdr_ctx_t ctx,
