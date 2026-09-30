@@ -47,6 +47,7 @@ EXTRA = \
 	COPYING \
 	INSTALL \
 	NEWS \
+	NEWS.errata \
 	README \
 	README.argp \
 	README.build \

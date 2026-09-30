@@ -1,0 +1,263 @@
+FreeIPMI 1.7.1 - XX/XX/XX
+-------------------------
+
+Backwards Compatibility / Legacy Support removal
+------------------------------------------------
+
+o Remove support for legacy config file paths
+  - /etc/freeipmi.conf (use /etc/freeipmi/freeipmi.conf)
+  - /etc/ipmidetect.conf (use /etc/freeipmi/ipmidetect.conf)
+  - /etc/ipmidetectd.conf (use /etc/freeipmi/ipmidetectd.conf)
+  - /etc/ipmi_monitoring_sensors.conf (use
+      /etc/freeipmi/freeipmi_interpret_sensor.conf)
+o Remove many legacy long options in tools
+  - --no-probing (use --disable-auto-probe)
+  - --reg-space (use --register-spacing)
+  - --timeout (use --session-timeout)
+  - --retry-timeout (use --retransmission-timeout)
+  - --auth-type (use --authentication-type)
+  - --privilege (use --privilege-level)
+  - --priv-level (use --privilege-level)
+  - --config (use --config-file)
+  - -f (use --flush-cache)
+  - -q (use --quiet-cache)
+o Remove legacy options in tools
+  - Do not support "plain" as an authentication type.
+o Remove legacy config file options
+  - timeout (use session-timeout)
+  - retry-timeout (use retransmission-timeout)
+  - cipher_suite_id (use cipher-suite-id)
+  - privilege (use privilege-level)
+o Remove legacy output support in ipmi-sensors and ipmi-sel.
+  - ipmimonitoring legacy output support is also removed as a result.
+o libfreeipmi/sel: Remove legacy output support.  Flag
+  IPMI_SEL_STRING_FLAGS_LEGACY is now illegal.
+o Remove legacy command line options in ipmipower
+  - --ipmi-version (--driver-type since 0.7.1)
+  - --retry-wait-timeout (--retransmission-wait-timeout since 0.5.1)
+  - --retry-backoff-count (--retransmission-backoff-count since 0.5.1)
+o Remove legacy config file support for ipmipower (use freeipmi.conf)
+o Remove legacy config file options in ipmipower
+  - ipmi-version (use driver-type)
+  - on-if-off (use ipmipower-on-if-off)
+  - wait-until-on (use ipmipower-wait-until-on)
+  - wait-until-off (use ipmipower-wait-until-off)
+  - retry-wait-timeout (use ipmipower-retransmission-wait-timeout)
+  - retransmission-wait-timeout (use ipmipower-retransmission-wait-timeout)
+  - retry-backoff-count (use ipmipower-retransmission-backoff-count)
+  - retransmission-backoff-count (use ipmipower-retransmission-backoff-count)
+  - ping-interval (use ipmipower-ping-interval)
+  - ping-timeout (use ipmipower-ping-timeout)
+  - ping-packet-count (use ipmipower-ping-packet-count)
+  - ping-percent (use ipmipower-ping-percent)
+  - ping-consec-count (use ipmipower-ping-consec-count)
+o Remove legacy ipmipower prompt options
+  - ipmi_version (use driver-type)
+  - ipmi-version (use driver-type)
+  - hostnames (use hostname)
+  - timeout (use session-timeout)
+  - retry-timeout (use retransmission-timeout)
+  - authentication_type (use authentication-type)
+  - cipher_suite_id (use cipher-suite-id)
+  - privilege (use privilege-level)
+  - retry-wait-timeout (use retransmission-wait-timeout)
+  - retry-backoff-count (use retransmission-backoff-count)
+  - advanced (use help)
+  - network (use help)
+o Remove legacy config file support for ipmiconsole (use freeipmi.conf)
+o Remove legacy config file options in ipmiconsole
+  - escape-char (use ipmiconsole-escape-char)
+  - dont-steal (use ipmiconsole-dont-steal)
+  - lock-memory (use ipmiconsole-lock-memory)
+o Remove legacy command line options in ipmi-sensors
+  - --sensors (use --record-ids)
+  - --group (use --sensor-types)
+  - --groups (use --sensor-types)
+  - --sensor-type (use --sensor-types)
+  - --exclude-groups (use --exclude-sensor-types)
+  - --list-groups (use --list-sensor-types)
+  - --sensor-config-file (from ipmimonitoring, use --sensor-state-config-file)
+o Remove legacy config file options for ipmi-sensors
+  - ipmi-sensors-sensor-config-file (use ipmi-sensors-sensor-state-config-file)
+  - ipmi-sensors-groups (use ipmi-sensors-sensor-types)
+  - ipmi-sensors-exclude-groups (use ipmi-sensors-exclude-sensor-types)
+  - ipmimonitoring-X backwards compatibility options (use ipmi-sensors-X instead)
+o Remove legacy command line options in ipmi-chassis
+  - --get-capabilities (use --get-chassis-capabilities)
+  - --get-status (use --get-chassis-status)
+o Remove legacy support in ipmi-chassis that has been replaced with
+  ipmi-config.  Removed legacy support options include:
+  - --set-power-restore-policy
+  - --set-power-cycle-interval
+  - --set-boot-flags
+  - --boot-type
+  - --lock-out-reset-button
+  - --blank-screen
+  - --boot-device
+  - --lock-keyboard
+  - --clear-cmos
+  - --console-redirection
+  - --user-password-bypass
+  - --force-progress-event-traps
+  - --firmware-bios-verbosity
+  - --get-boot-flags
+o Remove legacy command line options in ipmi-sel
+  - --delete-all (use --clear)
+  - --assume-system-event-records (use -W assumesystemevent)
+o Remove legacy command line option --skip-checks in ipmi-fru (use -W
+  skipchecks)
+o Remove legacy command line option --guid in bmc-info (use
+  --get-device-id)
+o Remove legacy command line options in ipmi-raw
+  - --channel-number (use --target-channel-number)
+  - --slave-address (use --target-slave-address)
+o Remove legacy command line option -f in ipmi-config (use --filename)
+o Remove legacy config options in ipmi-config
+  - Serial_Conf:Call_Retry_time (is now Call_Retry_Interval)
+  - User:Password20 (is now just Password)
+  - User:Lan_Enable_Restrict_to_Callback (is now Lan_Enable_Restricted_to_Callback)
+  - User:Serial_Enable_Restrict_to_Callback (is now Serial_Enable_Restricted_to_Callback)
+o Remove legacy --logfile option to bmc-watchdog.
+o Remove legacy OEM Dell commands
+  - get-power-info (use get-power-consumption-data)
+  - reset-power-info (use reset-power-consumption-data)
+  - get-power-supplyinfo (use power-supply-info)
+  - get-instantaneous-power-consumption-info (use get-instantaneous-power-consumption-data)
+  - get-power-headroom-info (use get-power-head-room)
+  - get-average-power-history (use get-power-consumption-data)
+  - get-peak-power-history (use get-power-consumption-data)
+o Remove legacy OEM Dell commands moved to Inventec
+  - get-board-id
+  - set-board-id
+  - get-fcb-version
+  - set-fcb-version
+  - get-sol-inactivity-timeout
+  - set-sol-inactivity-timeout
+o Remove legacy OEM Dell command options / keys
+  - "product-name" key for get-system-info command (use "platform-model-name")
+  - "slot-number" key for get-system-info command (use "blade-slot-info")
+o Remove legacy OEM Inventec commands
+  - get-nic-status (use get-nic-mode)
+  - set-nic-status (use set-nic-mode)
+o Remove legacy OEM IntelNM commands
+  - get-node-manager-alert-thresholds (use get-node-manager-policy-alert-thresholds)
+  - set-node-manager-alert-thresholds (use set-node-manager-policy-alert-thresholds)
+o Remove legacy input options in OEM IntelNM commands:
+  - get-node-manager-capabilities policytrigger - remove "inlet" support (use "inlettemperaturelimitpolicytrigger")
+  - set-node-manager-policy policytrigger - remove "inlet" support (use "inlettemperaturelimitpolicytrigger")
+o Remove legacy command line option --config_file in ipmidetectd (use
+  --config-file)
+o Remove legacy short option -o in ipmidetect (use -h)
+
+Typo Fixes
+----------
+
+Config:
+-------
+
+o Fix following configuration field typos:
+  - ipmi-pet-output-output-event-severity -> ipmi-pet-output-event-severity
+    ipmi-pet-output-output-event-state -> ipmi-pet-output-event-state
+    ipmi-sel-output-output-event-state -> ipmi-sel-output-event-state
+o In freeipmi_interpret_sel.conf fix field name typos:
+  - IPMI_Version_Change_Hardware_Incompatability_Detected_With_Associated_Entity ->
+      IPMI_Version_Change_Hardware_Incompatibility_Detected_With_Associated_Entity
+  - IPMI_Version_Change_Firmware_Or_Software_Incompatability_Detected_With_Associated_Entity ->
+      IPMI_Version_Change_Firmware_Or_Software_Incompatibility_Detected_With_Associated_Entity
+o In freeipmi_interpret_sensor.conf fix field name typos:
+  - IPMI_Version_Change_Hardware_Incompatability_Detected_With_Associated_Entity ->
+      IPMI_Version_Change_Hardware_Incompatibility_Detected_With_Associated_Entity
+  - IPMI_Version_Change_Firmware_Or_Software_Incompatability_Detected_With_Associated_Entity ->
+      IPMI_Version_Change_Firmware_Or_Software_Incompatibility_Detected_With_Associated_Entity
+
+Libraries:
+----------
+
+o In libfreeipmi, fix typos in function names or template names or arrays.
+  - ipmi_device_type_modifer_message() -> ipmi_device_type_modifier_message()
+  - tmpl_cmd_get_sensor_event_status_discerete_rs -> tmpl_cmd_get_sensor_event_status_discrete_rs
+  - ipmi_device_type_modifier_ds1621_temperature_sensor_eeprom_or_equivalent* ->
+      ipmi_device_type_modifier_ds1621_temperature_sensor_or_equivalent*
+  - ipmi_device_type_modifier_lm75_temperature_sensor_eeprom_or_equivalent* ->
+      ipmi_device_type_modifier_lm75_temperature_sensor_or_equivalent*
+o In libfreeipmi, fix typos in macro names or field names.
+  - IPMI_FRU_LANGUAGE_CODE_UKRANIAN -> IPMI_FRU_LANGUAGE_CODE_UKRAINIAN
+  - IPMI_BMC_GLOBAL_ENALBES_DISABLED -> IPMI_BMC_GLOBAL_ENABLES_DISABLED
+  - IPMI_ENTITY_ID_CONNECTIVITY_SWTICH -> IPMI_ENTITY_ID_CONNECTIVITY_SWITCH
+  - IPMI_SEL_FLAGS_ASSUME_SYTEM_EVENT_RECORDS -> IPMI_SEL_FLAGS_ASSUME_SYSTEM_EVENT_RECORDS
+  - IPMI_FRU_AREA_TYPE_MULTIRECORD_BASE_COMPATIBILITY_RECORD ->
+      IPMI_FRU_AREA_TYPE_MULTIRECORD_EXTENDED_COMPATIBILITY_RECORD
+  - IPMI_DEVICE_TYPE_MODIFIER_FRU_INVENTORY_DEVICE_BEHIND_MANAGEMENT_CONTROLLER_IPMI_FRU_INVENTORY_BACKWARDS_COMPATABILITY ->
+      IPMI_DEVICE_TYPE_MODIFIER_FRU_INVENTORY_DEVICE_BEHIND_MANAGEMENT_CONTROLLER_IPMI_FRU_INVENTORY_BACKWARDS_COMPATIBILITY
+  - IPMI_COMP_CODE_ACTIVATE_SESSION_NO_SLOT_AVAILALBE_TO_SUPPORT_USER_STR ->
+      IPMI_COMP_CODE_ACTIVATE_SESSION_NO_SLOT_AVAILABLE_TO_SUPPORT_USER_STR
+  - IPMI_COMP_CODE_SET_COMMAND_ENABLES_ATTMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND ->
+      IPMI_COMP_CODE_SET_COMMAND_ENABLES_ATTEMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND
+  - IPMI_COMP_CODE_SET_COMMAND_ENABLES_ATTMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND_STR ->
+      IPMI_COMP_CODE_SET_COMMAND_ENABLES_ATTEMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND_STR
+  - IPMI_COMP_CODE_SET_COMMAND_SUB_FUNCTION_ENABLES_ATTMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND ->
+      IPMI_COMP_CODE_SET_COMMAND_SUB_FUNCTION_ENABLES_ATTEMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND
+  - IPMI_COMP_CODE_SET_COMMAND_SUB_FUNCTION_ENABLES_ATTMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND_STR ->
+      IPMI_COMP_CODE_SET_COMMAND_SUB_FUNCTION_ENABLES_ATTEMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND_STR
+  - IPMI_COMP_CODE_GET_COMMAND_SUB_FUNCTION_ENABLES_ATTMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND ->
+      IPMI_COMP_CODE_GET_COMMAND_SUB_FUNCTION_ENABLES_ATTEMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND
+  - IPMI_COMP_CODE_GET_COMMAND_SUB_FUNCTION_ENABLES_ATTMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND_STR ->
+      IPMI_COMP_CODE_GET_COMMAND_SUB_FUNCTION_ENABLES_ATTEMPT_TO_ENABLE_AN_UNSUPPORTED_OR_UNCONFIGURABLE_COMMAND_STR
+  - IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_INTERRUPT_OCCURED ->
+      IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_INTERRUPT_OCCURRED
+  - IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY ->
+      IPMI_SENSOR_TYPE_VERSION_CHANGE_HARDWARE_INCOMPATIBILITY_DETECTED_WITH_ASSOCIATED_ENTITY
+  - IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY ->
+      IPMI_SENSOR_TYPE_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATIBILITY_DETECTED_WITH_ASSOCIATED_ENTITY
+  - IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAGS_SET_MUX_TO_RECOMENDED_AT_END_OF_POST ->
+      IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAGS_SET_MUX_TO_RECOMMENDED_AT_END_OF_POST
+  - IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_DEVICE_FORCE_REMOTELY_CONNECTED_FLOPPY_PRIMARY_REMOVEABLE_MEDIA ->
+      IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_DEVICE_FORCE_REMOTELY_CONNECTED_FLOPPY_PRIMARY_REMOVABLE_MEDIA
+  - IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_DEVICE_FORCE_FLOPPY_REMOVEABLE_MEDIA ->
+      IPMI_SYSTEM_BOOT_OPTION_BOOT_FLAG_BOOT_DEVICE_FORCE_FLOPPY_REMOVABLE_MEDIA
+  - IPMI_CMD_OEM_INVENTEC_UPDATE_FIRMARE -> IPMI_CMD_OEM_INVENTEC_UPDATE_FIRMWARE
+  - IPMI_CMD_OEM_QUANTA_UPDATE_FIRMARE -> IPMI_CMD_OEM_QUANTA_UPDATE_FIRMWARE
+  - IPMI_CMD_OEM_WISTRON_UPDATE_FIRMARE -> IPMI_CMD_OEM_WISTRON_UPDATE_FIRMWARE
+  - IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_CHANNEL_INFORMATON_VALIDITY_CHECK_BITMASK ->
+      IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_CHANNEL_INFORMATION_VALIDITY_CHECK_BITMASK
+  - IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_CHANNEL_INFORMATON_VALIDITY_CHECK_SHIFT ->
+      IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_CHANNEL_INFORMATION_VALIDITY_CHECK_SHIFT
+  - IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_CHANNEL_INFORMATON_VALIDITY_CHECK_CHANNEL_NUMBER_VALID ->
+      IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_CHANNEL_INFORMATION_VALIDITY_CHECK_CHANNEL_NUMBER_VALID
+  - IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATON_VALIDITY_CHECK_BITMASK ->
+      IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATION_VALIDITY_CHECK_BITMASK
+  - IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATON_VALIDITY_CHECK_SHIFT ->
+      IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATION_VALIDITY_CHECK_SHIFT
+  - IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATON_VALIDITY_CHECK_DIMM_SLOT_ID_VALID ->
+      IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATION_VALIDITY_CHECK_DIMM_SLOT_ID_VALID
+  - IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATON_VALIDITY_CHECK_DIMM_SLOT_ID_INVALID ->
+      IPMI_SENSOR_TYPE_MEMORY_OEM_INTEL_EVENT_DATA2_DIMM_INFORMATION_VALIDITY_CHECK_DIMM_SLOT_ID_INVALID
+  - IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_BROADWELL_POST_ERROR_CODE_DIMM_(***)_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURED ->
+      IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_BROADWELL_POST_ERROR_CODE_DIMM_(***)_ENCOUNTERED_A_SERIAL_PRESENCE_DETECTION_FAILURE ->
+  - IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_CORRECTABLE_RROR -> IPMI_OEM_INTEL_QUANTA_QSSC_S4R_SPECIFIC_CORRECTABLE_MEMORY_ERROR_CORRECTABLE_ERROR
+  - IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA2_OFFSET_SYSTEM_FIRMWARE_ERROR_UNRECOVERABLE_HARD_DISK_ATPI_IDE_DEVICE_FAILURE ->
+      IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_EVENT_DATA2_OFFSET_SYSTEM_FIRMWARE_ERROR_UNRECOVERABLE_HARD_DISK_ATAPI_IDE_DEVICE_FAILURE
+  - IPMI_FRU_DIMMSPD_DDR4_MODULE_NOMINAL_HEIGHT_MAX_28_TO_39 -> IPMI_FRU_DIMMSPD_DDR4_MODULE_NOMINAL_HEIGHT_MAX_28_TO_29
+o In libfreeipmi, fix output typos related to:
+  - RMCPPLUS_STATUS_NO_MATCHING_INTEGRITY_PAYLOAD_STR
+  - IPMI_SENSOR_TYPE_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT_VIN_OV_WARN
+  - IPMI_SENSOR_NUMBER_OEM_INTEL_WINDMILL_HOT_SWAP_CONTROLLER_0_STATUS_INPUT
+  - IPMI_FRU_LANGUAGE_CODE_UKRAINIAN
+  - IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_INTERRUPT_OCCURRED
+o In libfreeipmi, fix macro name inconsistencies related to:
+  - IPMI_SENSOR_TYPE_CHIP_EVENT* -> IPMI_SENSOR_TYPE_CHIP_SET_EVENT*
+o In libfree rename due to accidental macro name collision:
+  - IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_INTRUSION_WHILE_SYSTEM_ON/OFF ->
+      IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_EVENT_DATA2_OEM_DELL_INTRUSION_WHILE_SYSTEM_ON/OFF
+o In libfreeipmi, fix field name typos:
+  - "reserve" -> "reserved"
+  - "vrefq" -> "vrefdq"
+o In libipmimonitoring, fix typos in macro names.
+  - IPMI_MONITORING_SENSOR_BITMASK_VERSION_CHANGE_HARDWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY ->
+      IPMI_MONITORING_SENSOR_BITMASK_VERSION_CHANGE_HARDWARE_INCOMPATIBILITY_DETECTED_WITH_ASSOCIATED_ENTITY
+  - IPMI_MONITORING_SENSOR_BITMASK_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY ->
+      IPMI_MONITORING_SENSOR_BITMASK_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATIBILITY_DETECTED_WITH_ASSOCIATED_ENTITY
+  - IPMI_MONITORING_EVENT_OFFSET_VERSION_CHANGE_HARDWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY ->
+      IPMI_MONITORING_EVENT_OFFSET_VERSION_CHANGE_HARDWARE_INCOMPATIBILITY_DETECTED_WITH_ASSOCIATED_ENTITY
+  - IPMI_MONITORING_EVENT_OFFSET_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATABILITY_DETECTED_WITH_ASSOCIATED_ENTITY ->
+      IPMI_MONITORING_EVENT_OFFSET_VERSION_CHANGE_FIRMWARE_OR_SOFTWARE_INCOMPATIBILITY_DETECTED_WITH_ASSOCIATED_ENTITY
