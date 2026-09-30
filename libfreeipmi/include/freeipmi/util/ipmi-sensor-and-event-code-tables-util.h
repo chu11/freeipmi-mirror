@@ -143,7 +143,7 @@ int ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
  * If flag IPMI_GET_EVENT_MESSAGES_FLAGS_INTERPRET_OEM_DATA is
  * specified ipmi_get_oem_generic_event_message(),
  * ipmi_get_oem_sensor_type_message(), and
- * ipmi_get_oem_sensor_event_bitmask_message() are called respectively
+ * ipmi_get_oem_event_bitmask_message() are called respectively
  * if necessary.
  *
  * If flag IPMI_GET_EVENT_MESSAGES_FLAGS_SENSOR_READING is
@@ -153,9 +153,9 @@ int ipmi_get_oem_event_bitmask_message (uint32_t manufacturer_id,
  * following a get sensor reading in which threshold event bitmasks
  * are slightly different.
  *
- * If flag IPMI_GET_EVENT_MESSAGES_FLAG_IGNORE_UNRECOGNIZED_EVENTS is
- * specified ipmi_get_threshold_message() will not store event strings
- * for unrecognized events.
+ * If flag IPMI_GET_EVENT_MESSAGES_FLAGS_IGNORE_UNRECOGNIZED_EVENTS is
+ * specified, no "Unrecognized Event" string is stored for event
+ * offsets that have no known message; they are silently skipped.
  *
  * If there are no event messages, and 'no_event_message_string' is
  * non-NULL, it will be placed into 'event_messages' as the lone event

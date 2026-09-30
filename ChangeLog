@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/util/ipmi-sensor-and-event-code-tables-util.h
+	(ipmi_get_event_messages): Fix the comment.  The OEM bitmask helper
+	is ipmi_get_oem_event_bitmask_message(), the flag is
+	IPMI_GET_EVENT_MESSAGES_FLAGS_IGNORE_UNRECOGNIZED_EVENTS, and the
+	flag suppresses the "Unrecognized Event" strings this function
+	synthesizes itself; ipmi_get_threshold_message() is not involved.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-s2600bpb-spec.h
 	(IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA1_DISK_DRIVE_BITMASK):
 	Change to 0x0F.  The drive index is carried in the low nibble of
