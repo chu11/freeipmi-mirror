@@ -1649,7 +1649,7 @@ _ipmi_acpi_get_spmi_table (ipmi_locate_ctx_t ctx,
 
 int
 ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
-                                       ipmi_interface_type_t type,
+                                       ipmi_interface_type_t interface_type,
                                        struct ipmi_locate_info *info)
 {
   fiid_obj_t obj_acpi_spmi_table_descriptor = NULL;
@@ -1663,15 +1663,15 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
       return (-1);
     }
 
-  if (!IPMI_INTERFACE_TYPE_VALID (type) || !info)
+  if (!IPMI_INTERFACE_TYPE_VALID (interface_type) || !info)
     {
       LOCATE_SET_ERRNUM (ctx, IPMI_LOCATE_ERR_PARAMETERS);
       return (-1);
     }
 
   memset (&linfo, '\0', sizeof (struct ipmi_locate_info));
-  linfo.interface_type = type;
-  if (type == IPMI_INTERFACE_SSIF)
+  linfo.interface_type = interface_type;
+  if (interface_type == IPMI_INTERFACE_SSIF)
     {
       strncpy (linfo.driver_device, IPMI_DEFAULT_I2C_DEVICE, IPMI_LOCATE_PATH_MAX);
       linfo.driver_device[IPMI_LOCATE_PATH_MAX - 1] = '\0';
@@ -1685,7 +1685,7 @@ ipmi_locate_acpi_spmi_get_device_info (ipmi_locate_ctx_t ctx,
     }
 
   if (_ipmi_acpi_get_spmi_table (ctx,
-                                 type,
+                                 interface_type,
                                  obj_acpi_spmi_table_descriptor) < 0)
     goto cleanup;
 

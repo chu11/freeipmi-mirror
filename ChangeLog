@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/locate/ipmi-locate-acpi-spmi.c
+	(ipmi_locate_acpi_spmi_get_device_info): Name the parameter
+	interface_type, as the prototype in ipmi-locate.h does, instead of
+	type.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/driver/ipmi-kcs-driver.h
 	(ipmi_kcs_ctx_get_driver_address, ipmi_kcs_ctx_set_driver_address):
 	Name the parameter driver_address, matching the function names and
