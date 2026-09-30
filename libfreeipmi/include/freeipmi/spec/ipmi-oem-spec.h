@@ -27,6 +27,7 @@ extern "C" {
 
 #include <freeipmi/spec/oem/ipmi-oem-dell-spec.h>
 #include <freeipmi/spec/oem/ipmi-oem-fujitsu-spec.h>
+#include <freeipmi/spec/oem/ipmi-oem-gigabyte-spec.h>
 #include <freeipmi/spec/oem/ipmi-oem-ibm-spec.h>
 #include <freeipmi/spec/oem/ipmi-oem-intel-spec.h>
 #include <freeipmi/spec/oem/ipmi-oem-inventec-spec.h>

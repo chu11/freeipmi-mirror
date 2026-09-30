@@ -1,5 +1,16 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-cmd-oem-spec.h,
+	libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h: Include the
+	Gigabyte OEM headers.  They were added to freeipmi.h when Gigabyte
+	support arrived but not to these aggregators, so code including only
+	an aggregator missed them.
+	* libfreeipmi/include/freeipmi/freeipmi.h.in: Sort the Gigabyte cmd
+	OEM include into alphabetical order.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/freeipmi.h.in: Include
 	freeipmi/driver/ipmi-inteldcmi-driver.h and
 	freeipmi/spec/ipmi-timestamp-spec.h.  Both are installed but were
