@@ -365,7 +365,7 @@ int ipmi_cmd_set_channel_security_keys (ipmi_ctx_t ctx,
                                         uint8_t key_id,
                                         const void *key_value,
                                         unsigned int key_value_len,
-                                        fiid_obj_t obj_cmd_rq);
+                                        fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_user_access (ipmi_ctx_t ctx,
                               uint8_t channel_number,

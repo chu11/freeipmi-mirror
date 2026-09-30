@@ -1,5 +1,13 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/api/ipmi-messaging-support-cmds-api.h
+	(ipmi_cmd_set_channel_security_keys): Name the final parameter
+	obj_cmd_rs, as in the definition and every other ipmi_cmd_*
+	prototype.  It is the response object; the header called it
+	obj_cmd_rq.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/api/ipmi-chassis-cmds-api.h
 	(ipmi_cmd_set_system_boot_options_service_partition_selector,
 	ipmi_cmd_set_system_boot_options_service_partition_scan): Declare.
