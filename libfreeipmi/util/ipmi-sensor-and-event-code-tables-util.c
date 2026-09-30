@@ -645,7 +645,6 @@ get_management_subsystem_health_event_data2_message (unsigned int offset, uint8_
       uint8_t private_bus_id, lun, fru_device;
       fiid_obj_t obj = NULL;
       char *str = NULL;
-      int rv = -1;
 
       if (!(obj = fiid_obj_create (tmpl_event_data2)))
         {

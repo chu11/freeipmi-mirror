@@ -1,6 +1,13 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
+	(get_management_subsystem_health_event_data2_message): Remove the
+	inner rv declaration in the FRU failure block that shadowed the
+	function's rv.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
 	(_get_system_event_event_data2_message_offset_entry_added_to_auxiliary_log,
 	_get_system_event_event_data2_message_offset_timestamp_clock_synch,
 	get_system_boot_initiated_event_data2_message,
