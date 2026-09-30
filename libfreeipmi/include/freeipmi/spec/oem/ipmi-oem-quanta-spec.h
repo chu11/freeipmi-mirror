@@ -67,8 +67,7 @@ extern "C" {
  * number of enabled user - 1 byte, read only
  *
  * user name - 1-17 bytes, read only
- *           - Quanta 5441/Xanadu II - reports stored as p-string, does not return p-string
- *           - Quanta 5442/Xanadu III - returns as p-string
+ *           - Quanta S99Q/Dell FS12-TY - returns as p-string
  *
  * account status - 1 byte
  *                - 0x00 - status unspecified

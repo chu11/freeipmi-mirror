@@ -80,8 +80,7 @@ extern "C" {
  * number of enabled user - 1 byte, read only
  *
  * user name - 1-17 bytes, read only
- *           - Wistron 5441/Xanadu II - reports stored as p-string, does not return p-string
- *           - Wistron 5442/Xanadu III - returns as p-string
+ *           - Wistron/Dell Poweredge C6220 - returns as p-string
  *
  * account status - 1 byte
  *                - 0x00 - status unspecified

@@ -1,5 +1,29 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-comp-code-oem-intel-node-manager-spec.h:
+	Name the commands each completion code applies to with their real
+	IPMI_CMD_OEM_INTEL_NODE_MANAGER_* macro names; the comments used a
+	nonexistent IPMI_CMD_OEM_INTEL_* form and misspelled
+	SYNCHRONIZATION.
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-oem-quanta-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-oem-wistron-spec.h:
+	Describe the account status user name behavior of the Quanta
+	S99Q/Dell FS12-TY and Wistron/Dell Poweredge C6220 boards these
+	headers cover.  The comments were copied from the Inventec header
+	and still named the Inventec 5441 and 5442 boards.
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-system-info-parameters-oem-dell-spec.h:
+	Refer to IPMI_SYSTEM_INFO_PARAMETER_OEM_DELL_BLADE_SLOT_INFO, the
+	macro that exists, rather than ..._SLOT_NUMBER.
+	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.h:
+	Drop the "no 0x00 offset" note above the firmware update status
+	values, which do start at 0x00.
+	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.h,
+	libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-s2600bpb-spec.h:
+	Refer to the S5500WB domain instance type and S2600BPB NVMe
+	critical warning macros by their actual names.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-cmd-spec.h: Note that
 	0x5A to 0x5F, not 0x58 to 0x5F, are the unassigned application
 	command numbers; 0x58 and 0x59 are Set/Get System Info Parameters.
