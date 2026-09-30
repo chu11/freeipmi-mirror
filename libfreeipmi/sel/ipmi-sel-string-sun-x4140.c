@@ -43,6 +43,10 @@
 
 #include "freeipmi-portability.h"
 
+/* return (0) - no OEM match
+ * return (1) - OEM match
+ * return (-1) - error, cleanup and return error
+ */
 static int
 _sel_string_output_sun_x4140_event_data3_fru_position_number (ipmi_sel_ctx_t ctx,
                                                               char *tmpbuf,
@@ -77,7 +81,7 @@ _sel_string_output_sun_x4140_event_data3_fru_position_number (ipmi_sel_ctx_t ctx
             "FRU Position Number = %02Xh",
             system_event_record_data->event_data3);
 
-  return (0);
+  return (1);
 }
 
 /* return (0) - no OEM match
