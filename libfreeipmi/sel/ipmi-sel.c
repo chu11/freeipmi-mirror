@@ -1428,7 +1428,7 @@ ipmi_sel_parse_search_record_id (ipmi_sel_ctx_t ctx, uint16_t record_id)
                                           1));
 }
 
-int
+static int
 _get_parse_sel_entry_common (ipmi_sel_ctx_t ctx,
                              struct ipmi_sel_entry **sel_entry)
 {
@@ -1617,7 +1617,7 @@ ipmi_sel_parse_read_timestamp (ipmi_sel_ctx_t ctx,
   return (0);
 }
 
-int
+static int
 _sel_parse_system_event_common (ipmi_sel_ctx_t ctx,
                                 const void *sel_record,
                                 unsigned int sel_record_len,

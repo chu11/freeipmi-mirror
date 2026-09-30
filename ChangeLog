@@ -1,5 +1,13 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sel/ipmi-sel.c (_get_parse_sel_entry_common,
+	_sel_parse_system_event_common): Make static; they are file-local
+	helpers with no prototypes.
+	* libfreeipmi/sel/ipmi-sel-string-sun-x4140.c
+	(_sel_string_output_sun_x4140_event_data3_fru_position_number): Ditto.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sel/ipmi-sel-string.h (EVENT_BUFFER_LENGTH): Define here,
 	moved from ipmi-sel-string.c, so the OEM decoders share the size of
 	the tmpbuf they are handed.
