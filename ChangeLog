@@ -1,5 +1,15 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/api/ipmi-device-global-cmds-api.h,
+	libfreeipmi/include/freeipmi/api/ipmi-event-cmds-api.h,
+	libfreeipmi/include/freeipmi/api/ipmi-firmware-firewall-command-discovery-cmds-api.h,
+	libfreeipmi/include/freeipmi/api/ipmi-fru-inventory-device-cmds-api.h:
+	Include stdint.h for the uintN_t types used in the prototypes, as
+	the other API headers do, rather than relying on ipmi-api.h to
+	provide it.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/record-format/ipmi-platform-event-trap-record-format.h,
 	libfreeipmi/include/freeipmi/spec/ipmi-fru-chassis-types-spec.h,
 	libfreeipmi/include/freeipmi/spec/ipmi-fru-language-codes-spec.h,
