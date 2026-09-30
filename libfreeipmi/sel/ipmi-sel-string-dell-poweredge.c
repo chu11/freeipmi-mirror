@@ -719,23 +719,23 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
         case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LCP_NO_PO_POLICY_DATA_DEFINED:
           error_code_str = "LCP No PO Policy Data defined";
           break;
-        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LPC_MLE_MISMATC:
-          error_code_str = "LPC MLE Mismatc";
+        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LCP_MLE_MISMATCH:
+          error_code_str = "LCP MLE Mismatch";
           break;
-        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LPC_PLATFORM_CONFIG_MISMATC:
-          error_code_str = "LPC Platform Config Mismatc";
+        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LCP_PLATFORM_CONFIG_MISMATCH:
+          error_code_str = "LCP Platform Config Mismatch";
           break;
-        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LPC_SINIT_REVOKED:
-          error_code_str = "LPC SINIT Revoked";
+        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LCP_SINIT_REVOKED:
+          error_code_str = "LCP SINIT Revoked";
           break;
-        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LPC_NPW_NOT_ALLOWED:
-          error_code_str = "LPC NPW Not Allowed";
+        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LCP_NPW_NOT_ALLOWED:
+          error_code_str = "LCP NPW Not Allowed";
           break;
-        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LPC_PO_POLICY_INTEGRITY_FAILED:
-          error_code_str = "LPC PO Policy Integrity Failed";
+        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LCP_PO_POLICY_INTEGRITY_FAILED:
+          error_code_str = "LCP PO Policy Integrity Failed";
           break;
-        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LPC_PS_POLICY_INTEGRITY_FAILED:
-          error_code_str = "LPC PS Policy Integrity Failed";
+        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_LCP_PS_POLICY_INTEGRITY_FAILED:
+          error_code_str = "LCP PS Policy Integrity Failed";
           break;
         case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_BIOS_ACM_ERROR_STATUS_INTERRUPT_OCCURRED:
           error_code_str = "Interrupt Occurred";
@@ -1061,8 +1061,8 @@ sel_string_output_dell_poweredge_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
         case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_SINIT_ACM_ERROR_STATUS_ME_VT_POLICY_ERROR:
           error_code_str = "ME VT Policy error";
           break;
-        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_SINIT_ACM_ERROR_STATUS_LCP_NO_PO_POLICY_DATA_DEFINE:
-          error_code_str = "LCP NO PO Policy Data define";
+        case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_SINIT_ACM_ERROR_STATUS_LCP_NO_PO_POLICY_DATA_DEFINED:
+          error_code_str = "LCP No PO Policy Data defined";
           break;
         case IPMI_SENSOR_TYPE_OS_CRITICAL_STOP_OEM_DELL_TXT_ERROR_CODE_SINIT_ACM_ERROR_STATUS_LCP_MLE_MISMATCH:
           error_code_str = "LCP MLE mismatch";

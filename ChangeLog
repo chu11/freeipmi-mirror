@@ -1,5 +1,16 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-dell-spec.h:
+	Rename the BIOS ACM TXT error status macros for launch control
+	policy errors from ..._LPC_* to ..._LCP_*, matching the SINIT ACM
+	macros and the TXT abbreviation, and complete the truncated
+	..._MISMATC names to ..._MISMATCH and the SINIT
+	..._LCP_NO_PO_POLICY_DATA_DEFINE name to ..._DEFINED.
+	* libfreeipmi/sel/ipmi-sel-string-dell-poweredge.c: Use the new
+	names and fix the same typos in the output strings.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-oem-dell-spec.h
 	(IPMI_OEM_DELL_RESET_TO_DEFAULTS_INITIATE_RESET_TO_DEFAULTS): Rename
 	from ..._INITIATE_RESULT_TO_DEFAULTS.
