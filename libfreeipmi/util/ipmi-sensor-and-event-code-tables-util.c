@@ -1539,6 +1539,7 @@ ipmi_get_generic_event_message_short (uint8_t event_reading_type_code,
                                   ipmi_generic_event_reading_type_code_acpi_power_state_short));
     }
 
+  SET_ERRNO (EINVAL);
   return (-1);
 }
 

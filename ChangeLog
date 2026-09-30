@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
+	(ipmi_get_generic_event_message_short): Set errno to EINVAL for an
+	unrecognized event reading type code, as the long variant and the
+	sensor type variants do.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-lan-util.c
 	(ipmi_lan_check_session_authentication_code, ipmi_lan_check_checksum),
 	libfreeipmi/util/ipmi-ipmb-util.c (ipmi_ipmb_check_checksum),
