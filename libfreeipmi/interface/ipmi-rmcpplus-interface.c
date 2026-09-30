@@ -452,16 +452,16 @@ fill_rmcpplus_rakp_message_1 (uint8_t message_tag,
                               unsigned int remote_console_random_number_len,
                               uint8_t requested_maximum_privilege_level,
                               uint8_t name_only_lookup_flag,
-                              const char *user_name,
-                              unsigned int user_name_len,
+                              const char *username,
+                              unsigned int username_len,
                               fiid_obj_t obj_cmd_rq)
 {
   if (!remote_console_random_number
       || (remote_console_random_number_len != IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
       || !IPMI_PRIVILEGE_LEVEL_VALID (requested_maximum_privilege_level)
       || !IPMI_USER_NAME_LOOKUP_VALID (name_only_lookup_flag)
-      || (user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
-      || (!user_name && user_name_len)
+      || (username && username_len > IPMI_MAX_USER_NAME_LENGTH)
+      || (!username && username_len)
       || !fiid_obj_valid (obj_cmd_rq))
     {
       SET_ERRNO (EINVAL);
@@ -503,13 +503,13 @@ fill_rmcpplus_rakp_message_1 (uint8_t message_tag,
                      0);
   FILL_FIID_OBJ_SET (obj_cmd_rq,
                      "user_name_length",
-                     user_name_len);
+                     username_len);
 
-  if (user_name && user_name_len)
+  if (username && username_len)
     FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
                             "user_name",
-                            user_name,
-                            user_name_len);
+                            username,
+                            username_len);
 
   return (0);
 }

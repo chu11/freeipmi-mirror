@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/interface/ipmi-rmcpplus-interface.c
+	(fill_rmcpplus_rakp_message_1): Name the parameters username and
+	username_len, as the prototype in ipmi-rmcpplus-interface.h and
+	the rest of the API do, instead of user_name and user_name_len.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-rmcpplus-util.c (ipmi_calculate_k2): Name the
 	output parameters k2 and k2_len, as the prototype in
 	ipmi-rmcpplus-util.h does.  They were k1 and k1_len, copied from
