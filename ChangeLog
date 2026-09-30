@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-oem-quanta-spec.h:
+	Remove the Sun Microsystems LED macros.  They were pasted in from
+	ipmi-oem-sun-microsystems-spec.h, which still defines them.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/ipmi-pef-and-alerting-cmds.h:
 	Remove the second, identical copy of the IPMI_PEF_ENABLE,
 	IPMI_PEF_DISABLE and IPMI_PEF_VALID definitions.

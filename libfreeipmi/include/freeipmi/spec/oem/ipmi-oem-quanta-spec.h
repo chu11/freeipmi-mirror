@@ -306,24 +306,6 @@ extern "C" {
 /* 0x0F-0xFE - Reserved */
 #define IPMI_OEM_QUANTA_PROCESSOR_TYPE_NO_CPU_PRESENT 0xFF
 
-/*******************************************
- * Sun Microsystems                        *
- *******************************************/
-
-/*
- * Sun 4140
- */
-
-/* w/ IPMI_CMD_OEM_SUN_GET_LED / IPMI_CMD_OEM_SUN_SET_LED */
-#define IPMI_OEM_SUN_LED_MODE_OFF     0
-#define IPMI_OEM_SUN_LED_MODE_ON      1
-#define IPMI_OEM_SUN_LED_MODE_STANDBY 2
-#define IPMI_OEM_SUN_LED_MODE_SLOW    3
-#define IPMI_OEM_SUN_LED_MODE_FAST    4
-
-#define IPMI_OEM_SUN_LED_FORCE_GO_THRU_CONTROLLER     0
-#define IPMI_OEM_SUN_LED_FORCE_DIRECTLY_ACCESS_DEVICE 1
-
 #ifdef __cplusplus
 }
 #endif
