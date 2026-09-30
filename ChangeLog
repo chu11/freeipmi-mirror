@@ -1,5 +1,13 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-cipher-suite-util.c
+	(ipmi_algorithms_to_cipher_suite_id): Compare the authentication
+	algorithm against IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5, not
+	the integrity constant IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128.  Both
+	are 0x02, so behavior is unchanged.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-sensor-and-event-code-tables-util.c
 	(ipmi_get_generic_event_message_short): Set errno to EINVAL for an
 	unrecognized event reading type code, as the long variant and the

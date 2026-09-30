@@ -143,7 +143,7 @@ ipmi_algorithms_to_cipher_suite_id (uint8_t authentication_algorithm,
             *cipher_suite_id = 5;
         }
     }
-  else if (authentication_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
+  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
     {
       if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE
           && confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
