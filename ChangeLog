@@ -1,5 +1,17 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h
+	(IPMI_SYSTEM_BOOT_OPTION_DEVICE_INSTANCE_SELECTOR_MAX,
+	IPMI_SYSTEM_BOOT_OPTION_DEVICE_INSTANCE_SELECTOR_RANGE_MAX): Change
+	to 0x1F and 0x0F.  The device instance selector is a 5 bit field,
+	bit 4 internal/external and bits 3:0 the instance 0 to 15, so the
+	old 0x31 and 0x15 were the decimal maximums 31 and 15 written as
+	hex.  fill_cmd_set_system_boot_options_boot_flags() accepted
+	selectors up to 0x31 and truncated them, and ipmi-config accepted
+	"external-16" through "external-21".
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/api/ipmi-messaging-support-cmds-api.h
 	(ipmi_cmd_set_channel_security_keys): Name the final parameter
 	obj_cmd_rs, as in the definition and every other ipmi_cmd_*
