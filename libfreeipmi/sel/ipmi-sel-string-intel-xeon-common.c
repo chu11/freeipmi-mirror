@@ -783,7 +783,6 @@ sel_string_output_intel_xeon_event_data2_class_oem (ipmi_sel_ctx_t ctx,
       return (1);
     }
 
-  /* achu: In document technically unclear if this */
   if (system_event_record_data->generator_id == IPMI_SLAVE_ADDRESS_BMC
       && system_event_record_data->sensor_type == IPMI_SENSOR_TYPE_VERSION_CHANGE
       && system_event_record_data->sensor_number == IPMI_SENSOR_NUMBER_OEM_INTEL_FIRMWARE_UPDATE_STATUS
