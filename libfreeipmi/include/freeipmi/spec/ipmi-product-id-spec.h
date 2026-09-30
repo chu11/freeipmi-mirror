@@ -55,7 +55,7 @@ extern "C" {
 #define IPMI_FUJITSU_PRODUCT_ID_MIN                 0x0200
 #define IPMI_FUJITSU_PRODUCT_ID_MAX                 0x05FF
 
-// iRMC-S1 based systems
+/* iRMC-S1 based systems */
 #define IPMI_FUJITSU_PRODUCT_ID_TX200S3             0x0200
 #define IPMI_FUJITSU_PRODUCT_ID_TX300S3             0x0201
 #define IPMI_FUJITSU_PRODUCT_ID_RX200S3             0x0202
@@ -87,7 +87,7 @@ extern "C" {
     || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_RX330S1_SHA       \
     || (__product_id) == IPMI_FUJITSU_PRODUCT_ID_BX630S2_SHA) ? 1 : 0)
 
-// iRMC-S2 based systems
+/* iRMC-S2 based systems */
 #define IPMI_FUJITSU_PRODUCT_ID_RX600S4             0x0218
 #define IPMI_FUJITSU_PRODUCT_ID_TX200S4             0x0220
 #define IPMI_FUJITSU_PRODUCT_ID_TX300S4             0x0221
