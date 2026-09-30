@@ -1202,7 +1202,7 @@ unsigned int ipmi_sensor_type_system_firmware_progress_event_data2_offset_system
 const char * const ipmi_sensor_type_system_event_event_data2_offset_entry_added_to_auxiliary_log_log_entry_action[] =
   {
     "Log entry action = entry added",
-    "Log entry action = entry added because event did not be map to standard IPMI event",
+    "Log entry action = entry added because event did not map to standard IPMI event",
     "Log entry action = entry added along with one or more corresponding SEL entries",
     "Log entry action = log cleared",
     "Log entry action = log disabled",
