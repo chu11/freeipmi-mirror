@@ -282,7 +282,7 @@ sel_string_output_intel_s2600wt_common_event_data3_discrete_oem (ipmi_sel_ctx_t 
   if (ret)
     return (1);
 
-  if ((ret = sel_string_output_intel_xeon_broadwell_event_data2_discrete_oem (ctx,
+  if ((ret = sel_string_output_intel_xeon_broadwell_event_data3_discrete_oem (ctx,
                                                                               sel_entry,
                                                                               sel_record_type,
                                                                               tmpbuf,

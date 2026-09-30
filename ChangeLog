@@ -1,5 +1,16 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sel/ipmi-sel-string-intel-s2600gz.c
+	(sel_string_output_intel_s2600gz_event_data3_discrete_oem),
+	libfreeipmi/sel/ipmi-sel-string-intel-s2600wt-common.c
+	(sel_string_output_intel_s2600wt_common_event_data3_discrete_oem):
+	Call the Broadwell event data3 helper, not the event data2 one.  The
+	miswire meant the mirroring redundancy and memory ECC socket/channel/
+	DIMM decode never ran on the S2600GZ and S2600WT/WTT/KPR, and the
+	helper asserted on the event data2 flag in debug builds.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sel/ipmi-sel-string-dell-poweredge.c
 	(_dell_calculate_dimm_location,
 	sel_string_output_dell_poweredge_event_data2_event_data3): Remove
