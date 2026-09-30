@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-util.c (ipmi_cmd_str): Delegate the group
+	extension network functions to ipmi_cmd_dcmi_str() instead of
+	returning "Unknown" for every command.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-dcmi-util.c (ipmi_cmd_dcmi_str): Return "Get
 	Temperature Reading" for IPMI_CMD_DCMI_GET_TEMPERATURE_READING; it
 	said "Set".

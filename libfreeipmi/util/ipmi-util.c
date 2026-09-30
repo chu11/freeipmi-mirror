@@ -45,6 +45,7 @@
 #endif /* HAVE_UNISTD_H */
 
 #include "freeipmi/util/ipmi-util.h"
+#include "freeipmi/util/ipmi-dcmi-util.h"
 #include "freeipmi/fiid/fiid.h"
 #include "freeipmi/interface/rmcp-interface.h"
 #include "freeipmi/spec/ipmi-authentication-type-spec.h"
@@ -645,6 +646,12 @@ ipmi_cmd_str (uint8_t net_fn, uint8_t cmd)
           return "Unknown";
         }
       break;
+    case IPMI_NET_FN_GROUP_EXTENSION_RQ:
+    case IPMI_NET_FN_GROUP_EXTENSION_RS:
+      /* DCMI is the only group extension with a command table; the
+       * group extension identifier byte is not available here.
+       */
+      return ipmi_cmd_dcmi_str (cmd);
     default:
       return "Unknown";
     }
