@@ -579,8 +579,8 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
           break;
 
         default:
-          SET_ERRNO (EINVAL);
-          return (-1);
+          /* group extension / OEM network functions: no tables here */
+          break;
         }
 
       SNPRINTF_RETURN ("No error message found for command "

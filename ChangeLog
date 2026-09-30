@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/util/ipmi-error-util.c (ipmi_completion_code_strerror_r):
+	Fall through to the "No error message found" text for command
+	specific completion codes on the group extension and OEM network
+	functions instead of failing with EINVAL.  IPMI_NET_FN_VALID accepts
+	those network functions, and ipmi_completion_code_dcmi_strerror_r()
+	relies on this fallback for DCMI codes it does not list.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-outofband-util.c (ipmi_is_ipmi_1_5_packet,
 	ipmi_is_ipmi_2_0_packet): Reject a NULL pkt with EINVAL rather than
 	dereferencing it, as the other packet helpers do.
