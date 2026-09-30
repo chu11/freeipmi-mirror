@@ -1,5 +1,18 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-cmd-spec.h: Note that
+	0x5A to 0x5F, not 0x58 to 0x5F, are the unassigned application
+	command numbers; 0x58 and 0x59 are Set/Get System Info Parameters.
+	Cite the IPMI 2.0 specification rather than the 1.5 PDF, since the
+	table holds 2.0 content.
+	* libfreeipmi/include/freeipmi/spec/ipmi-netfn-spec.h: Likewise
+	cite the IPMI 2.0 specification.
+	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h: Point at
+	sdr/oem/ipmi-sdr-oem-intel-node-manager.h for OEM record parsing
+	rather than the deprecated ipmi-sdr-oem.h.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/api/ipmi-api.h,
 	libfreeipmi/include/freeipmi/fru/ipmi-fru.h,
 	libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h,

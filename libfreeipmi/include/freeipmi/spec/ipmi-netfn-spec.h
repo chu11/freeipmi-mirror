@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 /* Notes:
-   Refer to IPMIv1_5_rev1_1.pdf Table 5-1, Network Function Codes
+   Refer to IPMI 2.0 specification Table 5-1, Network Function Codes
    for complete description
  */
 #define IPMI_NET_FN_CHASSIS_RQ                        0x00

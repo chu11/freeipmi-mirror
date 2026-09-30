@@ -24,7 +24,7 @@ extern "C" {
 #endif
 
 /* Notes:
-   Refer to IPMIv1_5_rev1_1.pdf Table G-1, Command Number Assignments
+   Refer to IPMI 2.0 specification Table G-1, Command Number Assignments
    and Privilege Levels for complete description
  */
 
@@ -101,7 +101,7 @@ extern "C" {
 #define IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION                0x55
 #define IPMI_CMD_SET_CHANNEL_SECURITY_KEYS                        0x56
 #define IPMI_CMD_GET_SYSTEM_INTERFACE_CAPABILITIES                0x57
-/* unassigned                                                     0x58 to 0x5F */
+/* unassigned                                                     0x5A to 0x5F */
 /* Firmware Firewall Configuration                                0x60 to 0x64 */
 
 /* Chassis Device Commands */
