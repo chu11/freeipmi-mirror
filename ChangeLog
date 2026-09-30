@@ -1,5 +1,18 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/util/ipmi-outofband-util.h
+	(IPMI_SEQUENCE_NUMBER_WINDOW_DEFAULT, IPMI_SEQUENCE_NUMBER_WINDOW_MIN,
+	IPMI_SEQUENCE_NUMBER_WINDOW_MAX): Move here from
+	ipmi-outofband-util.c and document that the sequence_number_window
+	argument of ipmi_check_session_sequence_number_1_5() and _2_0()
+	must fall in that range or be 0 for the default.  The functions
+	rejected windows above 32 with EINVAL, but the limit and the
+	default were private to the implementation.
+	* libfreeipmi/util/ipmi-outofband-util.c: Remove the private
+	definitions.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/driver/ipmi-kcs-driver.h
 	(ipmi_kcs_write, ipmi_kcs_read),
 	libfreeipmi/include/freeipmi/driver/ipmi-ssif-driver.h

@@ -38,9 +38,18 @@ int ipmi_check_session_sequence_number_1_5_init (uint32_t *highest_received_sequ
 int ipmi_check_session_sequence_number_2_0_init (uint32_t *highest_received_sequence_number,
                                                  uint32_t *previously_received_list);
 
+/* sequence_number_window for the functions below must be between
+ * IPMI_SEQUENCE_NUMBER_WINDOW_MIN and IPMI_SEQUENCE_NUMBER_WINDOW_MAX,
+ * or 0 to select IPMI_SEQUENCE_NUMBER_WINDOW_DEFAULT.  Larger windows
+ * fail with EINVAL.
+ */
+#define IPMI_SEQUENCE_NUMBER_WINDOW_DEFAULT  8
+#define IPMI_SEQUENCE_NUMBER_WINDOW_MIN      1
+#define IPMI_SEQUENCE_NUMBER_WINDOW_MAX     32
+
 /* returns 1 if sequence number in range, 0 if not, -1 on error */
 /* highest_received_sequence_number and previously_received_list updated on success */
-/* set sequence_number_window to 0 for default */
+/* set sequence_number_window to 0 for default, see above for range */
 int ipmi_check_session_sequence_number_1_5 (uint32_t session_sequence_number,
                                             uint32_t *highest_received_sequence_number,
                                             uint32_t *previously_received_list,
@@ -48,7 +57,7 @@ int ipmi_check_session_sequence_number_1_5 (uint32_t session_sequence_number,
 
 /* returns 1 if sequence number in range, 0 if not, -1 on error */
 /* highest_received_sequence_number and previously_received_list updated on success */
-/* set sequence_number_window to 0 for default */
+/* set sequence_number_window to 0 for default, see above for range */
 int ipmi_check_session_sequence_number_2_0 (uint32_t session_sequence_number,
                                             uint32_t *highest_received_sequence_number,
                                             uint32_t *previously_received_list,

@@ -58,9 +58,6 @@
 #include "freeipmi-portability.h"
 
 #define IPMI_SEQUENCE_NUMBER_MAX            0xFFFFFFFF
-#define IPMI_SEQUENCE_NUMBER_WINDOW_DEFAULT          8
-#define IPMI_SEQUENCE_NUMBER_WINDOW_MAX             32
-#define IPMI_SEQUENCE_NUMBER_WINDOW_MIN              1
 
 int
 ipmi_is_ipmi_1_5_packet (const void *pkt, unsigned int pkt_len)
