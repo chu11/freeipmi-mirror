@@ -399,7 +399,7 @@ sel_string_output_intel_xeon_event_data2_discrete_oem (ipmi_sel_ctx_t ctx,
               power_supply_status_str = "The PMBus device does not successfully respond to the PMBUS_REVISION command";
               break;
             case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_OEM_INTEL_PSU_INCOMPATIBLE:
-              power_supply_status_str = "ThE PSU is incompatible with one or more PSUs that are present in the system";
+              power_supply_status_str = "The PSU is incompatible with one or more PSUs that are present in the system";
               break;
             case IPMI_SENSOR_TYPE_POWER_SUPPLY_CONFIGURATION_ERROR_EVENT_DATA2_OEM_INTEL_PSU_FW_DEGRADED:
               power_supply_status_str = "The PSU FW is operating in a degraded mode (likely due to a failed firmware update)";
