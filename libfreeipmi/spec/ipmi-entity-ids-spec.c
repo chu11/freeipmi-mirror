@@ -85,7 +85,7 @@ const char *const ipmi_entity_ids[] =
     "Processor/front-side bus",
     "Real Time Clock",
     "reserved",
-    "reserved",                 /* listed as air-inlet, assume is typo */
+    "air inlet",                /* 0x37, per DCMI, see ipmi-entity-ids-spec.h */
     "reserved",
     "reserved",
     "reserved",
@@ -157,7 +157,7 @@ const char *const ipmi_entity_ids_pretty[] =
     "Processor/front-side bus",
     "Real Time Clock",
     "reserved",
-    "reserved",                 /* listed as air-inlet, assume is typo */
+    "Air Inlet",                /* 0x37, per DCMI, see ipmi-entity-ids-spec.h */
     "reserved",
     "reserved",
     "reserved",

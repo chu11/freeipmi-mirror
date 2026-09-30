@@ -102,9 +102,10 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_ENTITY_ID_VALID(__entity_id)                  \
-  ((((__entity_id + 1) >= (IPMI_ENTITY_ID_UNSPECIFIED + 1) \
-     && (__entity_id) <= IPMI_ENTITY_ID_REAL_TIME_CLOCK)   \
-    || ((__entity_id) >= IPMI_ENTITY_ID_AIR_INLET          \
+  (((((__entity_id) + 1) >= (IPMI_ENTITY_ID_UNSPECIFIED + 1) \
+     && (__entity_id) <= IPMI_ENTITY_ID_REAL_TIME_CLOCK)     \
+    || (__entity_id) == IPMI_ENTITY_ID_AIR_INLET_B           \
+    || ((__entity_id) >= IPMI_ENTITY_ID_AIR_INLET            \
         && (__entity_id) <= IPMI_ENTITY_ID_BASEBOARD_MAIN_SYSTEM_BOARD)) ? 1 : 0)
 
 #define IPMI_ENTITY_ID_IS_CHASSIS_SPECIFIC(__entity_id) \

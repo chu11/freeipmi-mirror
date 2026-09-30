@@ -44,6 +44,6 @@ ipmi_get_entity_id_string (uint8_t entity_id)
   else if (IPMI_ENTITY_ID_IS_OEM_SYSTEM_INTEGRATOR_DEFINED (entity_id))
     return (ipmi_entity_id_oem_system_integrator);
 
-  /* 0x36-0x3F and 0x43-0x8F are reserved by the specification */
+  /* 0x36, 0x38-0x3F and 0x43-0x8F are reserved by the specification */
   return ("reserved");
 }

@@ -1,5 +1,19 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h
+	(IPMI_ENTITY_ID_VALID): Accept IPMI_ENTITY_ID_AIR_INLET_B (0x37).
+	Parenthesize the macro argument.
+	* libfreeipmi/spec/ipmi-entity-ids-spec.c (ipmi_entity_ids,
+	ipmi_entity_ids_pretty): Name entity id 0x37 "air inlet" / "Air
+	Inlet" rather than "reserved".  The header already defines 0x37 as
+	air inlet per DCMI and the DCMI commands accept it, but the string
+	tables and the valid check still treated it as a typo in the spec,
+	so ipmi_get_entity_id_string(0x37) returned "reserved".
+	* libfreeipmi/util/ipmi-entity-ids-util.c (ipmi_get_entity_id_string):
+	Update the reserved range comment.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-channel-spec.h
 	(IPMI_CHANNEL_MEDIUM_TYPE_RESERVED_MAX): Extend to 0x5F.  IPMI 2.0
 	Table 6-3 assigns 0x60 to 0x7F to OEM and reserves everything else,
