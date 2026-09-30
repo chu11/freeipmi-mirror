@@ -1,5 +1,13 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-comp-code-oem-wistron-spec.h:
+	Rename the IPMI_COMP_CODE_OEM_WISTON_* completion code macros to
+	IPMI_COMP_CODE_OEM_WISTRON_*.
+	* ipmi-oem/ipmi-oem-wistron.c (_wistron_oem_strerror): Use the new
+	names.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h
 	(IPMI_ENTITY_ID_CHASSIS_BACK_PANEL_BOARD): Rename from
 	IPMI_ENTITY_ID_CHASSI_BACK_PANEL_BOARD.
