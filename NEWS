@@ -11,6 +11,7 @@ o In libipmidetect fix hostname sscanf bound.
 o Fix ipmiconsole workaround flag parsing issues.
 o Fix minor libfreeipmi corner cases (e.g. parameter input corner cases).
 o Fix minor SEL output corner cases in several OEM vendors.
+o Fix libfreeipmi macro inconsistencies / errors.
 o Minor documentation fixes.
 
 FreeIPMI 1.6.19 - 08/27/26
