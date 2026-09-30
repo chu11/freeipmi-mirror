@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-windmill-spec.h
+	(IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_RECOVER_HECI_FROM_ABNORMAL_MODE):
+	Rename from ..._ROCVER_HECI_FROM_ABNORMAL_MODE.
+	* libfreeipmi/sel/ipmi-sel-string-intel-windmill.c
+	(sel_string_output_intel_windmill_event_data2_event_data3): Use the
+	new name.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-dell-spec.h:
 	Rename the BIOS ACM TXT error status macros for launch control
 	policy errors from ..._LPC_* to ..._LCP_*, matching the SINIT ACM

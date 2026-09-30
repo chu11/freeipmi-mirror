@@ -952,7 +952,7 @@ sel_string_output_intel_windmill_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
         case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_BACKUP_IMAGE_LOADED_DIRECT_FW_UPDATE_NEEDED:
           error_code_str = "Backup Image Loaded and a direct FW updated is needed";
           break;
-        case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_ROCVER_HECI_FROM_ABNORMAL_MODE:
+        case IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_WINDMILL_POST_ERROR_CODE_RECOVER_HECI_FROM_ABNORMAL_MODE:
           error_code_str = "Recover HECI from Abnormal Mode Successfully";
           break;
         default:
