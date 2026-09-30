@@ -246,7 +246,7 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_STRING_SELECTOR_VALID(__val)       \
-  (((__val+1) >= (IPMI_STRING_SELECTOR_MIN + 1) \
+  ((((__val) + 1) >= (IPMI_STRING_SELECTOR_MIN + 1) \
     && (__val) <= IPMI_STRING_SELECTOR_MAX) ? 1 : 0)
 
 #define IPMI_SET_RECORD_ID_FOR_LAST_RECORD_PROCESSED_BY_SOFTWARE 0x0

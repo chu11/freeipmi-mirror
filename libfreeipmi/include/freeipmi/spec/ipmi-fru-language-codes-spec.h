@@ -198,7 +198,7 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_FRU_LANGUAGE_CODE_VALID(__language_code)          \
-  (((__language_code + 1) >= (IPMI_FRU_LANGUAGE_CODE_ENGLISH_LEGACY + 1) \
+  ((((__language_code) + 1) >= (IPMI_FRU_LANGUAGE_CODE_ENGLISH_LEGACY + 1) \
     && (__language_code) <= IPMI_FRU_LANGUAGE_CODE_ZULU) ? 1 : 0)
 
 extern const char *const ipmi_fru_language_codes[];

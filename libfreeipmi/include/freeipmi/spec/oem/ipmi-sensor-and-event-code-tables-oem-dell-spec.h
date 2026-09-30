@@ -148,7 +148,7 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_VALID(__memory_card) \
-  (((__memory_card + 1) >= (IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_MIN + 1) \
+  ((((__memory_card) + 1) >= (IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_MIN + 1) \
     && (__memory_card) <= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_MAX) ? 1 : 0)
 
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_BANK_NUMBER_MIN 0x00
@@ -156,7 +156,7 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_BANK_NUMBER_VALID(__bank_number) \
-  (((__bank_number + 1) >= (IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_BANK_NUMBER_MIN + 1) \
+  ((((__bank_number) + 1) >= (IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_BANK_NUMBER_MIN + 1) \
     && (__bank_number) <= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_BANK_NUMBER_MAX) ? 1 : 0)
 
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_NUMBER_MIN 0x00
@@ -164,7 +164,7 @@ extern unsigned int ipmi_sensor_type_oem_dell_upgrade_max_index;
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_NUMBER_VALID(__bank_number) \
-  (((__bank_number + 1) >= (IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_NUMBER_MIN + 1) \
+  ((((__bank_number) + 1) >= (IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_NUMBER_MIN + 1) \
     && (__bank_number) <= IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_NUMBER_MAX) ? 1 : 0)
 
 #define IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_4_DIMMS_PER_NODE       0x08

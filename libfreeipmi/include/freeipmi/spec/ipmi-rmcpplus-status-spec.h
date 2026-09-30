@@ -106,7 +106,7 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define RMCPPLUS_STATUS_VALID(__status)                                          \
-  (((__status + 1) >= RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION \
+  ((((__status) + 1) >= RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION \
     && (__status) <= RMCPPLUS_STATUS_ILLEGAL_OR_UNRECOGNIZED_PARAMETER) ? 1 : 0)
 
 #ifdef __cplusplus

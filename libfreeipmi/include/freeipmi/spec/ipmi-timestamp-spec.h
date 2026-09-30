@@ -30,7 +30,7 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_TIMESTAMP_POST_INIT(__timestamp) \
-  ((((__timestamp + 1) >= (IPMI_TIMESTAMP_POST_INIT_MIN + 1) \
+  (((((__timestamp) + 1) >= (IPMI_TIMESTAMP_POST_INIT_MIN + 1) \
      && (__timestamp) <= IPMI_TIMESTAMP_POST_INIT_MAX)) ? 1 : 0)
 
 #ifdef __cplusplus

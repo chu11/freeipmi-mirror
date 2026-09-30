@@ -113,7 +113,7 @@ extern "C" {
 /* To avoid gcc warnings, add +1 in comparison */
 /* achu: no macros here, cipher suite ids are numbers */
 #define IPMI_CIPHER_SUITE_ID_SUPPORTED(__id) \
-  ((((__id + 1) >= (0 + 1) && (__id) <= 3)   \
+  (((((__id) + 1) >= (0 + 1) && (__id) <= 3)   \
     || ((__id) >= 6 && (__id) <= 8)          \
     || ((__id) >= 11 && (__id) <= 12)        \
     || ((__id) >= 15 && (__id) <= 17)) ? 1 : 0)

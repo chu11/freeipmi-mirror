@@ -46,7 +46,7 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_SYSTEM_SOFTWARE_TYPE_IS_BIOS(__val) \
-  (((__val + 1) >= IPMI_SYSTEM_SOFTWARE_TYPE_BIOS_MIN \
+  ((((__val) + 1) >= IPMI_SYSTEM_SOFTWARE_TYPE_BIOS_MIN \
     && (__val) <= IPMI_SYSTEM_SOFTWARE_TYPE_BIOS_MAX) ? 1 : 0)
 
 #define IPMI_SYSTEM_SOFTWARE_TYPE_IS_SMI_HANDLER(__val) \

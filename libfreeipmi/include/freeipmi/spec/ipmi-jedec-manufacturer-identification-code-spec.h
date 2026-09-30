@@ -30,7 +30,7 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_JEDEC_MANUFACTURER_CONTINUATION_CODES_VALID(__manufacturer_continuation_codes) \
-  (((__manufacturer_continuation_codes + 1) >= (IPMI_JEDEC_MANUFACTURER_CONTINUATION_CODES_MIN + 1)  \
+  ((((__manufacturer_continuation_codes) + 1) >= (IPMI_JEDEC_MANUFACTURER_CONTINUATION_CODES_MIN + 1)  \
     && (__manufacturer_continuation_codes) <= IPMI_JEDEC_MANUFACTURER_CONTINUATION_CODES_MAX) ? 1 : 0)
 
 struct ipmi_jedec_manufacturer_id_pair {

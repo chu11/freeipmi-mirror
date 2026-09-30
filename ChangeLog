@@ -1,5 +1,42 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/cmds/ipmi-pef-and-alerting-cmds.h
+	(IPMI_STRING_SELECTOR_VALID),
+	libfreeipmi/include/freeipmi/spec/ipmi-channel-spec.h
+	(IPMI_CHANNEL_NUMBER_VALID),
+	libfreeipmi/include/freeipmi/spec/ipmi-entity-ids-spec.h
+	(IPMI_ENTITY_ID_IS_OEM_SYSTEM_INTEGRATOR_DEFINED),
+	libfreeipmi/include/freeipmi/spec/ipmi-fru-chassis-types-spec.h
+	(IPMI_FRU_CHASSIS_TYPE_VALID),
+	libfreeipmi/include/freeipmi/spec/ipmi-fru-language-codes-spec.h
+	(IPMI_FRU_LANGUAGE_CODE_VALID),
+	libfreeipmi/include/freeipmi/spec/ipmi-iana-enterprise-numbers-spec.h
+	(IPMI_IANA_ENTERPRISE_ID_VALID),
+	libfreeipmi/include/freeipmi/spec/ipmi-jedec-manufacturer-identification-code-spec.h
+	(IPMI_JEDEC_MANUFACTURER_CONTINUATION_CODES_VALID),
+	libfreeipmi/include/freeipmi/spec/ipmi-netfn-spec.h (IPMI_NET_FN_VALID),
+	libfreeipmi/include/freeipmi/spec/ipmi-rmcpplus-status-spec.h
+	(RMCPPLUS_STATUS_VALID),
+	libfreeipmi/include/freeipmi/spec/ipmi-sensor-units-spec.h
+	(IPMI_SENSOR_UNIT_VALID, IPMI_SENSOR_RATE_UNIT_VALID),
+	libfreeipmi/include/freeipmi/spec/ipmi-system-software-id-spec.h
+	(IPMI_SYSTEM_SOFTWARE_TYPE_IS_BIOS),
+	libfreeipmi/include/freeipmi/spec/ipmi-timestamp-spec.h
+	(IPMI_TIMESTAMP_POST_INIT),
+	libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-dell-spec.h
+	(IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_MEMORY_CARD_VALID,
+	IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_BANK_NUMBER_VALID,
+	IPMI_SENSOR_TYPE_MEMORY_EVENT_DATA2_OEM_DELL_DIMM_NUMBER_VALID),
+	libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-oem-intel-common-spec.h
+	(IPMI_OEM_INTEL_SMTP_CONFIGURATION_PARAMETER_VALID),
+	libfreeipmi/include/freeipmi/util/ipmi-cipher-suite-util.h
+	(IPMI_CIPHER_SUITE_ID_SUPPORTED): Parenthesize the macro argument in
+	the "+ 1 to avoid gcc warnings" comparison, as the rest of the range
+	macros do, so an expression argument such as a conditional cannot
+	mis-associate with the + 1.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/api/ipmi-api.h: Do not include
 	ipmi-api.h from itself.
 

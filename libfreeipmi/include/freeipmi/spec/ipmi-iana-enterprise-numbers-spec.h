@@ -46,7 +46,7 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_IANA_ENTERPRISE_ID_VALID(__iana_enterprise_id) \
-  (((__iana_enterprise_id + 1) >= (0 + 1)                   \
+  ((((__iana_enterprise_id) + 1) >= (0 + 1)                   \
     && (__iana_enterprise_id) <= IPMI_IANA_ENTERPRISE_ID_MAX) ? 1 : 0)
 
 #define IPMI_IANA_ENTERPRISE_ID_RECOGNIZED(__iana_enterprise_id) \

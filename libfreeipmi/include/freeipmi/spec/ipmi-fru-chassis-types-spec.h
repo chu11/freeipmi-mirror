@@ -91,7 +91,7 @@ extern "C" {
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_FRU_CHASSIS_TYPE_VALID(__chassis_type) \
-  (((__chassis_type + 1) >= (IPMI_FRU_CHASSIS_TYPE_OTHER + 1) \
+  ((((__chassis_type) + 1) >= (IPMI_FRU_CHASSIS_TYPE_OTHER + 1) \
     && (__chassis_type) <= IPMI_FRU_CHASSIS_TYPE_BLADE_ENCLOSURE) ? 1 : 0)
 
 extern const char *const ipmi_fru_chassis_types[];

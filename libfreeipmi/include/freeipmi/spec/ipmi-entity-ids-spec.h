@@ -119,7 +119,7 @@ extern "C" {
 /* To avoid gcc warnings, subtract -1 in comparison */
 #define IPMI_ENTITY_ID_IS_OEM_SYSTEM_INTEGRATOR_DEFINED(__entity_id) \
   (((__entity_id) >= IPMI_ENTITY_ID_OEM_SYSTEM_INTEGRATOR_DEFINED_MIN \
-    && ((__entity_id - 1) <= (IPMI_ENTITY_ID_OEM_SYSTEM_INTEGRATOR_DEFINED_MAX - 1))) ? 1 : 0)
+    && (((__entity_id) - 1) <= (IPMI_ENTITY_ID_OEM_SYSTEM_INTEGRATOR_DEFINED_MAX - 1))) ? 1 : 0)
 
 #define IPMI_ENTITY_INSTANCE_SYSTEM_RELATIVE_MIN 0x00
 #define IPMI_ENTITY_INSTANCE_SYSTEM_RELATIVE_MAX 0x5F
