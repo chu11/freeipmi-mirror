@@ -1,6 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/ipmi-channel-spec.h
+	(IPMI_CHANNEL_MEDIUM_TYPE_RESERVED_MAX): Extend to 0x5F.  IPMI 2.0
+	Table 6-3 assigns 0x60 to 0x7F to OEM and reserves everything else,
+	but the range stopped at 0x59, leaving medium types 0x5A to 0x5F
+	neither reserved nor OEM.  Fix the range comments to match.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/ipmi-channel-spec.h
 	(IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED_2): Define as 0x03, the
 	reserved protocol type from IPMI 2.0 Table 6-2 that its comment
 	names.  It was 0x0, a duplicate of RESERVED_1, so
