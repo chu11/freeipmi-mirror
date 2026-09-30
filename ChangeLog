@@ -1,5 +1,13 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-cmd-spec.h
+	(IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION): Correct to 0x55 per
+	IPMI 2.0 Table G-1.  It was 0x53, an unassigned command number, so
+	fill_cmd_suspend_resume_payload_encryption() sent the wrong command
+	and the command specific completion code lookups never matched.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/util/ipmi-sensor-util.h
 	(ipmi_sensor_decode_tolerance): Declare the parameters in the order
 	the definition and its caller use, (linearization, raw_data).  The

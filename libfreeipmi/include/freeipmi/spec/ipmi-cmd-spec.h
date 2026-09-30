@@ -98,7 +98,7 @@ extern "C" {
 #define IPMI_CMD_MASTER_WRITE_READ                                0x52
 /* unassigned                                                     0x53 */
 #define IPMI_CMD_GET_CHANNEL_CIPHER_SUITES                        0x54
-#define IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION                0x53
+#define IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION                0x55
 #define IPMI_CMD_SET_CHANNEL_SECURITY_KEYS                        0x56
 #define IPMI_CMD_GET_SYSTEM_INTERFACE_CAPABILITIES                0x57
 /* unassigned                                                     0x58 to 0x5F */
