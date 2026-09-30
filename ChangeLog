@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h (ipmi_fru_board_info_area):
+	Name the final parameter board_custom_fields_len, as the definition
+	does.  The prototype called it chassis_custom_fields_len, copied
+	from ipmi_fru_chassis_info_area().
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h (ipmi_sdr_parse_accuracy):
 	Name the output parameter accuracy, as the definition does.  The
 	prototype called it tolerance, copied from ipmi_sdr_parse_tolerance().

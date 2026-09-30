@@ -198,7 +198,7 @@ int ipmi_fru_board_info_area (ipmi_fru_ctx_t ctx,
                               ipmi_fru_field_t *board_part_number,
                               ipmi_fru_field_t *board_fru_file_id,
                               ipmi_fru_field_t *board_custom_fields,
-                              unsigned int chassis_custom_fields_len);
+                              unsigned int board_custom_fields_len);
 
 int ipmi_fru_product_info_area (ipmi_fru_ctx_t ctx,
                                 const void *areabuf,
