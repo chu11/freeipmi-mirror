@@ -1,5 +1,11 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sel/ipmi-sel-string-dell-poweredge.c
+	(sel_string_output_dell_poweredge_event_data3_discrete_oem): Fix
+	"SINI ACM" typo in the TXT error type string.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sel/ipmi-sel-string-intel-xeon-common.c
 	(sel_string_output_intel_xeon_event_data2_class_oem): Remove a
 	truncated, dangling comment above the firmware update status decode.

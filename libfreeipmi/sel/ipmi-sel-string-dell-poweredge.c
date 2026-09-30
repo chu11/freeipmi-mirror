@@ -1426,7 +1426,7 @@ sel_string_output_dell_poweredge_event_data3_discrete_oem (ipmi_sel_ctx_t ctx,
           error_type_str = "BIOS ACM TXT Error";
           break;
         case IPMI_OEM_DELL_EVENT_DATA3_TXT_ERROR_TYPE_SINIT_ACM_TXT_ERROR:
-          error_type_str = "SINI ACM TXT Error";
+          error_type_str = "SINIT ACM TXT Error";
           break;
         case IPMI_OEM_DELL_EVENT_DATA3_TXT_ERROR_TYPE_UNRECOGNIZED_TXT_ERROR:
           error_type_str = "Unrecognized TXT Error";
