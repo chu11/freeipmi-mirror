@@ -162,6 +162,7 @@ FIID Template: tmpl_cmd_dcmi_get_dcmi_capability_info_mandatory_platform_attribu
     { 1, "temperature_monitoring.processors_temperature", REQUIRED, LENGTH-FIXED }
     { 1, "temperature_monitoring.baseboard_temperature", REQUIRED, LENGTH-FIXED }
     { 5, "temperature_monitoring.reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "temperature_monitoring.sampling_period", OPTIONAL, LENGTH-FIXED }
 
   Notes: Some fields not valid when parameter revision >= 2.  Please
   see DCMI specification for details.
@@ -460,6 +461,7 @@ FIID Template: tmpl_cmd_dcmi_get_dcmi_sensor_info_rq
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
     { 8, "group_extension_identification", REQUIRED, LENGTH-FIXED }
+    { 8, "sensor_type", REQUIRED, LENGTH-FIXED }
     { 8, "entity_id", REQUIRED, LENGTH-FIXED }
     { 8, "entity_instance", REQUIRED, LENGTH-FIXED }
     { 8, "entity_instance_start", REQUIRED, LENGTH-FIXED }
@@ -486,7 +488,8 @@ FIID Template: tmpl_cmd_dcmi_get_power_reading_rq
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
     { 8, "group_extension_identification", REQUIRED, LENGTH-FIXED }
     { 8, "mode", REQUIRED, LENGTH-FIXED }
-    { 16, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "mode_attributes", REQUIRED, LENGTH-FIXED }
+    { 8, "reserved", REQUIRED, LENGTH-FIXED }
 
 DCMI Get Power Reading Response
 -------------------------------

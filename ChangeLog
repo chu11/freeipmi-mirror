@@ -1,5 +1,15 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/templates/ipmi-dcmi-cmds-templates.h:
+	Match the documented templates to their definitions.  Add the
+	optional "temperature_monitoring.sampling_period" field to
+	tmpl_cmd_dcmi_get_dcmi_capability_info_mandatory_platform_attributes_rs,
+	the "sensor_type" field to tmpl_cmd_dcmi_get_dcmi_sensor_info_rq,
+	and split the 16 bit "reserved" in tmpl_cmd_dcmi_get_power_reading_rq
+	into "mode_attributes" and "reserved".
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h: Document that the
 	sub_record_data_len, code_range_mask_len and oem_data_len parameters
 	of the multirecord parsers are in/out values, buffer size on input
