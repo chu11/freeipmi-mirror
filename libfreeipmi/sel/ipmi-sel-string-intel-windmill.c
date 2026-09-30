@@ -765,9 +765,10 @@ sel_string_output_intel_windmill_event_data3_class_oem (ipmi_sel_ctx_t ctx,
     {
       snprintf (tmpbuf,
                 tmpbuflen,
-                "Extended Error Info = %02X",
+                "Extended Error Info = %02Xh",
                 system_event_record_data->event_data3);
 
+      return (1);
     }
 
   if (system_event_record_data->event_type_code == IPMI_EVENT_READING_TYPE_CODE_OEM_INTEL_WINDMILL_OTHER_IIO_ERROR_SENSOR

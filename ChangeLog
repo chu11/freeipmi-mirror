@@ -1,5 +1,14 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sel/ipmi-sel-string-intel-windmill.c
+	(sel_string_output_intel_windmill_event_data3_class_oem): Return 1
+	after formatting the ME firmware health "Extended Error Info" string;
+	the missing return let the hook report no match, so the string was
+	discarded in favor of the generic OEM event data3 output.  Add the
+	trailing "h" to the hex value for consistency with the other decoders.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sel/ipmi-sel.c (ipmi_sel_ctx_set_parameter): When an
 	interpret context is attached, push the current manufacturer id,
 	product id, and ASSUME_SYSTEM_EVENT_RECORDS flag into it.  The
