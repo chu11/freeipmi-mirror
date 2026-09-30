@@ -5073,7 +5073,7 @@ ipmi_oem_dell_reset_to_defaults (ipmi_oem_state_data_t *state_data)
    */
 
   bytes_rq[0] = IPMI_CMD_OEM_DELL_RESET_TO_DEFAULTS;
-  bytes_rq[1] = IPMI_OEM_DELL_RESET_TO_DEFAULTS_INITIATE_RESULT_TO_DEFAULTS;
+  bytes_rq[1] = IPMI_OEM_DELL_RESET_TO_DEFAULTS_INITIATE_RESET_TO_DEFAULTS;
 
   if ((rs_len = ipmi_cmd_raw (state_data->ipmi_ctx,
                               0, /* lun */

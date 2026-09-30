@@ -1,6 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-oem-dell-spec.h
+	(IPMI_OEM_DELL_RESET_TO_DEFAULTS_INITIATE_RESET_TO_DEFAULTS): Rename
+	from ..._INITIATE_RESULT_TO_DEFAULTS.
+	* ipmi-oem/ipmi-oem-dell.c (ipmi_oem_dell_reset_to_defaults): Use the
+	new name.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-oem-dell-spec.h
 	(IPMI_OEM_DELL_EXTENDED_CONFIG_IPV6_EXTENDED_GROUP_IPV6_GATEWAY_IP_ADDRESS_MASK):
 	Rename from ..._IPV6_GATEWAYY_IP_ADDRESS_MASK.
 
