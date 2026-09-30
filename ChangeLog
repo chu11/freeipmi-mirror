@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-quanta-qssc-s4r-spec.h
+	(IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_CPU_SOCKET_BITMASK,
+	IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE_PROGRESS_OEM_INTEL_QUANTA_QSSC_S4R_POST_ERROR_CODE_TYPE_MEMORY_DIMM_SLOT_BITMASK):
+	Write the 16 bit masks as 0x00E0 and 0x0007, like the neighboring
+	masks, instead of the five digit 0x000E0 and 0x00007.  No change in
+	value.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.h,
 	libfreeipmi/spec/ipmi-sensor-and-event-code-tables-oem-intel-common-spec.c
 	(ipmi_oem_intel_specific_pcie_correctable_sensor,
