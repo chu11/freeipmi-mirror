@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/spec/ipmi-sensor-and-event-code-tables-spec.c
+	(ipmi_sensor_type_session_audit_event_data3_offset_session_deactivated_deactivation_cause):
+	Fix "deactivatation" to "deactivation".
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-comp-code-spec.h
 	(IPMI_COMP_CODE_SUSPEND_RESUME_PAYLOAD_ENCRYPTION_OPERATION_NOT_ALLOWED_UNDER_PRESENT_CONFIGURATION_STR):
 	Fix "now allowed" to "not allowed"; the text said the opposite of

@@ -1464,7 +1464,7 @@ unsigned int ipmi_sensor_type_chip_set_event_data3_offset_soft_power_control_fai
 
 const char * const ipmi_sensor_type_session_audit_event_data3_offset_session_deactivated_deactivation_cause[] =
   {
-    "Session deactivatation cause unspecified. This value is also used for Session Activated events",
+    "Session deactivation cause unspecified. This value is also used for Session Activated events",
     "Session deactivated by Close Session command",
     "Session deactivated by timeout",
     "Session deactivated by configuration change",
