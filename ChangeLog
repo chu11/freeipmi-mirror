@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/ipmi-channel-spec.h
+	(IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED_2): Define as 0x03, the
+	reserved protocol type from IPMI 2.0 Table 6-2 that its comment
+	names.  It was 0x0, a duplicate of RESERVED_1, so
+	IPMI_CHANNEL_PROTOCOL_TYPE_IS_RESERVED(0x03) was false and bmc-info
+	reported protocol type 3 as unknown rather than reserved.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/ipmi-chassis-cmds.h
 	(IPMI_SYSTEM_BOOT_OPTION_DEVICE_INSTANCE_SELECTOR_MAX,
 	IPMI_SYSTEM_BOOT_OPTION_DEVICE_INSTANCE_SELECTOR_RANGE_MAX): Change
