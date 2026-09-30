@@ -141,7 +141,7 @@ enum ipmi_errnum
     IPMI_ERR_IPMI_ERROR = 32,
     IPMI_ERR_SYSTEM_ERROR = 33,
     IPMI_ERR_INTERNAL_ERROR = 34,
-    IPMI_ERR_ERRNUMRANGE = 35,
+    IPMI_ERR_ERRNUMRANGE = 35
   };
 typedef enum ipmi_errnum ipmi_errnum_type_t;
 
@@ -156,7 +156,7 @@ enum ipmi_driver_type
   IPMI_DEVICE_SSIF = 6,
   IPMI_DEVICE_OPENIPMI = 7,
   IPMI_DEVICE_SUNBMC = 8,
-  IPMI_DEVICE_INTELDCMI = 9,
+  IPMI_DEVICE_INTELDCMI = 9
 };
 typedef enum ipmi_driver_type ipmi_driver_type_t;
 

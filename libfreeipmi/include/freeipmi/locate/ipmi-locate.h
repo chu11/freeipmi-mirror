@@ -68,7 +68,7 @@ enum ipmi_interface_type
     IPMI_INTERFACE_KCS = 1,
     IPMI_INTERFACE_SMIC = 2,
     IPMI_INTERFACE_BT = 3,
-    IPMI_INTERFACE_SSIF = 4,
+    IPMI_INTERFACE_SSIF = 4
   };
 typedef enum ipmi_interface_type ipmi_interface_type_t;
 

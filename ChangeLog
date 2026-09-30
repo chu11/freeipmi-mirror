@@ -1,5 +1,13 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/api/ipmi-api.h (enum ipmi_errnum,
+	enum ipmi_driver_type),
+	libfreeipmi/include/freeipmi/locate/ipmi-locate.h
+	(enum ipmi_interface_type): Drop the trailing comma after the last
+	enumerator, which is not valid C89 or C++98.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/api/ipmi-device-global-cmds-api.h,
 	libfreeipmi/include/freeipmi/api/ipmi-event-cmds-api.h,
 	libfreeipmi/include/freeipmi/api/ipmi-firmware-firewall-command-discovery-cmds-api.h,
