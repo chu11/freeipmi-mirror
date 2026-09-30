@@ -28,4 +28,4 @@ extern "C" {
 }
 #endif
 
-#endif
+#endif /* IPMI_PEF_CONFIGURATION_PARAMETERS_OEM_SPEC_H */

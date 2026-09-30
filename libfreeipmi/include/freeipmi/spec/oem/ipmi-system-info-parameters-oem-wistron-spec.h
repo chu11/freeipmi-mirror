@@ -49,4 +49,4 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-#endif /* IPMI_SYSTEM_INFO_PARAMETERS_SPEC_H */
+#endif /* IPMI_SYSTEM_INFO_PARAMETERS_OEM_WISTRON_SPEC_H */

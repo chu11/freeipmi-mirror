@@ -659,4 +659,4 @@ FIID Template: tmpl_cmd_oem_intel_node_manager_get_limiting_policy_id_rs =
 }
 #endif
 
-#endif /* IPMI_OEM_CMDS_TEMPLATES_H */
+#endif /* IPMI_OEM_INTEL_NODE_MANAGER_CMDS_TEMPLATES_H */
