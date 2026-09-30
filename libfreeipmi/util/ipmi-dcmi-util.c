@@ -91,7 +91,7 @@ ipmi_cmd_dcmi_str (uint8_t cmd)
     case IPMI_CMD_DCMI_GET_THERMAL_LIMIT:
       return "Get Thermal Limit";
     case IPMI_CMD_DCMI_GET_TEMPERATURE_READING:
-      return "Set Temperature Reading";
+      return "Get Temperature Reading";
     case IPMI_CMD_DCMI_SET_DCMI_CONFIGURATION_PARAMETERS:
       return "Set DCMI Configuration Parameters";
     case IPMI_CMD_DCMI_GET_DCMI_CONFIGURATION_PARAMETERS:
