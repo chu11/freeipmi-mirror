@@ -167,7 +167,9 @@ int ipmi_fru_read_data_area (ipmi_fru_ctx_t ctx,
                              void *areabuf,
                              unsigned int areabuflen);
 
-/* most useful for OEM record handling, will error if not at a multirecord area */
+/* most useful for OEM record handling, will error if at an info area.
+ * Returns 0 with record_type_id set to 0 when no area remains.
+ */
 int ipmi_fru_read_multirecord_record_type_id (ipmi_fru_ctx_t ctx,
                                               uint8_t *record_type_id);
 

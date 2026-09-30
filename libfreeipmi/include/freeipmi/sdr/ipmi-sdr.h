@@ -99,7 +99,10 @@ extern "C" {
 
 #define IPMI_SDR_SENSOR_NAME_FLAGS_DEFAULT                       0x00000000
 #define IPMI_SDR_SENSOR_NAME_FLAGS_IGNORE_SHARED_SENSORS         0x00000001
-/* applicable only to entity sensor names */
+/* only valid for ipmi_sdr_parse_entity_sensor_name();
+ * ipmi_sdr_parse_sensor_name() fails with IPMI_SDR_ERR_PARAMETERS if
+ * it is set
+ */
 #define IPMI_SDR_SENSOR_NAME_FLAGS_ALWAYS_OUTPUT_INSTANCE_NUMBER 0x00000002
 
 #define IPMI_SDR_MAX_RECORD_LENGTH                      261 /* 256 + header */
@@ -177,6 +180,8 @@ int ipmi_sdr_cache_most_recent_erase_timestamp (ipmi_sdr_ctx_t ctx,
                                                 uint32_t *most_recent_erase_timestamp);
 
 int ipmi_sdr_cache_first (ipmi_sdr_ctx_t ctx);
+/* returns 1 if advanced to the next record, 0 if already at the last
+ * record, -1 on error */
 int ipmi_sdr_cache_next (ipmi_sdr_ctx_t ctx);
 int ipmi_sdr_cache_seek (ipmi_sdr_ctx_t ctx, unsigned int index);
 int ipmi_sdr_cache_search_record_id (ipmi_sdr_ctx_t ctx, uint16_t record_id);

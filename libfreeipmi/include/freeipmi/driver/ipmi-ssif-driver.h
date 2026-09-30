@@ -52,7 +52,7 @@ typedef struct ipmi_ssif_ctx *ipmi_ssif_ctx_t;
 
 /* Notes:
  *
- * IPMBAddress - slave address of the BMC on the SMBus (usually 0x42)
+ * driver_address - slave address of the BMC on the SMBus (usually 0x42)
  *
  */
 ipmi_ssif_ctx_t ipmi_ssif_ctx_create (void);

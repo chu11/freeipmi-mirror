@@ -1,5 +1,28 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/sdr/ipmi-sdr.h: Document that
+	IPMI_SDR_SENSOR_NAME_FLAGS_ALWAYS_OUTPUT_INSTANCE_NUMBER is rejected
+	by ipmi_sdr_parse_sensor_name(), not merely ignored, and the
+	1/0/-1 return of ipmi_sdr_cache_next().
+	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h: Document that an
+	Ipmi_Sel_Parse_Callback returning < 0 aborts parsing with
+	IPMI_SEL_ERR_CALLBACK_ERROR, and that ipmi_sel_ctx_get_separator()
+	returns NULL while the default separator is in effect.
+	* libfreeipmi/include/freeipmi/interpret/ipmi-interpret.h: Document
+	that IPMI_INTERPRET_FLAGS_IGNORE_UNRECOGNIZED_EVENTS affects
+	ipmi_interpret_sensor() only.
+	* libfreeipmi/include/freeipmi/fru/ipmi-fru.h
+	(ipmi_fru_read_multirecord_record_type_id): Document the 0 return
+	with a zero record type id once the areas are exhausted.
+	* libfreeipmi/include/freeipmi/util/ipmi-util.h (ipmi_get_random):
+	Document the return values and the EPERM failure when built
+	without a random device.
+	* libfreeipmi/include/freeipmi/driver/ipmi-ssif-driver.h: Call the
+	SMBus slave address driver_address, the name the accessors use,
+	instead of IPMBAddress.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-comp-code-oem-intel-node-manager-spec.h:
 	Name the commands each completion code applies to with their real
 	IPMI_CMD_OEM_INTEL_NODE_MANAGER_* macro names; the comments used a

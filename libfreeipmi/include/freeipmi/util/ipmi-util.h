@@ -42,6 +42,10 @@ int ipmi_check_completion_code (fiid_obj_t obj_cmd, uint8_t completion_code);
 /* returns 1 on pass, 0 on fail, -1 on error */
 int ipmi_check_completion_code_success (fiid_obj_t obj_cmd);
 
+/* returns number of bytes stored in buf on success (0 if buflen is
+ * 0), -1 on error.  Fails with EPERM if the library was built without
+ * /dev/urandom or /dev/random support.
+ */
 int ipmi_get_random (void *buf, unsigned int buflen);
 
 const char *ipmi_cmd_str (uint8_t net_fn, uint8_t cmd);

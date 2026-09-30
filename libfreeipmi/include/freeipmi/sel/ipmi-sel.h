@@ -85,6 +85,9 @@ extern "C" {
 
 typedef struct ipmi_sel_ctx *ipmi_sel_ctx_t;
 
+/* If the callback returns < 0, parsing stops and the parse function
+ * fails with IPMI_SEL_ERR_CALLBACK_ERROR.
+ */
 typedef int (*Ipmi_Sel_Parse_Callback)(ipmi_sel_ctx_t ctx, void *callback_data);
 
 /*
@@ -145,7 +148,8 @@ int ipmi_sel_ctx_set_debug_prefix (ipmi_sel_ctx_t ctx, const char *debug_prefix)
 
 /* determines separator between fields in string functions
  *
- * defaults to " | "
+ * defaults to " | ".  ipmi_sel_ctx_get_separator() returns NULL while
+ * the default is in effect.
  */
 char *ipmi_sel_ctx_get_separator (ipmi_sel_ctx_t ctx);
 int ipmi_sel_ctx_set_separator (ipmi_sel_ctx_t ctx, const char *separator);
