@@ -1,5 +1,15 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-s2600bpb-spec.h
+	(IPMI_OEM_INTEL_S2600BPB_NVME_CRITICAL_WARNING_EVENT_DATA1_DISK_DRIVE_BITMASK):
+	Change to 0x0F.  The drive index is carried in the low nibble of
+	event data 1, the only bits available once the event data 2 and 3
+	usage codes occupy bits 7:4; the previous single bit mask of 0x04
+	with a shift of 0 could only ever yield drive 0 or drive 4 in the
+	SEL string output.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-sensor-and-event-code-tables-oem-dell-spec.h
 	(IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_EVENT_DATA2_OEM_DELL_INTRUSION_WHILE_SYSTEM_ON,
 	IPMI_SENSOR_TYPE_PHYSICAL_SECURITY_EVENT_DATA2_OEM_DELL_INTRUSION_WHILE_SYSTEM_OFF):
