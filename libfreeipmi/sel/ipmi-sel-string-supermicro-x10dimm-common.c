@@ -62,7 +62,8 @@ sel_string_output_supermicro_x10dimm_event_data2_event_data3 (ipmi_sel_ctx_t ctx
 
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
+          || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND);
   assert (sel_entry);
   assert (tmpbuf);
   assert (tmpbuflen);

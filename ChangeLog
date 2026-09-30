@@ -1,5 +1,17 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sel/ipmi-sel-string-supermicro-common.c
+	(sel_string_output_supermicro_dimm_event_data2_event_data3): Drop the
+	assert that the product id is the X10SLM+-F; this helper is shared by
+	all thirteen X10 boards dispatched to the x10dimm hook, which
+	already asserts the full list.  Accept the Supermicro workaround
+	manufacturer id as the dispatcher does.
+	* libfreeipmi/sel/ipmi-sel-string-supermicro-x10dimm-common.c
+	(sel_string_output_supermicro_x10dimm_event_data2_event_data3): Ditto
+	for the manufacturer id.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sel/ipmi-sel-string-intel-quanta-qssc-s4r.c
 	(sel_string_output_intel_quanta_qssc_s4r_event_data2_event_data3):
 	Fix the local sparing spared DIMM strings; all four cases printed

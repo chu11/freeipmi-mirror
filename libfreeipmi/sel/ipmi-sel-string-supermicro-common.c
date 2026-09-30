@@ -147,7 +147,8 @@ sel_string_output_supermicro_dimm_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
 {
   assert (ctx);
   assert (ctx->magic == IPMI_SEL_CTX_MAGIC);
-  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO);
+  assert (ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO
+          || ctx->manufacturer_id == IPMI_IANA_ENTERPRISE_ID_SUPERMICRO_WORKAROUND);
   assert (sel_entry);
   assert (buf);
   assert (buflen);
@@ -156,7 +157,6 @@ sel_string_output_supermicro_dimm_event_data2_event_data3 (ipmi_sel_ctx_t ctx,
   assert (wlen);
   assert (system_event_record_data);
   assert (oem_rv);
-  assert (ctx->product_id == IPMI_SUPERMICRO_PRODUCT_ID_X10SLMPLUS_F);
 
   /* OEM Interpretation
    *
