@@ -741,7 +741,7 @@ int
 ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ctx,
                                                                    uint8_t parameter_valid,
                                                                    uint8_t dont_clear_on_power_up,
-                                                                   uint8_t dont_clear_on_pushbutton_rest_soft_reset,
+                                                                   uint8_t dont_clear_on_pushbutton_reset_soft_reset,
                                                                    uint8_t dont_clear_on_watchdog_timeout,
                                                                    uint8_t dont_clear_on_chassis_control,
                                                                    uint8_t dont_clear_on_PEF,
@@ -778,7 +778,7 @@ ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (ipmi_ctx_t ct
 
   if (fill_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing (parameter_valid,
                                                                          dont_clear_on_power_up,
-                                                                         dont_clear_on_pushbutton_rest_soft_reset,
+                                                                         dont_clear_on_pushbutton_reset_soft_reset,
                                                                          dont_clear_on_watchdog_timeout,
                                                                          dont_clear_on_chassis_control,
                                                                          dont_clear_on_PEF,

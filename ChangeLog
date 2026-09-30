@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-chassis-cmds-api.c
+	(ipmi_cmd_set_system_boot_options_BMC_boot_flag_valid_bit_clearing):
+	Fix the dont_clear_on_pushbutton_reset_soft_reset parameter name,
+	which was misspelled "rest" in the definition.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/interface/ipmi-rmcpplus-interface.c
 	(fill_rmcpplus_rakp_message_1): Name the parameters username and
 	username_len, as the prototype in ipmi-rmcpplus-interface.h and
