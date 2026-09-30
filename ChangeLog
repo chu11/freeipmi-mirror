@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/interface/ipmi-rmcpplus-interface.h
+	(IPMI_MAX_PAYLOAD_LENGTH): Change to 65535, the largest value the
+	16 bit ipmi_payload_len field can hold, from 65536.  The RMCP+
+	assembly length checks compare with > against this macro, so a
+	65536 byte payload passed them and only failed later when set into
+	the field.  Name the field correctly in the comment.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/util/ipmi-timestamp-util.c (ipmi_timestamp_string):
 	Fail with EINVAL if utc_offset is outside IPMI_UTC_OFFSET_VALID()
 	or if both IPMI_TIMESTAMP_FLAG_UTC_TO_LOCALTIME and

@@ -177,8 +177,8 @@ extern "C" {
 #define IPMI_INTEGRITY_PAD_MULTIPLE                       4
 #define IPMI_INTEGRITY_PAD_DATA                           0xFF
 
-#define IPMI_MAX_PAYLOAD_LENGTH                           65536
-/* achu: b/c ipmi_msg_len is 2 bytes */
+#define IPMI_MAX_PAYLOAD_LENGTH                           65535
+/* achu: b/c ipmi_payload_len is 2 bytes */
 
 #define IPMI_HMAC_SHA1_DIGEST_LENGTH                      20
 #define IPMI_HMAC_MD5_DIGEST_LENGTH                       16
