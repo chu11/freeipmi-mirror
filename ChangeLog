@@ -1,5 +1,17 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-oem-wistron-spec.h
+	(IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_REMOTE_UPDATE_ENABLE_FALSE,
+	IPMI_OEM_WISTRON_EXTENDED_ATTRIBUTE_ID_FIRMWARE_UPDATE_REMOTE_UPDATE_ENABLE_TRUE):
+	Rename the remote update enable values from ..._REMOTE_UPDATE_DISABLE
+	and ..._REMOTE_UPDATE_ENABLE, following the other ..._ENABLE_FALSE /
+	..._ENABLE_TRUE value pairs in this header.  The old ..._ENABLE name
+	collided with the attribute id macro of the same name defined
+	earlier in the file; both happened to be 0x01, which is the only
+	reason it compiled.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-sensor-and-event-code-tables-oem-spec.h,
 	libfreeipmi/include/freeipmi/spec/ipmi-cmd-oem-spec.h,
 	libfreeipmi/include/freeipmi/spec/ipmi-oem-spec.h: Include the
