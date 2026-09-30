@@ -437,7 +437,7 @@ FIID Template: tmpl_cmd_set_system_info_parameters_system_firmware_version_rq
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
     { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
     { 8, "set_selector", REQUIRED, LENGTH-FIXED }
-    { 128, "string", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-VARIABLE }
 
 Set System Info Parameters (System Name First Set) Request
 ----------------------------------------------------------
@@ -460,7 +460,7 @@ FIID Template: tmpl_cmd_set_system_info_parameters_system_name_rq
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
     { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
     { 8, "set_selector", REQUIRED, LENGTH-FIXED }
-    { 128, "string", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-VARIABLE }
 
 Set System Info Parameters (Primary Operating System Name First Set) Request
 ----------------------------------------------------------------------------
@@ -483,7 +483,7 @@ FIID Template: tmpl_cmd_set_system_info_parameters_primary_operating_system_name
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
     { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
     { 8, "set_selector", REQUIRED, LENGTH-FIXED }
-    { 128, "string", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-VARIABLE }
 
 Set System Info Parameters (Operating System Name First Set) Request
 --------------------------------------------------------------------
@@ -506,7 +506,7 @@ FIID Template: tmpl_cmd_set_system_info_parameters_operating_system_name_rq
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
     { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
     { 8, "set_selector", REQUIRED, LENGTH-FIXED }
-    { 128, "string", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-VARIABLE }
 
 Set System Info Parameters (Present OS Version Number First Set) Request
 ------------------------------------------------------------------------
@@ -529,7 +529,7 @@ FIID Template: tmpl_cmd_set_system_info_parameters_present_os_version_number_rq
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
     { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
     { 8, "set_selector", REQUIRED, LENGTH-FIXED }
-    { 128, "string", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-VARIABLE }
 
 Set System Info Parameters (BMC URL First Set) Request
 ------------------------------------------------------
@@ -552,7 +552,7 @@ FIID Template: tmpl_cmd_set_system_info_parameters_bmc_url_rq
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
     { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
     { 8, "set_selector", REQUIRED, LENGTH-FIXED }
-    { 128, "string", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-VARIABLE }
 
 Set System Info Parameters (Base OS/Hypervisor URL First Set) Request
 ---------------------------------------------------------------------
@@ -575,7 +575,7 @@ FIID Template: tmpl_cmd_set_system_info_parameters_base_os_hypervisor_url_rq
     { 8, "cmd", REQUIRED, LENGTH-FIXED }
     { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
     { 8, "set_selector", REQUIRED, LENGTH-FIXED }
-    { 128, "string", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-VARIABLE }
 
 Get System Info Parameters Request
 ----------------------------------
@@ -597,7 +597,7 @@ FIID Template: tmpl_cmd_get_system_info_parameters_rs
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8, "parameter_revision", REQUIRED, LENGTH-FIXED }
-    { 1024, "configuration_parameter_data", REQUIRED, LENGTH-VARIABLE }
+    { 1024, "configuration_parameter_data", OPTIONAL, LENGTH-VARIABLE }
 
 Get System Info Parameters (Set In Progress) Response
 -----------------------------------------------------
@@ -625,7 +625,7 @@ FIID Template: tmpl_cmd_get_system_info_parameters_system_firmware_version_rs
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8, "parameter_revision", REQUIRED, LENGTH-FIXED }
     { 8, "set_selector", REQUIRED, LENGTH-FIXED }
-    { 128, "string", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-VARIABLE }
 
 Get System Info Parameters (System Name First Set) Response
 -----------------------------------------------------------
@@ -650,7 +650,7 @@ FIID Template: tmpl_cmd_get_system_info_parameters_system_name_rs
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8, "parameter_revision", REQUIRED, LENGTH-FIXED }
     { 8, "set_selector", REQUIRED, LENGTH-FIXED }
-    { 128, "string", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-VARIABLE }
 
 Get System Info Parameters (Primary Operating System Name First Set) Response
 -----------------------------------------------------------------------------
@@ -675,7 +675,7 @@ FIID Template: tmpl_cmd_get_system_info_parameters_primary_operating_system_name
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8, "parameter_revision", REQUIRED, LENGTH-FIXED }
     { 8, "set_selector", REQUIRED, LENGTH-FIXED }
-    { 128, "string", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-VARIABLE }
 
 Get System Info Parameters (Operating System Name First Set) Response
 ---------------------------------------------------------------------
@@ -700,7 +700,7 @@ FIID Template: tmpl_cmd_get_system_info_parameters_operating_system_name_rs
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8, "parameter_revision", REQUIRED, LENGTH-FIXED }
     { 8, "set_selector", REQUIRED, LENGTH-FIXED }
-    { 128, "string", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-VARIABLE }
 
 Get Channel Cipher Suites Request
 ---------------------------------

@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/templates/ipmi-messaging-support-cmds-templates.h:
+	Match the documented templates to their definitions.  The 128 bit
+	"string" fields of the Set and Get System Info Parameters string
+	templates are LENGTH-VARIABLE, not LENGTH-FIXED, and
+	"configuration_parameter_data" in
+	tmpl_cmd_get_system_info_parameters_rs is OPTIONAL, not REQUIRED.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/templates/ipmi-pef-and-alerting-cmds-templates.h:
 	Match the documented templates to their definitions.  Remove the
 	"reserved3" field from
