@@ -1,5 +1,15 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/intel/ipmi-sensor-and-event-code-tables-oem-intel-windmill-spec.h:
+	Rename the IPMI_SENSOR_TYPE_PROCESSOR_EVENT_DATA2_OEM_INTEL_WINDMILL_MACHINE_CHECK_ERROR_*
+	macros to EVENT_DATA3; the CPU number, source and source-extra fields
+	they describe are decoded from event data 3.
+	* libfreeipmi/sel/ipmi-sel-string-intel-windmill.c
+	(sel_string_output_intel_windmill_event_data3_discrete_oem): Update
+	for the rename.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/sel/ipmi-sel-string-intel-windmill.c
 	(sel_string_output_intel_windmill_event_data3_class_oem): Return 1
 	after formatting the ME firmware health "Extended Error Info" string;
