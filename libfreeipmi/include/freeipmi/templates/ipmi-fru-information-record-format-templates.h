@@ -184,6 +184,37 @@ FIID Template: tmpl_fru_extended_compatibility_record
     { 1, "reserved", REQUIRED, LENGTH-FIXED }
     { 4096, "code_range_mask", REQUIRED, LENGTH-VARIABLE }
 
+FRU Extended DC Output
+----------------------
+
+FIID Template: tmpl_fru_extended_dc_output
+
+    { 4, "output_number", REQUIRED, LENGTH-FIXED }
+    { 1, "current_units", REQUIRED, LENGTH-FIXED }
+    { 2, "reserved", REQUIRED, LENGTH-FIXED }
+    { 1, "standby", REQUIRED, LENGTH-FIXED }
+    { 16, "nominal_voltage", REQUIRED, LENGTH-FIXED }
+    { 16, "maximum_negative_voltage_deviation", REQUIRED, LENGTH-FIXED }
+    { 16, "maximum_positive_voltage_deviation", REQUIRED, LENGTH-FIXED }
+    { 16, "ripple_and_noise_pk_pk", REQUIRED, LENGTH-FIXED }
+    { 16, "minimum_current_draw", REQUIRED, LENGTH-FIXED }
+    { 16, "maximum_current_draw", REQUIRED, LENGTH-FIXED }
+
+FRU Extended DC Load
+--------------------
+
+FIID Template: tmpl_fru_extended_dc_load
+
+    { 4, "output_number", REQUIRED, LENGTH-FIXED }
+    { 1, "current_units", REQUIRED, LENGTH-FIXED }
+    { 3, "reserved", REQUIRED, LENGTH-FIXED }
+    { 16, "nominal_voltage", REQUIRED, LENGTH-FIXED }
+    { 16, "specd_minimum_voltage", REQUIRED, LENGTH-FIXED }
+    { 16, "specd_maximum_voltage", REQUIRED, LENGTH-FIXED }
+    { 16, "specd_ripple_and_noise_pk_pk", REQUIRED, LENGTH-FIXED }
+    { 16, "minimum_current_load", REQUIRED, LENGTH-FIXED }
+    { 16, "maximum_current_load", REQUIRED, LENGTH-FIXED }
+
 FRU OEM Record
 --------------
 

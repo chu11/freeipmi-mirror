@@ -602,6 +602,14 @@ FIID Template: tmpl_cmd_get_system_info_parameters_rs
 Get System Info Parameters (Set In Progress) Response
 -----------------------------------------------------
 
+FIID Template: tmpl_cmd_get_system_info_parameters_set_in_progress_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "parameter_revision", REQUIRED, LENGTH-FIXED }
+    { 2, "state", REQUIRED, LENGTH-FIXED }
+    { 6, "reserved", REQUIRED, LENGTH-FIXED }
+
 Get System Info Parameters (System Firmware Version First Set) Response
 -----------------------------------------------------------------------
 
@@ -695,6 +703,81 @@ Get System Info Parameters (Operating System Name) Response
 -----------------------------------------------------------
 
 FIID Template: tmpl_cmd_get_system_info_parameters_operating_system_name_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "parameter_revision", REQUIRED, LENGTH-FIXED }
+    { 8, "set_selector", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-VARIABLE }
+
+Get System Info Parameters (Present OS Version Number First Set) Response
+-------------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_get_system_info_parameters_present_os_version_number_first_set_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "parameter_revision", REQUIRED, LENGTH-FIXED }
+    { 8, "set_selector", REQUIRED, LENGTH-FIXED }
+    { 4, "encoding", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "string_length", REQUIRED, LENGTH-FIXED }
+    { 112, "string", OPTIONAL, LENGTH-VARIABLE }
+
+Get System Info Parameters (Present OS Version Number) Response
+---------------------------------------------------------------
+
+FIID Template: tmpl_cmd_get_system_info_parameters_present_os_version_number_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "parameter_revision", REQUIRED, LENGTH-FIXED }
+    { 8, "set_selector", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-VARIABLE }
+
+Get System Info Parameters (BMC URL First Set) Response
+-------------------------------------------------------
+
+FIID Template: tmpl_cmd_get_system_info_parameters_bmc_url_first_set_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "parameter_revision", REQUIRED, LENGTH-FIXED }
+    { 8, "set_selector", REQUIRED, LENGTH-FIXED }
+    { 4, "encoding", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "string_length", REQUIRED, LENGTH-FIXED }
+    { 112, "string", OPTIONAL, LENGTH-VARIABLE }
+
+Get System Info Parameters (BMC URL) Response
+---------------------------------------------
+
+FIID Template: tmpl_cmd_get_system_info_parameters_bmc_url_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "parameter_revision", REQUIRED, LENGTH-FIXED }
+    { 8, "set_selector", REQUIRED, LENGTH-FIXED }
+    { 128, "string", REQUIRED, LENGTH-VARIABLE }
+
+Get System Info Parameters (Base OS/Hypervisor URL First Set) Response
+----------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_get_system_info_parameters_base_os_hypervisor_url_first_set_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "parameter_revision", REQUIRED, LENGTH-FIXED }
+    { 8, "set_selector", REQUIRED, LENGTH-FIXED }
+    { 4, "encoding", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "string_length", REQUIRED, LENGTH-FIXED }
+    { 112, "string", OPTIONAL, LENGTH-VARIABLE }
+
+Get System Info Parameters (Base OS/Hypervisor URL) Response
+------------------------------------------------------------
+
+FIID Template: tmpl_cmd_get_system_info_parameters_base_os_hypervisor_url_rs
 
     { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
     { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }

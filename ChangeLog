@@ -1,5 +1,22 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/templates/ipmi-lan-cmds-templates.h:
+	Document tmpl_cmd_set_lan_configuration_parameters_ipv4_header_parameters_rq,
+	_primary_rmcp_port_number_rq, _secondary_rmcp_port_number_rq and
+	the corresponding tmpl_cmd_get_lan_configuration_parameters_*_rs
+	templates.
+	* libfreeipmi/include/freeipmi/templates/ipmi-messaging-support-cmds-templates.h:
+	Document tmpl_cmd_get_system_info_parameters_set_in_progress_rs,
+	whose heading had no template, and the
+	present_os_version_number, bmc_url and base_os_hypervisor_url
+	first set and string response templates.
+	* libfreeipmi/include/freeipmi/templates/ipmi-fru-information-record-format-templates.h:
+	Document tmpl_fru_extended_dc_output and tmpl_fru_extended_dc_load.
+	All fifteen templates are public but were missing from the
+	documentation headers.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/templates/ipmi-lan-cmds-templates.h,
 	libfreeipmi/include/freeipmi/templates/ipmi-pef-and-alerting-cmds-templates.h,
 	libfreeipmi/include/freeipmi/templates/ipmi-serial-modem-cmds-templates.h,

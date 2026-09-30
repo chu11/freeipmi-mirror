@@ -182,6 +182,44 @@ FIID Template: tmpl_cmd_set_lan_configuration_parameters_subnet_mask_rq
     { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
     { 32, "subnet_mask", REQUIRED, LENGTH-FIXED }
 
+Set LAN Configuration Parameters (IPv4 Header Parameters) Request
+-----------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_ipv4_header_parameters_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved1", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 8, "time_to_live", REQUIRED, LENGTH-FIXED }
+    { 5, "reserved2", REQUIRED, LENGTH-FIXED }
+    { 3, "flags", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved3", REQUIRED, LENGTH-FIXED }
+    { 4, "type_of_service", REQUIRED, LENGTH-FIXED }
+    { 3, "precedence", REQUIRED, LENGTH-FIXED }
+
+Set LAN Configuration Parameters (Primary RMCP Port Number) Request
+-------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_primary_rmcp_port_number_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 16, "primary_rmcp_port_number", REQUIRED, LENGTH-FIXED }
+
+Set LAN Configuration Parameters (Secondary RMCP Port Number) Request
+---------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_set_lan_configuration_parameters_secondary_rmcp_port_number_rq
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED }
+    { 4, "channel_number", REQUIRED, LENGTH-FIXED }
+    { 4, "reserved", REQUIRED, LENGTH-FIXED }
+    { 8, "parameter_selector", REQUIRED, LENGTH-FIXED }
+    { 16, "secondary_rmcp_port_number", REQUIRED, LENGTH-FIXED }
+
 Set LAN Configuration Parameters (BMC Generated ARP Control) Request
 --------------------------------------------------------------------
 
@@ -676,6 +714,43 @@ FIID Template: tmpl_cmd_get_lan_configuration_parameters_subnet_mask_rs
     { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
     { 32, "subnet_mask", REQUIRED, LENGTH-FIXED }
 
+Get LAN Configuration Parameters (IPv4 Header Parameters) Response
+------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_get_lan_configuration_parameters_ipv4_header_parameters_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 4, "present_revision", REQUIRED, LENGTH-FIXED }
+    { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
+    { 8, "time_to_live", REQUIRED, LENGTH-FIXED }
+    { 5, "reserved2", REQUIRED, LENGTH-FIXED }
+    { 3, "flags", REQUIRED, LENGTH-FIXED }
+    { 1, "reserved3", REQUIRED, LENGTH-FIXED }
+    { 4, "type_of_service", REQUIRED, LENGTH-FIXED }
+    { 3, "precedence", REQUIRED, LENGTH-FIXED }
+
+Get LAN Configuration Parameters (Primary RMCP Port Number) Response
+--------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_get_lan_configuration_parameters_primary_rmcp_port_number_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 4, "present_revision", REQUIRED, LENGTH-FIXED }
+    { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
+    { 16, "primary_rmcp_port_number", REQUIRED, LENGTH-FIXED }
+
+Get LAN Configuration Parameters (Secondary RMCP Port Number) Response
+----------------------------------------------------------------------
+
+FIID Template: tmpl_cmd_get_lan_configuration_parameters_secondary_rmcp_port_number_rs
+
+    { 8, "cmd", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 8, "comp_code", REQUIRED, LENGTH-FIXED, MAKES-PACKET-SUFFICIENT }
+    { 4, "present_revision", REQUIRED, LENGTH-FIXED }
+    { 4, "oldest_revision_parameter", REQUIRED, LENGTH-FIXED }
+    { 16, "secondary_rmcp_port_number", REQUIRED, LENGTH-FIXED }
 
 Get LAN Configuration Parameters (BMC Generated ARP Control) Response
 ---------------------------------------------------------------------
