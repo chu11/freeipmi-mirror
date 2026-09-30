@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-oem-wistron-spec.h:
+	Include freeipmi/cmds/ipmi-lan-cmds.h, which defines the
+	IPMI_DESTINATION_TYPE_* constants the IPv6 SNMP trap destination
+	type macros expand to.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/cmds/ipmi-messaging-support-cmds.h:
 	Include freeipmi/spec/ipmi-privilege-level-spec.h, which defines the
 	IPMI_PRIVILEGE_LEVEL_* constants that IPMI_PRIVILEGE_LEVEL_LIMIT_VALID

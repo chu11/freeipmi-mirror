@@ -23,6 +23,8 @@
 extern "C" {
 #endif
 
+#include <freeipmi/cmds/ipmi-lan-cmds.h>
+
 /*
  * Wistron / Dell Poweredge C6220
  */
