@@ -1,5 +1,14 @@
 2026-09-29 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/sel/ipmi-sel-string-sun-x4140.c
+	(_sel_string_output_sun_x4140_event_data3_fru_position_number): Return
+	1 after formatting the FRU position number.  Returning 0 told the
+	calling hooks there was no OEM match, so the string was discarded and
+	the generic OEM event data3 output was printed instead; the Sun X4140
+	decoding has been a no-op since the callback rearchitecture.
+
+2026-09-29 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-system-info-parameters-oem-dell-spec.h
 	(IPMI_OEM_DELL_SYSTEM_INFO_CMC_INFO_CMC_FIRMWARE_VERSION_STRING_LENGTH):
 	Correct to 20.  The CMC firmware version occupies bytes 21-40 of
