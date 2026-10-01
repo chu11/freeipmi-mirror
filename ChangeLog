@@ -5,6 +5,8 @@
 	than the bytes already copied, which would otherwise memcpy with a
 	negative length.
 
+	(Reported by Charles Cochran<charles.cochran@canonical.com>)
+
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
 	* man/freeipmi.conf.5.pre.in, man/ipmiseld.conf.5.pre.in: List

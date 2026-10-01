@@ -8,6 +8,8 @@ o Fix ipmi-oem command line parsing bugs.
 o In ipmi-oem, fix error in with wistron get/set-ipv6-trap-settings.
 o In ipmi-oem, fix output error in dell get-system-info cmc-info.
 o In libipmidetect fix potential hostname sscanf bound overflow.
+o In ipmi-oem fujitsu get-sel-entry-long-text, fix potential memory
+  buffer overflow.
 o Fix ipmiconsole workaround flag parsing issues.
 o Fix minor libfreeipmi corner cases (e.g. parameter input corner cases).
 o Fix minor SEL output corner cases in several OEM vendors.
