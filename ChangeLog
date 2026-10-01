@@ -1,5 +1,10 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/libfreeipmi.3.pre.in: The header is installed as
+	freeipmi/freeipmi.h, not freeipmi.h; fix the FILES path.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/libipmiconsole.3.pre.in: ipmiconsole_ctx_destroy returns
 	void, not int.
 

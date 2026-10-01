@@ -114,7 +114,7 @@ Provides various utility functions for the calculation of keys, sensor
 readings, etc.  Utilized by most of the rest of FreeIPMI.
 
 .SH "FILES"
-/usr/include/freeipmi.h
+/usr/include/freeipmi/freeipmi.h
 .PP
 /usr/include/freeipmi/
 
