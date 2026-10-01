@@ -1,5 +1,15 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Set every command argument in the headings
+	as bare italics like the rest of the page: the Intel Node Manager
+	mode, platformbootingmode, policystorage and policytriggerlimit
+	arguments were bold or had brackets outside the italics, and
+	node-manager-policy-control, set-password-policy and
+	write-proprietary-string used angle brackets.  Close an
+	unterminated italic in the Wistron user-default-setting text.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Fix prose slips: "passed into the list",
 	the undefined "mapping-number" term (the argument is
 	ipass-mapping), a lowercase sentence start, "Command configured to

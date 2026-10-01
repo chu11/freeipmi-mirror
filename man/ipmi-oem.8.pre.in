@@ -494,7 +494,7 @@ multiple vendors motherboards.
 .LP
 .RS
 .TP
-.B get-node-manager-statistics mode=globalpower|globaltemp|globalthrottling|globalvolumetricairflow|globaltempairflow|globalchassispower|policypower|policytrigger|policythrottling|hostunhandledrequests|hostresponsetime|cputhrottling|memorythrottling|hostcommfailure \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
+.B get-node-manager-statistics \fImode=globalpower|globaltemp|globalthrottling|globalvolumetricairflow|globaltempairflow|globalchassispower|policypower|policytrigger|policythrottling|hostunhandledrequests|hostresponsetime|cputhrottling|memorythrottling|hostcommfailure\fR \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
 This OEM command will output Intel Node Manager statistics.  A
 \fImode\fR indicating statistics to output must be specified.  The
 user may optionally specify a \fIdomainid\fR or \fIpolicyid\fR,
@@ -527,7 +527,7 @@ additional error messages will be output as valid policies are being
 searched for.  Command confirmed to work on Intel S2600JF (Appro
 512X).
 .TP
-.B node-manager-policy-control \fI<enable|disable>\fR \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
+.B node-manager-policy-control \fIenable|disable\fR \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
 This OEM command will enable or disable the current global, domain, or
 policies used by the Intel Node Manager.  If no \fIdomainid\fR is
 specified, then the Node Manager will be enabled or globally disabled.
@@ -549,7 +549,7 @@ additional error messages will be output as valid policies are being
 searched for.  Command confirmed to work on Intel S2600JF (Appro
 512X).
 .TP
-.B set-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy\fR \fIpolicytargetlimit=num\fR [platformbootingmode=performance|power] \fIcorrectiontimelimit=ms\fR \fIstatisticsreportingperiod=seconds\fR policystorage=persistent|volatile [\fIpolicytriggerlimit=num\fR] \fI[policystate=enable|disable]\fR \fI[policyexceptionaction=alert|shutdown]\fR \fI[aggressivepowercorrection=automatic|notaggressive|aggressive]\fR \fI[policypowerdomain=primary|secondary]\fR
+.B set-node-manager-policy \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR \fIpolicytrigger=none|inlettemperaturelimitpolicytrigger|missingpowerreadingtimeout|timeafterplatformresettrigger|boottimepolicy\fR \fIpolicytargetlimit=num\fR \fI[platformbootingmode=performance|power]\fR \fIcorrectiontimelimit=ms\fR \fIstatisticsreportingperiod=seconds\fR \fIpolicystorage=persistent|volatile\fR \fI[policytriggerlimit=num]\fR \fI[policystate=enable|disable]\fR \fI[policyexceptionaction=alert|shutdown]\fR \fI[aggressivepowercorrection=automatic|notaggressive|aggressive]\fR \fI[policypowerdomain=primary|secondary]\fR
 This OEM command will add or modify an indicated policy ID from the
 domain ID.  Most of the fields above are required, although they can
 be listed in any order.  By default any created/modified policy will
@@ -1349,7 +1349,7 @@ This OEM command will allow users to customize BMC settings, store
 them as defaults, and restore back to previous settings as desired.
 The user default settings include all OEM extended configuration
 settings (such as the ones set by \fIset\-nic\-mode\fR,
-\fIset\-web\-server\-config, and others above), IPMI user account
+\fIset\-web\-server\-config\fR, and others above), IPMI user account
 settings, and IPMI lan configuration parameters.  \fIset\fR sets the
 current settings as a new default, while \fIreset\fR resets settings
 to the previously configured defaults.  Command confirmed to work on
@@ -1471,7 +1471,7 @@ accomplished by executing a cold-reset with
 .B bmc-device(8).
 Command confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
-.B set-password-policy <enable|disable>
+.B set-password-policy \fIenable|disable\fR
 This OEM command will set the current password policy enforcement.  If
 password policy is enabled, BMC passwords must meet the following
 requirements: Not contain the user's name, be 8-14 characters long,
@@ -1487,7 +1487,7 @@ purpose.  It can also be read via
 .B ipmi-fru.
 Command confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
-.B write-proprietary-string <string>
+.B write-proprietary-string \fIstring\fR
 This OEM command will write the proprietary string stored in the FRU.
 The maximum length string is 80 characters.  Command confirmed to work
 on Wistron / Dell Poweredge C6220.
