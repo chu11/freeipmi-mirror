@@ -132,7 +132,13 @@ Turns off all logging done by
 #include <@top_srcdir@/man/manpage-common-config-file.man>
 #include <@top_srcdir@/man/manpage-common-workaround-flags.man>
 #include <@top_srcdir@/man/manpage-common-debug.man>
-#include <@top_srcdir@/man/manpage-common-misc.man>
+.TP
+\fB\-?\fR, \fB\-\-help\fR
+Output a help list and exit.  If a command is also specified, the
+options for that command are listed as well.
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+Output the program version and exit.
 .SH "SET OPTIONS"
 The following options can be used by the set command to set or clear
 various BMC watchdog configuration parameters.

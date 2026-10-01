@@ -1,5 +1,12 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/bmc-watchdog.8.pre.in: Document -?/--help and -V/--version
+	inline instead of including the common misc text, which also
+	documents --usage.  bmc-watchdog parses with ARGP_NO_HELP and
+	defines help and version itself, so --usage is not accepted.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-sel.8.pre.in, man/ipmiseld.8.pre.in: Include the
 	OPERATOR variant of the username text.  Both tools default to the
 	OPERATOR privilege level, which the pages already state, and the
