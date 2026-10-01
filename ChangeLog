@@ -1,5 +1,10 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/libfreeipmi.3.pre.in: List the Intel DCMI driver among the
+	supported in-band drivers.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/libfreeipmi.3.pre.in: Name the sub-sections after the header
 	directories that exist: fru, sdr and sel rather than fru-parse,
 	sdr-cache, sdr-parse and sel-parse.  The SDR cache and SDR parse
