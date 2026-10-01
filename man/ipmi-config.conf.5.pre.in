@@ -24,7 +24,7 @@ for different environments.
 Note that many options may or may not be available on your particular
 machine.  For example, Serial-Over-Lan (SOL) is available only on IPMI
 2.0 machines.  Therefore, if you are looking to configure an IPMI 1.5
-machine, many of the SOL or IPMI 2.0 related options will be be
+machine, many of the SOL or IPMI 2.0 related options will be
 unavailable to you.  The number of configurable users may also vary
 for your particular machine.
 .LP
@@ -161,7 +161,7 @@ Future versions of this manpage will try to include more information.
      	OEM_Enable_Auth_Type_OEM_Proprietary         No
      EndSection
      Section Lan_Conf_Security_Keys
-        ## Give string or blank to clear. Max 20 chars
+        ## Give string or blank to clear. Max 20 bytes, prefix with 0x to enter hex
         K_G
      EndSection
      Section Lan_Conf_Misc
@@ -260,7 +260,7 @@ system functions are available to at least one user via IPMI over LAN.
 sessions allowed for the user.  Most users will wish to set this to
 "0" to allow unlimited simultaneous IPMI sessions.  This field is
 considered optional by IPMI standards, and may result in errors when
-attempting to configure it to a non-zero value.  If errors to occur,
+attempting to configure it to a non-zero value.  If errors occur,
 setting the value back to 0 should resolve problems.
 .LP
 \fISOL_Payload_Access\fR specifies if a particular user is allowed to
@@ -341,7 +341,7 @@ Different usernames at different privilege levels may be allowed to
 authenticate differently through this configuration.  For example, a
 username with "User" privileges may be allowed to authenticate with a
 straight password, but a username with "Administrator" privileges may
-be allowed only authenticate with MD5.
+be allowed to authenticate only with MD5.
 .LP
 The above example configuration supports \fIMD2\fR and \fIMD5\fR
 authentication for all users at the "User", "Operator", and
@@ -469,7 +469,7 @@ be set for at least one cipher suite ID.  Typically, this is the
 "Administrator" privilege.
 .LP
 A number of cipher suite IDs are optionally implemented, so the
-available cipher suite IDs available your system may vary.
+cipher suite IDs available on your system may vary.
 
 .SH "Section SOL_Conf"
 
@@ -486,7 +486,7 @@ that these be set on.  However, forced authentication and/or
 encryption support depend on the cipher suite IDs supported.
 .LP
 The \fICharacter_Accumulate_Interval\fR,
-\fICharacter_Send_Threshold\fR , \fISOL_Retry_Count\fR and ,
+\fICharacter_Send_Threshold\fR, \fISOL_Retry_Count\fR, and
 \fISOL_Retry_Interval\fR options are used to set SOL character output
 speeds. \fICharacter_Accumulate_Interval\fR determines how often
 serial data should be regularly sent and
@@ -505,7 +505,7 @@ in the BIOS and operating system, such as
 Generally speaking, both the \fIVolatile\fR and \fINon_Volatile\fR
 options should be set identically.
 .LP
-In addition to enabling SOL in this section, individual users most
+In addition to enabling SOL in this section, individual users must
 also be capable of connecting with SOL.  See the section
 .B "Section User1, User2, ..."
 above for details.

@@ -1,5 +1,14 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-config.conf.5.pre.in: Fix prose slips: "will be be",
+	"If errors to occur", "allowed only authenticate", "available
+	cipher suite IDs available your system", "users most also", the
+	misplaced commas in the SOL option list, and the K_G example
+	comment, which now matches the "Max 20 bytes, prefix with 0x to
+	enter hex" text checkout writes.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.conf.5.pre.in: Spell the example keys the way
 	--checkout writes them (IP_Address, MAC_Address, Lan_Enable_IPMI_Msgs,
 	*_Auth_Type_MD2/MD5/OEM_Proprietary, OEM_Enable_Auth_Type_*,
