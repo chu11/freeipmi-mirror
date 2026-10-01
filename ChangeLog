@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/libfreeipmi.3.pre.in: Fix the "@ISODATE" token in the .TH
+	header, which was missing its closing @ and so was never
+	substituted by configure.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/libipmimonitoring.3.pre.in: Use @ISODATE@ and
 	@PACKAGE_VERSION@ in the .TH header like the other library pages
 	instead of a hard coded "December 2006".
