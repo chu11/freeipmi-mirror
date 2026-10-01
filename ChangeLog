@@ -1,5 +1,12 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/bmc-device.8.pre.in: State that exactly one command option is
+	required, and that the --set-system-* strings are limited to 255
+	bytes (IPMI_SYSTEM_INFO_STRING_LEN_MAX), both of which the argument
+	parser enforces.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/bmc-device.8.pre.in: Close the italic --device-id references
 	with \fR (the "\." left the italic running into the next
 	sentence), use the OFFSET placeholder argp uses for

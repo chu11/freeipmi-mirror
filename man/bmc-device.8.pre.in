@@ -34,6 +34,7 @@ commands are not supported on all motherboards.
 .SH "BMC-DEVICE OPTIONS"
 The following options are specific to
 .B bmc-device.
+Exactly one of the command options below must be specified.
 .TP
 \fB\-\-cold\-reset\fR
 Perform a cold reset.
@@ -155,7 +156,8 @@ Get BT interface capabilities.
 Get BMC Global Enables.
 .TP
 \fB\-\-set\-system\-firmware\-version\fR=\fISTRING\fR
-Set System Firmware Version.
+Set System Firmware Version.  This and the other system information
+strings below may be at most 255 bytes long.
 .TP
 \fB\-\-set\-system\-name\fR=\fISTRING\fR
 Set System Name.
