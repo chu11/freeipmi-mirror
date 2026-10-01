@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/manpage-common-inband.man,
+	man/manpage-common-outofband-hostname.man,
+	man/freeipmi.conf.5.pre.in, man/ipmiseld.conf.5.pre.in: Close
+	italics with \fR rather than \FR.  \F is the font-family escape,
+	so the italic opened for the argument name ran on into the
+	description text of every page including these fragments.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.conf.5.pre.in, man/ipmiseld.conf.5.pre.in: List
 	cipher suite ids 15, 16 and 17 as supported.  The config file
 	parser accepts them via IPMI_CIPHER_SUITE_ID_SUPPORTED, and the

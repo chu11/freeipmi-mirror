@@ -63,10 +63,10 @@ Specify the in-band driver device path to use.
 \fBregister\-spacing\fR \fIREGISTER\-SPACING\fR
 Specify the in-band driver register spacing to use.
 .TP
-\fBtarget\-channel\-number\fR \fICHANNEL\-NUMBER\FR
+\fBtarget\-channel\-number\fR \fICHANNEL\-NUMBER\fR
 Specify the in-band driver target channel number.
 .TP
-\fBtarget\-slave\-address\fR \fISLAVE\-ADDRESS\FR
+\fBtarget\-slave\-address\fR \fISLAVE\-ADDRESS\fR
 Specify the in-band driver target slave address.
 .TP
 \fBhostname\fR \fIIPMIHOST1,IPMIHOST2,...\fR
