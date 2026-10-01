@@ -62,9 +62,9 @@ perform IPMI 1.5 and IPMI 2.0 respectively.
 \fB\-u\fR \fIUSERNAME\fR, \fB\-\-username\fR=\fIUSERNAME\fR
 Specify the username to use when authenticating with the remote host.
 If not specified, a null (i.e. anonymous) username is assumed.  The
-user must have atleast OPERATOR privileges to run the --on, --off,
+user must have at least OPERATOR privileges to run the --on, --off,
 --reset, --cycle, --pulse, or --soft power control commands.  The user
-must have atleast USER privileges to determine the power status of the
+must have at least USER privileges to determine the power status of the
 machine through --stat.
 #include <@top_srcdir@/man/manpage-common-outofband-password.man>
 #include <@top_srcdir@/man/manpage-common-outofband-k-g.man>

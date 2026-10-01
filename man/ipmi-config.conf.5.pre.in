@@ -253,8 +253,8 @@ the user is allowed.  Different IPMI commands have different privilege
 restrictions.  For example, determining the power status of a machine
 only requires the "User" privilege level.  However, power cycling
 requires the "Operator" privilege.  Typically, you will want to assign
-atleast one user with a privilege limit of "Administrator" so that all
-system functions are available to atleast one user via IPMI over LAN.
+at least one user with a privilege limit of "Administrator" so that all
+system functions are available to at least one user via IPMI over LAN.
 .LP
 \fILan_Session_Limit\fR specifies the number of simultaneous IPMI
 sessions allowed for the user.  Most users will wish to set this to
@@ -465,7 +465,7 @@ The above example configuration has decided to allow any user with
 "Administrator" privileges use any Cipher Suite algorithm suite which
 requires an authentication, integrity, and confidentiality algorithm.
 Typically, the maximum privilege level configured to a username should
-be set for atleast one cipher suite ID.  Typically, this is the
+be set for at least one cipher suite ID.  Typically, this is the
 "Administrator" privilege.
 .LP
 A number of cipher suite IDs are optionally implemented, so the

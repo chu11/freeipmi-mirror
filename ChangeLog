@@ -1,5 +1,14 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/manpage-common-outofband-username-user.man,
+	man/manpage-common-outofband-username-operator.man,
+	man/manpage-common-outofband-username-admin.man,
+	man/manpage-common-oem-interpretation.man, man/ipmipower.8.pre.in,
+	man/ipmiping.8.pre.in, man/rmcpping.8.pre.in,
+	man/ipmi-config.conf.5.pre.in: "atleast" -> "at least".
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-outofband-password.man,
 	common/toolcommon/tool-cmdline-common.h: "authenticationg" ->
 	"authenticating".
