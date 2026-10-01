@@ -75,6 +75,12 @@ in-band IPMI communication.  Utilized by the 'api' sub-section and the
 .B ipmi-locate(8)
 tool.
 .TP
+.B payload
+Provides fiid templates and 'fill' functions for IPMI payloads that
+are not commands, currently the Serial-over-LAN (SOL) payload.
+Utilized by
+.B libipmiconsole(3).
+.TP
 .B record-format
 Provides macros, fiid-templates, and information on records used in
 IPMI.  Utilized by the 'sdr' sub-section and tools like
@@ -100,6 +106,12 @@ Provides an API for reading a sensor.  Utilized by tools such as
 Provides macros and arrays for various other definitions and tables in
 IPMI.  Utilized by tools such as
 .B ipmi-sensors(8).
+.TP
+.B templates
+Documentation-only headers listing the fields of every fiid template
+defined by the 'cmds', 'interface', 'payload', and 'record-format'
+sub-sections, for reference when reading or writing fields with the
+'fiid' API.
 .TP
 .B util
 Provides various utility functions for the calculation of keys, sensor
