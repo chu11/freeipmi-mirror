@@ -108,8 +108,9 @@ Specify workaround flags to use.  Multiple workarounds can be
 specified separated by whitespace.  Please see tool manpages for
 details about available workarounds for each tool.  The following
 workarounds are supported: assumeio, spinpoll, idzero, forcepermsg,
-unexpectedauth, endianseq, authcap, intel20, supermicro20, sun20,
-opensesspriv, integritycheckvalue, assumesystemevent.
+unexpectedauth, endianseq, noauthcodecheck, authcap, nochecksumcheck,
+intel20, supermicro20, sun20, opensesspriv, integritycheckvalue,
+assumesystemevent.
 .TP
 \fBverbose\-count\fR \fICOUNT\fR
 Specify default verbose count to use for
