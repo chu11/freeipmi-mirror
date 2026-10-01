@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/libfreeipmi.3.pre.in: The 'driver' sub-section is used by
+	the 'api' sub-section only.  bmc-watchdog goes through the api
+	layer (ipmi_ctx_open_inband, ipmi_cmd) like every other tool, so
+	do not cite it as a direct user.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/libfreeipmi.3.pre.in: List the Intel DCMI driver among the
 	supported in-band drivers.
 

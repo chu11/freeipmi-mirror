@@ -33,10 +33,8 @@ and
 .TP
 .B driver
 Provides APIs for in-band IPMI communication.  Currently supported
-drivers are KCS, SSIF, OpenIPMI, SUNBMC, and Intel DCMI.  The 'driver' subsction
-is used by tools such as
-.B bmc-watchdog(8)
-and the 'api' sub-section.
+drivers are KCS, SSIF, OpenIPMI, SUNBMC, and Intel DCMI.  The 'driver'
+sub-section is used by the 'api' sub-section.
 .TP
 .B fiid
 The "FreeIPMI Interface Definition" provides an API used for
