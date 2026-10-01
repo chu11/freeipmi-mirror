@@ -1,5 +1,14 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-fru.8.pre.in: Say what --bridge-fru does rather than
+	only what the default is, and document the restrictions the
+	argument checks enforce: --bridge-fru cannot be combined with
+	--ignore-sdr-cache, and --fru-file opens no IPMI connection and
+	cannot be combined with --device-id or --bridge-fru (OEM
+	interpretation is also skipped for a file).
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-dcmi.8.pre.in: Point readers to bmc-device(8), not
 	ipmi-chassis(8), for ACPI power state information; ipmi-chassis
 	has no ACPI command.  Add bmc-device(8) and the already referenced
