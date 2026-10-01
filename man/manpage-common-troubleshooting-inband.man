@@ -2,11 +2,9 @@
 "device not found" - The specified device could not be found.  Please
 check configuration or inputs and try again.
 .LP
-"driver timeout" - Communication with the driver or device has timed
-out.  Please try again.
-.LP
-"message timeout" - Communication with the driver or device has timed
-out.  Please try again.
+"message timeout" - A command bridged to another controller did not
+receive a response in time.  The session with the BMC itself is still
+functional.  Please try again.
 .LP
 "BMC busy" - The BMC is currently busy.  It may be processing
 information or have too many simultaneous sessions to manage.  Please

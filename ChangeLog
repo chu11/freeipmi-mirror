@@ -1,5 +1,13 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/manpage-common-troubleshooting-inband.man: Drop the first of
+	two "driver timeout" entries, keeping the fuller one, and describe
+	"message timeout" as a bridged command not getting its response
+	rather than repeating the driver timeout text.  That is how
+	libfreeipmi defines IPMI_ERR_MESSAGE_TIMEOUT.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-outofband-username-user.man,
 	man/manpage-common-outofband-username-operator.man,
 	man/manpage-common-outofband-username-admin.man,
