@@ -62,10 +62,10 @@ perform IPMI 1.5 and IPMI 2.0 respectively.
 \fB\-u\fR \fIUSERNAME\fR, \fB\-\-username\fR=\fIUSERNAME\fR
 Specify the username to use when authenticating with the remote host.
 If not specified, a null (i.e. anonymous) username is assumed.  The
-user must have at least OPERATOR privileges to run the --on, --off,
---reset, --cycle, --pulse, or --soft power control commands.  The user
+user must have at least OPERATOR privileges to run the \fB\-\-on\fR, \fB\-\-off\fR,
+\fB\-\-reset\fR, \fB\-\-cycle\fR, \fB\-\-pulse\fR, or \fB\-\-soft\fR power control commands.  The user
 must have at least USER privileges to determine the power status of the
-machine through --stat.
+machine through \fB\-\-stat\fR.
 #include <@top_srcdir@/man/manpage-common-outofband-password.man>
 #include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
 #include <@top_srcdir@/man/manpage-common-outofband-session-timeout.man>
@@ -133,7 +133,7 @@ time the session timeout expires, a "session timeout" error is
 reported for the host.
 .TP
 \fB\-\-wait\-until\-off\fR
-The IPMI specification allows power off commands to return prior the
+The IPMI specification allows power off commands to return prior to the
 power off actually taking place.  This option will force
 .B ipmipower
 to regularly query the remote BMC and return only after the machine
@@ -147,7 +147,7 @@ reported for the host.
 This option informs
 .B ipmipower
 to initiate power control operations via an IPMI OEM specific power
-control extension.  The currently available POWERTYPEs are \fINONE\fR
+control extension.  The currently available OEM power types are \fINONE\fR
 and \fIC410X\fR.  Please see OEM POWER EXTENSIONS below for additional
 information.
 
@@ -164,7 +164,7 @@ Defaults to 500 milliseconds (0.5 seconds).
 .TP
 \fB\-\-retransmission\-backoff\-count\fR=\fICOUNT\fR
 Specify the retransmission backoff count for retransmissions.  After
-ever COUNT retransmissions, the retransmission timeout length will be
+every COUNT retransmissions, the retransmission timeout length will be
 increased by another factor.  Defaults to 8.
 .TP
 \fB\-\-ping\-interval\fR=\fIMILLISECONDS\fR
@@ -180,8 +180,8 @@ mode.
 .TP
 \fB\-\-ping\-timeout\fR=\fIMILLISECONDS\fR
 Specify the ping timeout length in milliseconds.  When running in
-interactive mode, RMCP (Remote Management Control Protocol) messages
-discovery will be sent to all configured remote hosts to confirm their
+interactive mode, RMCP (Remote Management Control Protocol) discovery
+messages will be sent to all configured remote hosts to confirm their
 support of IPMI. A remote host is considered undiscovered if the host
 does not respond in MILLISECONDS time.  Defaults to 30000 milliseconds
 (30 seconds).  The ping interval cannot be larger than the ping timeout.
@@ -391,7 +391,7 @@ no longer be available.  For example, an OEM
 extension may allow
 \fBon\fR but not \fBcycle\fR.  Specific
 .B ipmipower
-options may not longer function either.
+options may no longer function either.
 .LP
 Some OEM extensions may require additional arguments for their power
 control action, such as a sub-device identifier.  Additional arguments
@@ -473,8 +473,8 @@ do not.  This is typically solved in one of two ways:
 .LP
 1) Enable gratuitous ARPs on the remote machine.  The remote machine
 will send out a gratuitous ARP, which advertises the ethernet IP and
-MAC address so that other machines on the network this information
-their local ARP cache.  For large clusters, this method is not
+MAC address so that other machines on the network can store this
+information in their local ARP cache.  For large clusters, this method is not
 recommended since gratuitous ARPs can flood the network with
 unnecessary traffic.
 .LP

@@ -1,5 +1,17 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiconsole.8.pre.in: Fix "must a high enough privilege",
+	"able to be deactivate properly", a doubled slash in a motherboard
+	name, and a missing full stop.
+	* man/ipmipower.8.pre.in: Fix "prior the", "POWERTYPEs", "After
+	ever", "messages discovery", "may not longer", a sentence missing
+	its verb in the gratuitous ARP text, and mark up the bare --on,
+	--off, --reset, --cycle, --pulse, --soft and --stat references.
+	* man/ipmi-sel.8.pre.in, man/ipmiseld.8.pre.in: Add the missing
+	comma between Sun X4140 and Supermicro X7DBR-3.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmidetectd.8.pre.in: Show the FILE argument on the long form
 	of --config-file.
 	* man/ipmidetect.8.pre.in: Use the HOST and PORT placeholders argp

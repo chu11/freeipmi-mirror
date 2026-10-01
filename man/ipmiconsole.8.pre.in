@@ -55,7 +55,7 @@ proper setup.
 \fB\-u\fR \fIUSERNAME\fR, \fB\-\-username\fR=\fIUSERNAME\fR
 Specify the username to use when authenticating with the remote host.
 If not specified, a null (i.e. anonymous) username is assumed.  The
-user must a high enough privilege to establish a SOL session and have
+user must have a high enough privilege to establish a SOL session and have
 SOL session abilities.
 #include <@top_srcdir@/man/manpage-common-outofband-password.man>
 #include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
@@ -106,7 +106,7 @@ use.  Under most circumstances, if SOL is detected as being in use,
 .B ipmiconsole
 will attempt to steal the SOL session away from the previous session.
 This default behavior exists for several reasons, most notably that
-earlier SOL sessions may have not been able to be deactivate properly.
+earlier SOL sessions may not have been deactivated properly.
 .TP
 \fB\-\-deactivate\fR
 Deactivate SOL session if one is detected as being in use and exit.
@@ -274,7 +274,7 @@ systems that report invalid IPMI 2.0 SOL payload sizes.  Those hitting
 this issue may see "BMC Implementation" errors.  Issue observed on
 Asus P5M2/RS162-E4/RX4, Intel SR1520ML/X38ML, Inventec 5441/Dell
 Xanadu II, Sun x4100, Supermicro X8DTH, Supermicro X8DTG, Supermicro
-X8DTU, and Quanta QSSC-S4R//Appro GB812X-CN.
+X8DTU, and Quanta QSSC-S4R/Appro GB812X-CN.
 .LP
 \fIsolport\fR - This workaround flag will ignore alternate SOL ports
 specified during the protocol.  It works around remote systems that
@@ -292,7 +292,7 @@ Supermicro X8SIL-F.
 is supported on the current channel.  It works around remote systems
 that do not properly support this command.  Those hitting this issue
 may see "BMC Error" errors.  Issue observed on Intel Windmill, Quanta
-Winterfell, and Wiwynn Windmill
+Winterfell, and Wiwynn Windmill.
 .LP
 \fIserialalertsdeferred\fR - This workaround option will set serial
 alerts to be deferred instead of have them be failures.  This works
