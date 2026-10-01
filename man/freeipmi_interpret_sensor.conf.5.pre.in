@@ -2092,7 +2092,7 @@ an identical \fIManufacturer\-ID\fR, \fIProduct\-ID\fR,
 \fIEvent\-Reading\-Type\-Code\fR, and \fISensor\-Type\fR combination.  All
 interpretations rules for a specific combination are iterated through
 and the worst resulting sensor state is returned (i.e. Nominal <
-Warning < Critical).  If no match is found, no sensor state
+Warning < Critical).  If no match is found, the Unknown sensor state
 is returned for the OEM sensor reading.
 
 For each of the configuration options below, \fI<Manufacturer\-ID>\fR

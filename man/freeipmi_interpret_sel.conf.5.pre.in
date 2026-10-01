@@ -1951,7 +1951,7 @@ system event log events.  Interpretations rules for a specific
 combination of \fIManufacturer\-ID\fR, \fIProduct\-ID\fR, and
 \fIRecord-Type\fR, are iterated through and the worst resulting sensor
 state is returned (i.e. Nominal < Warning < Critical).  If no
-match is found, no state is returned for the OEM event.
+match is found, the Unknown state is returned for the OEM event.
 
 For each of the configuration options below, \fI<Manufacturer\-ID>\fR
 is the numeric IANA manufacturer ID for the manufacturer in question.

@@ -1,5 +1,14 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi_interpret_sel.conf.5.pre.in,
+	man/freeipmi_interpret_sensor.conf.5.pre.in: An OEM event or
+	reading that matches no interpretation rule is reported as the
+	Unknown state, not as "no state"; ipmi_interpret_sel and
+	ipmi_interpret_sensor set IPMI_INTERPRET_STATE_UNKNOWN in that
+	case.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* ipmiseld/ipmiseld-cache.c (_ipmiseld_sdr_cache_create): Pass
 	IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT when the
 	assumemaxsdrrecordcount workaround was requested.  The flag was
