@@ -291,7 +291,7 @@ Button_Switch, Module_Board, Microcontroller_Coprocessor, Add_In_Card,
 Chassis, Chip_Set, Other_FRU, Cable_Interconnect, Terminator,
 System_Boot_Initiated, Boot_Error, OS_Boot, OS_Critical_Stop,
 Slot_Connector, System_ACPI_Power_State, Watchdog2, Platform_Alert,
-Entity_Presence, Monitor_Asic_IC, Lan, Management_Subsystem_Health,
+Entity_Presence, Monitor_ASIC_IC, LAN, Management_Subsystem_Health,
 Battery, Session_Audit, Version_Change, FRU_State, and Any
 
 .SH "SENSORS SPECIAL CASE CONFIGURATION INFORMATION"
@@ -341,9 +341,11 @@ Issue observed on Intel S5500WBV/Penguin Relion 700.
 .B # ipmi-config --checkout
 .PP
 Output all core configuration information to the console.
+.PP
 .B # ipmi-config --checkout --category=pef
 .PP
 Output all pef configuration information to the console.
+.PP
 .B # ipmi-config --checkout --category=pef,chassis
 .PP
 Output all pef and chassis configuration information to the console.

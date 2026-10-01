@@ -1,5 +1,12 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-config.8.pre.in: Separate the two EXAMPLES entries that
+	ran into the preceding description with .PP like the others, and
+	spell the PEF sensor types Monitor_ASIC_IC and LAN the way checkout
+	writes them.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiconsole.8.pre.in: Fix "must a high enough privilege",
 	"able to be deactivate properly", a doubled slash in a motherboard
 	name, and a missing full stop.
