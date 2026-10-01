@@ -76,6 +76,9 @@ is commonly used.
 .SH "COMMANDS"
 The following commands are available to
 .B bmc-watchdog.
+Exactly one command must be specified.  The SET, START and DAEMON
+options described below are accepted only with the command they
+apply to; specifying one with any other command is an error.
 .TP
 \fB\-s\fR, \fB\-\-set\fR
 Set BMC Watchdog Configuration.  BMC watchdog timer configuration
