@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/libipmiconsole.3.pre.in: Fix the ipmiconsole_ctx_create
+	prototype in the SYNOPSIS.  The hostname is const and the function
+	takes a fourth struct ipmiconsole_engine_config argument, as
+	declared in libipmiconsole/ipmiconsole.h.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-system-software-id-spec.h
 	(IPMI_SYSTEM_SOFTWARE_TYPE_BIOS_MIN): Change to 0x00, the start of
 	the BIOS range in IPMI 2.0 Table 5-4 and in ipmi-slave-address-spec.h.
