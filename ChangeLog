@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi.conf.5.pre.in: Add ipmi-dcmi to the list of tools
+	that read the configuration file, and ipmi-dcmi and ipmi-pet to
+	SEE ALSO; both have option sections in this page.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiseld.conf.5.pre.in: Add noauthcodecheck and
 	nochecksumcheck to the list of supported workaround-flags values.
 	Both are parsed and applied to the daemon's out-of-band sessions.
