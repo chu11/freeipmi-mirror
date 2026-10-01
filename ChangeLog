@@ -1,5 +1,13 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/libipmiconsole.3.pre.in: Title the .TH header LIBIPMICONSOLE
+	rather than "System Commands" like the other library pages, fix
+	"configuration value can be set", remove the stray space in
+	". B libipmiconsole.conf(5)", and put the two FILES entries on
+	separate lines.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-workaround-config-tool.man: Remove.  No page
 	includes it; ipmi-config.8 carries its own, more up to date copy
 	of the slowcommit and veryslowcommit text.

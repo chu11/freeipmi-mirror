@@ -23,7 +23,7 @@
 .\"  You should have received a copy of the GNU General Public License along
 .\"  with Ipmiconsole.  If not, see <http://www.gnu.org/licenses/>.
 .\"############################################################################
-.TH libipmiconsole 3 "@ISODATE@" "libipmiconsole @PACKAGE_VERSION@" "System Commands"
+.TH libipmiconsole 3 "@ISODATE@" "libipmiconsole @PACKAGE_VERSION@" "LIBIPMICONSOLE"
 .SH "NAME"
 libipmiconsole \- IPMI SOL library
 .SH "SYNOPSIS"
@@ -78,14 +78,15 @@ sessions.  The goal of this library is to abstract away all of the
 underlying IPMI/SOL details away from the user into a relatively
 simple file descriptor interface.
 
-Alternate default configuration value can be set for
+Alternate default configuration values can be set for
 .B libipmiconsole
 via the libipmiconsole.conf file.  See
-. B libipmiconsole.conf(5)
+.B libipmiconsole.conf(5)
 for more information.
 
 .SH "FILES"
 /usr/include/ipmiconsole.h
+.br
 @LIBIPMICONSOLE_CONFIG_FILE_DEFAULT@
 
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
