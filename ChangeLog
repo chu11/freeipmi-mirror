@@ -1,5 +1,10 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: List embedded-video-status among the Dell
+	get-system-info keys; the command accepts and outputs it.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-raw.8.pre.in: Note that stdin is rejected when multiple
 	hosts are specified.
 

@@ -82,7 +82,8 @@ This OEM command can retrieve the motherboard system information.
 Valid keys are \fIguid\fR, \fIasset\-tag\fR, \fIservice\-tag\fR,
 \fIchassis\-service\-tag\fR, \fIchassis\-related\-service\-tag\fR,
 \fIboard\-revision\fR, \fIplatform\-model\-name\fR,
-\fIblade\-slot\-info\fR, \fIsystem\-revision\fR, \fIidrac\-info\fR,
+\fIblade\-slot\-info\fR, \fIsystem\-revision\fR,
+\fIembedded\-video\-status\fR, \fIidrac\-info\fR,
 \fIidrac\-ipv4\-url\fR, \fIidrac\-gui\-webserver\-control\fR,
 \fIcmc\-info\fR, \fIcmc\-ipv4\-url\fR, \fIcmc\-ipv6\-info\fR,
 \fIcmc\-ipv6\-url\fR, \fImac\-addresses\fR.  Command confirmed to work
