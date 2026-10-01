@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/libipmiconsole.3.pre.in: Fix the ipmiconsole_ctx_create
+	prototype in the SYNOPSIS.  The hostname is const and the function
+	takes a fourth struct ipmiconsole_engine_config argument, as
+	declared in libipmiconsole/ipmiconsole.h.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/templates/ipmi-lan-cmds-templates.h:
 	Write the IPv6 template rows in the "REQUIRED, LENGTH-FIXED" form
 	the documentation legend defines rather than C bitwise syntax, and

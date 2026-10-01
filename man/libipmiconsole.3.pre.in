@@ -37,7 +37,7 @@ libipmiconsole \- IPMI SOL library
 .sp
 .BI "void ipmiconsole_engine_teardown(int cleanup_sol_sessions);"
 .sp
-.BI "ipmiconsole_ctx_t ipmiconsole_ctx_create(char *hostname, struct ipmiconsole_ipmi_config *ipmi_config, struct ipmiconsole_protocol_config *protocol_config);"
+.BI "ipmiconsole_ctx_t ipmiconsole_ctx_create(const char *hostname, struct ipmiconsole_ipmi_config *ipmi_config, struct ipmiconsole_protocol_config *protocol_config, struct ipmiconsole_engine_config *engine_config);"
 .sp
 .BI "int ipmiconsole_ctx_errnum(ipmiconsole_ctx_t c);"
 .sp
