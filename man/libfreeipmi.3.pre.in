@@ -110,8 +110,8 @@ IPMI.  Utilized by tools such as
 .B templates
 Documentation-only headers listing the fields of every fiid template
 defined by the 'cmds', 'interface', 'payload', and 'record-format'
-sub-sections, for reference when reading or writing fields with the
-'fiid' API.
+sub-sections, for reference when reading or writing fields with
+the 'fiid' API.
 .TP
 .B util
 Provides various utility functions for the calculation of keys, sensor
