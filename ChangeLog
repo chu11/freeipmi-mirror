@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/libipmiconsole.3.pre.in: Add the public functions missing
+	from the SYNOPSIS: ipmiconsole_ctx_set_config,
+	ipmiconsole_ctx_get_config, ipmiconsole_ctx_errormsg and the six
+	ipmiconsole_*_is_valid helpers.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiseld.8.pre.in: Document --output-oem-event-strings, which
 	the daemon has accepted since it was added to ipmiseld-argp.c but
 	the man page never mentioned.
