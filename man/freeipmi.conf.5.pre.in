@@ -106,7 +106,7 @@ and MD5.
 .TP
 \fBcipher\-suite\-id\fR \fICIPHER\-SUITE\-ID\fR
 Specify the default cipher suite id to use.  The following cipher suite
-ids are supported: 0, 1, 2, 3, 6, 7, 8, 11, 12.
+ids are supported: 0, 1, 2, 3, 6, 7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBprivilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use.  The following privilege
@@ -208,7 +208,7 @@ Specify the default cipher suite id to use for
 If specified, will override the general option
 \fBcipher-suite-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
+7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBbmc\-device\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use for
@@ -268,7 +268,7 @@ Specify the default cipher suite id to use for
 If specified, will override the general option
 \fBcipher-suite-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
+7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBbmc\-info\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use for
@@ -354,7 +354,7 @@ Specify the default cipher suite id to use for
 If specified, will override the general option
 \fBcipher-suite-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
+7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBipmi\-chassis\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use for
@@ -414,7 +414,7 @@ Specify the default cipher suite id to use for
 If specified, will override the general option
 \fBcipher-suite-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
+7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBipmi\-config\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use for
@@ -478,7 +478,7 @@ Specify the default cipher suite id to use for
 If specified, will override the general option
 \fBcipher-suite-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
+7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBipmi\-dcmi\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use for
@@ -543,7 +543,7 @@ Specify the default cipher suite id to use for
 If specified, will override the general option
 \fBcipher-suite-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
+7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBipmi\-fru\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use for
@@ -621,7 +621,7 @@ Specify the default cipher suite id to use for
 If specified, will override the general option
 \fBcipher-suite-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
+7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBipmi\-oem\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use for
@@ -685,7 +685,7 @@ Specify the default cipher suite id to use for
 If specified, will override the general option
 \fBcipher-suite-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
+7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBipmi\-pet\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use for
@@ -785,7 +785,7 @@ Specify the default cipher suite id to use for
 If specified, will override the general option
 \fBcipher-suite-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
+7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBipmi\-raw\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use for
@@ -845,7 +845,7 @@ Specify the default cipher suite id to use for
 If specified, will override the general option
 \fBcipher-suite-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
+7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBipmi\-sel\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use for
@@ -978,7 +978,7 @@ Specify the default cipher suite id to use for
 If specified, will override the general option
 \fBcipher-suite-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
+7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBipmi\-sensors\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use for
@@ -1127,7 +1127,7 @@ Specify the default cipher suite id to use for
 If specified, will override the general option
 \fBcipher-suite-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
+7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBipmiconsole\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use for
@@ -1208,7 +1208,7 @@ Specify the default cipher suite id to use for
 If specified, will override the general option
 \fBcipher-suite-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
-7, 8, 11, 12.
+7, 8, 11, 12, 15, 16, 17.
 .TP
 \fBipmipower\-privilege\-level\fR \fIPRIVILEGE\-LEVEL\fR
 Specify the default privilege type to use for
