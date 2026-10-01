@@ -1,5 +1,10 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/libipmiconsole.conf.5.pre.in: Fix "be ware" and drop the
+	trailing comma at the end of SEE ALSO.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.8.pre.in: --filename with checkout is not
 	rejected alongside --always-prefix; the file is written directly,
 	bypassing the hostrange prefixing, so say the option has no effect

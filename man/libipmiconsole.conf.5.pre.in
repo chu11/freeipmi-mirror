@@ -33,7 +33,7 @@ configuration file can be used to set alternate default values for the
 .B libipmiconsole
 library.  The configuration of these defaults may be useful for
 environments in which programs link to libipmiconsole but do not
-support configuration of libipmiconsole parameters.  Users should be ware
+support configuration of libipmiconsole parameters.  Users should be aware
 that setting alternate default values into
 .B libipmiconsole
 will affect all tools that link to the library, such as the
@@ -145,5 +145,5 @@ Copyright (C) 2006-2007 The Regents of the University of California.
 #include <@top_srcdir@/man/manpage-common-gpl-freeipmi-text.man>
 
 .SH "SEE ALSO"
-freeipmi.conf(5), freeipmi(7), libipmiconsole(3), ipmiconsole(8),
+freeipmi.conf(5), freeipmi(7), libipmiconsole(3), ipmiconsole(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>
