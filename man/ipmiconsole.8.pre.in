@@ -52,7 +52,7 @@ proper setup.
 #include <@top_srcdir@/man/manpage-common-general-options-header.man>
 #include <@top_srcdir@/man/manpage-common-outofband-hostname.man>
 .TP
-\fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
+\fB\-u\fR \fIUSERNAME\fR, \fB\-\-username\fR=\fIUSERNAME\fR
 Specify the username to use when authenticating with the remote host.
 If not specified, a null (i.e. anonymous) username is assumed.  The
 user must a high enough privilege to establish a SOL session and have
@@ -72,7 +72,7 @@ to 500 milliseconds (0.5 seconds) if not specified.  Must be at most
 20000 milliseconds (20 seconds), the IPMI keepalive timeout used by
 .B ipmiconsole.
 .TP
-\fB\-I\fR, \fB\-\-cipher\-suite\-id\fR=\fICIPHER-SUITE-ID\fR
+\fB\-I\fR \fICIPHER\-SUITE\-ID\fR, \fB\-\-cipher\-suite\-id\fR=\fICIPHER\-SUITE\-ID\fR
 Specify the IPMI 2.0 cipher suite ID to use. The Cipher Suite ID
 identifies a set of authentication, integrity, and confidentiality
 algorithms to use for IPMI 2.0 communication. The authentication

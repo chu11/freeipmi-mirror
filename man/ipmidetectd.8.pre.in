@@ -65,7 +65,7 @@ manpage for additional information.
 
 .SH "OPTIONS"
 .TP
-\fB\-c\fR \fIFILE\fR, \fB\-\-config\-file\fR
+\fB\-c\fR \fIFILE\fR, \fB\-\-config\-file\fR=\fIFILE\fR
 Specify alternate configuration file
 .TP
 \fB\-d\fR, \fB\-\-debug\fR

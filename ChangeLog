@@ -1,5 +1,14 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmidetectd.8.pre.in: Show the FILE argument on the long form
+	of --config-file.
+	* man/ipmidetect.8.pre.in: Use the HOST and PORT placeholders argp
+	uses for --hostname and --port instead of STRING and INT.
+	* man/ipmiconsole.8.pre.in: Show the argument on the short forms of
+	-u and -I, which take one.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiseld.8.pre.in: Drop the "[2]" footnote marker copied from
 	ipmi-sel.h, whose footnote the page never reproduced; put the
 	FILES entries on separate lines and list the pid file, as
