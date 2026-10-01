@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi.conf.5.pre.in, man/ipmiseld.conf.5.pre.in: List
+	cipher suite ids 15, 16 and 17 as supported.  The config file
+	parser accepts them via IPMI_CIPHER_SUITE_ID_SUPPORTED, and the
+	tool man pages already document them.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.conf.5.pre.in: Remove the disabled
 	ipmi-fru-skip-checks entry.  The option was removed from the config
 	file parser along with --skip-checks; the skipchecks workaround
