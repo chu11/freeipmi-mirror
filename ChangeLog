@@ -1,5 +1,13 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/bmc-device.8.pre.in: State the numeric base of each argument
+	to --rearm-sensor, --platform-event and
+	--set-sensor-reading-and-event-status.  The byte fields and the
+	rearm bitmasks are always hexadecimal, while the record id and the
+	set-sensor bitmasks are decimal unless prefixed with 0x.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/bmc-watchdog.8.pre.in: Document -?/--help and -V/--version
 	inline instead of including the common misc text, which also
 	documents --usage.  bmc-watchdog parses with ARGP_NO_HELP and

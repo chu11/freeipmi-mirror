@@ -79,7 +79,9 @@ re-arming.  This option may also be useful to reset a sensor reading
 or event that may be stuck due to an internal hardware or firmware
 error.  If the \fIassertion_bitmask\fR and \fIdeassertion_bitmask\fR
 are specified, only the specific events will be re-armed.  If not
-specified, all possible events will be re-armed.  This command
+specified, all possible events will be re-armed.  The
+\fIrecord_id\fR is decimal unless prefixed with "0x"; the bitmasks
+are always hexadecimal, with or without a "0x" prefix.  This command
 requires the loading of the SDR.
 .TP
 \fB\-\-get\-sdr\-repository\-time\fR
@@ -110,7 +112,8 @@ time, ranging from -1440 to 1440 minutes.  A special case value of
 Instruct the BMC to process the specified event data.  Typically, this
 data will be logged to the System Event Log (SEL), but depending on
 implementation it may be processed by other subsystems such as
-Platform Event Filtering (PEF).  The keywords \fIassertion\fR or
+Platform Event Filtering (PEF).  All numeric fields are hexadecimal
+bytes, with or without a "0x" prefix.  The keywords \fIassertion\fR or
 \fIdeassertion\fR may be used for \fIevent_direction\fR, or the
 numerical values may be used instead.  The
 \fIevent_message_format_version\fR is 0x03 for IPMI 1.0 and 0x04 for
@@ -132,7 +135,9 @@ with the respective operations \fIclear0bits\fR, \fIset1bits\fR,
 \fIwrite\fR, and \fInochange\fR.  The \fIevent_data1\fR byte can be
 written fully, written without the event offset (bits 3:0), or not be
 changed via the \fIwrite\fR, \fInooffsetwrite\fR, or \fInochange\fR
-operations.
+operations.  The \fIsensor_number\fR, \fIsensor_reading\fR, and
+\fIevent_data\fR fields are hexadecimal bytes, with or without a "0x"
+prefix; the bitmasks are decimal unless prefixed with "0x".
 .TP
 \fB\-\-get\-mca\-auxiliary\-log\-status\fR
 Get machine check architecture (MCA) auxiliary log status information.
