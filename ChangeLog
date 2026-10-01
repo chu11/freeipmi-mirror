@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Keep the reset-node-manager-statistics
+	arguments on the .B heading line.  The domainid and policyid
+	arguments had wrapped onto a plain text line, so groff rendered
+	them as the first line of the description.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/libipmiconsole.conf.5.pre.in: Fix "be ware" and drop the
 	trailing comma at the end of SEE ALSO.
 

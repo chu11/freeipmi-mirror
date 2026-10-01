@@ -500,8 +500,7 @@ S5500WB (Penguin Computing Relion 700), Inventec 5441/5442 (Dell
 Xanadu II/III), Quanta S99Q (Dell FS12-TY), Quanta QSSC-S4R (Appro
 GB812X-CN), Supermicro X9DRi-F, Intel S2600JF (Appro 512X).
 .TP
-.B reset-node-manager-statistics \fI[mode=global|policy|hostunhandledrequests|hostresponsetime|cputhrottling|memorythrottling|hostcommfailure]\fR
-\fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
+.B reset-node-manager-statistics \fI[mode=global|policy|hostunhandledrequests|hostresponsetime|cputhrottling|memorythrottling|hostcommfailure]\fR \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
 This OEM command will reset Intel Node Manager statistics.  The
 \fImode\fR will indicate the statistics to be reset.  The user may
 optionally specify a \fIdomainid\fR or \fIpolicyid\fR.  \fIdomainid\fR
