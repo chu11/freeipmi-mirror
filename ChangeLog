@@ -1,5 +1,12 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/libipmimonitoring.3.pre.in: Fix "configurd", the stray period
+	after the SEL configuration file name, and "The libipmimonitoring
+	implements".
+	* man/libipmidetect.3.pre.in: "do-not" -> "do not".
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/libfreeipmi.3.pre.in: Use the standard DESCRIPTION section
 	name instead of "Introduction", include the reporting-bugs text
 	like the other library pages, set the ipmi-fru(8) cross reference
