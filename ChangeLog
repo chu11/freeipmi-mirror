@@ -1,5 +1,12 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-config.conf.5.pre.in: Name the page ipmi-config.conf in
+	the NAME section so whatis and apropos do not file it under
+	ipmi-config, and title the header "Configuration" rather than
+	"System Commands" like the other section 5 pages.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmidetect.conf.5.pre.in, man/ipmidetectd.conf.5.pre.in: Set
 	option names in bold and their arguments in italics like the other
 	configuration file pages, instead of an all italic .I line.

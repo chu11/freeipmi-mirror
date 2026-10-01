@@ -1,6 +1,6 @@
-.TH ipmi-config.conf 5 "@ISODATE@" "ipmi-config @PACKAGE_VERSION@" "System Commands"
+.TH ipmi-config.conf 5 "@ISODATE@" "ipmi-config @PACKAGE_VERSION@" "Configuration"
 .SH "NAME"
-ipmi-config \- IPMI configuration file details
+ipmi-config.conf \- IPMI configuration file details
 .br
 .SH "DESCRIPTION"
 Before many IPMI tools can be used over a network, a machine's
