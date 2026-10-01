@@ -1,5 +1,11 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/manpage-common-comma-separated-output.man,
+	man/manpage-common-no-header-output.man: Close the bold option name
+	with \fR like every other option fragment.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-cipher-suite-id-details.man: Write the suite
 	16-19 integrity algorithm as HMAC-SHA256-128, hyphenated like the
 	other algorithm names, and drop the "XXX GUESS" comments; the
