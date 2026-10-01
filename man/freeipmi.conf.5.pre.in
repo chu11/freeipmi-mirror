@@ -993,11 +993,11 @@ Specify default verbose count to use for
 Specify if sensor reading values and thresholds should not be
 output by default.
 .TP
-\fBipmi\-sensors\-record\-ids\fR \fRECORD-IDS-LIST\fR
+\fBipmi\-sensors\-record\-ids\fR \fIRECORD-IDS-LIST\fR
 Specify default record ids to show sensor outputs for.  Multiple record ids
 can be specified separated by whitespace.
 .TP
-\fBipmi\-sensors\-exclude\-record\-ids\fR \fRECORD-IDS-LIST\fR
+\fBipmi\-sensors\-exclude\-record\-ids\fR \fIRECORD-IDS-LIST\fR
 Specify default record ids to not show sensor outputs for.  Multiple
 record ids can be specified separated by whitespace.
 .TP

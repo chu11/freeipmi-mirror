@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi.conf.5.pre.in: Set the RECORD-IDS-LIST argument of
+	ipmi-sensors-record-ids and ipmi-sensors-exclude-record-ids in
+	italics.  "\fRECORD" was being read as the \fR font escape, so the
+	page rendered "ECORD-IDS-LIST".
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.conf.5.pre.in: Add ipmi-dcmi to the list of tools
 	that read the configuration file, and ipmi-dcmi and ipmi-pet to
 	SEE ALSO; both have option sections in this page.
