@@ -20,5 +20,5 @@ Specify the in-band driver target channel number to send IPMI requests
 to.
 .TP
 \fB\-\-target\-slave\-address\fR=\fISLAVE\-ADDRESS\fR
-Specify the in-band driver target slave number to send IPMI requests
+Specify the in-band driver target slave address to send IPMI requests
 to.

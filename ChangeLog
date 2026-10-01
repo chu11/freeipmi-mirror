@@ -1,5 +1,10 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/manpage-common-inband.man: --target-slave-address takes a
+	slave address, not a "slave number".
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-inband.man,
 	man/manpage-common-outofband-hostname.man,
 	man/freeipmi.conf.5.pre.in, man/ipmiseld.conf.5.pre.in: Close
