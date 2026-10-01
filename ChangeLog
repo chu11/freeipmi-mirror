@@ -5406,12 +5406,6 @@
 
 2026-09-16 Albert Chu <chu11@llnl.gov>
 
-	* bmc-info/bmc-info.c (display_system_info_common): Report unsupported
-	completion codes on continuation sets as errors instead of treating the
-	parameter as unsupported.
-
-2026-09-16 Albert Chu <chu11@llnl.gov>
-
 	* bmc-device/bmc-device.c (set_system_info_common): Remove duplicate
 	assert.
 
