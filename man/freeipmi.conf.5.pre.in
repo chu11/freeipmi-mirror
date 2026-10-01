@@ -33,7 +33,8 @@ and
 .LP
 By default, the configuration file is stored at
 @FREEIPMI_CONFIG_FILE_DEFAULT@.  But users may select a different
-configuration file at the command line with the --config-file option.
+configuration file at the command line with the
+\fB\-\-config\-file\fR option.
 .LP
 Values specified on the command line override the configuration
 values specified in the configuration file.

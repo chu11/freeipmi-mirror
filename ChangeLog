@@ -1,5 +1,10 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi.conf.5.pre.in: Mark up --config-file like every
+	other option so its hyphens render as ASCII minus signs.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.7.pre.in: Move "and" off the .B line so it is not
 	rendered in bold, fix "In can be used to configured", and keep
 	tool names lowercase at the start of sentences.
