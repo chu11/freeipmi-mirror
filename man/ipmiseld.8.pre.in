@@ -51,7 +51,7 @@ configuration file.
 #include <@top_srcdir@/man/manpage-common-driver.man>
 #include <@top_srcdir@/man/manpage-common-inband.man>
 #include <@top_srcdir@/man/manpage-common-outofband-hostname-hostranged.man>
-#include <@top_srcdir@/man/manpage-common-outofband-username-user.man>
+#include <@top_srcdir@/man/manpage-common-outofband-username-operator.man>
 #include <@top_srcdir@/man/manpage-common-outofband-password.man>
 #include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
 #include <@top_srcdir@/man/manpage-common-outofband-session-timeout.man>

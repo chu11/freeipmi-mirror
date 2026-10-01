@@ -1,3 +1,11 @@
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
+	* man/ipmi-sel.8.pre.in, man/ipmiseld.8.pre.in: Include the
+	OPERATOR variant of the username text.  Both tools default to the
+	OPERATOR privilege level, which the pages already state, and the
+	SEL clear and delete commands they issue require it; the USER text
+	was left behind when the default changed in 2008.
+
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmi-oem.8.pre.in: Give the Dell set-active-directory-config
