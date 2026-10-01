@@ -1,5 +1,13 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/libfreeipmi.3.pre.in: Use the standard DESCRIPTION section
+	name instead of "Introduction", include the reporting-bugs text
+	like the other library pages, set the ipmi-fru(8) cross reference
+	in bold like the rest, and move "and" off a .B line so it is not
+	rendered in bold.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/libipmiconsole.3.pre.in: Title the .TH header LIBIPMICONSOLE
 	rather than "System Commands" like the other library pages, fix
 	"configuration value can be set", remove the stray space in

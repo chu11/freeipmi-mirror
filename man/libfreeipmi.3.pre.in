@@ -1,7 +1,7 @@
 .TH LIBFREEIPMI 3 "@ISODATE@" "libfreeipmi @PACKAGE_VERSION@" "LIBFREEIPMI"
 .SH "NAME"
 libfreeipmi - FreeIPMI library
-.SH "Introduction"
+.SH "DESCRIPTION"
 Libfreeipmi is the primary library that most of the FreeIPMI tools are based
 upon.  The following describe the sub-sections of the library.
 .TP
@@ -50,7 +50,8 @@ and various tools.
 .TP
 .B fru
 Provides an API for parsing Field Replaceable Unit (FRU) records.
-Utilized by tools such as ipmi-fru(8).
+Utilized by tools such as
+.B ipmi-fru(8).
 .TP
 .B interface
 Provides 'assemble' and 'disassemble' functions for building packets
@@ -58,7 +59,8 @@ for individual in-band or out-of-band protocols.  Also provides all
 necessary fiid templates, 'fill' functions, and other utility
 functions necessary to communicate on an IPMI interface.  Utilized by
 the 'api' sub-section and tools such as
-.B ipmipower(8) and
+.B ipmipower(8)
+and
 .B ipmiconsole(8).
 .TP
 .B interpret
@@ -122,6 +124,7 @@ readings, etc.  Utilized by most of the rest of FreeIPMI.
 .PP
 /usr/include/freeipmi/
 
+#include <@top_srcdir@/man/manpage-common-reporting-bugs.man>
 .SH "COPYRIGHT"
 Copyright \(co 2003-2015 FreeIPMI Core Team.
 #include <@top_srcdir@/man/manpage-common-gpl-library-text.man>
