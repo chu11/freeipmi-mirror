@@ -1,5 +1,17 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Fix prose slips: "passed into the list",
+	the undefined "mapping-number" term (the argument is
+	ipass-mapping), a lowercase sentence start, "Command configured to
+	work", "will be specified" where "enabled or disabled" was meant,
+	a comma splice in the policy threshold text, the Wistron
+	get-dhcp-retry sentence missing "Command confirmed to work on", and
+	a self reference that should point at
+	get-link-status-change-control.  Note that "help" is accepted as a
+	synonym for "list".
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-locate.8.pre.in: Mention the PCI configuration space
 	probe alongside the DMI, SMBIOS and ACPI probes, and include the
 	common DIAGNOSTICS text; the tool exits 0 on success and 1 on

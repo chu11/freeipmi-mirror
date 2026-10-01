@@ -69,9 +69,11 @@ OEM ID and OEM COMMANDS specified.
 The currently supported OEM IDs and COMMANDs are listed below.  The
 special OEM ID of
 .B list
-may be passed into the list all supported OEM IDs and Commands.  The
+may be passed in to list all supported OEM IDs and Commands.  The
 special OEM command
 .B list
+(or
+.B help\fR)
 may be passed to any OEM ID to list commands supported by that OEM ID.
 .TP
 .B Dell
@@ -335,8 +337,8 @@ to 4.  \fI1\fR refers to iPass 1 and 5, \fI2\fR to 2 and 6, \fI3\fR to
 slots 1, 2, 3, 4, 13, 14, 15, and 16 are attached to iPass 1, 2, 3,
 and 4.  PCIe slots 5, 6, 7, 8, 9, 10, 11, and 12 are attached to iPass
 5, 6, 7, and 8.  For example, if \fI1:2\fR is set on
-\fImapping-number\fR \fI1\fR, PCIe slots 1 and 15 will be assigned to
-iPass 1 and slots 2 and 16 will be assigned to iPass 5.  if \fI1:4\fR
+\fIipass\-mapping\fR \fI1\fR, PCIe slots 1 and 15 will be assigned to
+iPass 1 and slots 2 and 16 will be assigned to iPass 5.  If \fI1:4\fR
 is chosen, PCIe slots 1, 2, 15, and 16 will be assigned to iPass 1 and
 iPass 5 will not be used.
 
@@ -476,7 +478,7 @@ to work on Intel S2600WT2.
 .B restore-configuration
 This OEM command will restore BMC configuration values back to default
 values.  The command will spin until the restore is confirmed to be
-complete.  Command configured to work on Intel S5500WB (Penguin
+complete.  Command confirmed to work on Intel S5500WB (Penguin
 Computing Relion 700) and Intel S2600JF (Appro 512X).  After running
 this command, the BMC must be reset to return it to functioning
 status.  This may be accomplished by executing a cold-reset with
@@ -531,7 +533,8 @@ policies used by the Intel Node Manager.  If no \fIdomainid\fR is
 specified, then the Node Manager will be enabled or globally disabled.
 If a \fIdomainid\fR is specified, only that domain will be enabled or
 disabled.  If both a \fIdomainid\fR and \fIpolicyid\fR are specified,
-only that specific policy within the domain will be specified.  This
+only that specific policy within the domain will be enabled or
+disabled.  This
 OEM command will be required to enable or disable policies before many
 of the commands below can be used for configuration or use.  Command
 confirmed to work on Intel S2600JF (Appro 512X).
@@ -617,7 +620,7 @@ Intel S2600JF (Appro 512X).
 .TP
 .B set-node-manager-policy-alert-thresholds \fIdomainid=platform|cpu|memory|highpowerio\fR \fIpolicyid=num\fR \fI[threshold1=num]\fR \fI[threshold2=num]\fR \fI[threshold3=num]\fR
 This OEM command will set the alert thresholds for a given domain ID
-and policy ID.  Up to three thresholds can be specified, The units of
+and policy ID.  Up to three thresholds can be specified.  The units of
 the thresholds will depend on the configuration of the current policy.
 Command confirmed to work on Intel S2600JF (Appro 512X).
 .TP
@@ -1435,8 +1438,8 @@ Command confirmed to work on Wistron / Dell Poweredge C6220.
 \}
 .TP
 .B get-dhcp-retry
-This OEM command will retrieve DHCP retry information.  Wistron / Dell
-Poweredge C6220.
+This OEM command will retrieve DHCP retry information.  Command
+confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
 .B set-dhcp-retry \fIretry-count\fR \fIretry-interval\fR \fIretry-timeout\fR
 This OEM command will set DHCP retry information.  The
@@ -1461,7 +1464,7 @@ up.  Command confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
 .B set-link-status-change-control \fIlink_resilience|dhcp_rediscovery\fR
 This OEM command will set the current NIC link status change control
-setting.  (See \fIset\-link\-status\-change\-control\fR above for
+setting.  (See \fIget\-link\-status\-change\-control\fR above for
 description of arguments).  After running this command, the BMC may
 need to be reset to finalize the configuration.  This may be
 accomplished by executing a cold-reset with
