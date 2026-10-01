@@ -1,5 +1,10 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiseld.conf.5.pre.in: Drop the CVS $Id comment, which
+	refers to a 2010 revision of a file that was created in 2012.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiseld.conf.5.pre.in: Show ignore-sdr, re-download-sdr and
 	clear-sel taking ENABLE|DISABLE like the other boolean options,
 	not DISABLE alone.

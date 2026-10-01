@@ -1,6 +1,4 @@
 .\"#############################################################################
-.\"$Id: ipmiseld.conf.5.pre.in,v 1.15 2010-02-08 22:02:30 chu11 Exp $
-.\"#############################################################################
 .\"  Copyright (C) 2012-2015 Lawrence Livermore National Security, LLC.
 .\"  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
 .\"  Written by Albert Chu <chu11@llnl.gov>
