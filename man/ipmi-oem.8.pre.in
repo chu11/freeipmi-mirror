@@ -178,9 +178,9 @@ This OEM command will get the current active directory configuration
 on the IPMI card.  Command confirmed to work on Dell Poweredge R610
 and R710 (Dell 11G Poweredge systems).
 .TP
-.B set-active-directory-config
-This OEM command will set the current Web Server configuration on the
-IPMI card.  The possible keys and values are
+.B set-active-directory-config \fIKEY=VALUE ...\fR
+This OEM command will set the current Active Directory configuration
+on the IPMI card.  The possible keys and values are
 \fIactivedirectory=enable|disable\fR, \fItimeout=seconds\fR,
 .if 0 \{
 \fIrootdomain=string\fR,
@@ -201,9 +201,10 @@ IPMI card.  The possible keys and values are
 \fIgcfilter2=string\fR,
 \fIgcfilter3=string\fR,
 \}
-and \fIcertificatevalidation=enable|disable\fR.  If no key=value pairs
-are specified, available pairs are output.  Some fields may be
-read-only on specific Poweredge systems.  Command confirmed to work on
+and \fIcertificatevalidation=enable|disable\fR.  Multiple key=value
+pairs may be specified.  If no key=value pairs are specified,
+available pairs are output.  Some fields may be read-only on specific
+Poweredge systems.  Command confirmed to work on
 Dell Poweredge R610 and R710 (Dell 11G Poweredge systems).
 .TP
 .B reset-to-defaults

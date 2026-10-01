@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Give the Dell set-active-directory-config
+	heading its KEY=VALUE argument, say it configures Active Directory
+	rather than the Web Server (text copied from set-web-server-config),
+	and note that multiple pairs may be given.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Keep the reset-node-manager-statistics
 	arguments on the .B heading line.  The domainid and policyid
 	arguments had wrapped onto a plain text line, so groff rendered
