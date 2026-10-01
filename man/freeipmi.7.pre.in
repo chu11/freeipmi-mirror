@@ -121,7 +121,7 @@ for more information.
 
 .SH "HPC Support"
 Much of FreeIPMI was written with HPC support in mind.
-.B Ipmi-config(8)
+.B ipmi-config(8)
 comes with file input/output support so that configuration can be
 copied and verified across nodes in a cluster.  Most tools (like
 .B ipmipower(8)
@@ -133,7 +133,7 @@ the hosts in parallel.  See tool manpages for more information.
 Also see the document
 \fIfreeipmi-hostrange.txt\fR
 for detailed usage and explanation.
-.B Ipmi-sensors(8)
+.B ipmi-sensors(8)
 and the
 .B libipmimonitoring(3)
 library support the ability to interpret sensor readings as well as
@@ -148,7 +148,8 @@ applications with, please see
 .B libfreeipmi(3),
 .B libipmiconsole(3),
 .B libipmimonitoring(3),
-.B and libipmidetect(3).
+and
+.B libipmidetect(3).
 Or see the document
 \fIfreeipmi-libraries.txt\fR.
 
@@ -197,8 +198,8 @@ A tool for Serial-over-Lan (SOL) console access.
 .PP
 .B ipmi-config
 .PP
-A tool to configure BMC and IPMI information.  In can be used to
-configured usernames, passwords, networking information, security,
+A tool to configure BMC and IPMI information.  It can be used to
+configure usernames, passwords, networking information, security,
 Serial-over-LAN (SOL), Platform Event Filtering (PEF), boot devices,
 power restoration policy, sensor thresholds, sensor events, and many
 more configuration options.
