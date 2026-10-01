@@ -1,5 +1,12 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/libipmimonitoring.conf.5, man/pef-config.8: Redirect straight
+	to freeipmi_interpret_sensor.conf.5 and ipmi-config.8 instead of
+	through another .so page; not every man implementation follows a
+	chain of redirects.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.conf.5.pre.in: Fix prose slips: "will be be",
 	"If errors to occur", "allowed only authenticate", "available
 	cipher suite IDs available your system", "users most also", the
