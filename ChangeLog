@@ -1,5 +1,12 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/manpage-common-cipher-suite-id-details.man: Write the suite
+	16-19 integrity algorithm as HMAC-SHA256-128, hyphenated like the
+	other algorithm names, and drop the "XXX GUESS" comments; the
+	HMAC-SHA256 suites have long been implemented and verified.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-troubleshooting-inband.man: Drop the first of
 	two "driver timeout" entries, keeping the fuller one, and describe
 	"message timeout" as a bridged command not getting its response
