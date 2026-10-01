@@ -8,7 +8,8 @@ ipmi-raw \- execute IPMI commands by hex values
 .B Ipmi-raw
 is used to execute IPMI commands by hex values.  Hex values may be
 input on the command line, a file via the \fB\-\-file\fR option, or
-via stdin if neither of the previous are specified.
+via stdin if neither of the previous are specified.  Stdin cannot be
+used when multiple hosts are specified; use \fB\-\-file\fR instead.
 .PP
 When reading from a file or stdin, each line is one request.  A line
 consists of whitespace separated hex bytes, each one or two hex digits
