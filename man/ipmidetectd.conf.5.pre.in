@@ -44,15 +44,15 @@ lines can be continued on the next using backslash ("\\").
 
 .SH "IPMIDETECTD CONFIGURATION OPTIONS"
 .TP
-.I ipmiping_period num
+\fBipmiping_period\fR \fIMILLISECONDS\fR
 Specify the period time in milliseconds that IPMI pings should be
 regularly sent out.  Default is 15000.
 .TP
-.I ipmidetectd_server_port port
+\fBipmidetectd_server_port\fR \fIPORT\fR
 Specify the alternate default port the ipmidetectd server should listen
 for requests off of.  Default is 9225.
 .TP
-.I host string[:port]
+\fBhost\fR \fIHOST[:PORT]\fR
 Specify a host or IP address the ipmidetectd daemon should send IPMI
 pings to.  Can be specified as many times as necessary.  An optional
 port can be specified.  Can accept host ranges as input.  See
