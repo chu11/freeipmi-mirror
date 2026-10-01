@@ -50,7 +50,7 @@ issues are handled within 'fiid'.  Fiid objects are used throughout
 libfreeipmi, including the 'api' sub-section, 'cmds' sub-sections,
 and various tools.
 .TP
-.B fru-parse
+.B fru
 Provides an API for parsing Field Replaceable Unit (FRU) records.
 Utilized by tools such as ipmi-fru(8).
 .TP
@@ -79,23 +79,17 @@ tool.
 .TP
 .B record-format
 Provides macros, fiid-templates, and information on records used in
-IPMI.  Utilized by the 'sdr-cache' subsection and tools like
+IPMI.  Utilized by the 'sdr' sub-section and tools like
 .B ipmi-sensors(8).
 .TP
-.B sdr-cache
+.B sdr
 Provides an API for creating, caching, reading, and parsing a sensor
-data repository (SDR).  Utilized by tools such as
+data repository (SDR) and its records.  Utilized by tools such as
 .B ipmi-fru(8)
 and
 .B ipmi-sensors(8).
 .TP
-.B sdr-parse
-Provides an API for parsing SDR records.  Utilized by tools such as
-.B ipmi-fru(8)
-and
-.B ipmi-sensors(8)
-.TP
-.B sel-parse
+.B sel
 Provides an API for reading and parsing System Event Log (SEL) entries.
 Utilized by tools such as
 .B ipmi-sel(8).

@@ -1,5 +1,12 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/libfreeipmi.3.pre.in: Name the sub-sections after the header
+	directories that exist: fru, sdr and sel rather than fru-parse,
+	sdr-cache, sdr-parse and sel-parse.  The SDR cache and SDR parse
+	APIs both live in sdr/ipmi-sdr.h, so merge their entries.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-inband.man: --target-slave-address takes a
 	slave address, not a "slave number".
 
