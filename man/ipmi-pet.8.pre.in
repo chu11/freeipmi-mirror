@@ -1,4 +1,4 @@
-.TH IPMI-PET 8 "@ISODATE@" "IPMI-PET version @PACKAGE_VERSION@" "System Commands"
+.TH IPMI-PET 8 "@ISODATE@" "ipmi-pet @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 ipmi-pet \- IPMI Platform Event Trap Interpreter
 .SH "SYNOPSIS"

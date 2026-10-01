@@ -1,4 +1,4 @@
-.TH IPMI-RAW 8 "@ISODATE@" "IPMI Raw version @PACKAGE_VERSION@" "System Commands"
+.TH IPMI-RAW 8 "@ISODATE@" "ipmi-raw @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 ipmi-raw \- execute IPMI commands by hex values
 .SH "SYNOPSIS"

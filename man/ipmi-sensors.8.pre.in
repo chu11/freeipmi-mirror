@@ -1,4 +1,4 @@
-.TH IPMI-SENSORS 8 "@ISODATE@" "IPMI Sensors version @PACKAGE_VERSION@" "System Commands"
+.TH IPMI-SENSORS 8 "@ISODATE@" "ipmi-sensors @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 ipmi-sensors \- display IPMI sensor information
 .SH "SYNOPSIS"

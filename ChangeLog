@@ -1,5 +1,16 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-locate.8.pre.in: Mention the PCI configuration space
+	probe alongside the DMI, SMBIOS and ACPI probes, and include the
+	common DIAGNOSTICS text; the tool exits 0 on success and 1 on
+	error like the other tools.
+	* man/ipmi-locate.8.pre.in, man/ipmi-raw.8.pre.in,
+	man/ipmi-pet.8.pre.in, man/ipmi-oem.8.pre.in,
+	man/ipmi-sensors.8.pre.in: Use the "<tool> @PACKAGE_VERSION@"
+	header the other tool pages use instead of "<Tool> version ...".
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-pet.8.pre.in: Say that --manufacturer-id and
 	--product-id are decimal, and that the manufacturer id must be
 	non-zero; both are parsed with strtoul base 10.
