@@ -103,7 +103,7 @@ system time can be specified with "now".
 \fB\-\-get\-sel\-time\-utc\-offset\fR
 Get SEL time UTC offset.
 .TP
-\fB\-\-set\-sel\-time\-utc\-offset\fR=\fIMINUTES\fR
+\fB\-\-set\-sel\-time\-utc\-offset\fR=\fIOFFSET\fR
 Set SEL time UTC offset.  Input is in minutes difference from UTC
 time, ranging from -1440 to 1440 minutes.  A special case value of
 "none" can be specified so no UTC offset is specified.
@@ -120,7 +120,7 @@ numerical values may be used instead.  The
 IPMI 1.5.  The \fIgenerator_id\fR above is optional, however it is
 required if generating the event via a system interface (i.e. inband).
 If generating the event via a system interface, the system management
-software generator id range is 0x41 to 6Fh.
+software generator id range is 0x41 to 0x6F.
 .TP
 \fB\-\-set\-sensor\-reading\-and\-event\-status\fR=\fI"<sensor_number> <sensor_reading> <sensor_reading_operation> <assertion_bitmask> <assertion_bitmask_operation> <deassertion_bitmask> <deassertion_bitmask_operation> <event_data1> <event_data2> <event_data3> <event_data_operation>"\fR
 Instruct the BMC to set a sensor reading and/or event status.  How the
@@ -177,11 +177,11 @@ Set Base OS/Hypervisor URL.
 .TP
 \fB\-\-read\-fru\fR=\fIFILENAME\fR
 Read the contents of a FRU device ID and store it in the specified
-file.  Requires setting of a device ID via \fI\-\-device\-id\.
+file.  Requires setting of a device ID via \fI\-\-device\-id\fR.
 .TP
 \fB\-\-write\-fru\fR=\fIFILENAME\fR
 Write the contents of the specified file into a FRU device id.
-Requires setting of a device ID via \fI\-\-device\-id\.  If
+Requires setting of a device ID via \fI\-\-device\-id\fR.  If
 \fI\-\-verbose\fR is specified, progress percent will also be output.
 .TP
 \fB\-\-device\-id\fR=\fIIDNUM\fR

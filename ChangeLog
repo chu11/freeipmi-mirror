@@ -1,5 +1,13 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/bmc-device.8.pre.in: Close the italic --device-id references
+	with \fR (the "\." left the italic running into the next
+	sentence), use the OFFSET placeholder argp uses for
+	--set-sel-time-utc-offset, and write the generator id range as
+	0x41 to 0x6F rather than mixing 0x and h notation.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi_interpret_sensor.conf.5.pre.in: Move the
 	IPMI_Power_Supply_Transition_Severity section after
 	IPMI_Power_Supply_State, where the parser and the installed
