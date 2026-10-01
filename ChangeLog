@@ -1,5 +1,11 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/manpage-common-sdr-cache-file-directory.man: The default SDR
+	cache directory is ~/.freeipmi/sdr-cache, with a /tmp fallback,
+	not the home directory itself.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-comma-separated-output.man,
 	man/manpage-common-no-header-output.man: Close the bold option name
 	with \fR like every other option fragment.
