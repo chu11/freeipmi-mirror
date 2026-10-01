@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiseld.8.pre.in: Document --output-oem-event-strings, which
+	the daemon has accepted since it was added to ipmiseld-argp.c but
+	the man page never mentioned.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/libfreeipmi.3.pre.in: Describe the 'payload' and 'templates'
 	sub-sections, which were missing from the overview.
 

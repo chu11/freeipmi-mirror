@@ -106,6 +106,19 @@ Log only OEM event records (i.e. don't log system event records).
 \fB\-\-event\-state\-config\-file\fR=\fIFILE\fR
 Specify an alternate event state configuration file.
 #include <@top_srcdir@/man/manpage-common-interpret-oem-data.man>
+.TP
+\fB\-\-output\-oem\-event\-strings\fR
+Some motherboards support an IPMI OEM extension that returns the
+string output for a system event.  Such string output may be
+beneficial for determining the meaning behind OEM specific events.
+This option will use the OEM event string to describe all system
+events in the logged output.  This option differs from the
+\fI\-\-interpret\-oem\-data\fR option in that all system events will
+output the vendor supplied event string, not just events that are OEM
+specific.  The event string may be very different from the normal
+FreeIPMI event string output.  If an OEM event string is not
+available, the default output will be logged.  This option is
+confirmed to work for Fujitsu iRMC S1 and iRMC S2 systems.
 #include <@top_srcdir@/man/manpage-common-entity-sensor-names.man>
 #include <@top_srcdir@/man/manpage-common-non-abbreviated-units.man>
 .TP
@@ -216,8 +229,9 @@ The output format of log messages can be adjusted via the
 \fB\-\-system\-event\-format\fR,
 \fB\-\-oem\-timestamped\-event\-format\fR and
 \fB\-\-oem\-non\-timestamped\-event\-format\fR options.  Options such
-as \fB\-\-interpret\-oem\-data\fR, \fB\-\-entity\-sensor\-names\fR,
-and \fB\-\-non\-abbreviated\-units\fR can further adjust the output
+as \fB\-\-interpret\-oem\-data\fR, \fB\-\-output\-oem\-event\-strings\fR,
+\fB\-\-entity\-sensor\-names\fR, and \fB\-\-non\-abbreviated\-units\fR
+can further adjust the output
 format.  The following conversion directives will allow the user to
 output specifics of each SEL event that occurs.
 .sp
