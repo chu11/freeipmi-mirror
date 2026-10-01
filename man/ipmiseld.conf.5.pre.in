@@ -110,7 +110,7 @@ details about available workarounds for each tool.  The following
 workarounds are supported: assumeio, spinpoll, idzero, forcepermsg,
 unexpectedauth, endianseq, noauthcodecheck, authcap, nochecksumcheck,
 intel20, supermicro20, sun20, opensesspriv, integritycheckvalue,
-assumesystemevent.
+assumemaxsdrrecordcount, assumesystemevent.
 .TP
 \fBverbose\-count\fR \fICOUNT\fR
 Specify default verbose count to use for

@@ -92,16 +92,21 @@ static int
 _ipmiseld_sdr_cache_create (ipmiseld_host_data_t *host_data,
                             char *filename)
 {
+  unsigned int cache_create_flags = IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT;
+
   assert (host_data);
   assert (host_data->host_poll);
   assert (host_data->host_poll->sdr_ctx);
   assert (host_data->host_poll->ipmi_ctx);
   assert (filename && strlen (filename));
 
+  if (host_data->prog_data->args->common_args.workaround_flags_sdr & IPMI_PARSE_WORKAROUND_FLAGS_SDR_ASSUME_MAX_SDR_RECORD_COUNT)
+    cache_create_flags |= IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT;
+
   if (ipmi_sdr_cache_create (host_data->host_poll->sdr_ctx,
                              host_data->host_poll->ipmi_ctx,
                              filename,
-                             IPMI_SDR_CACHE_CREATE_FLAGS_DEFAULT,
+                             cache_create_flags,
                              NULL,
                              NULL) < 0)
     {

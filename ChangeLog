@@ -1,5 +1,16 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* ipmiseld/ipmiseld-cache.c (_ipmiseld_sdr_cache_create): Pass
+	IPMI_SDR_CACHE_CREATE_FLAGS_ASSUME_MAX_SDR_RECORD_COUNT when the
+	assumemaxsdrrecordcount workaround was requested.  The flag was
+	accepted on the command line and in the config file but never
+	reached the SDR cache code, so it silently did nothing.
+	* man/ipmiseld.8.pre.in: Include the SDR workaround text.
+	* man/ipmiseld.conf.5.pre.in: List assumemaxsdrrecordcount among
+	the supported workaround-flags values.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/libipmiconsole.conf.5.pre.in: List the nochecksumcheck
 	workaround and the serialkeepaliveempty engine flag, both of which
 	the library's config file parser accepts.
