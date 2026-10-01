@@ -1114,10 +1114,10 @@ The following states correspond to System Event sensor events that report a
 transition state.
 .RS
 .TP
-\fBIPMI_System_Event_Transition_State_Active\fR
+\fBIPMI_System_Event_Transition_State_Idle\fR
 Defaults to Nominal.
 .TP
-\fBIPMI_System_Event_Transition_State_Idle\fR
+\fBIPMI_System_Event_Transition_State_Active\fR
 Defaults to Nominal.
 .TP
 \fBIPMI_System_Event_Transition_State_Busy\fR

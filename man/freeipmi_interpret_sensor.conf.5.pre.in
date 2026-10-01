@@ -345,42 +345,6 @@ Defaults to Critical.
 Defaults to Nominal.
 .RE
 .TP
-.B IPMI_Power_Supply_Transition_Severity
-The following states correspond to Power Supply sensors that report on
-device severity.
-.RS
-.TP
-\fBIPMI_Power_Supply_Transition_Severity_No_Event\fR
-Defaults to Nominal.
-.TP
-\fBIPMI_Power_Supply_Transition_Severity_Transition_To_OK\fR
-Defaults to Nominal.
-.TP
-\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
-Defaults to Warning.
-.TP
-\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
-Defaults to Critical.
-.TP
-\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
-Defaults to Critical.
-.TP
-\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
-Defaults to Warning.
-.TP
-\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
-Defaults to Critical.
-.TP
-\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Non_Recoverable\fR
-Defaults to Critical.
-.TP
-\fBIPMI_Power_Supply_Transition_Severity_Monitor\fR
-Defaults to Warning.
-.TP
-\fBIPMI_Power_Supply_Transition_Severity_Informational\fR
-Defaults to Nominal.
-.RE
-.TP
 .B IPMI_Fan_Transition_Availability
 The following states correspond to Fan sensors that report on
 device availability.
@@ -631,6 +595,42 @@ Defaults to Nominal.
 .TP
 \fBIPMI_Power_Supply_State_Asserted\fR
 Defaults to Warning.
+.RE
+.TP
+.B IPMI_Power_Supply_Transition_Severity
+The following states correspond to Power Supply sensors that report on
+device severity.
+.RS
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_No_Event\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Transition_To_OK\fR
+Defaults to Nominal.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Non_Critical_From_OK\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Critical_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Non_Recoverable_From_Less_Severe\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Non_Critical_From_More_Severe\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Critical_From_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Transition_To_Non_Recoverable\fR
+Defaults to Critical.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Monitor\fR
+Defaults to Warning.
+.TP
+\fBIPMI_Power_Supply_Transition_Severity_Informational\fR
+Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Power_Supply_Redundancy
