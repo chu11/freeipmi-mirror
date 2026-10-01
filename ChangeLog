@@ -1,5 +1,12 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/manpage-common-workaround-config-tool.man: Remove.  No page
+	includes it; ipmi-config.8 carries its own, more up to date copy
+	of the slowcommit and veryslowcommit text.
+	* man/Makefile.am (MANS_COMMON): Drop it.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/libipmimonitoring.conf.5, man/pef-config.8: Redirect straight
 	to freeipmi_interpret_sensor.conf.5 and ipmi-config.8 instead of
 	through another .so page; not every man implementation follows a
