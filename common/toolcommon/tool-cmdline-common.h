@@ -115,7 +115,7 @@ enum argp_common_option_keys
   { "username",       ARGP_USERNAME_KEY, "USERNAME", 0,                                                         \
       "Specify the username to use when authenticating with the remote host.", 8},                              \
   { "password",       ARGP_PASSWORD_KEY, "PASSWORD", 0,                                                         \
-      "Specify the password to use when authenticationg with the remote host. ", 9},                            \
+      "Specify the password to use when authenticating with the remote host. ", 9},                            \
   { "password-prompt", ARGP_PASSWORD_PROMPT_KEY, 0, 0,                                                          \
       "Prompt for password to avoid possibility of listing it in process lists.", 10},                          \
   { "k-g",       ARGP_K_G_KEY, "K_G", 0,                                                                        \

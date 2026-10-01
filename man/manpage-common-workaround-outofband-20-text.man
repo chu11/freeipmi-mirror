@@ -11,9 +11,9 @@ Supermicro IPMI 2.0 authentication issues on motherboards w/ Peppercon
 IPMI firmware.  The issues covered include handling invalid length
 authentication codes.  Those hitting this issue may see "password
 invalid" errors.  Issue observed on Supermicro H8QME with SIMSO
-daughter card.  Confirmed fixed on newerver firmware.
+daughter card.  Confirmed fixed on newer firmware.
 .LP
-\fIsun20\fR - This workaround flag will work work around several Sun IPMI
+\fIsun20\fR - This workaround flag will work around several Sun IPMI
 2.0 authentication issues.  The issues covered include invalid
 lengthed hash keys, improperly hashed keys, and invalid cipher suite
 records.  Those hitting this issue may see "password invalid" or "bmc

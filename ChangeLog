@@ -1,5 +1,30 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/manpage-common-outofband-password.man,
+	common/toolcommon/tool-cmdline-common.h: "authenticationg" ->
+	"authenticating".
+	* man/manpage-common-workaround-outofband-20-text.man: "newerver"
+	-> "newer", "will work work around" -> "will work around".
+	* man/manpage-common-workaround-outofband-common-text.man: "may
+	also needed too" -> "may also be needed".
+	* man/manpage-common-workaround-sdr-text.man: "miss-implemented"
+	-> "mis-implemented".
+	* man/manpage-common-workaround-inband-text.man: "contexting out
+	the tool" -> "context switching the tool out".
+	* man/manpage-common-hostranged-buffer.man: "the the" -> "the".
+	* man/manpage-common-hostranged-text-main.man: "later" ->
+	"latter".
+	* man/manpage-common-known-issues.man: "in order to this" -> "in
+	order for this".
+	* man/manpage-common-known-issues-ping.man: "other than the wait
+	awhile" -> "other than to wait a while".
+	* man/manpage-common-troubleshooting-heading-end.man: Reword
+	"please see WORKAROUNDS below to also if".
+	* man/manpage-common-outofband-k-g.man: "with the either" -> "with
+	either"; terminate the sentence.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: List embedded-video-status among the Dell
 	get-system-info keys; the command accepts and outputs it.
 

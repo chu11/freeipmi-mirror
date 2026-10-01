@@ -1,7 +1,7 @@
 .SH "HOSTRANGED SUPPORT"
 Multiple hosts can be input either as an explicit comma separated
 lists of hosts or a range of hostnames in the general form:
-prefix[n-m,l-k,...], where n < m and l < k, etc.  The later form
+prefix[n-m,l-k,...], where n < m and l < k, etc.  The latter form
 should not be confused with regular expression character classes (also
 denoted by []). For example, foo[19] does not represent foo1 or foo9,
 but rather represents a degenerate range: foo19.

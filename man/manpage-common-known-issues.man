@@ -11,5 +11,5 @@ configuration file would also be an appropriate way to hide this information.
 .LP
 In order to prevent brute force attacks, some BMCs will temporarily
 "lock up" after a number of remote authentication errors.  You may
-need to wait awhile in order to this temporary "lock up" to pass
+need to wait awhile in order for this temporary "lock up" to pass
 before you may authenticate again.
