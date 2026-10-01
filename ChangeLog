@@ -1,5 +1,16 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-config.conf.5.pre.in: Spell the example keys the way
+	--checkout writes them (IP_Address, MAC_Address, Lan_Enable_IPMI_Msgs,
+	*_Auth_Type_MD2/MD5/OEM_Proprietary, OEM_Enable_Auth_Type_*,
+	Enable_Gratuitous_ARPs, Enable_ARP_Response,
+	Gratuitous_ARP_Interval, and the gateway IP/MAC keys).  Key
+	matching is case insensitive so the old spellings worked, but a
+	diff against a real checkout showed spurious differences.  Also
+	fix the \fIP_Address\fR typo in the Lan_Conf text.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.conf.5.pre.in: Name the page ipmi-config.conf in
 	the NAME section so whatis and apropos do not file it under
 	ipmi-config, and title the header "Configuration" rather than

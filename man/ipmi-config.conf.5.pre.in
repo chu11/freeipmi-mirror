@@ -44,7 +44,7 @@ Future versions of this manpage will try to include more information.
      	## Possible values: Yes/No or blank to not set
      	Enable_User                                  Yes
      	## Possible values: Yes/No
-     	Lan_Enable_Ipmi_Msgs                         Yes
+     	Lan_Enable_IPMI_Msgs                         Yes
      	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
      	Lan_Privilege_Limit                          Administrator
         ## Possible values: 0-15, 0 is unlimited; May be reset to 0 if not specified
@@ -60,7 +60,7 @@ Future versions of this manpage will try to include more information.
      	## Possible values: Yes/No or blank to not set
      	Enable_User                                  No
      	## Possible values: Yes/No
-     	Lan_Enable_Ipmi_Msgs                         No
+     	Lan_Enable_IPMI_Msgs                         No
      	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
      	Lan_Privilege_Limit                          No_Access
         ## Possible values: 0-15, 0 is unlimited; May be reset to 0 if not specified
@@ -92,73 +92,73 @@ Future versions of this manpage will try to include more information.
      EndSection
      Section Lan_Conf
      	## Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others
-     	Ip_Address_Source                            Static
+     	IP_Address_Source                            Static
      	## Give valid IP Address
-     	Ip_Address                                   192.168.1.100
+     	IP_Address                                   192.168.1.100
      	## Give valid MAC Address
-     	Mac_Address                                  00:0E:0E:FF:AA:12
+     	MAC_Address                                  00:0E:0E:FF:AA:12
      	## Give valid Subnet mask
      	Subnet_Mask                                  255.255.255.0
      	## Give valid IP Address
-     	Default_Gateway_Ip_Address                   192.168.1.1
+     	Default_Gateway_IP_Address                   192.168.1.1
      	## Give valid MAC Address
-     	Default_Gateway_Mac_Address                  00:0E:0E:FF:AA:18
+     	Default_Gateway_MAC_Address                  00:0E:0E:FF:AA:18
      	## Give valid IP Address
-     	Backup_Gateway_Ip_Address                    192.168.1.2
+     	Backup_Gateway_IP_Address                    192.168.1.2
      	## Give valid MAC Address
-     	Backup_Gateway_Mac_Address                   00:0E:0E:FF:AA:15
+     	Backup_Gateway_MAC_Address                   00:0E:0E:FF:AA:15
      EndSection
      Section Lan_Conf_Auth
      	## Possible values: Yes/No
      	Callback_Enable_Auth_Type_None               No
      	## Possible values: Yes/No
-     	Callback_Enable_Auth_Type_Md2                No
+     	Callback_Enable_Auth_Type_MD2                No
      	## Possible values: Yes/No
-     	Callback_Enable_Auth_Type_Md5                No
+     	Callback_Enable_Auth_Type_MD5                No
      	## Possible values: Yes/No
      	Callback_Enable_Auth_Type_Straight_Password  No
      	## Possible values: Yes/No
-     	Callback_Enable_Auth_Type_Oem_Proprietary    No
+     	Callback_Enable_Auth_Type_OEM_Proprietary    No
      	## Possible values: Yes/No
      	User_Enable_Auth_Type_None                   No
      	## Possible values: Yes/No
-     	User_Enable_Auth_Type_Md2                    Yes
+     	User_Enable_Auth_Type_MD2                    Yes
      	## Possible values: Yes/No
-     	User_Enable_Auth_Type_Md5                    Yes
+     	User_Enable_Auth_Type_MD5                    Yes
      	## Possible values: Yes/No
      	User_Enable_Auth_Type_Straight_Password      No
      	## Possible values: Yes/No
-     	User_Enable_Auth_Type_Oem_Proprietary        No
+     	User_Enable_Auth_Type_OEM_Proprietary        No
      	## Possible values: Yes/No
      	Operator_Enable_Auth_Type_None               No
      	## Possible values: Yes/No
-     	Operator_Enable_Auth_Type_Md2                Yes
+     	Operator_Enable_Auth_Type_MD2                Yes
      	## Possible values: Yes/No
-     	Operator_Enable_Auth_Type_Md5                Yes
+     	Operator_Enable_Auth_Type_MD5                Yes
      	## Possible values: Yes/No
      	Operator_Enable_Auth_Type_Straight_Password  No
      	## Possible values: Yes/No
-     	Operator_Enable_Auth_Type_Oem_Proprietary    No
+     	Operator_Enable_Auth_Type_OEM_Proprietary    No
      	## Possible values: Yes/No
      	Admin_Enable_Auth_Type_None                  No
      	## Possible values: Yes/No
-     	Admin_Enable_Auth_Type_Md2                   Yes
+     	Admin_Enable_Auth_Type_MD2                   Yes
      	## Possible values: Yes/No
-     	Admin_Enable_Auth_Type_Md5                   Yes
+     	Admin_Enable_Auth_Type_MD5                   Yes
      	## Possible values: Yes/No
      	Admin_Enable_Auth_Type_Straight_Password     No
      	## Possible values: Yes/No
-     	Admin_Enable_Auth_Type_Oem_Proprietary       No
+     	Admin_Enable_Auth_Type_OEM_Proprietary       No
      	## Possible values: Yes/No
-     	Oem_Enable_Auth_Type_None                    No
+     	OEM_Enable_Auth_Type_None                    No
      	## Possible values: Yes/No
-     	Oem_Enable_Auth_Type_Md2                     No
+     	OEM_Enable_Auth_Type_MD2                     No
      	## Possible values: Yes/No
-     	Oem_Enable_Auth_Type_Md5                     No
+     	OEM_Enable_Auth_Type_MD5                     No
      	## Possible values: Yes/No
-     	Oem_Enable_Auth_Type_Straight_Password       No
+     	OEM_Enable_Auth_Type_Straight_Password       No
      	## Possible values: Yes/No
-     	Oem_Enable_Auth_Type_Oem_Proprietary         No
+     	OEM_Enable_Auth_Type_OEM_Proprietary         No
      EndSection
      Section Lan_Conf_Security_Keys
         ## Give string or blank to clear. Max 20 chars
@@ -166,11 +166,11 @@ Future versions of this manpage will try to include more information.
      EndSection
      Section Lan_Conf_Misc
      	## Possible values: Yes/No
-     	Enable_Gratuitous_Arps                       Yes
+     	Enable_Gratuitous_ARPs                       Yes
      	## Possible values: Yes/No
-     	Enable_Arp_Response                          No
+     	Enable_ARP_Response                          No
      	## Give valid number. Intervals are 500 ms.
-     	Gratuitous_Arp_Interval                      4
+     	Gratuitous_ARP_Interval                      4
      EndSection
      Section Rmcpplus_Conf_Privilege
      	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
@@ -318,7 +318,7 @@ configured under \fIMac_Address\fR, \fIDefault_Gateway_Mac_Address\fR,
 and \fIBackup_Gateway_Mac_Address\fR.
 .LP
 It is not required to setup the BMC \fIIP_Address\fR to be the same
-\fIP_Address\fR used by your operating system for that network
+\fIIP_Address\fR used by your operating system for that network
 interface.  However, if you choose to use a different address, an
 alternate ARP configuration may need to be setup.
 .LP
