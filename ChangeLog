@@ -1,5 +1,11 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiseld.conf.5.pre.in: Show ignore-sdr, re-download-sdr and
+	clear-sel taking ENABLE|DISABLE like the other boolean options,
+	not DISABLE alone.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiseld.conf.5.pre.in: The verbose-count entry described
 	ipmi-sel, text copied from freeipmi.conf.5; describe ipmiseld.
 

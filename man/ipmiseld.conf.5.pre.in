@@ -188,13 +188,13 @@ Specify the log priority to use.
 \fBcache\-directory\fR \fIDIRECTORY\fR
 Specify the cache directory to use.
 .TP
-\fBignore\-sdr\fR \fIDISABLE\fR
+\fBignore\-sdr\fR \fIENABLE|DISABLE\fR
 Specify if the SDR should be ignored.
 .TP
-\fBre\-download\-sdr\fR \fIDISABLE\fR
+\fBre\-download\-sdr\fR \fIENABLE|DISABLE\fR
 Specify if the SDR should be re-downloaded on start.
 .TP
-\fBclear\-sel\fR \fIDISABLE\fR
+\fBclear\-sel\fR \fIENABLE|DISABLE\fR
 Specify if the SEL should be cleared on start.
 .TP
 \fBthreadpool\-count\fR \fINUM\fR
