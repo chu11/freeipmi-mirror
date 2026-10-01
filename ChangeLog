@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-sensors.8.pre.in: Describe unknown events as
+	"Unrecognized Event = XXXXh" or "OEM Event = XXXXh", the strings
+	the tool actually outputs; "Unrecognized State" no longer exists.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi_interpret_sel.conf.5.pre.in,
 	man/freeipmi_interpret_sensor.conf.5.pre.in: An OEM event or
 	reading that matches no interpretation rule is reported as the
