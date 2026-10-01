@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/libipmimonitoring.3.pre.in: Use @ISODATE@ and
+	@PACKAGE_VERSION@ in the .TH header like the other library pages
+	instead of a hard coded "December 2006".
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/libipmimonitoring.3.pre.in: Give the SYNOPSIS the core
 	prototypes (init, context lifecycle, error, configuration, the
 	SEL and sensor query functions and their iterators) and point at
