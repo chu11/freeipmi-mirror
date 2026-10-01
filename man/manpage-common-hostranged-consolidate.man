@@ -1,5 +1,5 @@
 .TP
-\fB\-C\fR, \fB\-\-consolidate-output\fR
+\fB\-C\fR, \fB\-\-consolidate\-output\fR
 Consolidate hostranged output.  The complete standard output from
 every node specified will be consolidated so that nodes with identical
 output are not output twice.  A header will list those nodes with the
