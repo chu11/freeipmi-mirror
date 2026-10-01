@@ -1,5 +1,11 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-sensors.8.pre.in: Quote the troubleshooting message as
+	"sensor state config file parse error", which is what the tool
+	prints.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Set every command argument in the headings
 	as bare italics like the rest of the page: the Intel Node Manager
 	mode, platformbootingmode, policystorage and policytriggerlimit

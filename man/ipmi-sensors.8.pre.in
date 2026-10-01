@@ -190,7 +190,7 @@ non-recoverable thresholds.
 #include <@top_srcdir@/man/manpage-common-troubleshooting-inband.man>
 #include <@top_srcdir@/man/manpage-common-troubleshooting-inband-outofband.man>
 .LP
-"sensor config file parse error" - A parse error was found in the
+"sensor state config file parse error" - A parse error was found in the
 sensor interpretation configuration file.  Please see
 .B freeipmi_interpret_sensor.conf(5).
 #include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
