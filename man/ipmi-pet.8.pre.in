@@ -70,7 +70,7 @@ via SDR information.
 The following options are specific to
 .B ipmi-pet.
 .TP
-\fB\-v\fR
+\fB\-v\fR, \fB\-\-verbose\fR
 Output verbose output.  This option will output event direction and
 OEM custom messages from the trap.
 .TP

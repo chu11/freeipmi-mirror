@@ -68,7 +68,7 @@ configuration file.
 The following options are specific to
 .B ipmiseld.
 .TP
-\fB\-v\fR
+\fB\-v\fR, \fB\-\-verbose\fR
 Log verbose information.  This option will log additional information.
 Most notably it will output additional hex codes to given information
 on ambiguous SEL entries or SEL records.  For example, it will output
