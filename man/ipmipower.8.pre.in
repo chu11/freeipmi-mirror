@@ -70,7 +70,7 @@ machine through --stat.
 #include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
 #include <@top_srcdir@/man/manpage-common-outofband-session-timeout.man>
 .TP
-\fB\-\-retransmission-timeout\fR=\fIMILLISECONDS\fR
+\fB\-\-retransmission\-timeout\fR=\fIMILLISECONDS\fR
 Specify the packet retransmission timeout in milliseconds.  Defaults
 to 400 milliseconds (0.4 seconds) if not specified.
 #include <@top_srcdir@/man/manpage-common-authentication-type.man>

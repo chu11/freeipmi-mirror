@@ -67,10 +67,10 @@ Display SEL records by record id.  Accepts space or comma separated lists.
 Exclude display of SEL records by record id.  Accepts space or comma
 separated lists.
 .TP
-\fB\-\-display-range\fR=\fISTART\-END\fR
+\fB\-\-display\-range\fR=\fISTART\-END\fR
 Display SEL records from record id START to END.
 .TP
-\fB\-\-exclude\-display-range\fR=\fISTART\-END\fR
+\fB\-\-exclude\-display\-range\fR=\fISTART\-END\fR
 Exclude display of SEL records from record id START to END.
 .TP
 \fB\-\-date\-range\fR=\fIDATE\-DATE\fR
@@ -139,7 +139,7 @@ machines.
 Delete records by record id in the SEL.  Accepts space or comma
 separated lists.
 .TP
-\fB\-\-delete-range\fR=\fISTART\-END\fR
+\fB\-\-delete\-range\fR=\fISTART\-END\fR
 Delete record ids from START to END in the SEL.
 .TP
 \fB\-\-system\-event\-only\fR

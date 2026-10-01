@@ -60,19 +60,19 @@ SOL session abilities.
 #include <@top_srcdir@/man/manpage-common-outofband-password.man>
 #include <@top_srcdir@/man/manpage-common-outofband-k-g.man>
 .TP
-\fB\-\-session-timeout\fR=\fIMILLISECONDS\fR
+\fB\-\-session\-timeout\fR=\fIMILLISECONDS\fR
 Specify the session timeout in milliseconds.  Defaults to 60000
 milliseconds (60 seconds) if not specified.  Must be at least 20000
 milliseconds (20 seconds), the IPMI keepalive timeout used by
 .B ipmiconsole.
 .TP
-\fB\-\-retransmission-timeout\fR=\fIMILLISECONDS\fR
+\fB\-\-retransmission\-timeout\fR=\fIMILLISECONDS\fR
 Specify the packet retransmission timeout in milliseconds.  Defaults
 to 500 milliseconds (0.5 seconds) if not specified.  Must be at most
 20000 milliseconds (20 seconds), the IPMI keepalive timeout used by
 .B ipmiconsole.
 .TP
-\fB\-I\fR, \fB\-\-cipher\-suite-id\fR=\fICIPHER-SUITE-ID\fR
+\fB\-I\fR, \fB\-\-cipher\-suite\-id\fR=\fICIPHER-SUITE-ID\fR
 Specify the IPMI 2.0 cipher suite ID to use. The Cipher Suite ID
 identifies a set of authentication, integrity, and confidentiality
 algorithms to use for IPMI 2.0 communication. The authentication
@@ -94,13 +94,13 @@ cipher suite ids are currently supported:
 The following options are specific to
 .B ipmiconsole.
 .TP
-\fB\-e\fR \fICHAR\fR, \fB\-\-escape-char\fR=\fICHAR\fR
+\fB\-e\fR \fICHAR\fR, \fB\-\-escape\-char\fR=\fICHAR\fR
 Specify an alternate escape character (default char '&').  The
 escape character must be a single byte and may not be one of the
 escape command characters '?', '.', 'B', or 'D'.  See the ESCAPE
 CHARACTERS section below.
 .TP
-\fB\-\-dont-steal\fR
+\fB\-\-dont\-steal\fR
 Do not steal an SOL session if one is already detected as being in
 use.  Under most circumstances, if SOL is detected as being in use,
 .B ipmiconsole
@@ -151,7 +151,7 @@ When used along with the \fB\-\-deactivate\fR option, will deactivate
 all active SOL instances instead of just the currently configured
 payload instance.
 .TP
-\fB\-\-lock-memory\fR
+\fB\-\-lock\-memory\fR
 Lock sensitive information (such as usernames and passwords) in
 memory.
 .TP

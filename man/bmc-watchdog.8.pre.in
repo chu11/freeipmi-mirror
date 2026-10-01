@@ -166,22 +166,22 @@ Set pre-timeout interrupt.  The pre timeout interrupt can be set to
 one of the following: 0 = None, 1 = SMI, 2 = NMI, 3 = Messaging
 Interrupt.
 .TP
-\fB\-z\fR \fISECONDS\fR, \fB\-\-pre-timeout-interval=\fISECONDS\fR
+\fB\-z\fR \fISECONDS\fR, \fB\-\-pre\-timeout\-interval\fR=\fISECONDS\fR
 Set pre-timeout interval in seconds.
 .TP
-\fB\-F\fR, \fB\-\-clear-bios-frb2\fR
+\fB\-F\fR, \fB\-\-clear\-bios\-frb2\fR
 Clear  BIOS FRB2 Timer Use Flag.
 .TP
-\fB\-P\fR, \fB\-\-clear-bios-post\fR
+\fB\-P\fR, \fB\-\-clear\-bios\-post\fR
 Clear BIOS POST Timer Use Flag.
 .TP
-\fB\-L\fR, \fB\-\-clear-os-load\fR
+\fB\-L\fR, \fB\-\-clear\-os\-load\fR
 Clear OS Load Timer Use Flag.
 .TP
-\fB\-S\fR, \fB\-\-clear-sms-os\fR
+\fB\-S\fR, \fB\-\-clear\-sms\-os\fR
 Clear SMS/OS Timer Use Flag.
 .TP
-\fB\-O\fR, \fB\-\-clear-oem\fR
+\fB\-O\fR, \fB\-\-clear\-oem\fR
 Clear OEM Timer Use Flag.
 .TP
 \fB\-i\fR \fISECONDS\fR, \fB\-\-initial\-countdown\fR=\fISECONDS\fR
@@ -245,22 +245,22 @@ Set pre-timeout interrupt.  The pre timeout interrupt can be set to
 one of the following: 0 = None, 1 = SMI, 2 = NMI, 3 = Messaging
 Interrupt.
 .TP
-\fB\-z\fR \fISECONDS\fR, \fB\-\-pre-timeout\-interval\fR=\fISECONDS\fR
+\fB\-z\fR \fISECONDS\fR, \fB\-\-pre\-timeout\-interval\fR=\fISECONDS\fR
 Set pre-timeout interval in seconds.
 .TP
-\fB\-F\fR, \fB\-\-clear-bios-frb2\fR
+\fB\-F\fR, \fB\-\-clear\-bios\-frb2\fR
 Clear  BIOS FRB2 Timer Use Flag.
 .TP
-\fB\-P\fR, \fB\-\-clear-bios-post\fR
+\fB\-P\fR, \fB\-\-clear\-bios\-post\fR
 Clear BIOS POST Timer Use Flag.
 .TP
-\fB\-L\fR, \fB\-\-clear-os-load\fR
+\fB\-L\fR, \fB\-\-clear\-os\-load\fR
 Clear OS Load Timer Use Flag.
 .TP
-\fB\-S\fR, \fB\-\-clear-sms-os\fR
+\fB\-S\fR, \fB\-\-clear\-sms\-os\fR
 Clear SMS/OS Timer Use Flag.
 .TP
-\fB\-O\fR, \fB\-\-clear-oem\fR
+\fB\-O\fR, \fB\-\-clear\-oem\fR
 Clear OEM Timer Use Flag.
 .TP
 \fB\-i\fR \fISECONDS\fR, \fB\-\-initial\-countdown\fR=\fISECONDS\fR

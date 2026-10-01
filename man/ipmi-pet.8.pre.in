@@ -21,7 +21,7 @@ into
 .B ipmi-pet.
 On some systems, you may wish to also send a PET acknowledge to a
 remote system to inform it the trap was received and parsed.  One can
-be sent using the \fB\-\-pet-acknowledge\fR option.
+be sent using the \fB\-\-pet\-acknowledge\fR option.
 
 While an IPMI session is not required to interpret a PET, data from
 the sensor data repository (SDR) is required to properly interpret
@@ -86,7 +86,7 @@ additional hex codes to given information on ambiguous events.  For
 example, it will output Generator ID hex codes for sensors without
 names.
 .TP
-\fB\-\-pet-acknowledge\fR
+\fB\-\-pet\-acknowledge\fR
 Send PET acknowledge using inputted trap data instead of outputting
 data.  In some circumstances, this may be useful to inform a remote
 system that a trap was received and parsed.  If specified, a hostname

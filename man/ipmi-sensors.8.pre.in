@@ -73,7 +73,7 @@ about events, other sensor types, and oem sensors.
 \fB\-i\fR, \fB\-\-sdr\-info\fR
 Show sensor data repository (SDR) information
 .TP
-\fB\-q\fR, \fB\-\-quiet-readings\fR
+\fB\-q\fR, \fB\-\-quiet\-readings\fR
 Do not output sensor reading values by default.  This option is
 particularly useful if you want to use hostranged output across a
 cluster and want to consolidate the output.
