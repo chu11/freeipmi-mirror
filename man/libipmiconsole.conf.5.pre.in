@@ -79,9 +79,9 @@ ids are supported: 0, 1, 2, 3, 6, 7, 8, 11, 12, 15, 16, 17.
 \fBlibipmiconsole\-context\-workaround\-flags\fR \fIWORKAROUNDS\fR
 Specify default workaround flags to use.  Multiple workarounds can be
 specified separated by whitespace.  The following workarounds are
-supported: authcap, intel20, supermicro20, sun20, opensesspriv,
-integritycheckvalue, solpayloadsize, solport, solstatus,
-solchannelsupport, serialalertsdeferred, solpacketseq
+supported: authcap, nochecksumcheck, intel20, supermicro20, sun20,
+opensesspriv, integritycheckvalue, solpayloadsize, solport, solstatus,
+solchannelsupport, serialalertsdeferred, solpacketseq.
 .SH "CONTEXT PROTOCOL CONFIG OPTIONS"
 Every SOL session is housed within an libipmiconsole context.  The
 following defines protocol config default values for each context created.
@@ -119,7 +119,8 @@ header file for additional information on the library.
 \fBlibipmiconsole\-context\-engine\-flags\fR \fIFLAGS\fR
 Specify default engine flags to use.  Multiple flags can be specified
 separated by whitespace.  The following flags are supported: closefd,
-outputonsolestablished, lockmemory, serialkeepalive.
+outputonsolestablished, lockmemory, serialkeepalive,
+serialkeepaliveempty.
 .TP
 \fBlibipmiconsole\-context\-behavior\-flags\fR \fIFLAGS\fR
 Specify default behavior flags to use.  Multiple flags can be

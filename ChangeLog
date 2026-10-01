@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/libipmiconsole.conf.5.pre.in: List the nochecksumcheck
+	workaround and the serialkeepaliveempty engine flag, both of which
+	the library's config file parser accepts.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.conf.5.pre.in: Set the RECORD-IDS-LIST argument of
 	ipmi-sensors-record-ids and ipmi-sensors-exclude-record-ids in
 	italics.  "\fRECORD" was being read as the \fR font escape, so the
