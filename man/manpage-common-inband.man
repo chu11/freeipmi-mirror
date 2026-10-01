@@ -5,7 +5,7 @@ Do not probe in-band IPMI devices for default settings.
 \fB\-\-driver\-address\fR=\fIDRIVER-ADDRESS\fR
 Specify the in-band driver address to be used instead of the probed
 value.  \fIDRIVER-ADDRESS\fR should be prefixed with "0x" for a hex
-value and '0' for an octal value.
+value and "0" for an octal value.
 .TP
 \fB\-\-driver\-device\fR=\fIDEVICE\fR
 Specify the in-band driver device path to be used instead of the
@@ -13,12 +13,13 @@ probed path.
 .TP
 \fB\-\-register\-spacing\fR=\fIREGISTER-SPACING\fR
 Specify the in-band driver register spacing instead of the probed
-value.  Argument is in bytes (i.e. 32bit register spacing = 4)
+value.  Argument is in bytes (i.e. 32bit register spacing = 4).  As
+with \fIDRIVER-ADDRESS\fR, prefix with "0x" for a hex value.
 .TP
 \fB\-\-target\-channel\-number\fR=\fICHANNEL\-NUMBER\fR
 Specify the in-band driver target channel number to send IPMI requests
-to.
+to.  As with \fIDRIVER-ADDRESS\fR, prefix with "0x" for a hex value.
 .TP
 \fB\-\-target\-slave\-address\fR=\fISLAVE\-ADDRESS\fR
 Specify the in-band driver target slave address to send IPMI requests
-to.
+to.  As with \fIDRIVER-ADDRESS\fR, prefix with "0x" for a hex value.

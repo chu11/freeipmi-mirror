@@ -1,5 +1,12 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/manpage-common-inband.man: Note that --register-spacing,
+	--target-channel-number and --target-slave-address accept a 0x
+	prefix for hex like --driver-address does (all four are parsed with
+	strtol base 0), and quote the prefixes consistently.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-sdr-cache-file-directory.man: The default SDR
 	cache directory is ~/.freeipmi/sdr-cache, with a /tmp fallback,
 	not the home directory itself.
