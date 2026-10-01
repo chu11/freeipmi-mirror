@@ -1,5 +1,12 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-dcmi.8.pre.in: Point readers to bmc-device(8), not
+	ipmi-chassis(8), for ACPI power state information; ipmi-chassis
+	has no ACPI command.  Add bmc-device(8) and the already referenced
+	bmc-info(8) to SEE ALSO.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/bmc-device.8.pre.in: State the numeric base of each argument
 	to --rearm-sensor, --platform-event and
 	--set-sensor-reading-and-event-status.  The byte fields and the

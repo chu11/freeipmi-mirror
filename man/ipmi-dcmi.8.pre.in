@@ -46,7 +46,9 @@ are not implemented directly in this tool.  Please see
 .B ipmiconsole(8)
 for Serial-over-LAN (SOL) support,
 .B ipmi-chassis(8)
-for power status, power control, identification, and ACPI power state information,
+for power status, power control, and identification,
+.B bmc-device(8)
+for ACPI power state information,
 .B ipmipower(8)
 for power status and power control,
 .B ipmi-sel(8)
@@ -196,6 +198,7 @@ Get power limit across a cluster using IPMI over LAN.
 Copyright (C) 2009-2015 Lawrence Livermore National Security, LLC.
 #include <@top_srcdir@/man/manpage-common-gpl-program-text.man>
 .SH "SEE ALSO"
-freeipmi(7), ipmi-chassis(8), ipmi-config(8), ipmi-sel(8),
-ipmi-sensors(8), ipmiconsole(8), ipmipower(8)
+freeipmi(7), bmc-device(8), bmc-info(8), ipmi-chassis(8),
+ipmi-config(8), ipmi-sel(8), ipmi-sensors(8), ipmiconsole(8),
+ipmipower(8)
 #include <@top_srcdir@/man/manpage-common-homepage.man>
