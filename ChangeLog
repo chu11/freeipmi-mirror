@@ -1,5 +1,12 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiseld.8.pre.in: Drop the "[2]" footnote marker copied from
+	ipmi-sel.h, whose footnote the page never reproduced; put the
+	FILES entries on separate lines and list the pid file, as
+	ipmidetectd.8 does.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-sensors.8.pre.in: Quote the troubleshooting message as
 	"sensor state config file parse error", which is what the tool
 	prints.
