@@ -76,10 +76,11 @@ Update configuration information from a config file or key pairs.
 Show differences between stored information and a config file or key pairs.
 .TP
 \fB\-n\fR \fIFILENAME\fR, \fB\-\-filename\fR=\fIFILENAME\fR
-Specify a config file for checkout/commit/diff.  If specified with checkout, cannot
-use with multiple hosts or with \fB\-\-always\-prefix\fR.  For commit
-and diff, a FILENAME of "-" reads the configuration from standard
-input.
+Specify a config file for checkout/commit/diff.  If specified with
+checkout, cannot be used with multiple hosts; the checkout is written
+directly to the file, so \fB\-\-always\-prefix\fR has no effect on it.
+For commit and diff, a FILENAME of "-" reads the configuration from
+standard input, which cannot be used with multiple hosts.
 .TP
 \fB\-e\fR \fI"KEY=VALUE"\fR, \fB\-\-key\-pair\fR=\fI"KEY=VALUE"\fR
 Specify KEY=VALUE pairs for checkout/commit/diff.  Specify KEY by

@@ -1,5 +1,13 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-config.8.pre.in: --filename with checkout is not
+	rejected alongside --always-prefix; the file is written directly,
+	bypassing the hostrange prefixing, so say the option has no effect
+	instead.  Note that standard input cannot be used for commit or
+	diff with multiple hosts, which main() does reject.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-sensors.8.pre.in: Describe unknown events as
 	"Unrecognized Event = XXXXh" or "OEM Event = XXXXh", the strings
 	the tool actually outputs; "Unrecognized State" no longer exists.
