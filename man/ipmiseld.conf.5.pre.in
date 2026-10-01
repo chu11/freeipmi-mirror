@@ -113,8 +113,7 @@ intel20, supermicro20, sun20, opensesspriv, integritycheckvalue,
 assumemaxsdrrecordcount, assumesystemevent.
 .TP
 \fBverbose\-count\fR \fICOUNT\fR
-Specify default verbose count to use for
-.B ipmi-sel(8).
+Specify the verbose count to use.
 .TP
 \fBsensor\-types\fR \fISENSOR-TYPES-LIST\fR
 Specify sensor types of SEL events to log.  Multiple sensor types can
