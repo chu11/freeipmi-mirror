@@ -1,5 +1,11 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-pet.8.pre.in: Say that --manufacturer-id and
+	--product-id are decimal, and that the manufacturer id must be
+	non-zero; both are parsed with strtoul base 10.
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-pet.8.pre.in, man/ipmi-sel.8.pre.in,
 	man/ipmiseld.8.pre.in: Show the --verbose long form alongside -v;
 	only the short form was documented.

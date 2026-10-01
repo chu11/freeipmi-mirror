@@ -130,7 +130,8 @@ Specify an alternate event state configuration file.  Option ignored
 if \fB\-\-output\-event\-state\fR not specified.
 .TP
 \fB\-\-manufacturer\-id\fR=\fINUMBER\fR
-Specify a specific manufacturer id to assume.  Useful if you wish to
+Specify a specific manufacturer id to assume, as a non-zero decimal
+number.  Useful if you wish to
 specify \fB\-\-interpret\-oem\-data\fR, but the manufacturer id cannot
 be determined by IPMI access or is not available in the SNMP trap.
 The manufacturer id of a motherboard can be determined with
@@ -138,7 +139,8 @@ The manufacturer id of a motherboard can be determined with
 If this option is specified, so must \fB\-\-product\-id\fR.
 .TP
 \fB\-\-product\-id\fR=\fINUMBER\fR
-Specify a specific product id to assume.  Useful if you wish to
+Specify a specific product id to assume, as a decimal number.  Useful
+if you wish to
 specify \fB\-\-interpret\-oem\-data\fR, but the product id cannot
 be determined by IPMI access or is not available in the SNMP trap.
 The product id of a motherboard can be determined with
