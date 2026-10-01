@@ -1,5 +1,12 @@
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi_interpret_sel.conf.5.pre.in: Fix "may may", "the
+	later", "events that dealing with" and "Interpretations rules".
+	* man/freeipmi_interpret_sensor.conf.5.pre.in: Fix "treshold", "a
+	broken a sensor", "interpretations rules" and "inputted".
+
+2026-10-01 Albert Chu <chu11@llnl.gov>
+
 	* man/libipmimonitoring.3.pre.in: Fix "configurd", the stray period
 	after the SEL configuration file name, and "The libipmimonitoring
 	implements".

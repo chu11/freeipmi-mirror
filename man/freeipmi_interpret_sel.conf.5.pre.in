@@ -25,7 +25,7 @@ can be used to determine the sensor types and the states/thresholds
 that exist on a system by outputting very verbose output and seeing
 what types of Assertion or Deassertion events are possible.
 .LP
-Each of the events below may may take 1 or 2 of the following states
+Each of the events below may take 1 or 2 of the following states
 as input.
 .LP
 Nominal - Signal Nominal reading if event tripped
@@ -36,7 +36,7 @@ Critical - Signal Critical reading if event tripped
 .LP
 If only one state is listed, that state will be interpreted when the
 event is asserted or deasserted.  If two states are listed, the first
-state will be interpreted when an event is asserted, and the later
+state will be interpreted when an event is asserted, and the latter
 will be interpreted when an event is deasserted.
 .LP
 Not all IPMI sensor types and event types are currently supported.  If
@@ -67,7 +67,7 @@ lines can be continued on the next using backslash ("\\").
 .TP
 .B IPMI_Threshold_Sensor
 The following states correspond to threshold sensor events.  This
-normally applies to events that dealing with non-discrete values, such
+normally applies to events dealing with non-discrete values, such
 as temperatures, voltages, RPM, etc.
 .RS
 .TP
@@ -1947,7 +1947,7 @@ Defaults to Critical.
 .TP
 .B IPMI_OEM
 The following configuration options can be used to configure OEM
-system event log events.  Interpretations rules for a specific
+system event log events.  Interpretation rules for a specific
 combination of \fIManufacturer\-ID\fR, \fIProduct\-ID\fR, and
 \fIRecord-Type\fR, are iterated through and the worst resulting sensor
 state is returned (i.e. Nominal < Warning < Critical).  If no
