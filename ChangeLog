@@ -1,5 +1,11 @@
 2026-09-30 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiseld.conf.5.pre.in: Document the output-oem-event-strings
+	option, which the config file parser has accepted but the man page
+	never listed.
+
+2026-09-30 Albert Chu <chu11@llnl.gov>
+
 	* man/libfreeipmi.3.pre.in: Rewrap the 'templates' entry so no line
 	begins with an apostrophe, which groff treats as a control
 	character and warned about as an undefined macro.
