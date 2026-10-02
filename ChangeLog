@@ -1,5 +1,12 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/api/ipmi-api.h: Say that
+	IPMI_FLAGS_NOSESSION is accepted by ipmi_ctx_open_outofband() only
+	and rejected by ipmi_ctx_open_outofband_2_0(), rather than "for
+	outofband only".
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h: Document the
 	NON_ABBREVIATED_UNITS, ENTITY_SENSOR_NAMES, INTERPRET_OEM_DATA,
 	UTC_TO_LOCALTIME and LOCALTIME_TO_UTC string flags in the

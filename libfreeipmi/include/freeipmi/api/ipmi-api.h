@@ -191,13 +191,15 @@ typedef enum ipmi_driver_type ipmi_driver_type_t;
  * applied when the device is opened; changing it later with
  * ipmi_ctx_set_flags() has no effect on the already open driver.
  *
- * NOSESSION - for outofband only, do not create an IPMI session.
- * Useful for the few IPMI payloads that do not require a session for
- * an IPMI command to be sent (e.g. Get Channel Authentication
- * Capabilities, Get System GUID, PET Acknowledge).  Can only be set
- * during opening, not later using ipmi_ctx_set_flags().  If set, you
- * cannot call most IPMI payload functions, only those few that send
- * data without a session.
+ * NOSESSION - for ipmi_ctx_open_outofband() (IPMI 1.5) only, do not
+ * create an IPMI session.  Useful for the few IPMI payloads that do
+ * not require a session for an IPMI command to be sent (e.g. Get
+ * Channel Authentication Capabilities, Get System GUID, PET
+ * Acknowledge).  Rejected by ipmi_ctx_open_outofband_2_0(), since
+ * session-less commands are always sent as IPMI 1.5 packets.  Can only
+ * be set during opening, not later using ipmi_ctx_set_flags().  If
+ * set, you cannot call most IPMI payload functions, only those few
+ * that send data without a session.
  *
  * DEBUG_DUMP - for all interfaces
  *
