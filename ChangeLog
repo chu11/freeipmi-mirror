@@ -1,5 +1,12 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi_interpret_sensor.conf.5.pre.in: Describe the
+	IPMI_Memory_Redundancy section as Memory sensors, not Cooling
+	Device sensors; the text had been copied from
+	IPMI_Cooling_Device_Redundancy.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.conf.5.pre.in: Drop No_Access from the possible
 	values shown for Volatile_Channel_Privilege_Limit and
 	Non_Volatile_Channel_Privilege_Limit in the example; the channel

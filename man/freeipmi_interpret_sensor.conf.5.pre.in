@@ -925,7 +925,7 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Memory_Redundancy
-The following states correspond to Cooling Device sensors that report on
+The following states correspond to Memory sensors that report on
 redundancy.
 .RS
 .TP
