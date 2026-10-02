@@ -1,5 +1,12 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/record-format/oem/ipmi-sdr-oem-intel-record-format.h:
+	Drop the "see freeipmi/templates/" comment; this header declares
+	no templates, only the QSSC-S4R thermal profile byte offsets and
+	masks.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/debug/ipmi-debug.h: Describe
 	tmpl_unexpected_data at its declaration; it is the one exported
 	template with no entry under freeipmi/templates/.

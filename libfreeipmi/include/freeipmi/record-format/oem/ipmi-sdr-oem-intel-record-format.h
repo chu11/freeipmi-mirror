@@ -24,10 +24,6 @@ extern "C" {
 #endif
 
 /*
- * see freeipmi/templates/ for template definitions
- */
-
-/*
  * Quanta QSSC-S4R/Appro GB812X-CN
  * (Quanta motherboard contains Intel manufacturer ID)
  */
