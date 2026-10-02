@@ -457,6 +457,34 @@ int ipmi_sel_parse_read_oem (ipmi_sel_ctx_t ctx,
  * Output a month name (Jan, Feb, Mar, etc.) instead of the month
  * number when outputting the date.
  *
+ * NON_ABBREVIATED_UNITS
+ *
+ * Output full unit names (e.g. "degrees C") instead of abbreviated
+ * ones (e.g. "C") when a threshold reading is output in %f or %c.
+ *
+ * ENTITY_SENSOR_NAMES
+ *
+ * Output sensor names (%s) with the entity id and instance prepended,
+ * as ipmi_sdr_parse_entity_sensor_name() does, instead of the bare SDR
+ * id string.
+ *
+ * INTERPRET_OEM_DATA
+ *
+ * Interpret OEM event data, OEM records and OEM sensor types for the
+ * manufacturer and product set with ipmi_sel_ctx_set_manufacturer_id()
+ * and ipmi_sel_ctx_set_product_id().  Required for %O.
+ *
+ * UTC_TO_LOCALTIME
+ *
+ * Treat the SEL timestamp as UTC and convert it to localtime for %t
+ * and %d.
+ *
+ * LOCALTIME_TO_UTC
+ *
+ * Treat the SEL timestamp as localtime and convert it to UTC for %t
+ * and %d.  Mutually exclusive with UTC_TO_LOCALTIME; passing both
+ * fails with IPMI_SEL_ERR_PARAMETERS.
+ *
  * Returns the length of the string written to buffer.  The buffer is
  * always null terminated, even if nothing was output.  If the output
  * did not fit, buflen is returned and the buffer holds the first

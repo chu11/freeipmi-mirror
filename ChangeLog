@@ -1,5 +1,13 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/sel/ipmi-sel.h: Document the
+	NON_ABBREVIATED_UNITS, ENTITY_SENSOR_NAMES, INTERPRET_OEM_DATA,
+	UTC_TO_LOCALTIME and LOCALTIME_TO_UTC string flags in the
+	ipmi_sel_parse_read_record_string() flags paragraph with the other
+	flags.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/fiid/fiid.h (fiid_iterator_get_data):
 	Document the 0 return for a field with no data set, as was done for
 	fiid_obj_get_data().
