@@ -1,5 +1,13 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiseld.8.pre.in: Copy the OEM INTERPRETATION motherboard
+	list from ipmi-sel.8.pre.in; both tools use the same libfreeipmi
+	SEL OEM string support, but the ipmiseld list lacked the Gigabyte,
+	Intel S2600GZ/WP/KP/KPR/WT2/WTT/BPB, Intel and Wiwynn Windmill,
+	Quanta Winterfell and Supermicro X10SLM-F entries.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi_interpret_sensor.conf.5.pre.in: Describe the
 	IPMI_Memory_Redundancy section as Memory sensors, not Cooling
 	Device sensors; the text had been copied from
