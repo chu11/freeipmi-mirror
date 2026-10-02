@@ -65,6 +65,7 @@
 #include "ipmiconsole-argp.h"
 
 #include "freeipmi-portability.h"
+#include "tool-util-common.h"
 
 volatile unsigned int sigterm = 0x0;
 static struct termios saved_tty;
@@ -555,6 +556,8 @@ main (int argc, char **argv)
   int debug_flags = 0;
   int proxyfd = -1;
   int yes = 1;
+
+  ipmi_disable_coredump ();
 
   ipmiconsole_argp_parse (argc, argv, &cmd_args);
 
