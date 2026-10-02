@@ -1,5 +1,11 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/spec/oem/ipmi-oem-dell-spec.h: Say
+	"telnet enable" rather than "ssh enable" in the field list for the
+	telnet configuration token.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/interface/ipmi-rmcpplus-interface.h
 	(fill_rmcpplus_payload): Name the output object obj_rmcpplus_payload
 	rather than obj_cmd_rq; it is the tmpl_rmcpplus_payload object, not

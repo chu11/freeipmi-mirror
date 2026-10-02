@@ -320,7 +320,7 @@ extern "C" {
 
 /* w/ IPMI_OEM_DELL_TOKEN_ID_TELNET_CONFIGURATION
  *
- * ssh enable - boolean
+ * telnet enable - boolean
  * max session - uint8 (read only)
  * active session - uint8 (read only)
  * session timeout - uint32
