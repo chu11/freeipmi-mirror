@@ -1,5 +1,11 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/fiid/fiid.h (fiid_iterator_get_data):
+	Document the 0 return for a field with no data set, as was done for
+	fiid_obj_get_data().
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/fiid/fiid.h: Document
 	FIID_FIELD_SECURE_MEMSET_ON_CLEAR in the field flags comment block
 	alongside the other flags.

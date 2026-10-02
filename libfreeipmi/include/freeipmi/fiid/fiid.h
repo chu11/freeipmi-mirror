@@ -745,9 +745,9 @@ int fiid_iterator_get (fiid_iterator_t iter, uint64_t *val);
  * fiid_iterator_get_data
  *
  * Get an array of data in the object for the current field.  Returns
- * length of data read on success, -1 on error.  The current field
- * must begin on a byte boundary and have a data bit length that is a
- * multiple of 8.
+ * length of data read on success, 0 if no data was available for the
+ * field, -1 on error.  The current field must begin on a byte boundary
+ * and have a data bit length that is a multiple of 8.
  */
 int fiid_iterator_get_data (fiid_iterator_t iter,
                             void *data,
