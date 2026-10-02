@@ -1,5 +1,12 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* man/bmc-watchdog.8.pre.in: Say that errors go to syslog only in
+	daemon mode (to standard error as well with --debug, nowhere with
+	--no-logging); the set, get, reset, start, stop and clear commands
+	write errors to standard error.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmipower.8.pre.in: Document that the C410X OEM power type
 	requires ADMIN privilege for on and off; with the default OPERATOR
 	privilege the command is rejected before any packet is sent.

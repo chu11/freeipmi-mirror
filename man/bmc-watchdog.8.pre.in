@@ -285,7 +285,10 @@ ARP responses will not be suspended.
 Time interval to wait before resetting timer.  The default is 60
 seconds.
 .SH "ERRORS"
-Errors are logged to syslog.
+In daemon mode, errors are logged to syslog unless
+\fB\-\-no\-logging\fR is specified, and are also written to standard
+error if \fB\-\-debug\fR is specified.  For all other commands, errors
+are written to standard error.
 #include <@top_srcdir@/man/manpage-common-workaround-heading-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-inband-text.man>
 .LP
