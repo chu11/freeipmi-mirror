@@ -424,7 +424,10 @@ Poweredge C410x systems.  It supports \fBon\fR, \fBoff\fR, and
 specified when attempting to power control with this extension.  For
 example, the hostname \fImynode+2\fR would inform
 .B ipmipower
-to operate on slot number \fI2\fR on \fImynode\fR.
+to operate on slot number \fI2\fR on \fImynode\fR.  Powering a
+slot \fBon\fR or \fBoff\fR requires ADMIN privilege, so
+\fB\-\-privilege\-level\fR=\fIADMIN\fR must be specified along with a
+user that has it.
 The C410x appears to have difficulty handling new slot power control
 requests until prior ones have completed.  Users may wish to strongly
 consider using the \fB\-\-wait\-until\-on\fR and

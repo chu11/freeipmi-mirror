@@ -1,5 +1,11 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmipower.8.pre.in: Document that the C410X OEM power type
+	requires ADMIN privilege for on and off; with the default OPERATOR
+	privilege the command is rejected before any packet is sent.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmipower.8.pre.in: Stop saying --driver-type overrides an
 	auto selection; ipmipower does no driver probing and always
 	defaults to the IPMI 1.5 LAN driver.  State the default.
