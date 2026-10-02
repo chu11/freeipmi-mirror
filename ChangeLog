@@ -1,5 +1,14 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Mark activecoresconfig as required for the
+	Intel Node Manager set-turbo-synchronization-ratio command and drop
+	the claim that it defaults to all cores; the command fails without
+	it.  Say that an unspecified cpusocket applies to all sockets.
+	* ipmi-oem/ipmi-oem.c (oem_intelnm): Likewise in the --list
+	argument summary.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/oem/ipmi-oem-dell-spec.h: Say
 	"telnet enable" rather than "ssh enable" in the field list for the
 	telnet configuration token.
