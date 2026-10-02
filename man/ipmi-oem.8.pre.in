@@ -682,8 +682,10 @@ this command will attempt to register an alert (identical to
 \fIsendalertstring\fR options must be specified.  Exactly one of
 \fIslaveaddress\fR (for IPMB channels) or \fIdestinationselector\fR
 (for LAN channels) must also be specified; it selects whether an IPMB
-or a LAN alert destination is configured.  If \fIregister=no\fR, no
-other options are required.
+or a LAN alert destination is configured.  The \fIslaveaddress\fR
+should be prefixed with "0x" for a hex value (e.g. 0x20); it is
+otherwise read as decimal.  If \fIregister=no\fR, no other options
+are required.
 Appropriate channel number input can be determined via
 .B bmc-info(8).
 Destination selector and alert string selector information can be

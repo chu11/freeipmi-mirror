@@ -1,5 +1,17 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* ipmi-oem/ipmi-oem-common.c (ipmi_oem_parse_1_byte_hex_field): New
+	function, parses a byte with strtoul base 0 so a "0x" prefix
+	selects hex.
+	* ipmi-oem/ipmi-oem-common.h: Declare it.
+	* ipmi-oem/ipmi-oem-intelnm.c
+	(ipmi_oem_intelnm_set_node_manager_alert_destination): Parse the
+	slaveaddress key with it; IPMB slave addresses are conventionally
+	written in hex (0x20) and the decimal-only parser rejected that.
+	* man/ipmi-oem.8.pre.in: Document the 0x prefix for slaveaddress.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: For the Intel Node Manager
 	set-node-manager-alert-destination command, say that exactly one of
 	slaveaddress or destinationselector must be given and that it

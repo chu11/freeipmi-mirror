@@ -244,6 +244,42 @@ ipmi_oem_parse_1_byte_field (ipmi_oem_state_data_t *state_data,
 }
 
 int
+ipmi_oem_parse_1_byte_hex_field (ipmi_oem_state_data_t *state_data,
+                                 unsigned int option_num,
+                                 const char *value,
+                                 uint8_t *value_out)
+{
+  unsigned long temp;
+  char *ptr = NULL;
+
+  assert (state_data);
+  assert (value);
+  assert (value_out);
+
+  errno = 0;
+
+  /* base 0 so a "0x" prefix selects hex and plain digits stay decimal */
+  temp = strtoul (value, &ptr, 0);
+
+  if (errno
+      || ptr == value
+      || ptr[0] != '\0'
+      || temp > UCHAR_MAX)
+    {
+      pstdout_fprintf (state_data->pstate,
+                       stderr,
+                       "%s:%s invalid OEM option argument '%s' : invalid value\n",
+                       state_data->prog_data->args->oem_id,
+                       state_data->prog_data->args->oem_command,
+                       state_data->prog_data->args->oem_options[option_num]);
+      return (-1);
+    }
+
+  (*value_out) = temp;
+  return (0);
+}
+
+int
 ipmi_oem_parse_2_byte_field (ipmi_oem_state_data_t *state_data,
                              unsigned int option_num,
                              const char *value,

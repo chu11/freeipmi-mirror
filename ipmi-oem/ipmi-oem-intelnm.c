@@ -5563,10 +5563,10 @@ ipmi_oem_intelnm_set_node_manager_alert_destination (ipmi_oem_state_data_t *stat
         }
       else if (!strcasecmp (key, "slaveaddress"))
         {
-          if (ipmi_oem_parse_1_byte_field (state_data,
-                                           i,
-                                           value,
-                                           &slaveaddress) < 0)
+          if (ipmi_oem_parse_1_byte_hex_field (state_data,
+                                               i,
+                                               value,
+                                               &slaveaddress) < 0)
             goto cleanup;
 
           slaveaddress_specified++;
