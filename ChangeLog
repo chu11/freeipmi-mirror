@@ -1,5 +1,15 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Mark the suspend period keys of the Intel
+	Node Manager set-node-manager-policy-suspend-periods command as
+	optional; only domainid and policyid are required, X ranges 1-5,
+	giving no periods removes all existing ones, and a period needs
+	both its start and stop time.
+	* ipmi-oem/ipmi-oem.c (oem_intelnm): Likewise in the --list
+	argument summary.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* ipmi-oem/ipmi-oem-common.c (ipmi_oem_parse_1_byte_hex_field): New
 	function, parses a byte with strtoul base 0 so a "0x" prefix
 	selects hex.

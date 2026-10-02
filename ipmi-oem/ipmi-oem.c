@@ -590,7 +590,7 @@ struct ipmi_oem_command oem_intelnm[] =
     },
     {
       "set-node-manager-policy-suspend-periods",
-      "domainid=platform|cpu|memory|highpowerio policyid=num suspendperiodstartX=time suspendperiodstopX=time suspendperiodrepeatX=monday|tuesday|wednesday|thursday|friday|saturday|sunday",
+      "domainid=platform|cpu|memory|highpowerio policyid=num [suspendperiodstartX=time] [suspendperiodstopX=time] [suspendperiodrepeatX=monday|tuesday|wednesday|thursday|friday|saturday|sunday]",
       2,
       IPMI_OEM_COMMAND_FLAGS_OPTIONS_COUNT_VARIABLE,
       ipmi_oem_intelnm_set_node_manager_policy_suspend_periods
