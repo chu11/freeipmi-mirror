@@ -1,5 +1,43 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/api/ipmi-api.h (ipmi_ctx_set_target),
+	libfreeipmi/include/freeipmi/cmds/ipmi-messaging-support-cmds.h
+	(fill_cmd_close_session),
+	libfreeipmi/include/freeipmi/cmds/ipmi-sensor-cmds.h
+	(fill_cmd_re_arm_sensor_events),
+	libfreeipmi/include/freeipmi/cmds/ipmi-oem-intel-node-manager-cmds.h
+	(fill_cmd_oem_intel_node_manager_set_node_manager_policy_alert_thresholds)
+	(fill_cmd_oem_intel_node_manager_set_node_manager_policy_suspend_periods),
+	libfreeipmi/include/freeipmi/cmds/ipmi-firmware-firewall-command-discovery-cmds.h
+	(fill_cmd_set_command_sub_function_enables)
+	(fill_cmd_set_command_sub_function_enables_defining_body_code)
+	(fill_cmd_set_command_sub_function_enables_oem_iana),
+	libfreeipmi/include/freeipmi/cmds/ipmi-lan-cmds.h
+	(fill_cmd_set_lan_configuration_parameters_ipv6_static_addresses)
+	(fill_cmd_set_lan_configuration_parameters_ipv6_static_router_1_ip_address)
+	(fill_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_value)
+	(fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_ip_address)
+	(fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_value),
+	libfreeipmi/include/freeipmi/api/ipmi-messaging-support-cmds-api.h,
+	libfreeipmi/include/freeipmi/api/ipmi-sensor-cmds-api.h,
+	libfreeipmi/include/freeipmi/api/ipmi-oem-intel-node-manager-cmds-api.h,
+	libfreeipmi/include/freeipmi/api/ipmi-firmware-firewall-command-discovery-cmds-api.h,
+	libfreeipmi/include/freeipmi/api/ipmi-lan-cmds-api.h: Take the
+	optional and array input pointer parameters as const, like the
+	other fill and ipmi_cmd functions do.
+	* libfreeipmi/api/ipmi-api.c, libfreeipmi/cmds/ipmi-messaging-support-cmds.c,
+	libfreeipmi/cmds/ipmi-sensor-cmds.c,
+	libfreeipmi/cmds/ipmi-oem-intel-node-manager-cmds.c,
+	libfreeipmi/cmds/ipmi-firmware-firewall-command-discovery-cmds.c,
+	libfreeipmi/cmds/ipmi-lan-cmds.c,
+	libfreeipmi/api/ipmi-messaging-support-cmds-api.c,
+	libfreeipmi/api/ipmi-sensor-cmds-api.c,
+	libfreeipmi/api/ipmi-oem-intel-node-manager-cmds-api.c,
+	libfreeipmi/api/ipmi-firmware-firewall-command-discovery-cmds-api.c,
+	libfreeipmi/api/ipmi-lan-cmds-api.c: Update the definitions to match.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/api/ipmi-api.h: Say that
 	IPMI_FLAGS_NOSESSION is accepted by ipmi_ctx_open_outofband() only
 	and rejected by ipmi_ctx_open_outofband_2_0(), rather than "for

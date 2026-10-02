@@ -336,7 +336,7 @@ int ipmi_cmd_set_session_privilege_level (ipmi_ctx_t ctx,
 
 int ipmi_cmd_close_session (ipmi_ctx_t ctx,
                             uint32_t session_id,
-                            uint8_t *session_handle,
+                            const uint8_t *session_handle,
                             fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_channel_access (ipmi_ctx_t ctx,

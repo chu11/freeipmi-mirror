@@ -326,8 +326,8 @@ int ipmi_ctx_find_inband (ipmi_ctx_t ctx,
  * Can only be called after device opened.
  */
 int ipmi_ctx_set_target (ipmi_ctx_t ctx,
-                         uint8_t *channel_number,
-                         uint8_t *rs_addr);
+                         const uint8_t *channel_number,
+                         const uint8_t *rs_addr);
 
 int ipmi_ctx_get_target (ipmi_ctx_t ctx,
                          uint8_t *channel_number,

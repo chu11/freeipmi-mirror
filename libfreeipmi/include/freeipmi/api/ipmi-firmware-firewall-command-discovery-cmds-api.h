@@ -95,7 +95,7 @@ int ipmi_cmd_set_command_sub_function_enables (ipmi_ctx_t ctx,
                                                uint8_t lun,
                                                uint8_t command,
                                                uint32_t sub_function_enables1,
-                                               uint32_t *sub_function_enables2,
+                                               const uint32_t *sub_function_enables2,
                                                fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_command_sub_function_enables_defining_body_code (ipmi_ctx_t ctx,
@@ -105,7 +105,7 @@ int ipmi_cmd_set_command_sub_function_enables_defining_body_code (ipmi_ctx_t ctx
                                                                   uint8_t command,
                                                                   uint8_t defining_body_code,
                                                                   uint32_t sub_function_enables1,
-                                                                  uint32_t *sub_function_enables2,
+                                                                  const uint32_t *sub_function_enables2,
                                                                   fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_command_sub_function_enables_oem_iana (ipmi_ctx_t ctx,
@@ -115,7 +115,7 @@ int ipmi_cmd_set_command_sub_function_enables_oem_iana (ipmi_ctx_t ctx,
                                                         uint8_t command,
                                                         uint32_t oem_iana,
                                                         uint32_t sub_function_enables1,
-                                                        uint32_t *sub_function_enables2,
+                                                        const uint32_t *sub_function_enables2,
                                                         fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_command_sub_function_enables (ipmi_ctx_t ctx,

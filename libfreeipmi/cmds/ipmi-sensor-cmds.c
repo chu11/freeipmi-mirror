@@ -1508,8 +1508,8 @@ fill_cmd_get_sensor_event_enable (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
 int
 fill_cmd_re_arm_sensor_events (uint8_t sensor_number,
                                uint8_t re_arm_all_event_status_from_this_sensor,
-                               uint16_t *re_arm_assertion_event,
-                               uint16_t *re_arm_deassertion_event,
+                               const uint16_t *re_arm_assertion_event,
+                               const uint16_t *re_arm_deassertion_event,
                                fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_SENSOR_RE_ARM_ALL_EVENT_STATUS_VALID (re_arm_all_event_status_from_this_sensor)

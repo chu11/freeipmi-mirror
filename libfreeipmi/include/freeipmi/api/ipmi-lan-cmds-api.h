@@ -233,7 +233,7 @@ int ipmi_cmd_set_lan_configuration_parameters_ipv6_static_addresses (ipmi_ctx_t 
                                                                      uint8_t set_selector,
                                                                      uint8_t source,
                                                                      uint8_t enable,
-                                                                     uint8_t address[IPMI_IPV6_BYTES],
+                                                                     const uint8_t address[IPMI_IPV6_BYTES],
                                                                      uint8_t address_prefix_length,
                                                                      uint8_t address_status,
                                                                      fiid_obj_t obj_cmd_rs);
@@ -246,7 +246,7 @@ int ipmi_cmd_set_lan_configuration_parameters_ipv6_router_address_configuration_
 
 int ipmi_cmd_set_lan_configuration_parameters_ipv6_static_router_1_ip_address (ipmi_ctx_t ctx,
                                                                                uint8_t channel_number,
-                                                                               uint8_t router_ip_address[IPMI_IPV6_BYTES],
+                                                                               const uint8_t router_ip_address[IPMI_IPV6_BYTES],
                                                                                fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_lan_configuration_parameters_ipv6_static_router_1_mac_address (ipmi_ctx_t ctx,
@@ -261,12 +261,12 @@ int ipmi_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_length
 
 int ipmi_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_value (ipmi_ctx_t ctx,
                                                                                  uint8_t channel_number,
-                                                                                 uint8_t prefix_value[IPMI_IPV6_BYTES],
+                                                                                 const uint8_t prefix_value[IPMI_IPV6_BYTES],
                                                                                  fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_lan_configuration_parameters_ipv6_static_router_2_ip_address (ipmi_ctx_t ctx,
                                                                                uint8_t channel_number,
-                                                                               uint8_t router_ip_address[IPMI_IPV6_BYTES],
+                                                                               const uint8_t router_ip_address[IPMI_IPV6_BYTES],
                                                                                fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_set_lan_configuration_parameters_ipv6_static_router_2_mac_address (ipmi_ctx_t ctx,
@@ -281,7 +281,7 @@ int ipmi_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_length
 
 int ipmi_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_value (ipmi_ctx_t ctx,
                                                                                  uint8_t channel_number,
-                                                                                 uint8_t prefix_value[IPMI_IPV6_BYTES],
+                                                                                 const uint8_t prefix_value[IPMI_IPV6_BYTES],
                                                                                  fiid_obj_t obj_cmd_rs);
 
 int ipmi_cmd_get_lan_configuration_parameters (ipmi_ctx_t ctx,

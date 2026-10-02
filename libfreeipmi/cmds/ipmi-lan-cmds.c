@@ -2308,7 +2308,7 @@ fill_cmd_set_lan_configuration_parameters_ipv6_static_addresses (uint8_t channel
                                                                  uint8_t set_selector,
                                                                  uint8_t source,
                                                                  uint8_t enable,
-                                                                 uint8_t address[IPMI_IPV6_BYTES],
+                                                                 const uint8_t address[IPMI_IPV6_BYTES],
                                                                  uint8_t address_prefix_length,
                                                                  uint8_t address_status,
                                                                  fiid_obj_t obj_cmd_rq)
@@ -2382,7 +2382,7 @@ fill_cmd_set_lan_configuration_parameters_ipv6_router_address_configuration_cont
 static int
 _fill_router_ip_address (uint8_t parameter_selector,
                          uint8_t channel_number,
-                         uint8_t router_ip_address[IPMI_IPV6_BYTES],
+                         const uint8_t router_ip_address[IPMI_IPV6_BYTES],
                          fiid_obj_t obj_cmd_rq)
 {
   assert ((parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_1_IP_ADDRESS
@@ -2402,7 +2402,7 @@ _fill_router_ip_address (uint8_t parameter_selector,
 
 int
 fill_cmd_set_lan_configuration_parameters_ipv6_static_router_1_ip_address (uint8_t channel_number,
-                                                                           uint8_t router_ip_address[IPMI_IPV6_BYTES],
+                                                                           const uint8_t router_ip_address[IPMI_IPV6_BYTES],
                                                                            fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
@@ -2518,7 +2518,7 @@ fill_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_length (ui
 static int
 _fill_router_prefix_value (uint8_t parameter_selector,
                            uint8_t channel_number,
-                           uint8_t prefix_value[IPMI_IPV6_BYTES],
+                           const uint8_t prefix_value[IPMI_IPV6_BYTES],
                            fiid_obj_t obj_cmd_rq)
 {
   assert ((parameter_selector == IPMI_LAN_CONFIGURATION_PARAMETER_IPV6_STATIC_ROUTER_1_PREFIX_VALUE
@@ -2538,7 +2538,7 @@ _fill_router_prefix_value (uint8_t parameter_selector,
 
 int
 fill_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_value (uint8_t channel_number,
-                                                                             uint8_t prefix_value[IPMI_IPV6_BYTES],
+                                                                             const uint8_t prefix_value[IPMI_IPV6_BYTES],
                                                                              fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
@@ -2562,7 +2562,7 @@ fill_cmd_set_lan_configuration_parameters_ipv6_static_router_1_prefix_value (uin
 
 int
 fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_ip_address (uint8_t channel_number,
-                                                                           uint8_t router_ip_address[IPMI_IPV6_BYTES],
+                                                                           const uint8_t router_ip_address[IPMI_IPV6_BYTES],
                                                                            fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
@@ -2635,7 +2635,7 @@ fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_length (ui
 
 int
 fill_cmd_set_lan_configuration_parameters_ipv6_static_router_2_prefix_value (uint8_t channel_number,
-                                                                             uint8_t prefix_value[IPMI_IPV6_BYTES],
+                                                                             const uint8_t prefix_value[IPMI_IPV6_BYTES],
                                                                              fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHANNEL_NUMBER_VALID (channel_number)
