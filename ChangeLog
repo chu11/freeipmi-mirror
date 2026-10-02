@@ -1,5 +1,14 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/interface/ipmi-rmcpplus-interface.h
+	(fill_rmcpplus_payload): Name the output object obj_rmcpplus_payload
+	rather than obj_cmd_rq; it is the tmpl_rmcpplus_payload object, not
+	a command request.
+	* libfreeipmi/interface/ipmi-rmcpplus-interface.c
+	(fill_rmcpplus_payload): Likewise.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/record-format/oem/ipmi-sdr-oem-intel-record-format.h:
 	Drop the "see freeipmi/templates/" comment; this header declares
 	no templates, only the QSSC-S4R thermal profile byte offsets and

@@ -305,39 +305,39 @@ fill_rmcpplus_payload (const void *confidentiality_header,
                        unsigned int payload_data_len,
                        const void *confidentiality_trailer,
                        unsigned int confidentiality_trailer_len,
-                       fiid_obj_t obj_cmd_rq)
+                       fiid_obj_t obj_rmcpplus_payload)
 {
   if ((confidentiality_header && confidentiality_header_len > IPMI_MAX_CONFIDENTIALITY_HEADER_LENGTH)
       || (payload_data && payload_data_len > IPMI_MAX_PAYLOAD_LENGTH)
       || (confidentiality_trailer && confidentiality_trailer_len > IPMI_MAX_CONFIDENTIALITY_TRAILER_LENGTH)
-      || !fiid_obj_valid (obj_cmd_rq))
+      || !fiid_obj_valid (obj_rmcpplus_payload))
     {
       SET_ERRNO (EINVAL);
       return (-1);
     }
 
-  if (FIID_OBJ_TEMPLATE_COMPARE (obj_cmd_rq, tmpl_rmcpplus_payload) < 0)
+  if (FIID_OBJ_TEMPLATE_COMPARE (obj_rmcpplus_payload, tmpl_rmcpplus_payload) < 0)
     {
       ERRNO_TRACE (errno);
       return (-1);
     }
 
-  FILL_FIID_OBJ_CLEAR (obj_cmd_rq);
+  FILL_FIID_OBJ_CLEAR (obj_rmcpplus_payload);
 
   if (confidentiality_header)
-    FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
+    FILL_FIID_OBJ_SET_DATA (obj_rmcpplus_payload,
                             "confidentiality_header",
                             confidentiality_header,
                             confidentiality_header_len);
 
   if (payload_data)
-    FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
+    FILL_FIID_OBJ_SET_DATA (obj_rmcpplus_payload,
                             "payload_data",
                             payload_data,
                             payload_data_len);
 
   if (confidentiality_trailer)
-    FILL_FIID_OBJ_SET_DATA (obj_cmd_rq,
+    FILL_FIID_OBJ_SET_DATA (obj_rmcpplus_payload,
                             "confidentiality_trailer",
                             confidentiality_trailer,
                             confidentiality_trailer_len);

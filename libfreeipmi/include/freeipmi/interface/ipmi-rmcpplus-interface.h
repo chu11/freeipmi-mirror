@@ -252,7 +252,7 @@ int fill_rmcpplus_payload (const void *confidentiality_header,
                            unsigned int payload_data_len,
                            const void *confidentiality_trailer,
                            unsigned int confidentiality_trailer_len,
-                           fiid_obj_t obj_cmd_rq);
+                           fiid_obj_t obj_rmcpplus_payload);
 
 int fill_rmcpplus_open_session (uint8_t message_tag,
                                 uint8_t requested_maximum_privilege_level,
