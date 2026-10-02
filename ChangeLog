@@ -1,5 +1,13 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* configure.ac: Drop the trailing slash from FREEIPMI_SYSCONFDIR.
+	The config file default macros append "/<file>" to it, so every
+	default configuration file path was built, documented in the man
+	pages, and printed in --help with a doubled slash
+	(e.g. /etc/freeipmi//freeipmi.conf).
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Mark activecoresconfig as required for the
 	Intel Node Manager set-turbo-synchronization-ratio command and drop
 	the claim that it defaults to all cores; the command fails without

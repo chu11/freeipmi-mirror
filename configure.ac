@@ -718,7 +718,7 @@ ACX_PTHREAD([], AC_MSG_ERROR([Posix threads required to build libipmiconsole]))
 
 dnl Misc checks and build options
 
-FREEIPMI_SYSCONFDIR=${sysconfdir}/freeipmi/
+FREEIPMI_SYSCONFDIR=${sysconfdir}/freeipmi
 AC_SUBST(FREEIPMI_SYSCONFDIR)
 
 AC_FREEIPMI_CONFIG_FILE
