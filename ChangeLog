@@ -1,5 +1,11 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmipower.8.pre.in: Stop saying --driver-type overrides an
+	auto selection; ipmipower does no driver probing and always
+	defaults to the IPMI 1.5 LAN driver.  State the default.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* ipmiconsole/ipmiconsole.c (main): Call ipmi_disable_coredump()
 	before parsing arguments, as ipmipower does.  The man page said
 	core dumps were only enabled in debug builds, but nothing ever
