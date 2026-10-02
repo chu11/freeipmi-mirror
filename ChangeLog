@@ -1,5 +1,13 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiconsole.8.pre.in: Include cipher suite id 17 among the
+	cipher suites that encrypt console payloads and 15 and 16 among
+	those that do not; the SHA256 cipher suites have been supported
+	since the IPMI_CIPHER_SUITE_ID_SUPPORTED update but the SOL
+	encryption guidance still listed only 0-3, 6-8 and 11-12.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* configure.ac: Drop the trailing slash from FREEIPMI_SYSCONFDIR.
 	The config file default macros append "/<file>" to it, so every
 	default configuration file path was built, documented in the man

@@ -81,8 +81,8 @@ integrity algorithm identifies the algorithm to use for session packet
 signatures, and the confidentiality algorithm identifies the algorithm
 to use for payload encryption. Defaults to cipher suite ID 3 if not
 specified.  The user should be aware that only cipher suite ids 3, 8,
-and 12 encrypt console payloads.  Console information will be sent in
-the clear if an alternate cipher suite id is selected.  The following
+12, and 17 encrypt console payloads.  Console information will be sent
+in the clear if an alternate cipher suite id is selected.  The following
 cipher suite ids are currently supported:
 #include <@top_srcdir@/man/manpage-common-cipher-suite-id-details.man>
 #include <@top_srcdir@/man/manpage-common-privilege-level-admin.man>
@@ -230,14 +230,15 @@ all BMCs support the ability to steal away a SOL session.
 session.  You may wish to try and steal the session back by reconnecting.
 .LP
 "SOL requires encryption" - SOL requires a cipher suite id that
-includes encryption.  Please try to use cipher suite id 3, 8, or 12.
+includes encryption.  Please try to use cipher suite id 3, 8, 12, or
+17.
 It may also be possible the encryption requirements are not configured
 correctly on the remote BMC.
 .LP
 "SOL requires no encryption" - SOL requires a cipher suite id that
 does not use encryption.  Please try to use cipher suite id 0, 1, 2,
-6, 7, or 11.  It may also be possible the encryption requirements are
-not configured correctly on the remote BMC.
+6, 7, 11, 15, or 16.  It may also be possible the encryption
+requirements are not configured correctly on the remote BMC.
 .LP
 "BMC Implementation" - The BMC on the remote machine has a severe
 problem in its implementation.  Please see the WORKAROUNDS section
