@@ -1,5 +1,11 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* man/bmc-device.8.pre.in: Document that --read-fru cannot be used
+	with multiple hosts and that --write-fru drops its --verbose
+	progress output when multiple hosts are specified.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* man/bmc-watchdog.8.pre.in: Say that errors go to syslog only in
 	daemon mode (to standard error as well with --debug, nowhere with
 	--no-logging); the set, get, reset, start, stop and clear commands
