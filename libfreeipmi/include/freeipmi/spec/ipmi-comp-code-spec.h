@@ -218,6 +218,12 @@ extern "C" {
 #define IPMI_COMP_CODE_SEND_MESSAGE_NAK_ON_WRITE_STR \
   "NAK on Write"
 
+/* IPMI_CMD_READ_EVENT_MESSAGE_BUFFER */
+
+#define IPMI_COMP_CODE_READ_EVENT_MESSAGE_BUFFER_DATA_NOT_AVAILABLE                                                   0x80
+#define IPMI_COMP_CODE_READ_EVENT_MESSAGE_BUFFER_DATA_NOT_AVAILABLE_STR \
+  "data not available (queue/buffer empty)"
+
 /* IPMI_CMD_MASTER_WRITE_READ */
 
 #define IPMI_COMP_CODE_MASTER_WRITE_READ_LOST_ARBITRATION                                                             0x81
@@ -324,6 +330,10 @@ extern "C" {
 #define IPMI_COMP_CODE_CLOSE_SESSION_INVALID_SESSION_ID_IN_REQUEST                                                    0x87
 #define IPMI_COMP_CODE_CLOSE_SESSION_INVALID_SESSION_ID_IN_REQUEST_STR \
   "Invalid session ID in request"
+
+#define IPMI_COMP_CODE_CLOSE_SESSION_INVALID_SESSION_HANDLE_IN_REQUEST                                                0x88
+#define IPMI_COMP_CODE_CLOSE_SESSION_INVALID_SESSION_HANDLE_IN_REQUEST_STR \
+  "Invalid session handle in request"
 
 /* IPMI_CMD_SET_CHANNEL_ACCESS */
 #define IPMI_COMP_CODE_SET_CHANNEL_ACCESS_SET_NOT_SUPPORTED_ON_SELECTED_CHANNEL                                       0x82
@@ -514,6 +524,10 @@ extern "C" {
 #define IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE_STR \
   "Alert Immediate rejected due to IPMI messaging session active on this channel"
 
+#define IPMI_COMP_CODE_ALERT_PLATFORM_EVENT_PARAMETERS_NOT_SUPPORTED                                                  0x83
+#define IPMI_COMP_CODE_ALERT_PLATFORM_EVENT_PARAMETERS_NOT_SUPPORTED_STR \
+  "Platform Event Parameters (4:11) not supported"
+
 /*
  * Sensor Device Commands
  */
@@ -561,13 +575,50 @@ extern "C" {
  * SDR Device Commands
  */
 
+/* IPMI_CMD_GET_DEVICE_SDR */
+#define IPMI_COMP_CODE_GET_DEVICE_SDR_RECORD_CHANGED                                                                  0x80
+#define IPMI_COMP_CODE_GET_DEVICE_SDR_RECORD_CHANGED_STR \
+  "Record changed.  This status is returned if any of the record " \
+  "contents have been altered since the last time the Requester issued " \
+  "the request with 00h for the 'Offset into SDR' field."
+
+/* IPMI_CMD_PARTIAL_ADD_SDR */
+#define IPMI_COMP_CODE_PARTIAL_ADD_SDR_RECORD_REJECTED                                                                0x80
+#define IPMI_COMP_CODE_PARTIAL_ADD_SDR_RECORD_REJECTED_STR \
+  "Record rejected due to mismatch between record length in header " \
+  "data and number of bytes written."
+
 /*
  * SEL Device Commands
  */
 
+/* IPMI_CMD_RESERVE_SEL */
+#define IPMI_COMP_CODE_RESERVE_SEL_SEL_ERASE_IN_PROGRESS                                                              0x81
+#define IPMI_COMP_CODE_RESERVE_SEL_SEL_ERASE_IN_PROGRESS_STR \
+  "cannot execute command, SEL erase in progress"
+
 /* IPMI_CMD_GET_SEL_ENTRY */
 #define IPMI_COMP_CODE_GET_SEL_ENTRY_SEL_ERASE_IN_PROGRESS                                                            0x81
 #define IPMI_COMP_CODE_GET_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR \
+  "cannot execute command, SEL erase in progress"
+
+/* IPMI_CMD_ADD_SEL_ENTRY */
+#define IPMI_COMP_CODE_ADD_SEL_ENTRY_SEL_OPERATION_NOT_SUPPORTED                                                      0x80
+#define IPMI_COMP_CODE_ADD_SEL_ENTRY_SEL_OPERATION_NOT_SUPPORTED_STR \
+  "Operation not supported for this Record Type"
+
+#define IPMI_COMP_CODE_ADD_SEL_ENTRY_SEL_ERASE_IN_PROGRESS                                                            0x81
+#define IPMI_COMP_CODE_ADD_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR \
+  "cannot execute command, SEL erase in progress"
+
+/* IPMI_CMD_PARTIAL_ADD_SEL_ENTRY */
+#define IPMI_COMP_CODE_PARTIAL_ADD_SEL_ENTRY_RECORD_REJECTED                                                          0x80
+#define IPMI_COMP_CODE_PARTIAL_ADD_SEL_ENTRY_RECORD_REJECTED_STR \
+  "Record rejected due to mismatch between record length in header " \
+  "data and number of bytes written."
+
+#define IPMI_COMP_CODE_PARTIAL_ADD_SEL_ENTRY_SEL_ERASE_IN_PROGRESS                                                    0x81
+#define IPMI_COMP_CODE_PARTIAL_ADD_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR \
   "cannot execute command, SEL erase in progress"
 
 /* IPMI_CMD_DELETE_SEL_ENTRY */

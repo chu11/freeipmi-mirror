@@ -230,6 +230,15 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
 
                 case IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE:
                   SNPRINTF_RETURN (IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE_STR);
+                case IPMI_COMP_CODE_ALERT_PLATFORM_EVENT_PARAMETERS_NOT_SUPPORTED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_ALERT_PLATFORM_EVENT_PARAMETERS_NOT_SUPPORTED_STR);
+                }
+              break;
+            case IPMI_CMD_GET_DEVICE_SDR:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_GET_DEVICE_SDR_RECORD_CHANGED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_GET_DEVICE_SDR_RECORD_CHANGED_STR);
                 }
               break;
             case IPMI_CMD_SET_SENSOR_READING_AND_EVENT_STATUS:
@@ -297,6 +306,13 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_SEND_MESSAGE_NAK_ON_WRITE_STR);
                 }
               break;
+            case IPMI_CMD_READ_EVENT_MESSAGE_BUFFER:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_READ_EVENT_MESSAGE_BUFFER_DATA_NOT_AVAILABLE:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_READ_EVENT_MESSAGE_BUFFER_DATA_NOT_AVAILABLE_STR);
+                }
+              break;
             case IPMI_CMD_SET_SYSTEM_INFO_PARAMETERS:
               switch (comp_code)
                 {
@@ -359,6 +375,8 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                 {
                 case IPMI_COMP_CODE_CLOSE_SESSION_INVALID_SESSION_ID_IN_REQUEST:
                   SNPRINTF_RETURN (IPMI_COMP_CODE_CLOSE_SESSION_INVALID_SESSION_ID_IN_REQUEST_STR);
+                case IPMI_COMP_CODE_CLOSE_SESSION_INVALID_SESSION_HANDLE_IN_REQUEST:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_CLOSE_SESSION_INVALID_SESSION_HANDLE_IN_REQUEST_STR);
                 }
               break;
             case IPMI_CMD_SET_CHANNEL_ACCESS:
@@ -492,11 +510,43 @@ ipmi_completion_code_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_WRITE_FRU_DATA_FRU_DEVICE_BUSY_STR);
                 }
               break;
+            case IPMI_CMD_PARTIAL_ADD_SDR:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_PARTIAL_ADD_SDR_RECORD_REJECTED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_PARTIAL_ADD_SDR_RECORD_REJECTED_STR);
+                }
+              break;
+            case IPMI_CMD_RESERVE_SEL:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_RESERVE_SEL_SEL_ERASE_IN_PROGRESS:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_RESERVE_SEL_SEL_ERASE_IN_PROGRESS_STR);
+                }
+              break;
             case IPMI_CMD_GET_SEL_ENTRY:
               switch (comp_code)
                 {
                 case IPMI_COMP_CODE_GET_SEL_ENTRY_SEL_ERASE_IN_PROGRESS:
                   SNPRINTF_RETURN (IPMI_COMP_CODE_GET_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR);
+                }
+              break;
+            case IPMI_CMD_ADD_SEL_ENTRY:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_ADD_SEL_ENTRY_SEL_OPERATION_NOT_SUPPORTED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_ADD_SEL_ENTRY_SEL_OPERATION_NOT_SUPPORTED_STR);
+                case IPMI_COMP_CODE_ADD_SEL_ENTRY_SEL_ERASE_IN_PROGRESS:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_ADD_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR);
+                }
+              break;
+            case IPMI_CMD_PARTIAL_ADD_SEL_ENTRY:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_PARTIAL_ADD_SEL_ENTRY_RECORD_REJECTED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_PARTIAL_ADD_SEL_ENTRY_RECORD_REJECTED_STR);
+                case IPMI_COMP_CODE_PARTIAL_ADD_SEL_ENTRY_SEL_ERASE_IN_PROGRESS:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_PARTIAL_ADD_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR);
                 }
               break;
             case IPMI_CMD_DELETE_SEL_ENTRY:
