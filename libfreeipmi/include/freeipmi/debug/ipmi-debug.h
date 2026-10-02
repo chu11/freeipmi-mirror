@@ -26,6 +26,10 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid/fiid.h>
 
+/* Single variable length field, "unexpected_data", of up to 65536
+ * bytes.  The dump functions below use it to hold and print whatever
+ * trailing bytes of a packet did not fit the expected templates.
+ */
 extern fiid_template_t tmpl_unexpected_data;
 
 int ipmi_obj_dump (int fd,
