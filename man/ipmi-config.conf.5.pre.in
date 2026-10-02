@@ -77,7 +77,7 @@ Future versions of this manpage will try to include more information.
      	Volatile_Enable_Per_Message_Auth             Yes
      	## Possible values: Yes/No
      	Volatile_Enable_Pef_Alerting                 No
-     	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+     	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary
      	Volatile_Channel_Privilege_Limit             Administrator
      	## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
      	Non_Volatile_Access_Mode                     Always_Available
@@ -87,7 +87,7 @@ Future versions of this manpage will try to include more information.
      	Non_Volatile_Enable_Per_Message_Auth         Yes
      	## Possible values: Yes/No
      	Non_Volatile_Enable_Pef_Alerting             No
-     	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+     	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary
      	Non_Volatile_Channel_Privilege_Limit         Administrator
      EndSection
      Section Lan_Conf

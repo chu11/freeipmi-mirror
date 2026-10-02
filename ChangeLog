@@ -1,5 +1,13 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-config.conf.5.pre.in: Drop No_Access from the possible
+	values shown for Volatile_Channel_Privilege_Limit and
+	Non_Volatile_Channel_Privilege_Limit in the example; the channel
+	privilege limit does not accept it, only the per-user
+	Lan_Privilege_Limit does.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-oem.8.pre.in: Mark the suspend period keys of the Intel
 	Node Manager set-node-manager-policy-suspend-periods command as
 	optional; only domainid and policyid are required, X ranges 1-5,
