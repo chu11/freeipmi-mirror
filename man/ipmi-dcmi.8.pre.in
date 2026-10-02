@@ -120,8 +120,11 @@ the
 and
 \fB\-\-statistics\-sampling\-period\fR
 options
-listed below.  If one or more options below are not specified, current
-configuration will be utilized.
+listed below.  At least one of them must be specified, and they may
+not be specified without this option.  If one or more of them are not
+specified, the current configuration will be utilized.  If the BMC
+reports that no power limit has been set yet, all four must be
+specified.
 .TP
 \fB\-\-exception\-actions\fR=\fIACTION\fR
 Specify exception action for set power limit configuration.  The

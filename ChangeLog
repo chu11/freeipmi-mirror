@@ -1,5 +1,12 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-dcmi.8.pre.in: Document that --set-power-limit requires
+	at least one of its four sub-options, that they cannot be given
+	without it, and that all four are required when the BMC reports
+	no power limit has been set yet.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* man/bmc-device.8.pre.in: Document that --read-fru cannot be used
 	with multiple hosts and that --write-fru drops its --verbose
 	progress output when multiple hosts are specified.
