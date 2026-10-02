@@ -679,10 +679,11 @@ This OEM command will set the current alert receiver.  By default,
 this command will attempt to register an alert (identical to
 \fIregister=yes\fR).  When registering an alert receiver the
 \fIchannelnumber\fR, \fIalertstringselector\fR, and
-\fIsendalertstring\fR options must be specified.  The
-\fIslaveaddress\fR or \fIdestinationselector\fR must also be
-specified, depending on the channel number specified.  If
-\fIregister=no\fR, most of these options are not required.
+\fIsendalertstring\fR options must be specified.  Exactly one of
+\fIslaveaddress\fR (for IPMB channels) or \fIdestinationselector\fR
+(for LAN channels) must also be specified; it selects whether an IPMB
+or a LAN alert destination is configured.  If \fIregister=no\fR, no
+other options are required.
 Appropriate channel number input can be determined via
 .B bmc-info(8).
 Destination selector and alert string selector information can be

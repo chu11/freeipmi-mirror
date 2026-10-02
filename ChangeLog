@@ -1,5 +1,13 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: For the Intel Node Manager
+	set-node-manager-alert-destination command, say that exactly one of
+	slaveaddress or destinationselector must be given and that it
+	selects the IPMB or LAN form of the request, and that register=no
+	requires no other options.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-dcmi.8.pre.in: Document that --set-power-limit requires
 	at least one of its four sub-options, that they cannot be given
 	without it, and that all four are required when the BMC reports
