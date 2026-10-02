@@ -1,3 +1,11 @@
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/api/ipmi-api.c (ipmi_ctx_open_outofband): Accept
+	IPMI_FLAGS_IGNORE_AUTHENTICATION_CODE in the flags argument.  The
+	header documents it as an IPMI 1.5 flag, but the open call rejected
+	it with IPMI_ERR_PARAMETERS and it could only be set afterwards with
+	ipmi_ctx_set_flags().
+
 2026-10-01 Albert Chu <chu11@llnl.gov>
 
 	* man/manpage-common-cipher-suite-id-main.man,

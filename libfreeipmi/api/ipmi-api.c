@@ -489,7 +489,8 @@ ipmi_ctx_open_outofband (ipmi_ctx_t ctx,
   unsigned int flags_mask = (IPMI_FLAGS_NOSESSION
                              | IPMI_FLAGS_DEBUG_DUMP
                              | IPMI_FLAGS_NO_VALID_CHECK
-                             | IPMI_FLAGS_NO_LEGAL_CHECK);
+                             | IPMI_FLAGS_NO_LEGAL_CHECK
+                             | IPMI_FLAGS_IGNORE_AUTHENTICATION_CODE);
 
   if (!ctx || ctx->magic != IPMI_CTX_MAGIC)
     {
