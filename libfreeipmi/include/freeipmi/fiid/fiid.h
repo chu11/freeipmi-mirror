@@ -111,6 +111,14 @@ typedef enum fiid_err fiid_err_t;
  * fields not being set.  Typically used in response packets to
  * indicate the few fields necessary to be set for a payload to be
  * accepted.
+ *
+ * SECURE_MEMSET_ON_CLEAR
+ *
+ * The field holds sensitive data (e.g. a password or key).  When the
+ * field is cleared with fiid_obj_clear_field(), or the object is
+ * cleared with fiid_obj_clear() or destroyed with fiid_obj_destroy(),
+ * the bytes are wiped with a memset that the compiler cannot optimize
+ * away.  Scratch copies made by fiid_obj_copy() are wiped the same way.
  */
 
 #define FIID_FIELD_REQUIRED         0x00000001

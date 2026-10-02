@@ -1,5 +1,11 @@
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/fiid/fiid.h: Document
+	FIID_FIELD_SECURE_MEMSET_ON_CLEAR in the field flags comment block
+	alongside the other flags.
+
+2026-10-02 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-comp-code-spec.h: Add the
 	command specific completion codes that were missing from the IPMI
 	2.0 command tables: Read Event Message Buffer 80h, Close Session
