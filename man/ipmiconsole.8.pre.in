@@ -42,7 +42,7 @@ The FreeIPMI tool
 .B ipmi-config(8)
 may be used to do this configuration.
 .LP
-Often (although not always), console redirection must be also be
+Often (although not always), console redirection must also be
 configured properly in the BIOS and/or operating system.  Both must be
 configured to redirect console traffic out the appropriate COM port.
 Please see your motherboard and OS documentation for instructions on
@@ -137,7 +137,7 @@ will cause a baud rate change, which may lock up the terminal.
 This option is identical to \fB\-\-serial\-keepalive\fR except that
 SOL packets will contain no NUL character data.  On some motherboards,
 this may be sufficient to deal with a hanging IPMI session without the
-risk of regularly sending a NUL character byte may have.  However,
+risk that regularly sending a NUL character byte may have.  However,
 some systems may not ACK a SOL packet without character data in it,
 meaning these keepalive packets do nothing.
 .TP
@@ -220,7 +220,7 @@ configured on the remote BMC.
 .LP
 "SOL in use" - SOL is already in use on the remote BMC.  If you do not
 specify the
-.I --dont-steal
+\fB\-\-dont\-steal\fR
 option,
 .B ipmiconsole
 will attempt to steal the SOL session away from the other session.  Not

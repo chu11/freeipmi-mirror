@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiconsole.8.pre.in: Fix "must be also be", the garbled
+	"without the risk of ... may have" sentence, and escape the
+	hyphens in the --dont-steal cross reference.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmidetect.8.pre.in, man/ipmidetectd.8.pre.in: Document the
 	-?/--help and --usage options argp provides, as every other tool
 	page does.
