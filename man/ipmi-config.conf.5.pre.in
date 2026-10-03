@@ -1,7 +1,6 @@
 .TH IPMI-CONFIG.CONF 5 "@ISODATE@" "ipmi-config @PACKAGE_VERSION@" "Configuration"
 .SH "NAME"
 ipmi-config.conf \- IPMI configuration file details
-.br
 .SH "DESCRIPTION"
 Before many IPMI tools can be used over a network, a machine's
 Baseboard Management Controller (BMC) must be configured.  The
@@ -317,12 +316,12 @@ fields.  The respective MAC addresses for the IP addresses are
 configured under \fIMac_Address\fR, \fIDefault_Gateway_Mac_Address\fR,
 and \fIBackup_Gateway_Mac_Address\fR.
 .LP
-It is not required to setup the BMC \fIIP_Address\fR to be the same
+It is not required to set up the BMC \fIIP_Address\fR to be the same
 \fIIP_Address\fR used by your operating system for that network
 interface.  However, if you choose to use a different address, an
-alternate ARP configuration may need to be setup.
+alternate ARP configuration may need to be set up.
 .LP
-To instead setup your BMC network information via DHCP, the field
+To instead set up your BMC network information via DHCP, the field
 \fIIP_Address_Source\fR should be configured with "Use_DHCP".
 .LP
 It is recommended that static IP addresses be configured for address
@@ -462,7 +461,7 @@ to set cipher suite ID 3 to a privilege level and disable all
 remaining cipher suite IDs.
 .LP
 The above example configuration has decided to allow any user with
-"Administrator" privileges use any Cipher Suite algorithm suite which
+"Administrator" privileges to use any cipher suite which
 requires an authentication, integrity, and confidentiality algorithm.
 Typically, the maximum privilege level configured to a username should
 be set for at least one cipher suite ID.  Typically, this is the
@@ -474,7 +473,7 @@ cipher suite IDs available on your system may vary.
 .SH "Section SOL_Conf"
 
 This section is for setting up Serial-Over-Lan (SOL) and will only be
-available for configuration on those machines.  SOL can be enabled
+available for configuration on IPMI 2.0 machines.  SOL can be enabled
 with the \fIEnable_SOL\fR field.  The minimum privilege level required
 for connecting with SOL is specified by \fISOL_Privilege_Level\fR.
 This should be set to the maximum privilege level configured to a

@@ -1,5 +1,12 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-config.conf.5.pre.in: Fix prose slips: a stray .br after
+	the NAME line, "setup" used as a verb, "privileges use any Cipher
+	Suite algorithm suite", and "on those machines" with no
+	antecedent in the SOL_Conf section.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.8.pre.in: Fix prose slips: a stray comma after
 	"ipmi-config" in the description, "sometime", a missing comma in
 	the front panel button key list, "It is recommend", "the channel
