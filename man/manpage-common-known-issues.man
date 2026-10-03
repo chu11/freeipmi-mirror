@@ -5,7 +5,7 @@ line, this information may be discovered by other users when using
 tools like the
 .B ps(1)
 command or looking in the /proc file system.  It is generally more
-secure to input password information with options like the -P or -K
+secure to input password information with the \fB\-P\fR or \fB\-K\fR
 options.  Configuring security relevant information in the FreeIPMI
 configuration file would also be an appropriate way to hide this information.
 .LP

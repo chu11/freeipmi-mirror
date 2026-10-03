@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/manpage-common-known-issues.man: Escape the hyphens in the -P
+	and -K option names and drop the redundant "options like the ...
+	options" wording.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-hostranged-buffer.man: Fix "the the".
 
 2026-10-02 Albert Chu <chu11@llnl.gov>
