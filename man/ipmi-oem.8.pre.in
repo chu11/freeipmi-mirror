@@ -387,7 +387,7 @@ This OEM command will retrieve the Fujitsu specific string
 interpretation of a SEL record.  This command may be useful for
 interpreting Fujitsu OEM hex codes found in the SEL.  A specific SEL
 record ID must be specified.  Please see
-.B ipmi-sel(8),
+.B ipmi-sel(8)
 for retrieving SEL records.  Command confirmed to work on Fujitsu
 RX100
 S5.
@@ -438,7 +438,7 @@ number's configuration will be output.  Command confirmed to work on
 Intel S5500WB (Penguin Computing Relion 700) and Intel S2600JF (Appro
 512X).
 .TP
-.B set-smtp-config \fI[channel\-number]\fR \fIKEY=VALUE...\fR
+.B set-smtp-config \fI[channel\-number]\fR \fIKEY=VALUE ...\fR
 This OEM command will set the current SMTP configuration on the IPMI
 card.  By default, configuration will be done for all LAN channels.
 If a \fIchannel\-number\fR is specified, only that specific channel
@@ -530,7 +530,7 @@ searched for.  Command confirmed to work on Intel S2600JF (Appro
 .B node-manager-policy-control \fIenable|disable\fR \fI[domainid=platform|cpu|memory|highpowerio]\fR \fI[policyid=num]\fR
 This OEM command will enable or disable the current global, domain, or
 policies used by the Intel Node Manager.  If no \fIdomainid\fR is
-specified, then the Node Manager will be enabled or globally disabled.
+specified, then the Node Manager will be globally enabled or disabled.
 If a \fIdomainid\fR is specified, only that domain will be enabled or
 disabled.  If both a \fIdomainid\fR and \fIpolicyid\fR are specified,
 only that specific policy within the domain will be enabled or
@@ -576,8 +576,8 @@ If the \fIpolicytrigger\fR is \fInone\fR,
 \fItimeafterplatformresettrigger\fR, the units will be in Watts.  If
 the \fIpolicytrigger\fR is \fImissingpowerreadingtimeout\fR, the units
 will be in percent, where 100 means maximum throttling.  If the
-\fIpolicytrigger\fR is \fIboottimepolicy\fR, the units is number of
-CPUs.  In addition, \fIplatformbootingmode\fR must be set to
+\fIpolicytrigger\fR is \fIboottimepolicy\fR, the units are the number
+of CPUs.  In addition, \fIplatformbootingmode\fR must be set to
 performance or power to indicate optimization mode.
 \fIpolicytriggerlimit\fR is sometimes required, given the input to
 \fIpolicytrigger\fR.  The units of the \fIpolicytriggerlimit\fR will
@@ -652,7 +652,7 @@ multiples of 6 minutes, therefore the stored configuration may be
 rounded to a slightly alternate configuration.
 \fIsuspendperiodrepeat\fR indicates the days in which the suspend
 period shall be enabled.  The option can be specified multiple times
-to configure multiple times.  Command confirmed to work on Intel
+to configure multiple days.  Command confirmed to work on Intel
 S2600JF (Appro 512X).
 .TP
 .B set-node-manager-power-draw-range \fIdomainid=platform|cpu|memory|highpowerio\fR \fIminpowerdrawrange=watts\fR \fImaxpowerdrawrange=watts\fR
@@ -745,9 +745,9 @@ vs. shared mode.)  The BMC MAC address cannot be set through the
 normal IPMI MAC address command (what is used in the
 .B ipmi-config(8)
 tool).  The MACADDR should be specified in XX:XX:XX:XX:XX:XX form.  A
-shared BMC MAC address may conflict with normal communication ethernet
+shared BMC MAC address may conflict with normal ethernet
 communication on the primary ethernet port.  Users may wish to
-configuration an alternate MAC address instead.  After configuration
+configure an alternate MAC address instead.  After configuration
 of the MAC address, the BMC must be reset.  This may be accomplished
 by executing a cold-reset with
 .B bmc-device(8).
@@ -890,7 +890,7 @@ the IPMI card.  The possible keys and values are
 \fIconnectionretry\fR specifies the number of retries for connecting.
 \fIretryinterval\fR specifies the number seconds in a retry interval.
 \fIdelaytime\fR specifies the number of seconds to wait before
-connecting.  If set to zero, the connection is immeadite.  If the user
+connecting.  If set to zero, the connection is immediate.  If the user
 specifies \fIrandom\fR, a random time between 5 and 10 seconds is
 chosen.  Command confirmed to work on Inventec 5441/5442 (Dell Xanadu
 II/III).  After setting these configuration parameters, typically a
@@ -939,7 +939,7 @@ II/III).
 .if 0 \{
 .TP
 .B set-asset-tag \fIasset-tag\fR
-This OEM command cat set the asset-tag of the motherboard.  The
+This OEM command can set the asset-tag of the motherboard.  The
 maximum length of the asset tag is 10 bytes.  Command confirmed to
 work on Inventec 5441/5442 (Dell Xanadu II/III).
 \}
@@ -1058,7 +1058,7 @@ output.  Command confirmed to work on Quanta S99Q (Dell FS12-TY).
 This OEM command will get the current web server configuration on the
 IPMI card.  Command confirmed to work on Quanta S99Q (Dell FS12-TY).
 .TP
-.B set-web-server-config \fIKEY=VALUE...\fR
+.B set-web-server-config \fIKEY=VALUE ...\fR
 This OEM command will set the current web server configuration on the
 IPMI card.  The possible keys and values are
 \fIwebserver=enable|disable\fR, \fIwebservertimeout=seconds\fR,
@@ -1135,9 +1135,9 @@ vs. shared mode.)  The BMC MAC address cannot be set through the
 normal IPMI MAC address command (what is used in the
 .B ipmi-config(8)
 tool).  The MACADDR should be specified in XX:XX:XX:XX:XX:XX form.  A
-shared BMC MAC address may conflict with normal communication ethernet
+shared BMC MAC address may conflict with normal ethernet
 communication on the primary ethernet port.  Users may wish to
-configuration an alternate MAC address instead.  After configuration
+configure an alternate MAC address instead.  After configuration
 of the MAC address, the BMC must be reset.  This may be accomplished
 by executing a cold-reset with
 .B bmc-device(8).
@@ -1300,7 +1300,7 @@ This OEM command will get the current web server configuration on the
 IPMI card.  Command confirmed to work on Wistron / Dell Poweredge
 C6220.
 .TP
-.B set-web-server-config \fIKEY=VALUE...\fR
+.B set-web-server-config \fIKEY=VALUE ...\fR
 This OEM command will set the current web server configuration on the
 IPMI card.  The possible keys and values are
 \fIwebserver=enable|disable\fR, \fIwebservertimeout=seconds\fR,
@@ -1464,7 +1464,7 @@ This OEM command will get the current link status change control.  If
 it reports "Link Down Resilience Enabled", BMC firmware will do
 nothing upon detecting Link Status Change until the DHCP lease is
 expired.  If it reports "DHCP Re-Discovery Enabled", BMC firmware will
-perform DHCP Discovery upon detecting link status going down than back
+perform DHCP Discovery upon detecting link status going down then back
 up.  Command confirmed to work on Wistron / Dell Poweredge C6220.
 .TP
 .B set-link-status-change-control \fIlink_resilience|dhcp_rediscovery\fR

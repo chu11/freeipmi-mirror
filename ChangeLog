@@ -1,5 +1,14 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-oem.8.pre.in: Fix prose slips: "enabled or globally
+	disabled", "the units is number of CPUs", "configure multiple
+	times" (days), "normal communication ethernet communication",
+	"wish to configuration", "than back up", a stray comma after
+	ipmi-sel(8), "immeadite", "cat set", and "KEY=VALUE..." without
+	the space used by the other headings.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/bmc-watchdog.8.pre.in, man/ipmi-fru.8.pre.in,
 	man/ipmi-sel.8.pre.in, man/ipmiseld.8.pre.in: "compliances issues"
 	-> "compliance issues".
