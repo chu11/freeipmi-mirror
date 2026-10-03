@@ -453,13 +453,13 @@ communicated with in parallel at the same time.
 .SH "EXAMPLES"
 .LP
 Determine the power status of foo[0-2] with null username and password
-        ipmipower -h foo[0-2] --stat
+        ipmipower \-h foo[0\-2] \-\-stat
 .LP
 Determine the power status of foo[0-2] with non-null username and password
-        ipmipower -h foo[0-2] -u foo -p bar --stat
+        ipmipower \-h foo[0\-2] \-u foo \-p bar \-\-stat
 .LP
 Hard reset nodes foo[0-2] with non-null username and password
-        ipmipower -h foo[0-2] -u foo -p bar --reset
+        ipmipower \-h foo[0\-2] \-u foo \-p bar \-\-reset
 
 #include <@top_srcdir@/man/manpage-common-troubleshooting-heading-start.man>
 #include <@top_srcdir@/man/manpage-common-troubleshooting-heading-outofband.man>

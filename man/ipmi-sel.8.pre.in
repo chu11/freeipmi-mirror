@@ -255,27 +255,27 @@ Supermicro X9SCA-F-O, Supermicro H8DGU-F, Supermicro X9DRi-F,
 Supermicro X9DRI-LN4F+, Supermicro X9SPU-F-O, Supermicro X9SCM-iiF,
 Supermicro X10SLM-F, Wiwynn Windmill, Wistron/Dell Poweredge C6220.
 .SH "EXAMPLES"
-.B # ipmi-sel
+.B # ipmi\-sel
 .PP
 Show all SEL records on the local machine.
 .PP
-.B # ipmi-sel -h ahost -u myusername -p mypassword
+.B # ipmi\-sel \-h ahost \-u myusername \-p mypassword
 .PP
 Show all SEL records of a remote machine using IPMI over LAN.
 .PP
-.B # ipmi-sel -h mycluster[0-127] -u myusername -p mypassword
+.B # ipmi\-sel \-h mycluster[0\-127] \-u myusername \-p mypassword
 .PP
 Show all SEL records across a cluster using IPMI over LAN.
 .PP
-.B # ipmi-sel --delete=44,82
+.B # ipmi\-sel \-\-delete=44,82
 .PP
 Delete SEL records 44 and 82 on the local machine.
 .PP
-.B # ipmi-sel --clear
+.B # ipmi\-sel \-\-clear
 .PP
 Delete all SEL entries on the local machine.
 .PP
-.B # ipmi-sel --delete-range=12-42
+.B # ipmi\-sel \-\-delete\-range=12\-42
 .PP
 Delete SEL entries in the range 12 to 42 on the local machine.
 .PP

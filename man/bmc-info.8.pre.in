@@ -80,15 +80,15 @@ output the GUID based on this common alternate format.
 .LP
 Dell Poweredge R610, Dell Poweredge R710, Intel SR870BN4/Tiger4
 .SH "EXAMPLES"
-.B # bmc-info
+.B # bmc\-info
 .PP
 Get BMC information of the local machine.
 .PP
-.B # bmc-info -h ahost -u myusername -p mypassword
+.B # bmc\-info \-h ahost \-u myusername \-p mypassword
 .PP
 Get BMC information of a remote machine using IPMI over LAN.
 .PP
-.B # bmc-info -h mycluster[0-127] -u myusername -p mypassword
+.B # bmc\-info \-h mycluster[0\-127] \-u myusername \-p mypassword
 .PP
 Get BMC information across a cluster using IPMI over LAN.
 .PP

@@ -181,15 +181,15 @@ Activate or deactivate power limit.  Allowed values: ACTIVATE, DEACTIVATE.
 .LP
 Currently None
 .SH "EXAMPLES"
-.B # ipmi-dcmi --get-power-limit
+.B # ipmi\-dcmi \-\-get\-power\-limit
 .PP
 Get power limit of the local machine.
 .PP
-.B # ipmi-dcmi -h ahost -u myusername -p mypassword --get-power-limit
+.B # ipmi\-dcmi \-h ahost \-u myusername \-p mypassword \-\-get\-power\-limit
 .PP
 Get power limit of a remote machine using IPMI over LAN.
 .PP
-.B # ipmi-dcmi -h mycluster[0-127] -u myusername -p mypassword --get-power-limit
+.B # ipmi\-dcmi \-h mycluster[0\-127] \-u myusername \-p mypassword \-\-get\-power\-limit
 .PP
 Get power limit across a cluster using IPMI over LAN.
 .PP

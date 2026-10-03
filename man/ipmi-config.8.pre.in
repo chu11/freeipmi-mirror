@@ -183,7 +183,7 @@ following example could be used in a script to configure each node in
 a cluster with the same BMC config file.  The script only needs to
 determine the correct IP address and MAC address to use.
 .LP
-.B # ipmi-config --commit -e "Lan_Conf:IP_Address=$MY_IP" -e "Lan_Conf:MAC_Address=$MY_MAC" --filename=my_bmc.conf
+.B # ipmi\-config \-\-commit \-e "Lan_Conf:IP_Address=$MY_IP" \-e "Lan_Conf:MAC_Address=$MY_MAC" \-\-filename=my_bmc.conf
 .SH "CORE SPECIAL CASE CONFIGURATION INFORMATION"
 The
 .B UserN:Password
@@ -347,39 +347,39 @@ incorrectly, leading to incorrect configuration.  Most notably, this
 problem has come up when attempting to configure multiple channels.
 Issue observed on Intel S5500WBV/Penguin Relion 700.
 .SH "EXAMPLES"
-.B # ipmi-config --checkout
+.B # ipmi\-config \-\-checkout
 .PP
 Output all core configuration information to the console.
 .PP
-.B # ipmi-config --checkout --category=pef
+.B # ipmi\-config \-\-checkout \-\-category=pef
 .PP
 Output all pef configuration information to the console.
 .PP
-.B # ipmi-config --checkout --category=pef,chassis
+.B # ipmi\-config \-\-checkout \-\-category=pef,chassis
 .PP
 Output all pef and chassis configuration information to the console.
 .PP
-.B # ipmi-config --checkout --filename=bmc-data1.conf
+.B # ipmi\-config \-\-checkout \-\-filename=bmc\-data1.conf
 .PP
 Store all core configuration information in bmc-data1.conf.
 .PP
-.B # ipmi-config --diff --filename=bmc-data2.conf
+.B # ipmi\-config \-\-diff \-\-filename=bmc\-data2.conf
 .PP
 Show all differences between the current configuration and the bmc-data2.conf file.
 .PP
-.B # ipmi-config --diff --key-pair="lan_conf_misc:gratuitous_arp_interval=8"
+.B # ipmi\-config \-\-diff \-\-key\-pair="lan_conf_misc:gratuitous_arp_interval=8"
 .PP
 Show the difference between the current configuration and the 'lan_conf_misc:gratuitous_arp_interval' value of '8'.
 .PP
-.B # ipmi-config --commit --filename=bmc-data1.conf
+.B # ipmi\-config \-\-commit \-\-filename=bmc\-data1.conf
 .PP
 Commit all configuration values from the bmc-data1.conf file.
 .PP
-.B # ipmi-config --commit --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
+.B # ipmi\-config \-\-commit \-\-key\-pair="lan_conf_misc:gratuitous_arp_interval=4"
 .PP
 Commit key 'lan_conf_misc:gratuitous_arp_interval' of value '4'.
 .PP
-.B # ipmi-config --commit --filename=bmc-data-updt.conf --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
+.B # ipmi\-config \-\-commit \-\-filename=bmc\-data\-updt.conf \-\-key\-pair="lan_conf_misc:gratuitous_arp_interval=4"
 .PP
 Commit all configuration values from bmc-data-updt.conf and key 'lan_conf_misc:gratuitous_arp_interval' of value '4'.
 .PP

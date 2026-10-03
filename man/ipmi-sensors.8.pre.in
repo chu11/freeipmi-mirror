@@ -266,27 +266,27 @@ Supermicro X9SCA-F-O, Supermicro H8DGU-F, Supermicro X9DRi-F,
 Supermicro X9DRI-LN4F+, Supermicro X9SPU-F-O, Supermicro X9SCM-iiF,
 Wiwynn Windmill, Wistron/Dell Poweredge C6220.
 .SH "EXAMPLES"
-.B # ipmi-sensors
+.B # ipmi\-sensors
 .PP
 Show all sensors and readings on the local machine.
 .PP
-.B # ipmi-sensors --verbose
+.B # ipmi\-sensors \-\-verbose
 .PP
 Show verbose sensors and readings on the local machine.
 .PP
-.B # ipmi-sensors --record-ids="7,11,102"
+.B # ipmi\-sensors \-\-record\-ids="7,11,102"
 .PP
 Show sensor record ids 7, 11, and 102 on the local machine.
 .PP
-.B # ipmi-sensors --sensor-types=fan
+.B # ipmi\-sensors \-\-sensor\-types=fan
 .PP
 Show all sensors of type fan on the local machine.
 .PP
-.B # ipmi-sensors -h ahost -u myusername -p mypassword
+.B # ipmi\-sensors \-h ahost \-u myusername \-p mypassword
 .PP
 Show all sensors on a remote machine using IPMI over LAN.
 .PP
-.B # ipmi-sensors -h mycluster[0-127] -u myusername -p mypassword
+.B # ipmi\-sensors \-h mycluster[0\-127] \-u myusername \-p mypassword
 .PP
 Show all sensors across a cluster using IPMI over LAN.
 .PP

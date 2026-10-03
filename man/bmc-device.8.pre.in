@@ -223,15 +223,15 @@ Increase verbosity in output.
 #include <@top_srcdir@/man/manpage-common-workaround-sdr-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
 .SH "EXAMPLES"
-.B # bmc-device --cold-reset
+.B # bmc\-device \-\-cold\-reset
 .PP
 Perform a cold reset.
 .PP
-.B # bmc-device -h ahost -u myusername -p mypassword --cold-reset
+.B # bmc\-device \-h ahost \-u myusername \-p mypassword \-\-cold\-reset
 .PP
 Perform a cold reset of a remote machine using IPMI over LAN.
 .PP
-.B # bmc-device -h mycluster[0-127] -u myusername -p mypassword --cold-reset
+.B # bmc\-device \-h mycluster[0\-127] \-u myusername \-p mypassword \-\-cold\-reset
 .PP
 Perform a cold reset across a cluster using IPMI over LAN.
 .PP

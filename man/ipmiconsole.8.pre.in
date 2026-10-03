@@ -348,7 +348,7 @@ prevent unauthorized access.
 Do not run proxy mode on an untrusted host.
 
 .SH "EXAMPLES"
-.B # ipmiconsole -h ahost -u myusername -p mypassword
+.B # ipmiconsole \-h ahost \-u myusername \-p mypassword
 .PP
 Establish a console session with a remote host.
 .PP
