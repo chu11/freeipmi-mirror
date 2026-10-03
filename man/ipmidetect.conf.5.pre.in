@@ -44,18 +44,23 @@ character, and lines can be continued on the next using backslash
 
 .TP
 \fBhostnames\fR \fIHOST1 HOST2 HOST3 ...\fR
-Specify the hostname of the server to reach.  Multiple hostnames can
-be listed up to a maximum of 8.
+Specify the hostname of the
+.B ipmidetectd
+server to reach.  Multiple hostnames can be listed up to a maximum of
+8; they are tried in the order listed until one responds.  The default
+is localhost.
 .TP
 \fBport\fR \fIPORT\fR
-Specify the port.
+Specify the port the
+.B ipmidetectd
+server listens on.  The default is 9225.
 .TP
 \fBtimeout_len\fR \fISECONDS\fR
 Specify the number of seconds within which a node must have answered
 an IPMI ping, as recorded by the
 .B ipmidetectd
 server, to be considered detected.  Nodes last seen longer ago than
-this are reported as undetected.
+this are reported as undetected.  The default is 60.
 .SH "FILES"
 @IPMIDETECT_CONFIG_FILE_DEFAULT@
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>

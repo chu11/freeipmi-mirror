@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmidetect.conf.5.pre.in: State the defaults for hostnames
+	(localhost), port (9225) and timeout_len (60), and that several
+	hostnames are tried in order until one responds.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmidetect.conf.5.pre.in: timeout_len is the age in seconds
 	beyond which a node's last IPMI ping response no longer counts as
 	detected, not a network timeout; describe it that way.
