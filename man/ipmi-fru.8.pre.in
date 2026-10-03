@@ -111,7 +111,7 @@ data off of a board.  No IPMI connection is made, and the
 checks.  Some FRUs have incorrect checksums, but the FRU data is
 correct.  Those hitting this issue may see "checksum invalid" errors
 in their FRU output.  Output may be unknown, pray for the best.  This
-option is confirmed to work around compliances issues on Inventec
+option is confirmed to work around compliance issues on Inventec
 5441/Dell Xanadu II, Dell Poweredge R610, and Dell Poweredge R710
 motherboards.
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>

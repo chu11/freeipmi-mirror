@@ -1,5 +1,13 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/bmc-watchdog.8.pre.in, man/ipmi-fru.8.pre.in,
+	man/ipmi-sel.8.pre.in, man/ipmiseld.8.pre.in: "compliances issues"
+	-> "compliance issues".
+	* man/ipmipower.8.pre.in: Add the missing full stop after the
+	interactive k_g command description.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi_interpret_sel.conf.5.pre.in,
 	man/freeipmi_interpret_sensor.conf.5.pre.in: Refer to the
 	ipmi-sensors(8) tool in lower case.

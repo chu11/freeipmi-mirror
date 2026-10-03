@@ -260,7 +260,7 @@ Specify a new password.  No input for null password.
 .TP
 \fBk_g\fR \fI[K_G]\fR
 Specify a new K_g BMC Key.  No input for null key.  Prefix with '0x'
-to enter a key in hexadecimal
+to enter a key in hexadecimal.
 .TP
 \fBdriver-type\fR \fIIPMIDRIVER\fR
 Specify the ipmi driver to use.

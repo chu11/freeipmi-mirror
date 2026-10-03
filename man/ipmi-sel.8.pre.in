@@ -174,7 +174,7 @@ Some motherboards have invalid SEL record types listed, leading to
 errors such as 'Unknown SEL Record Type'.  The records may actually be
 formatted correctly.  Use this option to assume these invalid record
 types are system event records and pray for the best.  This option is
-confirmed to work around compliances issues on HP DL 380 G5
+confirmed to work around compliance issues on HP DL 380 G5
 motherboards.
 \}
 #include <@top_srcdir@/man/manpage-common-interpret-oem-data.man>
@@ -233,7 +233,7 @@ systems.
 record types are system event records.  Records may be formatted
 correctly but report invalid record types.  Those hitting this issue
 may see "Unknown SEL Record Type" errors.  Output may be unknown, pray
-for the best.  This option is confirmed to work around compliances
+for the best.  This option is confirmed to work around compliance
 issues on HP DL 380 G5 motherboards.
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/man/manpage-common-oem-interpretation.man>

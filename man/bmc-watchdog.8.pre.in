@@ -302,7 +302,7 @@ implementation, the reset-period must be large enough to ensure minor
 fluctuations in the countdown will not affect the workaround.  Due to
 the implementation of this workaround, if another process stops the
 watchdog timer, it may be detectable.  This option is confirmed to
-work around compliances issues on Sun x4100, x4200, and x4500.
+work around compliance issues on Sun x4100, x4200, and x4500.
 
 .SH "EXAMPLES"
 .LP
