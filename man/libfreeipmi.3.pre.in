@@ -19,17 +19,18 @@ and
 Provides fiid templates and 'fill' functions for IPMI
 commands.  Also provides macros defining common parameters for
 IPMI commands.  The cmds are used by most other portions of
-libfreeipmi including the 'api' sub-section and tools such as
+libfreeipmi including the 'api' sub-section and tools and libraries
+such as
 .B ipmipower(8)
 and
-.B ipmiconsole(8).
+.B libipmiconsole(3).
 .TP
 .B debug
 Provides various packet/record dumping utility functions.
-Utilized by the 'api' sub-section and by tools such as
+Utilized by the 'api' sub-section and by tools and libraries such as
 .B ipmipower(8)
 and
-.B ipmiconsole(8).
+.B libipmiconsole(3).
 .TP
 .B driver
 Provides APIs for in-band IPMI communication.  Currently supported
@@ -58,10 +59,10 @@ Provides 'assemble' and 'disassemble' functions for building packets
 for individual in-band or out-of-band protocols.  Also provides all
 necessary fiid templates, 'fill' functions, and other utility
 functions necessary to communicate on an IPMI interface.  Utilized by
-the 'api' sub-section and tools such as
+the 'api' sub-section and tools and libraries such as
 .B ipmipower(8)
 and
-.B ipmiconsole(8).
+.B libipmiconsole(3).
 .TP
 .B interpret
 Provides an API for interpreting sensor events by mapping them into

@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/libfreeipmi.3.pre.in: Cite libipmiconsole(3), not
+	ipmiconsole(8), as a user of the cmds, debug and interface
+	sub-sections; the ipmiconsole tool only uses the library API.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.conf.5.pre.in: Add the COPYRIGHT section every
 	other page has.
 
