@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-config.8.pre.in: Password, Lan_Session_Limit and
+	Serial_Session_Limit cannot be checked out on any system, since
+	IPMI has no command to read them; stop saying "on some systems".
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.conf.5.pre.in: Add cipher suite ID 15
 	(HMAC-SHA256, no integrity or confidentiality) to the
 	Rmcpplus_Conf_Privilege example and the cipher suite table;

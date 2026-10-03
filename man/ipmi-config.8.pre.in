@@ -182,8 +182,9 @@ determine the correct IP address and MAC address to use.
 .SH "CORE SPECIAL CASE CONFIGURATION INFORMATION"
 The
 .B UserN:Password
-fields (where N is a number) cannot be checked out on some systems,
-therefore the checked out value will always be blank.
+fields (where N is a number) cannot be checked out, as IPMI provides
+no command to read a password, therefore the checked out value will
+always be blank.
 .LP
 The
 .B UserN:Enable_User
@@ -194,8 +195,9 @@ The
 .B UserN:Lan_Session_Limit
 and
 .B UserN:Serial_Session_Limit
-fields (where N is a number) cannot be checked out on some systems,
-therefore the checked out value will always be blank.  If not
+fields (where N is a number) cannot be checked out, as IPMI provides
+no command to read them, therefore the checked out value will always
+be blank.  If not
 specified in later commits of configurations, the field may be reset
 to 0 due to a requirement that other fields (configured along with the
 session limit) will require an input value for the session limit.
