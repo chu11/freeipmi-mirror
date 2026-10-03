@@ -1,5 +1,12 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-config.conf.5.pre.in: Add cipher suite ID 15
+	(HMAC-SHA256, no integrity or confidentiality) to the
+	Rmcpplus_Conf_Privilege example and the cipher suite table;
+	Maximum_Privilege_Cipher_Suite_Id_15 is a configurable key.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.conf.5.pre.in: Make the example comments for
 	Password, the IP/MAC/subnet keys, Gratuitous_ARP_Interval and
 	Character_Accumulate_Interval match what --checkout writes today.

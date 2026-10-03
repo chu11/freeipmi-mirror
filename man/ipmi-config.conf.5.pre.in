@@ -202,6 +202,8 @@ Future versions of this manpage will try to include more information.
      	Maximum_Privilege_Cipher_Suite_Id_13         Administrator
      	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
      	Maximum_Privilege_Cipher_Suite_Id_14         Administrator
+     	## Possible values: Unused/User/Operator/Administrator/OEM_Proprietary
+     	Maximum_Privilege_Cipher_Suite_Id_15         Administrator
      EndSection
      Section SOL_Conf
      	## Possible values: Yes/No
@@ -451,9 +453,12 @@ AES-CBC-128
 13 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-128
 .sp
 14 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-40
+.sp
+15 - Authentication Algorithm = HMAC-SHA256; Integrity Algorithm = None; Confidentiality Algorithm = None
 .LP
 Generally speaking, HMAC-SHA1 based algorithms are stronger than
-HMAC-MD5, which are better than MD5-128 algorithms.  AES-CBC-128
+HMAC-MD5, which are better than MD5-128 algorithms, and HMAC-SHA256 is
+stronger than HMAC-SHA1.  AES-CBC-128
 confidentiality algorithms are stronger than xRC4-128 algorithms,
 which are better than xRC4-40 algorithms.  Cipher suite ID 3 is
 therefore typically considered the most secure.  Some users may wish
