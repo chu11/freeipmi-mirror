@@ -1,5 +1,12 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi.conf.5.pre.in, man/libipmiconsole.conf.5.pre.in:
+	Title the pages FREEIPMI.CONF and LIBIPMICONSOLE.CONF like the
+	other configuration file pages, so the header does not read
+	FREEIPMI(5) next to freeipmi(7).
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.conf.5.pre.in: Escape the hyphens in the 38 "will
 	override the general option" cross references to
 	authentication-type, cipher-suite-id and privilege-level.

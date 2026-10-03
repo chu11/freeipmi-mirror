@@ -1,4 +1,4 @@
-.TH FREEIPMI 5 "@ISODATE@" "FreeIPMI @PACKAGE_VERSION@" "Configuration"
+.TH FREEIPMI.CONF 5 "@ISODATE@" "FreeIPMI @PACKAGE_VERSION@" "Configuration"
 .SH "NAME"
 freeipmi.conf \- specify default values to FreeIPMI
 .SH "DESCRIPTION"
