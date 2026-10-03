@@ -51,7 +51,11 @@ be listed up to a maximum of 8.
 Specify the port.
 .TP
 \fBtimeout_len\fR \fISECONDS\fR
-Specify the timeout length in seconds.
+Specify the number of seconds within which a node must have answered
+an IPMI ping, as recorded by the
+.B ipmidetectd
+server, to be considered detected.  Nodes last seen longer ago than
+this are reported as undetected.
 .SH "FILES"
 @IPMIDETECT_CONFIG_FILE_DEFAULT@
 #include <@top_srcdir@/man/manpage-common-reporting-bugs.man>

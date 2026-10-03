@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmidetect.conf.5.pre.in: timeout_len is the age in seconds
+	beyond which a node's last IPMI ping response no longer counts as
+	detected, not a network timeout; describe it that way.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/bmc-device.8.pre.in, man/bmc-info.8.pre.in,
 	man/ipmi-chassis.8.pre.in, man/ipmi-config.8.pre.in,
 	man/ipmi-dcmi.8.pre.in, man/ipmi-fru.8.pre.in, man/ipmi-pet.8.pre.in,
