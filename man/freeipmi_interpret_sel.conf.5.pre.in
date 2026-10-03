@@ -62,7 +62,7 @@ file are listed below.  Each configuration option must be listed on a
 separate line.  Arguments for an option are separated by any amount of
 whitespace.  Multiple arguments are also separated by whitespace.
 Comments can be marked by using the pound sign ("#") character, and
-lines can be continued on the next using backslash ("\\").
+lines can be continued on the next line using backslash ("\\").
 .SH "OPTIONS"
 .TP
 .B IPMI_Threshold_Sensor
@@ -427,7 +427,7 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Platform_Security_Violation_Attempt
-The following states correspond to Platform Violation Attempt sensor events w/
+The following states correspond to Platform Security Violation Attempt sensor events w/
 Platform Security Violation Attempt specific output events.
 .RS
 .TP
@@ -538,7 +538,7 @@ Defaults to Warning/Warning.
 .RE
 .TP
 .B IPMI_Power_Supply_State
-The following states correspond to Power_Supply sensor events that report an
+The following states correspond to Power Supply sensor events that report an
 assertion or deassertion.
 .RS
 .TP
@@ -919,7 +919,7 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Drive_Slot_Predictive_Failure
-The following states correspond to Drive_Slot sensor events that report a
+The following states correspond to Drive Slot sensor events that report a
 predictive failure assertion or deassertion.
 .RS
 .TP
@@ -1245,7 +1245,7 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Button_Switch_Transition_Severity
-The following states correspond to Button Switch  sensor events that
+The following states correspond to Button/Switch sensor events that
 report on device severity.
 .RS
 .TP

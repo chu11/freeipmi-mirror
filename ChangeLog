@@ -1,6 +1,16 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
 	* man/freeipmi_interpret_sel.conf.5.pre.in,
+	man/freeipmi_interpret_sensor.conf.5.pre.in: Fix prose and markup
+	slips: "continued on the next using backslash", "Platform
+	Violation Attempt" missing "Security", "Power_Supply" and
+	"Drive_Slot" with underscores in prose, "Button Switch" with a
+	double space, "OS Boot ... output events" on the sensor page, and
+	unescaped hyphens in Sensor-Event and Sensor-Event-Bitmask-Value.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
+	* man/freeipmi_interpret_sel.conf.5.pre.in,
 	man/freeipmi_interpret_sensor.conf.5.pre.in: Complete the
 	IPMI_Event_Logging_Disabled introduction, which ended
 	mid-sentence, and add the missing introduction to

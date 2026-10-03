@@ -65,7 +65,7 @@ file are listed below.  Each configuration option must be listed on a
 separate line.  Arguments for an option are separated by any amount of
 whitespace.  Multiple arguments are also separated by whitespace.
 Comments can be marked by using the pound sign ("#") character, and
-lines can be continued on the next using backslash ("\\").
+lines can be continued on the next line using backslash ("\\").
 .SH "OPTIONS"
 .TP
 .B IPMI_Threshold_Sensor
@@ -460,7 +460,7 @@ Defaults to Critical.
 .RE
 .TP
 .B IPMI_Platform_Security_Violation_Attempt
-The following states correspond to Platform Violation Attempt sensors w/
+The following states correspond to Platform Security Violation Attempt sensors w/
 Platform Security Violation Attempt specific output states.
 .RS
 .TP
@@ -583,7 +583,7 @@ Defaults to Warning.
 .RE
 .TP
 .B IPMI_Power_Supply_State
-The following states correspond to Power_Supply sensors that report an
+The following states correspond to Power Supply sensors that report an
 assertion or deassertion.
 .RS
 .TP
@@ -1009,7 +1009,7 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_Drive_Slot_Predictive_Failure
-The following states correspond to Drive_Slot sensors that report a
+The following states correspond to Drive Slot sensors that report a
 predictive failure assertion or deassertion.
 .RS
 .TP
@@ -1648,7 +1648,7 @@ Defaults to Nominal.
 .TP
 .B IPMI_OS_Boot
 The following states correspond to OS Boot sensors w/ OS Boot specific
-output events.
+output states.
 .RS
 \fBIPMI_OS_Boot_No_Event\fR
 Defaults to Nominal.
@@ -2121,7 +2121,7 @@ standard of the IPMI specification.
 \fBIPMI_OEM_Bitmask\fR can be used to configure a state interpretation
 for a specific \fIManufacturer\-ID\fR, \fIProduct\-ID\fR,
 \fIEvent\-Reading\-Type\-Code\fR, and \fISensor\-Type\fR combination and a
-specific bitmask of the \fISensor-Event\fR.  The state will be
+specific bitmask of the \fISensor\-Event\fR.  The state will be
 accepted as the sensor interpretation if the input bitmask ANDed
 with the actual sensor event bitmask reading is true.  As a special
 case, the state will be accepted if the input bitmask and the
@@ -2129,7 +2129,7 @@ actual sensor event bitmask are both 0.  In other words, if no events
 happened, an OEM interpretation can be configured for this case by
 inputting a bitmask of 0x0000.
 .TP
-\fBIPMI_OEM_Value\fR \fI<Manufacturer\-ID>\fR:\fI<Product\-ID>\fR,... \fIEvent\-Reading\-Type\-Code\fR \fISensor\-Type\fR \fISensor\-Event\-Bitmask-Value\fR \fIState\fR
+\fBIPMI_OEM_Value\fR \fI<Manufacturer\-ID>\fR:\fI<Product\-ID>\fR,... \fIEvent\-Reading\-Type\-Code\fR \fISensor\-Type\fR \fISensor\-Event\-Bitmask\-Value\fR \fIState\fR
 \fBIPMI_OEM_Value\fR can be used to configure a state interpretation
 for a specific \fIManufacturer\-ID\fR, \fIProduct\-ID\fR,
 \fIEvent\-Reading\-Type\-Code\fR, and \fISensor\-Type\fR combination and a
