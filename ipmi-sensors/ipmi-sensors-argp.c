@@ -78,7 +78,7 @@ static struct argp_option cmdline_options[] =
     { "sdr-info",       SDR_INFO_KEY,       0, 0,
       "Show sensor data repository (SDR) information.", 41},
     { "quiet-readings", QUIET_READINGS_KEY,  0, 0,
-      "Do not output sensor readings or thresholds on simple output.", 42},
+      "Do not output sensor readings on simple output.", 42},
     { "record-ids",     RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
       "Show specific sensors by record id.  Accepts space or comma separated lists", 44},
     { "exclude-record-ids", EXCLUDE_RECORD_IDS_KEY, "RECORD-IDS-LIST", 0,
