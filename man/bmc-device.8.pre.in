@@ -179,18 +179,18 @@ Set Base OS/Hypervisor URL.
 .TP
 \fB\-\-read\-fru\fR=\fIFILENAME\fR
 Read the contents of a FRU device ID and store it in the specified
-file.  Requires setting of a device ID via \fI\-\-device\-id\fR.
+file.  Requires setting of a device ID via \fB\-\-device\-id\fR.
 Cannot be used when multiple hosts are specified.
 .TP
 \fB\-\-write\-fru\fR=\fIFILENAME\fR
 Write the contents of the specified file into a FRU device id.
-Requires setting of a device ID via \fI\-\-device\-id\fR.  If
-\fI\-\-verbose\fR is specified, progress percent will also be output,
+Requires setting of a device ID via \fB\-\-device\-id\fR.  If
+\fB\-\-verbose\fR is specified, progress percent will also be output,
 except when multiple hosts are specified.
 .TP
 \fB\-\-device\-id\fR=\fIIDNUM\fR
-Specify a specific FRU device ID.  For use with \fI\-\-read\-fru\fR
-and \fI\-\-write\-fru\fR.
+Specify a specific FRU device ID.  For use with \fB\-\-read\-fru\fR
+and \fB\-\-write\-fru\fR.
 .TP
 \fB\-\-verbose\fR
 Increase verbosity in output.
