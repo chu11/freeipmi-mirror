@@ -91,14 +91,14 @@ name.  The current local system time can be specified with "now".
 Note that non-timestamped records will be displayed automatically
 because they do not possess a timestamp.
 .TP
-\fB\-t\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+\fB\-t\fR \fISENSOR\-TYPES\-LIST\fR, \fB\-\-sensor\-types\fR=\fISENSOR\-TYPES\-LIST\fR
 Specify sensor types to show SEL events for.  Multiple types can be
 separated by commas or spaces.  A special command line type of "all",
 will indicate all types should be shown (may be useful for overriding
 configured defaults).  Users may specify sensor types by string (see
 \fB\-\-list\-sensor\-types\fR below) or by number (decimal or hex).
 .TP
-\fB\-T\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+\fB\-T\fR \fISENSOR\-TYPES\-LIST\fR, \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPES\-LIST\fR
 Specify sensor types to not show SEL events for.  Multiple types can
 be separated by commas or spaces.  A special command line type of "none",
 will indicate no types should be excluded (may be useful for

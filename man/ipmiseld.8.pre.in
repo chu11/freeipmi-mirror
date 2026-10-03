@@ -77,7 +77,7 @@ non-critical SEL errors or issues will also be logged.  Somewhat
 common errors, such as timeouts or invalid hostnames, will output with
 increased verbosity.
 .TP
-\fB\-t\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+\fB\-t\fR \fISENSOR\-TYPES\-LIST\fR, \fB\-\-sensor\-types\fR=\fISENSOR\-TYPES\-LIST\fR
 Specify sensor types of SEL events to log.  By default, all sensor
 types are logged.  A special command line type of "all", will indicate
 all types should be shown (may be useful for overriding configured
@@ -87,7 +87,7 @@ Users may specify sensor types by string (see
 .B ipmi-sel(8))
 or by number (decimal or hex).
 .TP
-\fB\-T\fR \fISENSOR\-TYPE\-LIST\fR, \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPE\-LIST\fR
+\fB\-T\fR \fISENSOR\-TYPES\-LIST\fR, \fB\-\-exclude\-sensor\-types\fR=\fISENSOR\-TYPES\-LIST\fR
 Specify sensor types of SEL events to not log.  By default, no sensor
 types are filtered.  A special command line type of "none", will
 indicate no types should be excluded (may be useful for overriding
