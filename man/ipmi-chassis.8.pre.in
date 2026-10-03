@@ -38,6 +38,7 @@ For a more powerful chassis power control utility, please see
 .SH "IPMI-CHASSIS OPTIONS"
 The following options are specific to
 .B ipmi-chassis.
+Exactly one of the command options below must be specified.
 .TP
 \fB\-\-get\-chassis\-capabilities\fR
 Get chassis capabilities.  This command returns information on which

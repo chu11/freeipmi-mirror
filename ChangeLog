@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-chassis.8.pre.in: State that exactly one command option
+	must be specified, as the argp code enforces and the other
+	command-style tool pages say.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/bmc-device.8.pre.in: Use bold for the --device-id, --verbose,
 	--read-fru and --write-fru cross references like the rest of the
 	page.
