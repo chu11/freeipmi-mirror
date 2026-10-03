@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmiseld.conf.5.pre.in: The hostname list is a single string
+	argument; say it must not contain whitespace, since the parser
+	rejects "host1, host2".
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmidetect.conf.5.pre.in: State the defaults for hostnames
 	(localhost), port (9225) and timeout_len (60), and that several
 	hostnames are tried in order until one responds.

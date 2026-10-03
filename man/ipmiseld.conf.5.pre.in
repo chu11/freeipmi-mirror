@@ -69,7 +69,9 @@ Specify the in-band driver target slave address.
 .TP
 \fBhostname\fR \fIIPMIHOST1,IPMIHOST2,...\fR
 Specify the remote host(s) to communicate with.  Multiple hostnames may
-be separated by comma or may be specified in a range format.
+be separated by comma or may be specified in a range format.  The
+list must be a single argument without whitespace
+(e.g. host1,host2,host[3-5]).
 .TP
 \fBusername\fR \fIUSERNAME\fR
 Specify the username to use.
