@@ -178,7 +178,7 @@ following example could be used in a script to configure each node in
 a cluster with the same BMC config file.  The script only needs to
 determine the correct IP address and MAC address to use.
 .LP
-.B # ipmi-config --commit -e "Lan_Conf:Ip_Address=$MY_IP" -e "Lan_Conf:Mac_Address=$MY_MAC" --filename=my_bmc.conf
+.B # ipmi-config --commit -e "Lan_Conf:IP_Address=$MY_IP" -e "Lan_Conf:MAC_Address=$MY_MAC" --filename=my_bmc.conf
 .SH "CORE SPECIAL CASE CONFIGURATION INFORMATION"
 The
 .B UserN:Password
