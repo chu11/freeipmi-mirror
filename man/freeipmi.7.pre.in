@@ -258,9 +258,10 @@ The following libraries are distributed and supported by FreeIPMI.
 .PP
 .B libfreeipmi
 .PP
-A C library that includes KCS, SSIF, and OpenIPMI Linux, and Solaris
-BMC drivers, IPMI 1.5 and IPMI 2.0 LAN communication interfaces, IPMI
-packet building utilities, IPMI command utilities, and utilities for
+A C library that includes KCS, SSIF, OpenIPMI Linux, Solaris BMC, and
+Intel DCMI drivers, IPMI 1.5 and IPMI 2.0 LAN communication
+interfaces, IPMI packet building utilities, IPMI command utilities,
+and utilities for
 reading/interpreting/managing IPMI.  This library is for programmers
 intimately familiar with the IPMI protocol and IPMI specification.
 Most users may wish to use the libraries listed below.

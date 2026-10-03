@@ -1,5 +1,10 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi.7.pre.in: List the Intel DCMI driver among the
+	libfreeipmi in-band drivers, as the introduction already does.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.7.pre.in, man/libfreeipmi.3.pre.in: Use "\-" in the
 	NAME line like every other page, so whatis/apropos parse it
 	consistently.
