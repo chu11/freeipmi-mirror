@@ -238,7 +238,6 @@ issues on HP DL 380 G5 motherboards.
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
 #include <@top_srcdir@/man/manpage-common-oem-interpretation.man>
 .LP
-
 Dell Poweredge 2900, Dell Poweredge 2950, Dell Poweredge R610, Dell
 Poweredge R710, Fujitsu iRMC S1 and iRMC S2 systems, Gigabyte
 MD90-FS0-ZB, Gigabyte MG20-OP0-ZB/Penguin Computing Relion X1904GT,
