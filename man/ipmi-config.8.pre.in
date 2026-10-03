@@ -14,7 +14,7 @@ events, and many more configuration options.
 
 Some configuration is typically required before most IPMI
 tools can be used to access a machine remotely.  By default,
-.B ipmi-config,
+.B ipmi-config
 will let you \fI\-\-checkout\fR or \fI\-\-commit\fR only the
 \fIcore\fR IPMI values necessary for IPMI configuration.  For
 additional advanced configuration fields related to Chassis
@@ -188,7 +188,7 @@ therefore the checked out value will always be blank.
 The
 .B UserN:Enable_User
 field (where N is a number) cannot be checked out on older IPMI
-systems, therefore the checked out value will sometime be blank.
+systems, therefore the checked out value will sometimes be blank.
 .LP
 The
 .B UserN:Lan_Session_Limit
@@ -255,7 +255,7 @@ accomplished through a cold-reset.  A cold-reset can be executed via
 .SH "CHASSIS SPECIAL CASE CONFIGURATION INFORMATION"
 The
 .B Chassis_Front_Panel_Buttons:Enable_Standby_Button_For_Entering_Standby,
-.B Chassis_Front_Panel_Buttons:Enable_Diagnostic_Interrupt_Button
+.B Chassis_Front_Panel_Buttons:Enable_Diagnostic_Interrupt_Button,
 .B Chassis_Front_Panel_Buttons:Enable_Reset_Button,
 and
 .B Chassis_Front_Panel_Buttons:Enable_Power_Off_Button_For_Power_Off_Only
@@ -298,7 +298,7 @@ Battery, Session_Audit, Version_Change, FRU_State, and Any
 Since many configurable fields involve decimal numbers,
 precision/floating point inaccuracies may occur when configuring new
 thresholds.  The inaccuracies may not be apparent immediately.  It is
-recommend users verify their changes after configuring new thresholds.
+recommended users verify their changes after configuring new thresholds.
 
 #include <@top_srcdir@/man/manpage-common-hostranged-text-main.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-text-threads.man>
@@ -333,7 +333,7 @@ Dell PowerEdge T320.
 .LP
 \fIsolchannelassumelanchannel\fR - This workaround will force
 .B ipmi-config
-to assume that the channel used SOL is identical to the channel used
+to assume that the channel used for SOL is identical to the channel used
 for LAN.  On some motherboards, the SOL channel is reported
 incorrectly, leading to incorrect configuration.  Most notably, this
 problem has come up when attempting to configure multiple channels.
@@ -357,11 +357,11 @@ Store all core configuration information in bmc-data1.conf.
 .PP
 .B # ipmi-config --diff --filename=bmc-data2.conf
 .PP
-Show all difference between the current configuration and the bmc-data2.conf file.
+Show all differences between the current configuration and the bmc-data2.conf file.
 .PP
 .B # ipmi-config --diff --key-pair="lan_conf_misc:gratuitous_arp_interval=8"
 .PP
-Show difference with the current configuration and the 'lan_conf_misc:gratuitous_arp_interval' of value '8'.
+Show the difference between the current configuration and the 'lan_conf_misc:gratuitous_arp_interval' value of '8'.
 .PP
 .B # ipmi-config --commit --filename=bmc-data1.conf
 .PP
