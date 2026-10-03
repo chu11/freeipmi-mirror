@@ -155,6 +155,7 @@ MANS_COMMON = \
 	manpage-common-time-options-heading.man \
 	manpage-common-time-options.man \
 	manpage-common-sdr-cache-options-heading.man \
+	manpage-common-sdr-cache-options-heading-partial.man \
 	manpage-common-sdr-cache-options.man \
 	manpage-common-sdr-cache-file-directory.man \
 	manpage-common-sdr-cache-ignore.man \

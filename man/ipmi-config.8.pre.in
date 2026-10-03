@@ -131,7 +131,7 @@ wishes to use a specific one.
 Use a specific channel number for SOL configuration.  Particularly
 useful if motherboard contains multiple SOL channels and a user
 wishes to use a specific one.
-#include <@top_srcdir@/man/manpage-common-sdr-cache-options-heading.man>
+#include <@top_srcdir@/man/manpage-common-sdr-cache-options-heading-partial.man>
 #include <@top_srcdir@/man/manpage-common-sdr-cache-options.man>
 #include <@top_srcdir@/man/manpage-common-sdr-cache-file-directory.man>
 #include <@top_srcdir@/man/manpage-common-hostranged-options-header.man>

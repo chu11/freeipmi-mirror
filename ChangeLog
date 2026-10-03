@@ -1,5 +1,15 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/manpage-common-sdr-cache-options-heading-partial.man: New
+	fragment for tools where only some commands need the SDR cache.
+	* man/Makefile.am (MANS_COMMON): Add it.
+	* man/bmc-device.8.pre.in, man/ipmi-config.8.pre.in,
+	man/ipmi-oem.8.pre.in: Include it instead of the heading that says
+	the tool requires the SDR cache for general operation; only
+	--rearm-sensor, --category=sensors and a few OEM commands load it.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-known-issues.man: Escape the hyphens in the -P
 	and -K option names and drop the redundant "options like the ...
 	options" wording.
