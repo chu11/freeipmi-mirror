@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/libipmidetect.3.pre.in: Describe detection as whether a
+	node's IPMI interface is currently responding, not whether the
+	node supports IPMI; a powered-off node is undetected.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/libipmimonitoring.3.pre.in: List ipmi_monitoring_bitmasks.h
 	and ipmi_monitoring_offsets.h in the SYNOPSIS; ipmi_monitoring.h
 	does not include them, and the bitmask/offset accessors need the
