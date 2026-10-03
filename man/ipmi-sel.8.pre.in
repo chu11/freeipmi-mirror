@@ -185,7 +185,7 @@ string output for a system event.  Such string output may be
 beneficial for determining the meaning behind OEM specific events.  This option
 will use the OEM event string to describe all system events in the
 .B ipmi-sel
-output.  This option differs from \fI\-\-interpret\-oem\-data\fR
+output.  This option differs from \fB\-\-interpret\-oem\-data\fR
 option in that all system events will output the vendor supplied event
 string, not just events that are OEM specific.  The event string may
 be very different from the normal FreeIPMI event string output.  If an

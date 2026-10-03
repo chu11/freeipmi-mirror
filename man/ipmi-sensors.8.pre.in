@@ -135,7 +135,7 @@ Ignore not-available (i.e. N/A) sensors in output.
 Ignore unrecognized sensor events.  This will suppress output of
 unrecognized events, typically shown as 'Unrecognized Event = XXXXh'
 in output.  In addition, unrecognized events will be ignored when
-calculating sensor state with \fI\-\-output\-sensor\-state\fR below.
+calculating sensor state with \fB\-\-output\-sensor\-state\fR below.
 .TP
 \fB\-\-output\-event\-bitmask\fR
 Output event bitmask value instead of the string representation.
