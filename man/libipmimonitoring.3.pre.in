@@ -28,6 +28,10 @@
 libipmimonitoring \- a library for IPMI system event and sensor monitoring
 .SH "SYNOPSIS"
 .B #include <ipmi_monitoring.h>
+.br
+.B #include <ipmi_monitoring_bitmasks.h>
+.br
+.B #include <ipmi_monitoring_offsets.h>
 .sp
 .BI "int ipmi_monitoring_init(unsigned int flags, int *errnum);"
 .sp

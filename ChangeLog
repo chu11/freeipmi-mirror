@@ -1,5 +1,12 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/libipmimonitoring.3.pre.in: List ipmi_monitoring_bitmasks.h
+	and ipmi_monitoring_offsets.h in the SYNOPSIS; ipmi_monitoring.h
+	does not include them, and the bitmask/offset accessors need the
+	macros they define.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/libfreeipmi.3.pre.in: Cite libipmiconsole(3), not
 	ipmiconsole(8), as a user of the cmds, debug and interface
 	sub-sections; the ipmiconsole tool only uses the library API.
