@@ -1,5 +1,12 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmipower.8.pre.in: Say that --consolidate-output is ignored,
+	not "commonly disabled", for OEM power types that take an extra
+	argument; ipmipower_output.c never consolidates for them.  Use
+	bold for the option name like the rest of the page.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiconsole.8.pre.in: Fix "must be also be", the garbled
 	"without the risk of ... may have" sentence, and escape the
 	hyphens in the --dont-steal cross reference.
