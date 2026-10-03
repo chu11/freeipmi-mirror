@@ -26,7 +26,7 @@ and
 .TP
 .B debug
 Provides various packet/record dumping utility functions.
-Utilized by the 'api' subsection and by tools such as
+Utilized by the 'api' sub-section and by tools such as
 .B ipmipower(8)
 and
 .B ipmiconsole(8).
@@ -45,7 +45,7 @@ a string-name to bit-field mapping.  The API allows users to
 read/write fields in an object using the string to bit-field
 mapping.  Marshalling, packing, endian, and various other network
 issues are handled within 'fiid'.  Fiid objects are used throughout
-libfreeipmi, including the 'api' sub-section, 'cmds' sub-sections,
+libfreeipmi, including the 'api' sub-section, 'cmds' sub-section,
 and various tools.
 .TP
 .B fru

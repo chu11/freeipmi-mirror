@@ -189,7 +189,7 @@ output.  This option differs from \fI\-\-interpret\-oem\-data\fR
 option in that all system events will output the vendor supplied event
 string, not just events that are OEM specific.  The event string may
 be very different from the normal FreeIPMI event string output.  If an
-OEM event strings is not available, the default output will be output.
+OEM event string is not available, the default output will be output.
 This option is confirmed to work for Fujitsu iRMC S1 and iRMC S2
 systems.
 #include <@top_srcdir@/man/manpage-common-entity-sensor-names.man>

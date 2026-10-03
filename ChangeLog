@@ -1,5 +1,13 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-sel.8.pre.in: "an OEM event strings" -> "string".
+	* man/libfreeipmi.3.pre.in: "subsection" -> "sub-section" and
+	"'cmds' sub-sections" -> "sub-section".
+	* man/libipmiconsole.conf.5.pre.in: "an libipmiconsole context" ->
+	"a libipmiconsole context".
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi_interpret_sensor.conf.5.pre.in: List the
 	IPMI_System_Event_Transition_State options in the parser's order
 	(Idle before Active), matching the SEL page.

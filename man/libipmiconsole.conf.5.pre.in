@@ -55,7 +55,7 @@ whitespace.  Multiple arguments are also separated by whitespace.
 Comments can be marked by using the pound sign ("#") character, and
 lines can be continued on the next using backslash ("\\").
 .SH "CONTEXT IPMI CONFIG OPTIONS"
-Every SOL session is housed within an libipmiconsole context.  The
+Every SOL session is housed within a libipmiconsole context.  The
 following defines IPMI config default values for each context created.
 .TP
 \fBlibipmiconsole\-context\-username\fR \fIUSERNAME\fR
@@ -83,7 +83,7 @@ supported: authcap, nochecksumcheck, intel20, supermicro20, sun20,
 opensesspriv, integritycheckvalue, solpayloadsize, solport, solstatus,
 solchannelsupport, serialalertsdeferred, solpacketseq.
 .SH "CONTEXT PROTOCOL CONFIG OPTIONS"
-Every SOL session is housed within an libipmiconsole context.  The
+Every SOL session is housed within a libipmiconsole context.  The
 following defines protocol config default values for each context created.
 .TP
 \fBlibipmiconsole\-context\-session\-timeout\-len\fR \fIMILLISECONDS\fR
@@ -109,7 +109,7 @@ Specify the default packet errors count to use.
 \fBlibipmiconsole\-context\-maximum\-retransmission\-count\fR \fINUM\fR
 Specify the default maximum retransmission count to use.
 .SH "CONTEXT ENGINE CONFIG OPTIONS"
-Every SOL session is housed within an libipmiconsole context.  The
+Every SOL session is housed within a libipmiconsole context.  The
 following defines engine config default values for each context
 created.  Knowledge of the libipmiconsole library may be necessary to
 understand the meaning of these settings.  Please see the
