@@ -90,7 +90,7 @@ Specify the default username to use.
 \fBpassword\fR \fIPASSWORD\fR
 Specify the default password to use.
 .TP
-\fBk_g\fR \fIstr\fR
+\fBk_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use.  Prefix with '0x' to enter
 the key in hex.
 .TP
@@ -189,7 +189,7 @@ If specified, will override the general option
 \fBpassword\fR
 above.
 .TP
-\fBbmc\-device\-k_g\fR \fIstr\fR
+\fBbmc\-device\-k_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use for
 .B bmc-device(8).
 If specified, will override the general option
@@ -249,7 +249,7 @@ If specified, will override the general option
 \fBpassword\fR
 above.
 .TP
-\fBbmc\-info\-k_g\fR \fIstr\fR
+\fBbmc\-info\-k_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use for
 .B bmc-info(8).
 If specified, will override the general option
@@ -335,7 +335,7 @@ If specified, will override the general option
 \fBpassword\fR
 above.
 .TP
-\fBipmi\-chassis\-k_g\fR \fIstr\fR
+\fBipmi\-chassis\-k_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use for
 .B ipmi-chassis(8).
 If specified, will override the general option
@@ -395,7 +395,7 @@ If specified, will override the general option
 \fBpassword\fR
 above.
 .TP
-\fBipmi\-config\-k_g\fR \fIstr\fR
+\fBipmi\-config\-k_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use for
 .B ipmi-config(8).
 If specified, will override the general option
@@ -459,7 +459,7 @@ If specified, will override the general option
 \fBpassword\fR
 above.
 .TP
-\fBipmi\-dcmi\-k_g\fR \fIstr\fR
+\fBipmi\-dcmi\-k_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use for
 .B ipmi-dcmi(8).
 If specified, will override the general option
@@ -524,7 +524,7 @@ If specified, will override the general option
 \fBpassword\fR
 above.
 .TP
-\fBipmi\-fru\-k_g\fR \fIstr\fR
+\fBipmi\-fru\-k_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use for
 .B ipmi-fru(8).
 If specified, will override the general option
@@ -597,7 +597,7 @@ If specified, will override the general option
 \fBpassword\fR
 above.
 .TP
-\fBipmi\-oem\-k_g\fR \fIstr\fR
+\fBipmi\-oem\-k_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use for
 .B ipmi-oem(8).
 If specified, will override the general option
@@ -661,7 +661,7 @@ If specified, will override the general option
 \fBpassword\fR
 above.
 .TP
-\fBipmi\-pet\-k_g\fR \fIstr\fR
+\fBipmi\-pet\-k_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use for
 .B ipmi-pet(8).
 If specified, will override the general option
@@ -761,7 +761,7 @@ If specified, will override the general option
 \fBpassword\fR
 above.
 .TP
-\fBipmi\-raw\-k_g\fR \fIstr\fR
+\fBipmi\-raw\-k_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use for
 .B ipmi-raw(8).
 If specified, will override the general option
@@ -821,7 +821,7 @@ If specified, will override the general option
 \fBpassword\fR
 above.
 .TP
-\fBipmi\-sel\-k_g\fR \fIstr\fR
+\fBipmi\-sel\-k_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use for
 .B ipmi-sel(8).
 If specified, will override the general option
@@ -945,7 +945,7 @@ If specified, will override the general option
 \fBpassword\fR
 above.
 .TP
-\fBipmi\-sensors\-k_g\fR \fIstr\fR
+\fBipmi\-sensors\-k_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use for
 .B ipmi-sensors(8).
 If specified, will override the general option
@@ -1094,7 +1094,7 @@ If specified, will override the general option
 \fBpassword\fR
 above.
 .TP
-\fBipmiconsole\-k_g\fR \fIstr\fR
+\fBipmiconsole\-k_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use for
 .B ipmiconsole(8).
 If specified, will override the general option
@@ -1167,7 +1167,7 @@ If specified, will override the general option
 \fBpassword\fR
 above.
 .TP
-\fBipmipower\-k_g\fR \fIstr\fR
+\fBipmipower\-k_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use for
 .B ipmipower(8).
 If specified, will override the general option

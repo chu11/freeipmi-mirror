@@ -79,7 +79,7 @@ Specify the username to use.
 \fBpassword\fR \fIPASSWORD\fR
 Specify the password to use.
 .TP
-\fBk_g\fR \fIstr\fR
+\fBk_g\fR \fIK_G\fR
 Specify the BMC key (K_g) to use.  Prefix with '0x' to enter
 the key in hex.
 .TP

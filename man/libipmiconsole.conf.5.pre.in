@@ -64,7 +64,7 @@ Specify the default username to use.
 \fBlibipmiconsole\-context\-password\fR \fIPASSWORD\fR
 Specify the default password to use.
 .TP
-\fBlibipmiconsole\-context\-k_g\fR \fIstr\fR
+\fBlibipmiconsole\-context\-k_g\fR \fIK_G\fR
 Specify the default BMC key (K_g) to use.  Prefix with '0x' to enter
 the key in hex.
 .TP

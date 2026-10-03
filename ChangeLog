@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi.conf.5.pre.in, man/ipmiseld.conf.5.pre.in,
+	man/libipmiconsole.conf.5.pre.in: Use the upper-case placeholder
+	K_G for the k_g options like every other placeholder.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.conf.5.pre.in, man/libipmiconsole.conf.5.pre.in:
 	Title the pages FREEIPMI.CONF and LIBIPMICONSOLE.CONF like the
 	other configuration file pages, so the header does not read
