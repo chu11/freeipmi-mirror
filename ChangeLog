@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi.conf.5.pre.in: Fix "event state state", "event
+	severity state" and "IPMI key (K_g)" (every other entry says BMC
+	key).
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmiseld.conf.5.pre.in: The hostname list is a single string
 	argument; say it must not contain whitespace, since the parser
 	rejects "host1, host2".
