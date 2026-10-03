@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-config.conf.5.pre.in: Make the example comments for
+	Password, the IP/MAC/subnet keys, Gratuitous_ARP_Interval and
+	Character_Accumulate_Interval match what --checkout writes today.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.conf.5.pre.in, man/ipmi-config.8.pre.in: Spell the
 	Lan_Enable_IPMI_Msgs, *_IP_Address, *_MAC_Address and *_ARP* keys
 	in prose and the commit example the way --checkout writes them.

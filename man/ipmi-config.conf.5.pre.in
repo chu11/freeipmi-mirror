@@ -38,7 +38,7 @@ Future versions of this manpage will try to include more information.
      Section User1
      	## Give username
      	## Username                                  NULL
-     	## Give password or leave it blank to clear password
+     	## Give password or blank to clear. MAX 16 chars (20 chars if IPMI 2.0 supported).
      	Password                                     mypassword
      	## Possible values: Yes/No or blank to not set
      	Enable_User                                  Yes
@@ -54,7 +54,7 @@ Future versions of this manpage will try to include more information.
      Section User2
      	## Give username
      	Username                                     user2
-     	## Give password or leave it blank to clear password
+     	## Give password or blank to clear. MAX 16 chars (20 chars if IPMI 2.0 supported).
      	Password                                     userpass
      	## Possible values: Yes/No or blank to not set
      	Enable_User                                  No
@@ -92,19 +92,19 @@ Future versions of this manpage will try to include more information.
      Section Lan_Conf
      	## Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others
      	IP_Address_Source                            Static
-     	## Give valid IP Address
+     	## Give valid IP address
      	IP_Address                                   192.168.1.100
-     	## Give valid MAC Address
+     	## Give valid MAC address
      	MAC_Address                                  00:0E:0E:FF:AA:12
-     	## Give valid Subnet mask
+     	## Give valid Subnet Mask
      	Subnet_Mask                                  255.255.255.0
-     	## Give valid IP Address
+     	## Give valid IP address
      	Default_Gateway_IP_Address                   192.168.1.1
-     	## Give valid MAC Address
+     	## Give valid MAC address
      	Default_Gateway_MAC_Address                  00:0E:0E:FF:AA:18
-     	## Give valid IP Address
+     	## Give valid IP address
      	Backup_Gateway_IP_Address                    192.168.1.2
-     	## Give valid MAC Address
+     	## Give valid MAC address
      	Backup_Gateway_MAC_Address                   00:0E:0E:FF:AA:15
      EndSection
      Section Lan_Conf_Auth
@@ -168,7 +168,7 @@ Future versions of this manpage will try to include more information.
      	Enable_Gratuitous_ARPs                       Yes
      	## Possible values: Yes/No
      	Enable_ARP_Response                          No
-     	## Give valid number. Intervals are 500 ms.
+     	## Possible values: 0-255, in 500ms increments (e.g. 2 = 1000ms)
      	Gratuitous_ARP_Interval                      4
      EndSection
      Section Rmcpplus_Conf_Privilege
@@ -212,7 +212,7 @@ Future versions of this manpage will try to include more information.
      	Force_SOL_Payload_Authentication             Yes
      	## Possible values: Yes/No
      	Force_SOL_Payload_Encryption                 Yes
-     	## Give a valid integer. Each unit is 5ms
+     	## Give a non-zero valid integer. Each unit is 5ms
      	Character_Accumulate_Interval                50
      	## Give a valid number
      	Character_Send_Threshold                     100
