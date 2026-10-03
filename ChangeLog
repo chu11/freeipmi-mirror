@@ -1,5 +1,10 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi.7.pre.in: Add ipmi-dcmi(8), ipmidetectd(8),
+	ipmiseld(8) and the configuration file pages to SEE ALSO.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.7.pre.in: List the Intel DCMI driver among the
 	libfreeipmi in-band drivers, as the introduction already does.
 
