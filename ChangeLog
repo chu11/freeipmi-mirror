@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi.7.pre.in, man/libfreeipmi.3.pre.in: Use "\-" in the
+	NAME line like every other page, so whatis/apropos parse it
+	consistently.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/manpage-common-workaround-outofband-20-text.man: "invalid
 	lengthed hash keys" -> "invalid length hash keys" in the sun20
 	description.
