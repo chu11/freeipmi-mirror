@@ -1,3 +1,7 @@
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
+	* man/manpage-common-hostranged-buffer.man: Fix "the the".
+
 2026-10-02 Albert Chu <chu11@llnl.gov>
 
 	* man/ipmiseld.8.pre.in: Copy the OEM INTERPRETATION motherboard
