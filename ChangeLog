@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi_interpret_sensor.conf.5.pre.in: List the
+	IPMI_System_Event_Transition_State options in the parser's order
+	(Idle before Active), matching the SEL page.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi_interpret_sel.conf.5.pre.in,
 	man/freeipmi_interpret_sensor.conf.5.pre.in: Fix prose and markup
 	slips: "continued on the next using backslash", "Platform
