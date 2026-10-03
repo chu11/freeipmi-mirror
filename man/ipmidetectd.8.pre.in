@@ -71,6 +71,12 @@ Specify alternate configuration file
 \fB\-d\fR, \fB\-\-debug\fR
 Turn on debugging and run daemon in foreground
 .TP
+\fB\-?\fR, \fB\-\-help\fR
+Output a help list and exit
+.TP
+\fB\-\-usage\fR
+Output a usage message and exit
+.TP
 \fB\-V\fR, \fB\-\-version\fR
 Output version
 

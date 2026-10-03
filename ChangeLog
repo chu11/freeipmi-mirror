@@ -1,5 +1,13 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmidetect.8.pre.in, man/ipmidetectd.8.pre.in: Document the
+	-?/--help and --usage options argp provides, as every other tool
+	page does.
+	* man/ipmidetect.8.pre.in: Escape the hyphens in --detected and
+	--undetected in DIAGNOSTICS.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/bmc-watchdog.8.pre.in, man/ipmiconsole.8.pre.in,
 	man/ipmidetect.8.pre.in, man/ipmidetectd.8.pre.in,
 	man/ipmipower.8.pre.in, man/ipmiseld.8.pre.in,
