@@ -200,7 +200,7 @@ above.  Prefix with '0x' to enter the key in hex.
 Specify the default authentication type to use for
 .B bmc-device(8).
 If specified, will override the general option
-\fBauthentication-type\fR
+\fBauthentication\-type\fR
 above.  The following authentication types are supported: NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
@@ -208,7 +208,7 @@ STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 Specify the default cipher suite id to use for
 .B bmc-device(8).
 If specified, will override the general option
-\fBcipher-suite-id\fR
+\fBcipher\-suite\-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 7, 8, 11, 12, 15, 16, 17.
 .TP
@@ -216,7 +216,7 @@ above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 Specify the default privilege type to use for
 .B bmc-device(8).
 If specified, will override the general option
-\fBprivilege-level\fR
+\fBprivilege\-level\fR
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
 .TP
@@ -260,7 +260,7 @@ above.  Prefix with '0x' to enter the key in hex.
 Specify the default authentication type to use for
 .B bmc-info(8).
 If specified, will override the general option
-\fBauthentication-type\fR
+\fBauthentication\-type\fR
 above.  The following authentication types are supported: NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
@@ -268,7 +268,7 @@ STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 Specify the default cipher suite id to use for
 .B bmc-info(8).
 If specified, will override the general option
-\fBcipher-suite-id\fR
+\fBcipher\-suite\-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 7, 8, 11, 12, 15, 16, 17.
 .TP
@@ -276,7 +276,7 @@ above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 Specify the default privilege type to use for
 .B bmc-info(8).
 If specified, will override the general option
-\fBprivilege-level\fR
+\fBprivilege\-level\fR
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
 .TP
@@ -346,7 +346,7 @@ above.  Prefix with '0x' to enter the key in hex.
 Specify the default authentication type to use for
 .B ipmi-chassis(8).
 If specified, will override the general option
-\fBauthentication-type\fR
+\fBauthentication\-type\fR
 above.  The following authentication types are supported: NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
@@ -354,7 +354,7 @@ STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 Specify the default cipher suite id to use for
 .B ipmi-chassis(8).
 If specified, will override the general option
-\fBcipher-suite-id\fR
+\fBcipher\-suite\-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 7, 8, 11, 12, 15, 16, 17.
 .TP
@@ -362,7 +362,7 @@ above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 Specify the default privilege type to use for
 .B ipmi-chassis(8).
 If specified, will override the general option
-\fBprivilege-level\fR
+\fBprivilege\-level\fR
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
 .TP
@@ -406,7 +406,7 @@ above.  Prefix with '0x' to enter the key in hex.
 Specify the default authentication type to use for
 .B ipmi-config(8).
 If specified, will override the general option
-\fBauthentication-type\fR
+\fBauthentication\-type\fR
 above.  The following authentication types are supported: NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
@@ -414,7 +414,7 @@ STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 Specify the default cipher suite id to use for
 .B ipmi-config(8).
 If specified, will override the general option
-\fBcipher-suite-id\fR
+\fBcipher\-suite\-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 7, 8, 11, 12, 15, 16, 17.
 .TP
@@ -422,7 +422,7 @@ above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 Specify the default privilege type to use for
 .B ipmi-config(8).
 If specified, will override the general option
-\fBprivilege-level\fR
+\fBprivilege\-level\fR
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
 .TP
@@ -470,7 +470,7 @@ above.  Prefix with '0x' to enter the key in hex.
 Specify the default authentication type to use for
 .B ipmi-dcmi(8).
 If specified, will override the general option
-\fBauthentication-type\fR
+\fBauthentication\-type\fR
 above.  The following authentication types are supported: NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
@@ -478,7 +478,7 @@ STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 Specify the default cipher suite id to use for
 .B ipmi-dcmi(8).
 If specified, will override the general option
-\fBcipher-suite-id\fR
+\fBcipher\-suite\-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 7, 8, 11, 12, 15, 16, 17.
 .TP
@@ -486,7 +486,7 @@ above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 Specify the default privilege type to use for
 .B ipmi-dcmi(8).
 If specified, will override the general option
-\fBprivilege-level\fR
+\fBprivilege\-level\fR
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
 .TP
@@ -535,7 +535,7 @@ above.  Prefix with '0x' to enter the key in hex.
 Specify the default authentication type to use for
 .B ipmi-fru(8).
 If specified, will override the general option
-\fBauthentication-type\fR
+\fBauthentication\-type\fR
 above.  The following authentication types are supported: NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
@@ -543,7 +543,7 @@ STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 Specify the default cipher suite id to use for
 .B ipmi-fru(8).
 If specified, will override the general option
-\fBcipher-suite-id\fR
+\fBcipher\-suite\-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 7, 8, 11, 12, 15, 16, 17.
 .TP
@@ -551,7 +551,7 @@ above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 Specify the default privilege type to use for
 .B ipmi-fru(8).
 If specified, will override the general option
-\fBprivilege-level\fR
+\fBprivilege\-level\fR
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
 .TP
@@ -608,7 +608,7 @@ above.  Prefix with '0x' to enter the key in hex.
 Specify the default authentication type to use for
 .B ipmi-oem(8).
 If specified, will override the general option
-\fBauthentication-type\fR
+\fBauthentication\-type\fR
 above.  The following authentication types are supported: NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
@@ -616,7 +616,7 @@ STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 Specify the default cipher suite id to use for
 .B ipmi-oem(8).
 If specified, will override the general option
-\fBcipher-suite-id\fR
+\fBcipher\-suite\-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 7, 8, 11, 12, 15, 16, 17.
 .TP
@@ -624,7 +624,7 @@ above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 Specify the default privilege type to use for
 .B ipmi-oem(8).
 If specified, will override the general option
-\fBprivilege-level\fR
+\fBprivilege\-level\fR
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
 .TP
@@ -672,7 +672,7 @@ above.  Prefix with '0x' to enter the key in hex.
 Specify the default authentication type to use for
 .B ipmi-pet(8).
 If specified, will override the general option
-\fBauthentication-type\fR
+\fBauthentication\-type\fR
 above.  The following authentication types are supported: NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
@@ -680,7 +680,7 @@ STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 Specify the default cipher suite id to use for
 .B ipmi-pet(8).
 If specified, will override the general option
-\fBcipher-suite-id\fR
+\fBcipher\-suite\-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 7, 8, 11, 12, 15, 16, 17.
 .TP
@@ -688,7 +688,7 @@ above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 Specify the default privilege type to use for
 .B ipmi-pet(8).
 If specified, will override the general option
-\fBprivilege-level\fR
+\fBprivilege\-level\fR
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
 .TP
@@ -772,7 +772,7 @@ above.  Prefix with '0x' to enter the key in hex.
 Specify the default authentication type to use for
 .B ipmi-raw(8).
 If specified, will override the general option
-\fBauthentication-type\fR
+\fBauthentication\-type\fR
 above.  The following authentication types are supported: NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
@@ -780,7 +780,7 @@ STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 Specify the default cipher suite id to use for
 .B ipmi-raw(8).
 If specified, will override the general option
-\fBcipher-suite-id\fR
+\fBcipher\-suite\-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 7, 8, 11, 12, 15, 16, 17.
 .TP
@@ -788,7 +788,7 @@ above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 Specify the default privilege type to use for
 .B ipmi-raw(8).
 If specified, will override the general option
-\fBprivilege-level\fR
+\fBprivilege\-level\fR
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
 .TP
@@ -832,7 +832,7 @@ above.  Prefix with '0x' to enter the key in hex.
 Specify the default authentication type to use for
 .B ipmi-sel(8).
 If specified, will override the general option
-\fBauthentication-type\fR
+\fBauthentication\-type\fR
 above.  The following authentication types are supported: NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
@@ -840,7 +840,7 @@ STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 Specify the default cipher suite id to use for
 .B ipmi-sel(8).
 If specified, will override the general option
-\fBcipher-suite-id\fR
+\fBcipher\-suite\-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 7, 8, 11, 12, 15, 16, 17.
 .TP
@@ -848,7 +848,7 @@ above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 Specify the default privilege type to use for
 .B ipmi-sel(8).
 If specified, will override the general option
-\fBprivilege-level\fR
+\fBprivilege\-level\fR
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
 .TP
@@ -956,7 +956,7 @@ above.  Prefix with '0x' to enter the key in hex.
 Specify the default authentication type to use for
 .B ipmi-sensors(8).
 If specified, will override the general option
-\fBauthentication-type\fR
+\fBauthentication\-type\fR
 above.  The following authentication types are supported: NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
@@ -964,7 +964,7 @@ STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 Specify the default cipher suite id to use for
 .B ipmi-sensors(8).
 If specified, will override the general option
-\fBcipher-suite-id\fR
+\fBcipher\-suite\-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 7, 8, 11, 12, 15, 16, 17.
 .TP
@@ -972,7 +972,7 @@ above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 Specify the default privilege type to use for
 .B ipmi-sensors(8).
 If specified, will override the general option
-\fBprivilege-level\fR
+\fBprivilege\-level\fR
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
 .TP
@@ -1105,7 +1105,7 @@ above.  Prefix with '0x' to enter the key in hex.
 Specify the default cipher suite id to use for
 .B ipmiconsole(8).
 If specified, will override the general option
-\fBcipher-suite-id\fR
+\fBcipher\-suite\-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 7, 8, 11, 12, 15, 16, 17.
 .TP
@@ -1113,7 +1113,7 @@ above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 Specify the default privilege type to use for
 .B ipmiconsole(8).
 If specified, will override the general option
-\fBprivilege-level\fR
+\fBprivilege\-level\fR
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
 .TP
@@ -1178,7 +1178,7 @@ above.  Prefix with '0x' to enter the key in hex.
 Specify the default authentication type to use for
 .B ipmipower(8).
 If specified, will override the general option
-\fBauthentication-type\fR
+\fBauthentication\-type\fR
 above.  The following authentication types are supported: NONE,
 STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 .TP
@@ -1186,7 +1186,7 @@ STRAIGHT_PASSWORD_KEY, MD2, and MD5.
 Specify the default cipher suite id to use for
 .B ipmipower(8).
 If specified, will override the general option
-\fBcipher-suite-id\fR
+\fBcipher\-suite\-id\fR
 above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 7, 8, 11, 12, 15, 16, 17.
 .TP
@@ -1194,7 +1194,7 @@ above.  The following cipher suite ids are supported: 0, 1, 2, 3, 6,
 Specify the default privilege type to use for
 .B ipmipower(8).
 If specified, will override the general option
-\fBprivilege-level\fR
+\fBprivilege\-level\fR
 above.  The following privilege levels are supported: USER, OPERATOR,
 ADMIN.
 .TP

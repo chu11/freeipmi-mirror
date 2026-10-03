@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi.conf.5.pre.in: Escape the hyphens in the 38 "will
+	override the general option" cross references to
+	authentication-type, cipher-suite-id and privilege-level.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.conf.5.pre.in: Fix "event state state", "event
 	severity state" and "IPMI key (K_g)" (every other entry says BMC
 	key).
