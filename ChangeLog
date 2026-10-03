@@ -1,5 +1,11 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-config.conf.5.pre.in: MD2 and MD5 are hash algorithms,
+	not "digital signature algorithms that can minimally encrypt
+	passwords".
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.conf.5.pre.in: Fix prose slips: a stray .br after
 	the NAME line, "setup" used as a verb, "privileges use any Cipher
 	Suite algorithm suite", and "on those machines" with no

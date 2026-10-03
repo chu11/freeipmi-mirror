@@ -349,8 +349,8 @@ been disabled for the "Callback" privilege level.
 .LP
 Generally speaking, you do not want to allow any user to authenticate
 with \fINone\fR or \fIStraight_Password\fR for security reasons.
-\fIMD2\fR and \fIMD5\fR are digital signature algorithms that can
-minimally encrypt passwords.  If you have chosen to support the NULL
+\fIMD2\fR and \fIMD5\fR are hash algorithms, so passwords are not
+sent over the network in the clear.  If you have chosen to support the NULL
 username (enabled User1) and NULL passwords (NULL password for User1),
 you will have to enable the \fINone\fR authentication fields above to
 allow users to connect via \fINone\fR.
