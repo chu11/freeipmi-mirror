@@ -286,7 +286,8 @@ and \fICommunity_String_Channel_3\fR, where you can configure the
 Community String on Channels 1 and 3 respectively.
 
 The following are the options suitable for input for Sensor_Type in
-PEF configuration.
+PEF configuration.  A numeric sensor type code (hex accepted) may be
+given instead of a string.
 .TP
 \fBSensor_Type Options\fR
 Reserved, Temperature, Voltage, Current, Fan, Physical_Security,

@@ -1,5 +1,10 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/ipmi-config.8.pre.in: Note that the PEF Sensor_Type field also
+	accepts a numeric sensor type code, as the --checkout comment says.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.8.pre.in: Document that --category also accepts
 	space separators and the legacy "bmc" alias for core, and
 	describe what the sensors and pef categories cover.
