@@ -315,6 +315,7 @@ recommend users verify their changes after configuring new thresholds.
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-common-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-15-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-outofband-20-text.man>
+#include <@top_srcdir@/man/manpage-common-workaround-sdr-text.man>
 #include <@top_srcdir@/man/manpage-common-workaround-extra-text.man>
 .LP
 \fIslowcommit\fR - This workaround will slow down commits to the BMC
