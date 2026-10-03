@@ -23,7 +23,7 @@
 .\"  You should have received a copy of the GNU General Public License along
 .\"  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
 .\"############################################################################
-.TH IPMIDETECT.CONF 5 "@ISODATE@" "LLNL" "LIBIPMIDETECT"
+.TH IPMIDETECT.CONF 5 "@ISODATE@" "libipmidetect @PACKAGE_VERSION@" "Configuration"
 .SH "NAME"
 ipmidetect.conf \- specify alternate default values for the ipmidetect library
 .SH "DESCRIPTION"

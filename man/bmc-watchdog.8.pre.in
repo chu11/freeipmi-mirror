@@ -23,7 +23,7 @@
 .\"  You should have received a copy of the GNU General Public License along
 .\"  with Bmc-Watchdog.  If not, see <http://www.gnu.org/licenses/>.
 .\"############################################################################
-.TH bmc-watchdog 8 "@ISODATE@" "bmc-watchdog @PACKAGE_VERSION@" "System Commands"
+.TH BMC-WATCHDOG 8 "@ISODATE@" "bmc-watchdog @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 bmc-watchdog \- BMC watchdog timer daemon and control utility
 .SH "SYNOPSIS"

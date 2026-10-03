@@ -20,7 +20,7 @@
 .\"  You should have received a copy of the GNU General Public License along
 .\"  with Ipmiseld.  If not, see <http://www.gnu.org/licenses/>.
 .\"#############################################################################
-.TH ipmiseld.conf 5 "@ISODATE@" "ipmiseld.conf @VERSION@" "ipmiseld.conf"
+.TH IPMISELD.CONF 5 "@ISODATE@" "ipmiseld @PACKAGE_VERSION@" "Configuration"
 .SH "NAME"
 ipmiseld.conf \- ipmiseld configuration file
 .SH "DESCRIPTION"

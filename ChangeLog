@@ -1,5 +1,18 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/bmc-watchdog.8.pre.in, man/ipmiconsole.8.pre.in,
+	man/ipmidetect.8.pre.in, man/ipmidetectd.8.pre.in,
+	man/ipmipower.8.pre.in, man/ipmiseld.8.pre.in,
+	man/ipmi-config.conf.5.pre.in, man/ipmidetect.conf.5.pre.in,
+	man/ipmidetectd.conf.5.pre.in, man/ipmiseld.conf.5.pre.in,
+	man/libipmiconsole.3.pre.in, man/libipmidetect.3.pre.in: Use the
+	same .TH layout as the other pages: upper-case title, "<name>
+	@PACKAGE_VERSION@" as the source, and "System Commands" or
+	"Configuration" as the manual name.  ipmidetect.conf.5 had "LLNL"
+	in place of the version.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/freeipmi.7.pre.in: Add ipmi-dcmi(8), ipmidetectd(8),
 	ipmiseld(8) and the configuration file pages to SEE ALSO.
 

@@ -1,4 +1,4 @@
-.TH ipmi-config.conf 5 "@ISODATE@" "ipmi-config @PACKAGE_VERSION@" "Configuration"
+.TH IPMI-CONFIG.CONF 5 "@ISODATE@" "ipmi-config @PACKAGE_VERSION@" "Configuration"
 .SH "NAME"
 ipmi-config.conf \- IPMI configuration file details
 .br

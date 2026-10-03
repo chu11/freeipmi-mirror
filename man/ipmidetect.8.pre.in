@@ -23,7 +23,7 @@
 .\"  You should have received a copy of the GNU General Public License along
 .\"  with Ipmidetect.  If not, see <http://www.gnu.org/licenses/>.
 .\"############################################################################
-.TH Ipmidetect 8 "@ISODATE@" "Ipmidetect @VERSION@" "Ipmidetect"
+.TH IPMIDETECT 8 "@ISODATE@" "ipmidetect @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 ipmidetect \- list detected and/or undetected IPMI interfaces in a cluster
 .SH "SYNOPSIS"
