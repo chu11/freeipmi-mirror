@@ -1,5 +1,13 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi_interpret_sel.conf.5.pre.in,
+	man/freeipmi_interpret_sensor.conf.5.pre.in: Refer to the
+	ipmi-sensors(8) tool in lower case.
+	* man/ipmidetect.conf.5.pre.in: Refer to libipmidetect(3) for
+	ipmidetect_load_data(); there is no ipmidetect_load_data(3) page.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-chassis.8.pre.in: State that exactly one command option
 	must be specified, as the argp code enforces and the other
 	command-style tool pages say.

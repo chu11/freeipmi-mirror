@@ -19,9 +19,9 @@ Each of the states listed below are (hopefully) descriptive enough
 to describe the state conditions that may be set/unset for each
 sensor or event type.  For more detailed information on each of the
 individual states listed below, please see the IPMI Specification
-"Sensor and Event Code Tables".
-.B Ipmi-sensors(8)
-can be used to determine the sensor types and the states/thresholds
+"Sensor and Event Code Tables".  The
+.B ipmi-sensors(8)
+tool can be used to determine the sensor types and the states/thresholds
 that exist on a system by outputting very verbose output and seeing
 what types of Assertion or Deassertion events are possible.
 .LP
