@@ -1175,6 +1175,7 @@ Defaults to Nominal.
 .TP
 .B IPMI_Event_Logging_Disabled
 The following states correspond to Event Logging Disabled sensors w/
+Event Logging Disabled specific output states.
 .RS
 .TP
 \fBIPMI_Event_Logging_Disabled_No_Event\fR
@@ -1766,6 +1767,8 @@ Defaults to Nominal.
 .RE
 .TP
 .B IPMI_System_ACPI_Power_State
+The following states correspond to System ACPI Power State sensors w/
+System ACPI Power State specific output states.
 .RS
 .TP
 \fBIPMI_System_ACPI_Power_State_No_Event\fR

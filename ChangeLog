@@ -1,5 +1,13 @@
 2026-10-03 Albert Chu <chu11@llnl.gov>
 
+	* man/freeipmi_interpret_sel.conf.5.pre.in,
+	man/freeipmi_interpret_sensor.conf.5.pre.in: Complete the
+	IPMI_Event_Logging_Disabled introduction, which ended
+	mid-sentence, and add the missing introduction to
+	IPMI_System_ACPI_Power_State.
+
+2026-10-03 Albert Chu <chu11@llnl.gov>
+
 	* man/ipmi-config.conf.5.pre.in: MD2 and MD5 are hash algorithms,
 	not "digital signature algorithms that can minimally encrypt
 	passwords".
