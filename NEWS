@@ -1,4 +1,4 @@
-FreeIPMI 1.6.20 - XX/XX/XX
+FreeIPMI 1.6.20 - 10/05/26
 --------------------------
 o The format specifier %h was used for two different format fields.
   Use %H as target host specifier.
