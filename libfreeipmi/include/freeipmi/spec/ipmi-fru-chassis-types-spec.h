@@ -86,11 +86,18 @@ extern "C" {
 #define IPMI_FRU_CHASSIS_TYPE_ADVANCED_TCA          0x1B
 #define IPMI_FRU_CHASSIS_TYPE_BLADE                 0x1C
 #define IPMI_FRU_CHASSIS_TYPE_BLADE_ENCLOSURE       0x1D
+#define IPMI_FRU_CHASSIS_TYPE_TABLET                0x1E
+#define IPMI_FRU_CHASSIS_TYPE_CONVERTIBLE           0x1F
+#define IPMI_FRU_CHASSIS_TYPE_DETACHABLE            0x20
+#define IPMI_FRU_CHASSIS_TYPE_IOT_GATEWAY           0x21
+#define IPMI_FRU_CHASSIS_TYPE_EMBEDDED_PC           0x22
+#define IPMI_FRU_CHASSIS_TYPE_MINI_PC               0x23
+#define IPMI_FRU_CHASSIS_TYPE_STICK_PC              0x24
 
 /* To avoid gcc warnings, add +1 in comparison */
 #define IPMI_FRU_CHASSIS_TYPE_VALID(__chassis_type) \
   ((((__chassis_type) + 1) >= (IPMI_FRU_CHASSIS_TYPE_OTHER + 1) \
-    && (__chassis_type) <= IPMI_FRU_CHASSIS_TYPE_BLADE_ENCLOSURE) ? 1 : 0)
+    && (__chassis_type) <= IPMI_FRU_CHASSIS_TYPE_STICK_PC) ? 1 : 0)
 
 extern const char *const ipmi_fru_chassis_types[];
 

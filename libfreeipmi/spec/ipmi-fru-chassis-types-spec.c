@@ -68,5 +68,12 @@ const char *const ipmi_fru_chassis_types[] =
     "Advanced TCA",
     "Blade",
     "Blade Enclosure",
+    "Tablet",
+    "Convertible",
+    "Detachable",
+    "IoT Gateway",
+    "Embedded PC",
+    "Mini PC",
+    "Stick PC",
     NULL
   };
