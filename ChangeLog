@@ -1,5 +1,11 @@
 2026-10-05 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/include/freeipmi/api/ipmi-api.h: Document all
+	completion and RMCP+ status codes that map to invalid-username and
+	BMC-busy errors.
+
+2026-10-05 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/include/freeipmi/spec/ipmi-fru-chassis-types-spec.h,
 	libfreeipmi/spec/ipmi-fru-chassis-types-spec.c: Add the SMBIOS
 	chassis types from Tablet through Stick PC.
