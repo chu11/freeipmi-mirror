@@ -1,5 +1,14 @@
 2026-10-10  LongWei27 <longwei27@huawei.com>
 
+	* ipmiseld/ipmiseld.c: Use clock_gettime(CLOCK_MONOTONIC)
+	instead of gettimeofday() for daemon loop timing to prevent
+	excessively long sleeps when the system clock jumps backward.
+	Guarded by HAVE_CLOCK_GETTIME and HAVE_CLOCK_MONOTONIC with
+	fallback to gettimeofday().  Also add error checking for
+	gettimeofday() that was previously missing.
+
+2026-10-10  LongWei27 <longwei27@huawei.com>
+
 	* ipmidetectd/ipmidetectd.c: Use clock_gettime(CLOCK_MONOTONIC)
 	instead of gettimeofday() for daemon loop timing to prevent
 	incorrect ping intervals when the system clock jumps backward.
