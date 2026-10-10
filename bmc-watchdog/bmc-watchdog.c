@@ -1206,11 +1206,18 @@ _daemon_cmd (const char *progname)
 
   while (shutdown_flag)
     {
-      struct timeval start_tv, end_tv;
       uint32_t adjusted_period;
+#if defined(HAVE_CLOCK_GETTIME) && defined(HAVE_CLOCK_MONOTONIC)
+      struct timespec start_ts, end_ts;
+
+      if (clock_gettime (CLOCK_MONOTONIC, &start_ts) < 0)
+        err_exit ("clock_gettime: %s", strerror (errno));
+#else
+      struct timeval start_tv, end_tv;
 
       if (gettimeofday (&start_tv, NULL) < 0)
         err_exit ("gettimeofday: %s", strerror (errno));
+#endif
 
       if (_get_watchdog_timer_cmd (NULL,
                                    &timer_state,
@@ -1294,14 +1301,24 @@ _daemon_cmd (const char *progname)
         }
 
     sleep_now:
+#if defined(HAVE_CLOCK_GETTIME) && defined(HAVE_CLOCK_MONOTONIC)
+      if (clock_gettime (CLOCK_MONOTONIC, &end_ts) < 0)
+        err_exit ("clock_gettime: %s", strerror (errno));
+#else
       if (gettimeofday (&end_tv, NULL) < 0)
         err_exit ("gettimeofday: %s", strerror (errno));
+#endif
 
       adjusted_period = reset_period;
 
-      /* Ignore micro secs, just seconds is good enough */
+      /* Ignore sub-second precision, just seconds is good enough */
+#if defined(HAVE_CLOCK_GETTIME) && defined(HAVE_CLOCK_MONOTONIC)
+      if ((end_ts.tv_sec - start_ts.tv_sec) < adjusted_period)
+        adjusted_period -= (end_ts.tv_sec - start_ts.tv_sec);
+#else
       if ((end_tv.tv_sec - start_tv.tv_sec) < adjusted_period)
         adjusted_period -= (end_tv.tv_sec - start_tv.tv_sec);
+#endif
 
       daemon_sleep (adjusted_period);
     }

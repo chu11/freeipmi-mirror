@@ -1489,7 +1489,6 @@ static int
 _ipmiseld_poll_postprocess (void *arg)
 {
   ipmiseld_host_data_t *host_data;
-  struct timeval tv;
   int rv = -1;
 
   assert (arg);
@@ -1498,8 +1497,19 @@ _ipmiseld_poll_postprocess (void *arg)
 
   assert (!host_data->host_poll);
 
-  gettimeofday (&tv, NULL);
-  host_data->next_poll_time = tv.tv_sec + host_data->prog_data->args->poll_interval;
+  {
+#if defined(HAVE_CLOCK_GETTIME) && defined(HAVE_CLOCK_MONOTONIC)
+    struct timespec ts;
+    if (clock_gettime (CLOCK_MONOTONIC, &ts) < 0)
+      err_exit ("clock_gettime: %s", strerror (errno));
+    host_data->next_poll_time = ts.tv_sec + host_data->prog_data->args->poll_interval;
+#else
+    struct timeval tv;
+    if (gettimeofday (&tv, NULL) < 0)
+      err_exit ("gettimeofday: %s", strerror (errno));
+    host_data->next_poll_time = tv.tv_sec + host_data->prog_data->args->poll_interval;
+#endif
+  }
 
   pthread_mutex_lock (&host_data_heap_lock);
 
@@ -1763,14 +1773,23 @@ _ipmiseld (ipmiseld_prog_data_t *prog_data)
             daemon_sleep (prog_data->args->poll_interval + 1);
           else
             {
+              time_t now_sec;
+#if defined(HAVE_CLOCK_GETTIME) && defined(HAVE_CLOCK_MONOTONIC)
+              struct timespec ts;
+              if (clock_gettime (CLOCK_MONOTONIC, &ts) < 0)
+                err_exit ("clock_gettime: %s", strerror (errno));
+              now_sec = ts.tv_sec;
+#else
               struct timeval tv;
-
-              gettimeofday (&tv, NULL);
+              if (gettimeofday (&tv, NULL) < 0)
+                err_exit ("gettimeofday: %s", strerror (errno));
+              now_sec = tv.tv_sec;
+#endif
 
               /* If next_poll_time == 0, no sleep, its the first time through */
               if (host_data->next_poll_time
-                  && (host_data->next_poll_time > tv.tv_sec))
-                daemon_sleep ((host_data->next_poll_time - tv.tv_sec) + 1);
+                  && (host_data->next_poll_time > now_sec))
+                daemon_sleep ((host_data->next_poll_time - now_sec) + 1);
             }
         }
     }

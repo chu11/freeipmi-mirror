@@ -506,6 +506,15 @@ AC_CHECK_FUNCS([asprintf])
 AC_CHECK_LIB([m], [cbrt], [AC_DEFINE(HAVE_CBRT, [1], [Define to 1 if you have `cbrt' function.])])
 AC_CHECK_FUNCS([getmsg putmsg])
 
+dnl clock_gettime may be in librt on older systems
+AC_SEARCH_LIBS([clock_gettime], [rt])
+AC_CHECK_FUNCS([clock_gettime])
+dnl clock_gettime() alone does not guarantee CLOCK_MONOTONIC is available
+AC_CHECK_DECL([CLOCK_MONOTONIC],
+  [AC_DEFINE([HAVE_CLOCK_MONOTONIC], [1], [Define to 1 if CLOCK_MONOTONIC is available.])],
+  [],
+  [[#include <time.h>]])
+
 dnl sighandler_t apparently not defined in Apple/OS X
 AC_CHECK_TYPES([sighandler_t], [], [], [[#define _GNU_SOURCE
 #include <signal.h>]])
