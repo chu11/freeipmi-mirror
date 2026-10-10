@@ -1,3 +1,15 @@
+2026-10-10  LongWei27 <longwei27@huawei.com>
+
+	* configure.ac: Add AC_SEARCH_LIBS/AC_CHECK_FUNCS for clock_gettime
+	and AC_CHECK_DECL for CLOCK_MONOTONIC to support monotonic clock
+	detection.
+
+	* bmc-watchdog/bmc-watchdog.c: Use clock_gettime(CLOCK_MONOTONIC)
+	instead of gettimeofday() for daemon loop timing to prevent
+	uint32_t underflow in adjusted_period when the system clock jumps
+	backward.  Guarded by HAVE_CLOCK_GETTIME and HAVE_CLOCK_MONOTONIC
+	with fallback to gettimeofday().
+
 2026-10-05 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/api/ipmi-api.h: Document all
