@@ -1,5 +1,15 @@
 2026-10-10  LongWei27 <longwei27@huawei.com>
 
+	* ipmidetectd/ipmidetectd.c: Use clock_gettime(CLOCK_MONOTONIC)
+	instead of gettimeofday() for daemon loop timing to prevent
+	incorrect ping intervals when the system clock jumps backward.
+	Guarded by HAVE_CLOCK_GETTIME and HAVE_CLOCK_MONOTONIC with
+	fallback to gettimeofday().  Note: last_received timestamp is
+	deliberately kept as gettimeofday() since it is a wall-clock
+	timestamp used for log output.
+
+2026-10-10  LongWei27 <longwei27@huawei.com>
+
 	* configure.ac: Add AC_SEARCH_LIBS/AC_CHECK_FUNCS for clock_gettime
 	and AC_CHECK_DECL for CLOCK_MONOTONIC to support monotonic clock
 	detection.

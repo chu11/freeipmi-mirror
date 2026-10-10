@@ -719,15 +719,35 @@ _ipmidetectd_loop (void)
       unsigned int timeout_ms;
       int num;
 
+#if defined(HAVE_CLOCK_GETTIME) && defined(HAVE_CLOCK_MONOTONIC)
+      {
+        struct timespec ts;
+        if (clock_gettime (CLOCK_MONOTONIC, &ts) < 0)
+          err_exit ("clock_gettime: %s", strerror (errno));
+        now.tv_sec = ts.tv_sec;
+        now.tv_usec = ts.tv_nsec / 1000;
+      }
+#else
       if (gettimeofday (&now, NULL) < 0)
         err_exit ("gettimeofday: %s", strerror (errno));
+#endif
 
       if (timeval_gt (&now, &ipmidetectd_next_send))
         {
           _ipmidetectd_send_pings ();
 
+#if defined(HAVE_CLOCK_GETTIME) && defined(HAVE_CLOCK_MONOTONIC)
+          {
+            struct timespec ts;
+            if (clock_gettime (CLOCK_MONOTONIC, &ts) < 0)
+              err_exit ("clock_gettime: %s", strerror (errno));
+            now.tv_sec = ts.tv_sec;
+            now.tv_usec = ts.tv_nsec / 1000;
+          }
+#else
           if (gettimeofday (&now, NULL) < 0)
             err_exit ("gettimeofday: %s", strerror (errno));
+#endif
 
           timeval_add_ms (&now, conf.ipmiping_period, &ipmidetectd_next_send);
         }
