@@ -28,6 +28,16 @@
 #define IPMIPOWER_UTIL_H
 
 #include <sys/poll.h>
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 
 #include "ipmipower.h"
 
@@ -43,6 +53,13 @@ const char *ipmipower_power_cmd_to_string (ipmipower_power_cmd_t cmd);
 int ipmipower_power_cmd_check_privilege (ipmipower_power_cmd_t cmd,
                                          char *errbuf,
                                          unsigned int errbuflen);
+
+/* ipmipower_gettime
+ * - fill tv from a monotonic clock when available, else gettimeofday()
+ * - for elapsed time / timeout arithmetic only, not calendar time
+ * - exits on error
+ */
+void ipmipower_gettime (struct timeval *tv);
 
 /* ipmipower_poll
  * - safe poll()

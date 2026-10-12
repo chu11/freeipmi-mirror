@@ -238,11 +238,7 @@ ipmipower_powercmd_queue (ipmipower_power_cmd_t cmd,
   /* Initialize when protocol really begins.  Necessary b/c of fanout support
    * For now just clear it.
    */
-  if (gettimeofday (&(ip->time_begin), NULL) < 0)
-    {
-      IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-      exit (EXIT_FAILURE);
-    }
+  ipmipower_gettime (&(ip->time_begin));
 #else  /* 0 */
   memset (&(ip->time_begin), '\0', sizeof (struct timeval));
 #endif  /* 0 */
@@ -811,11 +807,7 @@ _send_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
       && IPMIPOWER_PACKET_TYPE_IPMI_SESSION_PACKET_RQ (pkt))
     ip->session_inbound_count++;
 
-  if (gettimeofday (&(ip->ic->last_ipmi_send), NULL) < 0)
-    {
-      IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-      exit (EXIT_FAILURE);
-    }
+  ipmipower_gettime (&(ip->ic->last_ipmi_send));
 }
 
 /* _recv_packet
@@ -883,11 +875,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
         {
           ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname, ip->extra_arg);
           ip->retransmission_count = 0;  /* important to reset */
-          if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
-            {
-              IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+          ipmipower_gettime (&ip->ic->last_ipmi_recv);
           goto cleanup;
         }
 
@@ -943,11 +931,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
         {
           ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname, ip->extra_arg);
           ip->retransmission_count = 0;  /* important to reset */
-          if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
-            {
-              IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+          ipmipower_gettime (&ip->ic->last_ipmi_recv);
           goto cleanup;
         }
 
@@ -1058,11 +1042,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname, ip->extra_arg);
 
           ip->retransmission_count = 0;  /* important to reset */
-          if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
-            {
-              IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+          ipmipower_gettime (&ip->ic->last_ipmi_recv);
           goto cleanup;
         }
 
@@ -1099,11 +1079,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
         {
           ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname, ip->extra_arg);
           ip->retransmission_count = 0;  /* important to reset */
-          if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
-            {
-              IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+          ipmipower_gettime (&ip->ic->last_ipmi_recv);
           goto cleanup;
         }
 
@@ -1236,11 +1212,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
           ipmipower_output (ipmipower_packet_errmsg (ip, pkt), ip->ic->hostname, ip->extra_arg);
 
           ip->retransmission_count = 0;  /* important to reset */
-          if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
-            {
-              IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+          ipmipower_gettime (&ip->ic->last_ipmi_recv);
           goto cleanup;
         }
 
@@ -1263,11 +1235,7 @@ _recv_packet (ipmipower_powercmd_t ip, ipmipower_packet_type_t pkt)
    */
  close_session_workaround:
   ip->retransmission_count = 0;  /* important to reset */
-  if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
-    {
-      IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-      exit (EXIT_FAILURE);
-    }
+  ipmipower_gettime (&ip->ic->last_ipmi_recv);
   rv = 1;
 
  cleanup:
@@ -1301,11 +1269,7 @@ _has_timed_out (ipmipower_powercmd_t ip)
   if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_START)
     return (0);
 
-  if (gettimeofday (&cur_time, NULL) < 0)
-    {
-      IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-      exit (EXIT_FAILURE);
-    }
+  ipmipower_gettime (&cur_time);
 
   timeval_sub (&cur_time, &(ip->time_begin), &result);
   timeval_millisecond_calc (&result, &session_timeout);
@@ -1358,11 +1322,7 @@ _retry_packets (ipmipower_powercmd_t ip)
   else
     retransmission_timeout = cmd_args.common_args.retransmission_timeout * (1 + (ip->retransmission_count/cmd_args.retransmission_backoff_count));
 
-  if (gettimeofday (&cur_time, NULL) < 0)
-    {
-      IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-      exit (EXIT_FAILURE);
-    }
+  ipmipower_gettime (&cur_time);
 
   timeval_sub (&cur_time, &(ip->ic->last_ipmi_send), &result);
   timeval_millisecond_calc (&result, &time_since_last_ipmi_send);
@@ -1746,11 +1706,7 @@ _check_activate_session_authentication_type (ipmipower_powercmd_t ip)
           ipmipower_output (IPMIPOWER_MSG_TYPE_BMC_ERROR, ip->ic->hostname, ip->extra_arg);
 
           ip->retransmission_count = 0;  /* important to reset */
-          if (gettimeofday (&ip->ic->last_ipmi_recv, NULL) < 0)
-            {
-              IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+          ipmipower_gettime (&ip->ic->last_ipmi_recv);
           return (-1);
         }
     }
@@ -1907,11 +1863,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
 
       _send_packet (ip, IPMIPOWER_PACKET_TYPE_AUTHENTICATION_CAPABILITIES_RQ);
 
-      if (gettimeofday (&(ip->time_begin), NULL) < 0)
-        {
-          IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-          exit (EXIT_FAILURE);
-        }
+      ipmipower_gettime (&(ip->time_begin));
       executing_count++;
     }
   else if (ip->protocol_state == IPMIPOWER_PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT)
@@ -2379,11 +2331,7 @@ _process_ipmi_packets (ipmipower_powercmd_t ip)
     }
 
  done:
-  if (gettimeofday (&cur_time, NULL) < 0)
-    {
-      IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-      exit (EXIT_FAILURE);
-    }
+  ipmipower_gettime (&cur_time);
   timeval_add_ms (&(ip->time_begin), cmd_args.common_args.session_timeout, &end_time);
   timeval_sub (&end_time, &cur_time, &result);
   timeval_millisecond_calc (&result, &timeout);

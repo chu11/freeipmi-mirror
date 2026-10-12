@@ -1,5 +1,19 @@
 2026-10-12 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_util.c, ipmipower/ipmipower_util.h
+	(ipmipower_gettime): New wrapper that samples
+	clock_gettime(CLOCK_MONOTONIC) into a struct timeval, falling back
+	to gettimeofday() when HAVE_CLOCK_GETTIME or HAVE_CLOCK_MONOTONIC
+	is not defined.
+
+	* ipmipower/ipmipower_powercmd.c: Use ipmipower_gettime() instead
+	of gettimeofday() for time_begin, last_ipmi_send, last_ipmi_recv
+	and the current-time samples in _has_timed_out, _retry_packets and
+	_process_ipmi_packets, so a wall-clock step cannot stall
+	retransmissions or time out every in-flight power command at once.
+
+2026-10-12 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/driver/ipmi-kcs-driver.c (_ipmi_kcs_gettime): New
 	helper that samples clock_gettime(CLOCK_MONOTONIC), falling back
 	to gettimeofday() when HAVE_CLOCK_GETTIME or HAVE_CLOCK_MONOTONIC

@@ -128,6 +128,33 @@ ipmipower_power_cmd_check_privilege (ipmipower_power_cmd_t cmd,
   return (rv);
 }
 
+void
+ipmipower_gettime (struct timeval *tv)
+{
+  assert (tv);
+
+#if defined(HAVE_CLOCK_GETTIME) && defined(HAVE_CLOCK_MONOTONIC)
+  {
+    struct timespec ts;
+
+    if (clock_gettime (CLOCK_MONOTONIC, &ts) < 0)
+      {
+        IPMIPOWER_ERROR (("clock_gettime: %s", strerror (errno)));
+        exit (EXIT_FAILURE);
+      }
+
+    tv->tv_sec = ts.tv_sec;
+    tv->tv_usec = ts.tv_nsec / 1000;
+  }
+#else
+  if (gettimeofday (tv, NULL) < 0)
+    {
+      IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
+      exit (EXIT_FAILURE);
+    }
+#endif
+}
+
 int
 ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
 {
