@@ -892,9 +892,9 @@ _ipmiconsole_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
       tv_orig.tv_sec = (long)timeout/1000;
       tv_orig.tv_usec = (timeout % 1000) * 1000;
 
-      if (gettimeofday(&start, NULL) < 0)
+      if (ipmiconsole_gettime (&start) < 0)
         {
-          IPMICONSOLE_DEBUG (("gettimeofday: %s", strerror (errno)));
+          IPMICONSOLE_DEBUG (("ipmiconsole_gettime: %s", strerror (errno)));
           return (-1);
         }
     }
@@ -917,9 +917,9 @@ _ipmiconsole_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
 
       if (n < 0 && timeout >= 0)      /* EINTR - adjust timeout */
         {
-          if (gettimeofday(&end, NULL) < 0)
+          if (ipmiconsole_gettime (&end) < 0)
             {
-              IPMICONSOLE_DEBUG (("gettimeofday: %s", strerror (errno)));
+              IPMICONSOLE_DEBUG (("ipmiconsole_gettime: %s", strerror (errno)));
               return (-1);
             }
 

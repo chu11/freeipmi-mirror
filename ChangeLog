@@ -1,5 +1,12 @@
 2026-10-12 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole_engine.c (_ipmiconsole_poll): Use
+	ipmiconsole_gettime() instead of gettimeofday() for the start/end
+	samples used to recompute the remaining poll() timeout after
+	EINTR, so a wall-clock step cannot restart or cut short the wait.
+
+2026-10-12 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole_util.c, libipmiconsole/ipmiconsole_util.h
 	(ipmiconsole_gettime): New library-internal helper that samples
 	clock_gettime(CLOCK_MONOTONIC) into a struct timeval, falling back
