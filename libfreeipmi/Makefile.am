@@ -150,6 +150,8 @@ libfreeipmi_la_SOURCES = \
 	libcommon/ipmi-md2.h \
 	libcommon/ipmi-md5.c \
 	libcommon/ipmi-md5.h \
+	libcommon/ipmi-time-util.c \
+	libcommon/ipmi-time-util.h \
 	libcommon/ipmi-trace.h \
 	locate/ipmi-locate.c \
 	locate/ipmi-locate-acpi-spmi.c \

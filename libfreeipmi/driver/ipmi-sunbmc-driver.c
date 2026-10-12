@@ -72,6 +72,7 @@
 #include "ipmi-driver-trace.h"
 
 #include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-time-util.h"
 
 #include "freeipmi-portability.h"
 
@@ -536,7 +537,7 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
   tv_orig.tv_sec = tv.tv_sec;
   tv_orig.tv_usec = tv.tv_usec;
 
-  if (gettimeofday (&start, NULL) < 0)
+  if (gettime_monotonic (&start) < 0)
     {
       SUNBMC_ERRNO_TO_SUNBMC_ERRNUM (ctx, errno);
       return (-1);
@@ -555,7 +556,7 @@ _sunbmc_read (ipmi_sunbmc_ctx_t ctx,
             return (-1);
           }
 
-        if (gettimeofday (&end, NULL) < 0)
+        if (gettime_monotonic (&end) < 0)
           {
             SUNBMC_ERRNO_TO_SUNBMC_ERRNUM (ctx, errno);
             return (-1);

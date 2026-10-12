@@ -63,6 +63,7 @@
 #include "ipmi-driver-trace.h"
 
 #include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-time-util.h"
 
 #include "freeipmi-portability.h"
 
@@ -519,7 +520,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
   tv_orig.tv_sec = tv.tv_sec;
   tv_orig.tv_usec = tv.tv_usec;
 
-  if (gettimeofday (&start, NULL) < 0)
+  if (gettime_monotonic (&start) < 0)
     {
       OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
       return (-1);
@@ -539,7 +540,7 @@ _openipmi_read (ipmi_openipmi_ctx_t ctx,
             return (-1);
           }
 
-        if (gettimeofday (&end, NULL) < 0)
+        if (gettime_monotonic (&end) < 0)
           {
             OPENIPMI_ERRNO_TO_OPENIPMI_ERRNUM (ctx, errno);
             return (-1);
