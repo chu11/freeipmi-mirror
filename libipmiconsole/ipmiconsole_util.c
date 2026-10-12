@@ -78,3 +78,26 @@ ipmiconsole_set_closeonexec (ipmiconsole_ctx_t c, int fd)
 
   return (0);
 }
+
+int
+ipmiconsole_gettime (struct timeval *tv)
+{
+  assert (tv);
+
+#if defined(HAVE_CLOCK_GETTIME) && defined(HAVE_CLOCK_MONOTONIC)
+  {
+    struct timespec ts;
+
+    if (clock_gettime (CLOCK_MONOTONIC, &ts) < 0)
+      return (-1);
+
+    tv->tv_sec = ts.tv_sec;
+    tv->tv_usec = ts.tv_nsec / 1000;
+  }
+#else
+  if (gettimeofday (tv, NULL) < 0)
+    return (-1);
+#endif
+
+  return (0);
+}

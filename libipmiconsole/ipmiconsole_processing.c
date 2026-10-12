@@ -67,6 +67,7 @@
 #include "ipmiconsole_debug.h"
 #include "ipmiconsole_engine.h"
 #include "ipmiconsole_packet.h"
+#include "ipmiconsole_util.h"
 #include "scbuf.h"
 
 #include "freeipmi-portability.h"
@@ -160,9 +161,9 @@ _send_ipmi_packet (ipmiconsole_ctx_t c, ipmiconsole_packet_type_t p)
   else
     t = &(c->session.last_keepalive_packet_sent);
 
-  if (gettimeofday (t, NULL) < 0)
+  if (ipmiconsole_gettime (t) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+      IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return (-1);
     }
@@ -286,9 +287,9 @@ _send_sol_packet_with_character_data (ipmiconsole_ctx_t c,
       goto cleanup;
     }
 
-  if (gettimeofday (&(c->session.last_sol_input_packet_sent), NULL) < 0)
+  if (ipmiconsole_gettime (&(c->session.last_sol_input_packet_sent)) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+      IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
@@ -448,9 +449,9 @@ _send_sol_packet_generate_break (ipmiconsole_ctx_t c,
       return (-1);
     }
 
-  if (gettimeofday (&(c->session.last_sol_input_packet_sent), NULL) < 0)
+  if (ipmiconsole_gettime (&(c->session.last_sol_input_packet_sent)) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+      IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return (-1);
     }
@@ -474,9 +475,9 @@ _receive_ipmi_packet_data_reset (ipmiconsole_ctx_t c)
   c->session.workaround_retransmission_count = 0;
   c->session.errors_count = 0;
   c->session.session_sequence_number_errors_count = 0;
-  if (gettimeofday (&(c->session.last_ipmi_packet_received), NULL) < 0)
+  if (ipmiconsole_gettime (&(c->session.last_ipmi_packet_received)) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+      IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return (-1);
     }
@@ -497,9 +498,9 @@ _receive_sol_packet_data_reset (ipmiconsole_ctx_t c)
   if (_receive_ipmi_packet_data_reset (c) < 0)
     return (-1);
 
-  if (gettimeofday (&(c->session.last_sol_packet_received), NULL) < 0)
+  if (ipmiconsole_gettime (&(c->session.last_sol_packet_received)) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+      IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return (-1);
     }
@@ -517,9 +518,9 @@ _receive_keepalive_packet_data_reset (ipmiconsole_ctx_t c)
   assert (c);
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
 
-  if (gettimeofday (&(c->session.last_ipmi_packet_received), NULL) < 0)
+  if (ipmiconsole_gettime (&(c->session.last_ipmi_packet_received)) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+      IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return (-1);
     }
@@ -1439,9 +1440,9 @@ _session_timeout (ipmiconsole_ctx_t c)
   assert (c->magic == IPMICONSOLE_CTX_MAGIC);
 
   timeval_add_ms (&(c->session.last_ipmi_packet_received), c->config.session_timeout_len, &timeout);
-  if (gettimeofday (&current, NULL) < 0)
+  if (ipmiconsole_gettime (&current) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+      IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return (-1);
     }
@@ -1475,9 +1476,9 @@ _ipmi_retransmission_timeout (ipmiconsole_ctx_t c)
 
   timeval_add_ms (&(c->session.last_ipmi_packet_sent), retransmission_timeout_len, &timeout);
 
-  if (gettimeofday (&current, NULL) < 0)
+  if (ipmiconsole_gettime (&current) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+      IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return (-1);
     }
@@ -1614,9 +1615,9 @@ _sol_retransmission_timeout (ipmiconsole_ctx_t c, int *dont_deactivate_flag)
   (*dont_deactivate_flag) = 0;
 
   timeval_add_ms (&(c->session.last_sol_input_packet_sent), c->config.retransmission_timeout_len, &timeout);
-  if (gettimeofday (&current, NULL) < 0)
+  if (ipmiconsole_gettime (&current) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+      IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return (-1);
     }
@@ -1708,9 +1709,9 @@ _keepalive_is_necessary (ipmiconsole_ctx_t c)
   assert (c->session.protocol_state == IPMICONSOLE_PROTOCOL_STATE_SOL_SESSION);
 
   timeval_add_ms (&(c->session.last_ipmi_packet_received), c->config.keepalive_timeout_len, &timeout);
-  if (gettimeofday (&current, NULL) < 0)
+  if (ipmiconsole_gettime (&current) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+      IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return (-1);
     }
@@ -1750,9 +1751,9 @@ _keepalive_timeout (ipmiconsole_ctx_t c)
       struct timeval current;
       struct timeval timeout;
 
-      if (gettimeofday (&current, NULL) < 0)
+      if (ipmiconsole_gettime (&current) < 0)
         {
-          IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+          IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
           return (-1);
         }
@@ -1788,9 +1789,9 @@ _serial_keepalive_is_necessary (ipmiconsole_ctx_t c)
           || c->config.engine_flags & IPMICONSOLE_ENGINE_SERIAL_KEEPALIVE_EMPTY);
 
   timeval_add_ms (&(c->session.last_sol_packet_received), c->config.session_timeout_len, &timeout);
-  if (gettimeofday (&current, NULL) < 0)
+  if (ipmiconsole_gettime (&current) < 0)
     {
-      IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+      IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       return (-1);
     }
@@ -1831,9 +1832,9 @@ _serial_keepalive_timeout (ipmiconsole_ctx_t c)
           struct timeval current;
           struct timeval timeout;
 
-          if (gettimeofday (&current, NULL) < 0)
+          if (ipmiconsole_gettime (&current) < 0)
             {
-              IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+              IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
               ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
               return (-1);
             }
@@ -2867,9 +2868,9 @@ _calculate_timeout (ipmiconsole_ctx_t c, unsigned int *timeout)
       unsigned int keepalive_timeout_ms;
       int rv;
 
-      if (gettimeofday (&current, NULL) < 0)
+      if (ipmiconsole_gettime (&current) < 0)
         {
-          IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+          IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
           return (-1);
         }
@@ -2929,9 +2930,9 @@ _calculate_timeout (ipmiconsole_ctx_t c, unsigned int *timeout)
       unsigned int session_timeout_ms;
       unsigned int retransmission_timeout_ms;
 
-      if (gettimeofday (&current, NULL) < 0)
+      if (ipmiconsole_gettime (&current) < 0)
         {
-          IPMICONSOLE_CTX_DEBUG (c, ("gettimeofday: %s", strerror (errno)));
+          IPMICONSOLE_CTX_DEBUG (c, ("ipmiconsole_gettime: %s", strerror (errno)));
           ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
           return (-1);
         }

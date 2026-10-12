@@ -1,5 +1,21 @@
 2026-10-12 Albert Chu <chu11@llnl.gov>
 
+	* libipmiconsole/ipmiconsole_util.c, libipmiconsole/ipmiconsole_util.h
+	(ipmiconsole_gettime): New library-internal helper that samples
+	clock_gettime(CLOCK_MONOTONIC) into a struct timeval, falling back
+	to gettimeofday() when HAVE_CLOCK_GETTIME or HAVE_CLOCK_MONOTONIC
+	is not defined.
+
+	* libipmiconsole/ipmiconsole_processing.c,
+	libipmiconsole/ipmiconsole_ctx.c: Use it instead of gettimeofday()
+	for every last_*_packet_sent / last_*_packet_received stamp and
+	the current-time samples in the session timeout, retransmission,
+	keepalive and poll-timeout checks, so a wall-clock step cannot
+	freeze the console or tear the session down with a spurious
+	session timeout.
+
+2026-10-12 Albert Chu <chu11@llnl.gov>
+
 	* common/pingtool/ping-tool-common.c (_now): New helper returning
 	whole seconds from clock_gettime(CLOCK_MONOTONIC), falling back to
 	time() when HAVE_CLOCK_GETTIME or HAVE_CLOCK_MONOTONIC is not

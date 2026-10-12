@@ -1190,18 +1190,18 @@ ipmiconsole_ctx_session_setup (ipmiconsole_ctx_t c)
    * beginning if necessary.
    */
 
-  if (gettimeofday (&(c->session.last_ipmi_packet_received), NULL) < 0)
+  if (ipmiconsole_gettime (&(c->session.last_ipmi_packet_received)) < 0)
     {
-      IPMICONSOLE_DEBUG (("gettimeofday: %s", strerror (errno)));
+      IPMICONSOLE_DEBUG (("ipmiconsole_gettime: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }
 
   timeval_clear (&(c->session.last_keepalive_packet_sent));
 
-  if (gettimeofday (&(c->session.last_sol_packet_received), NULL) < 0)
+  if (ipmiconsole_gettime (&(c->session.last_sol_packet_received)) < 0)
     {
-      IPMICONSOLE_DEBUG (("gettimeofday: %s", strerror (errno)));
+      IPMICONSOLE_DEBUG (("ipmiconsole_gettime: %s", strerror (errno)));
       ipmiconsole_ctx_set_errnum (c, IPMICONSOLE_ERR_SYSTEM_ERROR);
       goto cleanup;
     }

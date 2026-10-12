@@ -27,8 +27,27 @@
 #ifndef IPMICONSOLE_UTIL_H
 #define IPMICONSOLE_UTIL_H
 
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
+
 #include "ipmiconsole.h"
 
 int ipmiconsole_set_closeonexec (ipmiconsole_ctx_t c, int fd);
+
+/* ipmiconsole_gettime
+ * - fill tv from clock_gettime(CLOCK_MONOTONIC) when available, else
+ *   gettimeofday()
+ * - for elapsed time / timeout arithmetic only, not calendar time
+ * - returns 0 on success, -1 on error with errno set
+ */
+int ipmiconsole_gettime (struct timeval *tv);
 
 #endif /* IPMICONSOLE_UTIL_H */
