@@ -169,11 +169,7 @@ ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
       tv_orig.tv_sec = (long)timeout/1000;
       tv_orig.tv_usec = (timeout % 1000) * 1000;
 
-      if (gettimeofday(&start, NULL) < 0)
-        {
-          IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-          exit (EXIT_FAILURE);
-        }
+      ipmipower_gettime (&start);
     }
   else
     {
@@ -195,11 +191,7 @@ ipmipower_poll (struct pollfd *ufds, unsigned int nfds, int timeout)
 
       if (n < 0 && timeout >= 0)      /* EINTR - adjust timeout */
         {
-          if (gettimeofday(&end, NULL) < 0)
-            {
-              IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-              exit (EXIT_FAILURE);
-            }
+          ipmipower_gettime (&end);
 
           if (timercmp (&end, &start, <=))
             timeout = (tv_orig.tv_sec * 1000) + (tv_orig.tv_usec / 1000);
