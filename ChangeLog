@@ -1,5 +1,15 @@
 2026-10-12 Albert Chu <chu11@llnl.gov>
 
+	* common/pingtool/ping-tool-common.c (_now): New helper returning
+	whole seconds from clock_gettime(CLOCK_MONOTONIC), falling back to
+	time() when HAVE_CLOCK_GETTIME or HAVE_CLOCK_MONOTONIC is not
+	defined.
+	(_main_loop): Use it instead of time() for the send spacing and
+	receive timeout so a wall-clock step cannot lengthen the sleep or
+	skip the receive wait.
+
+2026-10-12 Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/driver/ipmi-kcs-driver.c (_ipmi_kcs_gettime): Call
 	the shared gettime_monotonic() helper instead of carrying a private
 	copy of the clock_gettime/gettimeofday selection.

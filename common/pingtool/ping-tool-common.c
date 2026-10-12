@@ -298,6 +298,25 @@ _cmdline_parse (int argc,
   _strncpy (pingtool_dest, argv[optind], FREEIPMI_MAXHOSTNAMELEN);
 }
 
+/* Send spacing and the receive timeout are elapsed-time measurements,
+ * so sample a monotonic clock where available rather than wall-clock
+ * time(2), which can step.  Whole seconds are all the loop needs.
+ */
+static time_t
+_now (void)
+{
+#if defined(HAVE_CLOCK_GETTIME) && defined(HAVE_CLOCK_MONOTONIC)
+  struct timespec ts;
+
+  if (clock_gettime (CLOCK_MONOTONIC, &ts) < 0)
+    ipmi_ping_err_exit ("clock_gettime: %s", strerror (errno));
+
+  return (ts.tv_sec);
+#else
+  return (time (NULL));
+#endif
+}
+
 /* signal handlers + sleep(3) is a bad idea, so use select(3) */
 static int
 _sleep (unsigned int len)
@@ -581,7 +600,7 @@ _main_loop (Ipmi_Ping_CreatePacket create,
 
       /* wait if necessary; the sleep may return early on a signal, so
        * loop back and re-check the clock rather than sending now */
-      now = time (NULL);
+      now = _now ();
       if ((now - last_send) < pingtool_interval)
         {
           _sleep (last_send + pingtool_interval - now);
@@ -608,12 +627,12 @@ _main_loop (Ipmi_Ping_CreatePacket create,
       if (rv != len)
         ipmi_ping_err_exit ("ipmi_sendto: wrong bytes written");
 
-      last_send = time (NULL);
+      last_send = _now ();
 
       pingtool_pkt_sent++;
 
       while (!pingtool_interrupted
-             && ((now = time (NULL)) - last_send) < pingtool_timeout)
+             && ((now = _now ()) - last_send) < pingtool_timeout)
         {
           fd_set rset;
           struct timeval tv;
