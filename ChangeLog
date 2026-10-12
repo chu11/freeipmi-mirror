@@ -1,5 +1,14 @@
 2026-10-12 Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/api/ipmi-lan-session-common.c: Use
+	gettime_monotonic() instead of gettimeofday() for last_send,
+	last_received, recv_starttime and the current-time samples in
+	_session_timed_out and _calculate_timeout, so a wall-clock step
+	cannot stall retransmission or fail a command with a spurious
+	session timeout.
+
+2026-10-12 Albert Chu <chu11@llnl.gov>
+
 	* libipmiconsole/ipmiconsole_engine.c (_ipmiconsole_poll): Use
 	ipmiconsole_gettime() instead of gettimeofday() for the start/end
 	samples used to recompute the remaining poll() timeout after

@@ -73,6 +73,7 @@
 #include "ipmi-lan-session-common.h"
 
 #include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-time-util.h"
 
 #include "freeipmi-portability.h"
 #include "debug-util.h"
@@ -148,7 +149,7 @@ _session_timed_out (ipmi_ctx_t ctx)
   session_timeout_len.tv_usec = (ctx->io.outofband.session_timeout - (session_timeout_len.tv_sec * 1000)) * 1000;
   timeradd (&(ctx->io.outofband.last_received), &session_timeout_len, &session_timeout);
 
-  if (gettimeofday (&current, NULL) < 0)
+  if (gettime_monotonic (&current) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
@@ -181,7 +182,7 @@ _calculate_timeout (ipmi_ctx_t ctx,
           && recv_starttime
           && timeout);
 
-  if (gettimeofday (&current, NULL) < 0)
+  if (gettime_monotonic (&current) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
@@ -578,7 +579,7 @@ _api_lan_cmd_send (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (gettimeofday (&ctx->io.outofband.last_send, NULL) < 0)
+  if (gettime_monotonic (&ctx->io.outofband.last_send) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -608,7 +609,7 @@ _api_lan_cmd_recv (ipmi_ctx_t ctx,
           && pkt
           && pkt_len);
 
-  if (gettimeofday (&recv_starttime, NULL) < 0)
+  if (gettime_monotonic (&recv_starttime) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
@@ -924,7 +925,7 @@ api_lan_cmd_wrapper (ipmi_ctx_t ctx,
   if (!ctx->io.outofband.last_received.tv_sec
       && !ctx->io.outofband.last_received.tv_usec)
     {
-      if (gettimeofday (&ctx->io.outofband.last_received, NULL) < 0)
+      if (gettime_monotonic (&ctx->io.outofband.last_received) < 0)
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           return (-1);
@@ -1114,7 +1115,7 @@ api_lan_cmd_wrapper (ipmi_ctx_t ctx,
       if (!ret)
         continue;
 
-      if (gettimeofday (&(ctx->io.outofband.last_received), NULL) < 0)
+      if (gettime_monotonic (&(ctx->io.outofband.last_received)) < 0)
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
@@ -1259,7 +1260,7 @@ _ipmi_cmd_send_ipmb (ipmi_ctx_t ctx,
 
  out_of_order_workaround:
   /* "pretend" a request was just sent */
-  if (gettimeofday (&ctx->io.outofband.last_send, NULL) < 0)
+  if (gettime_monotonic (&ctx->io.outofband.last_send) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -1518,7 +1519,7 @@ api_lan_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       if (!ret)
         continue;
 
-      if (gettimeofday (&(ctx->io.outofband.last_received), NULL) < 0)
+      if (gettime_monotonic (&(ctx->io.outofband.last_received)) < 0)
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
@@ -2406,7 +2407,7 @@ _api_lan_2_0_cmd_send (ipmi_ctx_t ctx,
       goto cleanup;
     }
 
-  if (gettimeofday (&ctx->io.outofband.last_send, NULL) < 0)
+  if (gettime_monotonic (&ctx->io.outofband.last_send) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       goto cleanup;
@@ -2444,7 +2445,7 @@ _api_lan_2_0_cmd_recv (ipmi_ctx_t ctx,
           && pkt
           && pkt_len);
 
-  if (gettimeofday (&recv_starttime, NULL) < 0)
+  if (gettime_monotonic (&recv_starttime) < 0)
     {
       API_ERRNO_TO_API_ERRNUM (ctx, errno);
       return (-1);
@@ -2925,7 +2926,7 @@ api_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
   if (!ctx->io.outofband.last_received.tv_sec
       && !ctx->io.outofband.last_received.tv_usec)
     {
-      if (gettimeofday (&ctx->io.outofband.last_received, NULL) < 0)
+      if (gettime_monotonic (&ctx->io.outofband.last_received) < 0)
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           return (-1);
@@ -3128,7 +3129,7 @@ api_lan_2_0_cmd_wrapper (ipmi_ctx_t ctx,
       if (!ret)
         continue;
 
-      if (gettimeofday (&ctx->io.outofband.last_received, NULL) < 0)
+      if (gettime_monotonic (&ctx->io.outofband.last_received) < 0)
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
@@ -3344,7 +3345,7 @@ api_lan_2_0_cmd_wrapper_ipmb (ipmi_ctx_t ctx,
       if (!ret)
         continue;
 
-      if (gettimeofday (&(ctx->io.outofband.last_received), NULL) < 0)
+      if (gettime_monotonic (&(ctx->io.outofband.last_received)) < 0)
         {
           API_ERRNO_TO_API_ERRNUM (ctx, errno);
           goto cleanup;
