@@ -562,6 +562,41 @@ _ipmi_kcs_timeval_diff (struct timeval *start, struct timeval *end)
   return (t);
 }
 
+/* Timeouts and poll intervals are elapsed-time measurements, so use
+ * a monotonic clock where available; a wall-clock step would
+ * otherwise stall the spin loop or time out a transaction instantly.
+ */
+static int
+_ipmi_kcs_gettime (ipmi_kcs_ctx_t ctx, struct timeval *tv)
+{
+  assert (ctx);
+  assert (ctx->magic == IPMI_KCS_CTX_MAGIC);
+  assert (tv);
+
+#if defined(HAVE_CLOCK_GETTIME) && defined(HAVE_CLOCK_MONOTONIC)
+  {
+    struct timespec ts;
+
+    if (clock_gettime (CLOCK_MONOTONIC, &ts) < 0)
+      {
+        KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
+        return (-1);
+      }
+
+    tv->tv_sec = ts.tv_sec;
+    tv->tv_usec = ts.tv_nsec / 1000;
+  }
+#else
+  if (gettimeofday (tv, NULL) < 0)
+    {
+      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
+      return (-1);
+    }
+#endif
+
+  return (0);
+}
+
 static int
 _ipmi_kcs_spin_sleep (ipmi_kcs_ctx_t ctx)
 {
@@ -576,21 +611,15 @@ _ipmi_kcs_spin_sleep (ipmi_kcs_ctx_t ctx)
    * that there is something substantially superior to this.
    */
 
-  if (gettimeofday (&spinstart, NULL) < 0)
-    {
-      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
-      return (-1);
-    }
+  if (_ipmi_kcs_gettime (ctx, &spinstart) < 0)
+    return (-1);
 
   while (1)
     {
       unsigned long t;
 
-      if (gettimeofday (&spinend, NULL) < 0)
-        {
-          KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
-          return (-1);
-        }
+      if (_ipmi_kcs_gettime (ctx, &spinend) < 0)
+        return (-1);
 
       t = _ipmi_kcs_timeval_diff (&spinstart, &spinend);
 
@@ -619,11 +648,8 @@ _ipmi_kcs_sleep (ipmi_kcs_ctx_t ctx, struct timeval *start)
    * safe and portable.
    */
 
-  if (gettimeofday (&end, NULL) < 0)
-    {
-      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
-      return (-1);
-    }
+  if (_ipmi_kcs_gettime (ctx, &end) < 0)
+    return (-1);
 
   t = _ipmi_kcs_timeval_diff (start, &end);
 
@@ -656,11 +682,8 @@ _ipmi_kcs_wait_for_ibf_clear (ipmi_kcs_ctx_t ctx)
   assert (ctx);
   assert (ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  if (gettimeofday (&start, NULL) < 0)
-    {
-      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
-      return (-1);
-    }
+  if (_ipmi_kcs_gettime (ctx, &start) < 0)
+    return (-1);
 
   while (_ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_IBF)
     {
@@ -684,11 +707,8 @@ _ipmi_kcs_wait_for_obf_set (ipmi_kcs_ctx_t ctx)
   assert (ctx);
   assert (ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  if (gettimeofday (&start, NULL) < 0)
-    {
-      KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
-      return (-1);
-    }
+  if (_ipmi_kcs_gettime (ctx, &start) < 0)
+    return (-1);
 
   while (!(_ipmi_kcs_get_status (ctx) & IPMI_KCS_STATUS_REG_OBF))
     {

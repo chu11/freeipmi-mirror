@@ -1,3 +1,14 @@
+2026-10-12 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/driver/ipmi-kcs-driver.c (_ipmi_kcs_gettime): New
+	helper that samples clock_gettime(CLOCK_MONOTONIC), falling back
+	to gettimeofday() when HAVE_CLOCK_GETTIME or HAVE_CLOCK_MONOTONIC
+	is not defined.
+	(_ipmi_kcs_spin_sleep, _ipmi_kcs_sleep, _ipmi_kcs_wait_for_ibf_clear,
+	_ipmi_kcs_wait_for_obf_set): Use it instead of gettimeofday() so a
+	wall-clock step cannot stall the spin loop or time out a KCS
+	transaction early.
+
 2026-10-10  LongWei27 <longwei27@huawei.com>
 
 	* ipmiseld/ipmiseld.c: Use clock_gettime(CLOCK_MONOTONIC)
