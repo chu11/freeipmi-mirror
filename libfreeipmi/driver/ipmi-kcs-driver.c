@@ -57,6 +57,7 @@
 #include "ipmi-semaphores.h"
 
 #include "libcommon/ipmi-fiid-util.h"
+#include "libcommon/ipmi-time-util.h"
 
 #include "freeipmi-portability.h"
 
@@ -573,26 +574,11 @@ _ipmi_kcs_gettime (ipmi_kcs_ctx_t ctx, struct timeval *tv)
   assert (ctx->magic == IPMI_KCS_CTX_MAGIC);
   assert (tv);
 
-#if defined(HAVE_CLOCK_GETTIME) && defined(HAVE_CLOCK_MONOTONIC)
-  {
-    struct timespec ts;
-
-    if (clock_gettime (CLOCK_MONOTONIC, &ts) < 0)
-      {
-        KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
-        return (-1);
-      }
-
-    tv->tv_sec = ts.tv_sec;
-    tv->tv_usec = ts.tv_nsec / 1000;
-  }
-#else
-  if (gettimeofday (tv, NULL) < 0)
+  if (gettime_monotonic (tv) < 0)
     {
       KCS_SET_ERRNUM (ctx, IPMI_KCS_ERR_SYSTEM_ERROR);
       return (-1);
     }
-#endif
 
   return (0);
 }
