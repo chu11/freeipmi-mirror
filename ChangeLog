@@ -1,5 +1,14 @@
 2026-10-12 Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/ipmipower_ping.c (ipmipower_ping_process_pings): Use
+	ipmipower_gettime() instead of gettimeofday() for the current-time
+	sample that drives next_ping_sends_time, last_ping_send,
+	last_ping_recv and the returned poll timeout, so a wall-clock step
+	cannot stall the ping sweep or mark every node undiscovered at
+	once.
+
+2026-10-12 Albert Chu <chu11@llnl.gov>
+
 	* ipmipower/ipmipower_util.c, ipmipower/ipmipower_util.h
 	(ipmipower_gettime): New wrapper that samples
 	clock_gettime(CLOCK_MONOTONIC) into a struct timeval, falling back

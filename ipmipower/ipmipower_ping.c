@@ -92,11 +92,7 @@ ipmipower_ping_process_pings (int *timeout)
   if (!cmd_args.ping_interval)
     return;
 
-  if (gettimeofday (&cur_time, NULL) < 0)
-    {
-      IPMIPOWER_ERROR (("gettimeofday: %s", strerror (errno)));
-      exit (EXIT_FAILURE);
-    }
+  ipmipower_gettime (&cur_time);
 
   if (timeval_gt (&cur_time, &next_ping_sends_time) || force_discovery_sweep)
     {
