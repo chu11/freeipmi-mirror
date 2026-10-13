@@ -1501,12 +1501,18 @@ _ipmiseld_poll_postprocess (void *arg)
 #if defined(HAVE_CLOCK_GETTIME) && defined(HAVE_CLOCK_MONOTONIC)
     struct timespec ts;
     if (clock_gettime (CLOCK_MONOTONIC, &ts) < 0)
-      err_exit ("clock_gettime: %s", strerror (errno));
+      {
+        ipmiseld_err_output (host_data, "clock_gettime: %s", strerror (errno));
+        goto cleanup;
+      }
     host_data->next_poll_time = ts.tv_sec + host_data->prog_data->args->poll_interval;
 #else
     struct timeval tv;
     if (gettimeofday (&tv, NULL) < 0)
-      err_exit ("gettimeofday: %s", strerror (errno));
+      {
+        ipmiseld_err_output (host_data, "gettimeofday: %s", strerror (errno));
+        goto cleanup;
+      }
     host_data->next_poll_time = tv.tv_sec + host_data->prog_data->args->poll_interval;
 #endif
   }

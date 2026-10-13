@@ -1,3 +1,10 @@
+2026-10-13 Albert Chu <chu11@llnl.gov>
+
+	* ipmiseld/ipmiseld.c (_ipmiseld_poll_postprocess): Report a
+	clock sampling failure with ipmiseld_err_output() and return
+	instead of calling err_exit(), since this runs on a threadpool
+	worker thread.
+
 2026-10-12 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/api/ipmi-lan-session-common.c: Use
