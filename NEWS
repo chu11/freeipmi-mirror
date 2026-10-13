@@ -3,6 +3,7 @@ FreeIPMI 1.6.21 - XX/XX/XX
 o In ipmi-sensors, do not exit with a fatal error if an SDR entry has
   an invalid event/reading type code.  Output an "unkonwn" error and
   continue.
+o In bmc-watchdog, fix potential fix time-jump bugs.
 
 FreeIPMI 1.6.20 - 10/05/26
 --------------------------
