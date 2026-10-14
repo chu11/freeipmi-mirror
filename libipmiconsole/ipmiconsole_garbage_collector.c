@@ -145,7 +145,10 @@ ipmiconsole_garbage_collector (void *arg)
        */
 
       if ((perr = pthread_mutex_lock (&(console_engine_ctxs_to_destroy_mutex))) != 0)
-        IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
+        {
+          IPMICONSOLE_DEBUG (("pthread_mutex_lock: %s", strerror (perr)));
+          continue;
+        }
 
       if (!(itr = list_iterator_create (console_engine_ctxs_to_destroy)))
         {
@@ -177,12 +180,12 @@ ipmiconsole_garbage_collector (void *arg)
             }
         }
 
-      if ((perr = pthread_mutex_unlock (&(console_engine_ctxs_to_destroy_mutex))) != 0)
-        IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
-
     end_loop:
       if (itr)
         list_iterator_destroy (itr);
+
+      if ((perr = pthread_mutex_unlock (&(console_engine_ctxs_to_destroy_mutex))) != 0)
+        IPMICONSOLE_DEBUG (("pthread_mutex_unlock: %s", strerror (perr)));
     }
 
   if ((perr = pthread_mutex_lock (&garbage_collector_active_mutex)))
